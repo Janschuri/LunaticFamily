@@ -1,0 +1,67 @@
+Database:
+  MySQL:
+    enabled: false
+    host: localhost
+    port: 3306
+    database: playerData
+    username: root
+    password:
+  SQLite:
+    Filename:
+default_gender: "fe"
+family:
+  - partner
+  - sibling
+  - firstChild
+  - secondChild
+  - firstParent
+  - secondParent
+  - firstGrandchild
+  - secondGrandchild
+  - thirdGrandchild
+  - fourthGrandchild
+  - firstGrandparent
+  - secondGrandparent
+  - thirdGrandparent
+  - fourthGrandparent
+  - firstParentInLaw
+  - secondParentInLaw
+  - firstChildInLaw
+  - secondChildInLaw
+  - firstAuntOrUncle
+  - secondAuntOrUncle
+  - thirdAuntOrUncle
+  - fourthAuntOrUncle
+  - firstSiblingInLaw
+  - secondSiblingInLaw
+  - firstCousin
+  - secondCousin
+  - thirdCousin
+  - fourthCousin
+  - firstNieceOrNephew
+  - secondNieceOrNephew
+  - firstGreatGrandparent
+  - secondGreatGrandparent
+  - thirdGreatGrandparent
+  - fourthGreatGrandparent
+  - fifthGreatGrandparent
+  - sixthGreatGrandparent
+  - seventhGreatGrandparent
+  - eighthGreatGrandparent
+  - firstGreatAuntOrUncle
+  - secondGreatAuntOrUncle
+  - thirdGreatAuntOrUncle
+  - fourthGreatAuntOrUncle
+  - firstGrandchildInLaw
+  - secondGrandchildInLaw
+  - thirdGrandchildInLaw
+  - fourthGrandchildInLaw
+  - firstGreatGrandchild
+  - secondGreatGrandchild
+  - thirdGreatGrandchild
+  - fourthGreatGrandchild
+  - fifthGreatGrandchild
+  - sixthGreatGrandchild
+  - seventhGreatGrandchild
+  - eighthGreatGrandchild
+
