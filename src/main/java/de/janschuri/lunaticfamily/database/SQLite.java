@@ -22,7 +22,7 @@ public class SQLite extends Database{
     public String SQLiteCreateTokensTable = "CREATE TABLE IF NOT EXISTS playerData (" +
             "`uuid` varchar(36) NOT NULL," +
             "`name` varchar(16) NULL," +
-            "`skinURL` varchar(127) NULL" +
+            "`skinURL` varchar(127) NULL," +
             "`partner` varchar(36) NULL," +
             "`sibling` varchar(36) NULL," +
             "`firstParent` varchar(36) NULL," +

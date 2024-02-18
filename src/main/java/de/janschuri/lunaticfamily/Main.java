@@ -51,21 +51,19 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
 
-
-//        if (getConfig().getBoolean("database.MySQL.enabled")) {
-        db = new MySQL(this);
-//        Bukkit.getLogger().info("test");
-//
-//        }
-//        else {
-//            db = new SQLite(this);
-//        }
-
-        db.load();
-
         saveDefaultConfig();
 
         loadConfig(this);
+
+        if (getConfig().getBoolean("database.MySQL.enabled")) {
+            db = new MySQL(this);
+
+        }
+        else {
+            db = new SQLite(this);
+        }
+
+        db.load();
 
         getServer().getPluginManager().registerEvents(new JoinListener(this), this);
         getServer().getPluginManager().registerEvents(new QuitListener(this), this);
