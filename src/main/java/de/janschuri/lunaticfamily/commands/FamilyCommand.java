@@ -96,6 +96,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                     List<String> list = plugin.familyList;
 
                     FamilyTree familyTree = new FamilyTree(player, plugin);
+                    familyTree.reloadTree(player);
                     CrazyAdvancementsAPI.setActiveTab(player, "advancement_name");
 
                     if (args.length == 1) {
