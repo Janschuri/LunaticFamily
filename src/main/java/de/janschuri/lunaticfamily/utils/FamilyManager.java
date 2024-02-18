@@ -158,8 +158,25 @@ public class FamilyManager {
             FamilyManager partnerFam = new FamilyManager(partner, plugin);
 
             if (partnerFam.getSibling() != null) {
-                String secondBrotherInLaw = partnerFam.getSibling();
-                familyList.put("secondSiblingInLaw", sibling);
+                String secondSiblingInLaw = partnerFam.getSibling();
+                familyList.put("secondSiblingInLaw", secondSiblingInLaw);
+                FamilyManager secondSiblingInLawFam = new FamilyManager(secondSiblingInLaw, plugin);
+
+                if (secondSiblingInLawFam.getPartner() != null) {
+                    String thirdSiblingInLaw = secondSiblingInLawFam.getPartner();
+                    familyList.put("thirdSiblingInLaw", thirdSiblingInLaw);
+                }
+
+                if (secondSiblingInLawFam.getFirstChild() != null) {
+                    String thirdNieceOrNephew = secondSiblingInLawFam.getFirstChild();
+                    familyList.put("thirdNieceOrNephew", thirdNieceOrNephew);
+                }
+
+                if (secondSiblingInLawFam.getSecondChild() != null) {
+                    String fourthNieceOrNephew = secondSiblingInLawFam.getSecondChild();
+                    familyList.put("fourthNieceOrNephew", fourthNieceOrNephew);
+                }
+
             }
 
             if (partnerFam.getFirstParent() != null) {

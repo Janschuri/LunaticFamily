@@ -3,6 +3,8 @@ package de.janschuri.lunaticfamily.commands;
 import com.google.common.collect.BiMap;
 import de.janschuri.lunaticfamily.utils.FamilyManager;
 import de.janschuri.lunaticfamily.Main;
+import de.janschuri.lunaticfamily.utils.FamilyTree;
+import eu.endercentral.crazy_advancements.CrazyAdvancementsAPI;
 import org.apache.logging.log4j.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -92,6 +94,9 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 else if (args[0].equalsIgnoreCase("list")) {
 
                     List<String> list = plugin.familyList;
+
+                    FamilyTree familyTree = new FamilyTree(player, plugin);
+                    CrazyAdvancementsAPI.setActiveTab(player, "advancement_name");
 
                     if (args.length == 1) {
 

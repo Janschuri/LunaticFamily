@@ -112,8 +112,8 @@ public final class Main extends JavaPlugin {
         familyList = Objects.requireNonNull(config.getStringList("family"));
 
         //family relationships
-        ego = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(lang.getString("family_relationships.ego")));
 
+        relationshipsFe.put("ego", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.egoFe")));
         relationshipsFe.put("partner", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.wife")));
         relationshipsFe.put("Child", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.daughter")));
         relationshipsFe.put("Parent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.mother")));
@@ -131,7 +131,7 @@ public final class Main extends JavaPlugin {
         relationshipsFe.put("ChildInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.daughter_in_law")));
         relationshipsFe.put("GrandchildInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.granddaughter_in_law")));
 
-
+        relationshipsFe.put("ego", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.egoMa")));
         relationshipsMa.put("partner", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.husband")));
         relationshipsMa.put("Child", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.son")));
         relationshipsMa.put("Parent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.father")));
@@ -167,7 +167,7 @@ public final class Main extends JavaPlugin {
         if (url == null || url.isEmpty())
             return skull;
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        GameProfile profile = new GameProfile(UUID.randomUUID(), "test");
         byte[] encodedData = Base64.encodeBase64(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
         profile.getProperties().put("textures", new Property("textures", new String(encodedData)));
         Field profileField = null;

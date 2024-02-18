@@ -68,7 +68,8 @@ messages:
   admin_adopt_not_adopted: "%player% is not adopted."
   admin_adopt_unset: "You cancelled the Adoption of %child% by %parent1% and %parent2%."
 family_relationships:
-  ego: "&6you"
+  egoFe: "&6you"
+  egoMa: "&6you"
   wife: "&3wife"
   husband: "&3husband"
   sister: "&3sister"

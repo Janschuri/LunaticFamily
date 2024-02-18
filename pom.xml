@@ -66,6 +66,10 @@
           <id>spigot-repo</id>
           <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
       </repository>
+      <repository>
+          <id>jitpack.io</id>
+          <url>https://jitpack.io</url>
+      </repository>
   </repositories>
 
   <dependencies>
@@ -101,6 +105,11 @@
           <groupId>org.yaml</groupId>
           <artifactId>snakeyaml</artifactId>
           <version>1.26</version>
+      </dependency>
+      <dependency>
+          <groupId>com.github.ZockerAxel</groupId>
+          <artifactId>CrazyAdvancementsAPI</artifactId>
+          <version>v2.1.17a</version>
       </dependency>
   </dependencies>
 </project>
