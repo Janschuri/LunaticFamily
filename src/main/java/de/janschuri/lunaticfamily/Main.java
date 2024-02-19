@@ -13,7 +13,6 @@ import de.janschuri.lunaticfamily.database.SQLite;
 import de.janschuri.lunaticfamily.utils.JoinListener;
 import de.janschuri.lunaticfamily.utils.QuitListener;
 import org.apache.commons.codec.binary.Base64;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -21,8 +20,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -182,6 +185,43 @@ public final class Main extends JavaPlugin {
         }
         skull.setItemMeta(skullMeta);
         return skull;
+    }
+
+    // Method to spawn particles
+    public static void spawnParticles(Location location, Particle particle) {
+        World world = location.getWorld();
+
+        Random random = new Random();
+
+        // Define the range for random offsets
+        double range = 2.0;
+
+        // Spawn particles in a cloud-like pattern around the player
+        for (int i = 0; i < 10; i++) { // Adjust the number of particles as needed
+            // Generate random offsets
+            double offsetX = (random.nextDouble() - 0.5) * range * 2;
+            double offsetY = (random.nextDouble() - 0.5) * range * 2;
+            double offsetZ = (random.nextDouble() - 0.5) * range * 2;
+
+            // Adjust particle location
+            Location particleLocation = location.clone().add(offsetX, offsetY, offsetZ);
+
+            // Spawn particles
+            world.spawnParticle(particle, particleLocation, 1);
+        }
+    }
+    public static Location getPositionBetweenLocations(Location loc1, Location loc2) {
+        // Get the vectors of the two locations
+        Vector vec1 = new Vector(loc1.getX(), loc1.getY(), loc1.getZ());
+        Vector vec2 = new Vector(loc2.getX(), loc2.getY(), loc2.getZ());
+
+        // Calculate the midpoint vector
+        Vector midpoint = vec1.clone().add(vec2).multiply(0.5);
+
+        // Convert the midpoint vector to a location
+        Location position = new Location(loc1.getWorld(), midpoint.getX(), midpoint.getY(), midpoint.getZ());
+
+        return position;
     }
 
 

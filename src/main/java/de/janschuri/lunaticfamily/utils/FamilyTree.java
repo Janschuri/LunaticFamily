@@ -2,32 +2,46 @@ package de.janschuri.lunaticfamily.utils;
 
 import com.google.common.collect.BiMap;
 import de.janschuri.lunaticfamily.Main;
+import eu.endercentral.crazy_advancements.CrazyAdvancementsAPI;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
 import eu.endercentral.crazy_advancements.advancement.AdvancementDisplay;
 import eu.endercentral.crazy_advancements.advancement.AdvancementFlag;
 import eu.endercentral.crazy_advancements.advancement.AdvancementVisibility;
 import eu.endercentral.crazy_advancements.manager.AdvancementManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 
 public class FamilyTree {
 
     private final Main plugin;
-    private final Player player;
     private final FamilyManager playerFam;
 
     private final BiMap familyList;
 
-    public FamilyTree(Player player, Main plugin) {
+    public FamilyTree(String uuid, Main plugin) {
         this.plugin = plugin;
-        this.player = player;
 
-        String uuid = player.getUniqueId().toString();
         this.playerFam = new FamilyManager(uuid, plugin);
         this.familyList = playerFam.getFamilyList();
+
+        AdvancementManager manager = new AdvancementManager(new NameKey("manager", uuid));
+
+        if (Bukkit.getPlayer(UUID.fromString(uuid)) != null) {
+            Player player = Bukkit.getPlayer(UUID.fromString(uuid));
+            manager.removePlayer(player);
+            manager.addPlayer(player);
+        }
+
+
 
 
         String title = playerFam.getName();
@@ -308,11 +322,6 @@ public class FamilyTree {
                             Advancement eighthGreatGrandchildFirstHolder = createAdvancement(fourthGrandchild, "eighthGreatGrandchildFirstHolder", 0.5f,0.0f);
                             Advancement eighthGreatGrandchildSecondHolder = createAdvancement(eighthGreatGrandchildFirstHolder, "eighthGreatGrandchildSecondHolder", 1.0f,1.0f);
                             Advancement eighthGreatGrandchild = createAdvancement(eighthGreatGrandchildSecondHolder, "eighthGreatGrandchild", 0.5f,1.0f);
-
-
-
-        AdvancementManager manager = new AdvancementManager(new NameKey("manager", player.getUniqueId().toString()));
-        manager.addPlayer(player);
 
         manager.addAdvancement(ego);
 
@@ -662,12 +671,6 @@ public class FamilyTree {
         }
 
         return advancement;
-    }
-
-    public void reloadTree (Player player){
-        AdvancementManager manager = new AdvancementManager(new NameKey("manager", player.getUniqueId().toString()));
-        manager.removePlayer(player);
-        manager.addPlayer(player);
     }
 
 }

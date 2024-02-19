@@ -95,10 +95,6 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
 
                     List<String> list = plugin.familyList;
 
-                    FamilyTree familyTree = new FamilyTree(player, plugin);
-                    familyTree.reloadTree(player);
-                    CrazyAdvancementsAPI.setActiveTab(player, "advancement_name");
-
                     if (args.length == 1) {
 
                         BiMap familyList = playerFam.getFamilyList();
@@ -181,6 +177,10 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                         sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
                     }
 
+                }
+                else if (args[0].equalsIgnoreCase("tree")) {
+                    FamilyTree familyTree = new FamilyTree(uuid, plugin);
+                    sender.sendMessage("tree reloaded");
                 }
 
                 else if (args[0].equalsIgnoreCase("reload") && player.hasPermission("family.admin")){

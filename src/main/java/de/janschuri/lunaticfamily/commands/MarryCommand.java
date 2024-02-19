@@ -8,12 +8,14 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.Location;
 
 import java.util.*;
 
@@ -581,6 +583,28 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             else {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("marry_no_partner"));
                             }
+                        }
+                        else if (args[0].equalsIgnoreCase("kiss")) {
+                            if (playerFam.getPartner() != null) {
+                                String partner = playerFam.getPartner();
+                                if (Bukkit.getPlayer(UUID.fromString(partner)) != null) {
+                                    Player partnerPlayer = Bukkit.getPlayer(UUID.fromString(partner));
+                                    Location location = Main.getPositionBetweenLocations(player.getLocation(), partnerPlayer.getLocation());
+                                    location.setY(location.getY() + 2);
+
+                                    for (int i = 0; i < 6; i++) { // Spawn three clouds
+                                        Bukkit.getScheduler().runTaskLater(plugin, () -> Main.spawnParticles(location, Particle.HEART), i * 5L); // Delay between clouds: i * 20 ticks (1 second)
+                                    }
+                                }
+                                else {
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", Bukkit.getOfflinePlayer(UUID.fromString(partner)).getName()));
+                                }
+
+                            }
+                            else {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_no_partner"));
+                            }
+
                         }
                         //subcommand does not exist
                         else {

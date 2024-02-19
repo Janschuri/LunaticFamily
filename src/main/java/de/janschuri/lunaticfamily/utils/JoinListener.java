@@ -27,13 +27,18 @@ public class JoinListener implements Listener {
                 playerFam.savePlayerData();
 
 
-
-                FamilyTree familyTree = new FamilyTree(player, plugin);
-                CrazyAdvancementsAPI.setActiveTab(player, "advancement_name");
-
-
             }
         }.runTaskLater(plugin, 10L);
+
+        new BukkitRunnable() {
+            public void run() {
+                Player player = event.getPlayer();
+                String uuid = player.getUniqueId().toString();
+                FamilyTree familyTree = new FamilyTree(uuid, plugin);
+                player.sendMessage("tree reloaded");
+
+            }
+        }.runTaskLater(plugin, 100L);
 
     }
 }
