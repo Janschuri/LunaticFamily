@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.Location;
@@ -222,6 +223,17 @@ public final class Main extends JavaPlugin {
         Location position = new Location(loc1.getWorld(), midpoint.getX(), midpoint.getY(), midpoint.getZ());
 
         return position;
+    }
+
+    // Method to check if a player is within a certain range of blocks from a location
+    public static boolean isPlayerInRange(Player player, Location targetLocation, double range) {
+        Location playerLocation = player.getLocation();
+
+        // Calculate the distance between player's location and target location
+        double distance = playerLocation.distance(targetLocation);
+
+        // Check if the distance is within the range
+        return distance <= range;
     }
 
 

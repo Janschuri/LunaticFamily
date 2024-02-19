@@ -589,11 +589,17 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 String partner = playerFam.getPartner();
                                 if (Bukkit.getPlayer(UUID.fromString(partner)) != null) {
                                     Player partnerPlayer = Bukkit.getPlayer(UUID.fromString(partner));
-                                    Location location = Main.getPositionBetweenLocations(player.getLocation(), partnerPlayer.getLocation());
-                                    location.setY(location.getY() + 2);
 
-                                    for (int i = 0; i < 6; i++) { // Spawn three clouds
-                                        Bukkit.getScheduler().runTaskLater(plugin, () -> Main.spawnParticles(location, Particle.HEART), i * 5L); // Delay between clouds: i * 20 ticks (1 second)
+                                    if(Main.isPlayerInRange(partnerPlayer, player.getLocation(), 3)) {
+                                        Location location = Main.getPositionBetweenLocations(player.getLocation(), partnerPlayer.getLocation());
+                                        location.setY(location.getY() + 2);
+
+                                        for (int i = 0; i < 6; i++) { // Spawn three clouds
+                                            Bukkit.getScheduler().runTaskLater(plugin, () -> Main.spawnParticles(location, Particle.HEART), i * 5L); // Delay between clouds: i * 20 ticks (1 second)
+                                        }
+                                    }
+                                    else {
+                                        sender.sendMessage("zu weit weg :(");
                                     }
                                 }
                                 else {
@@ -604,6 +610,20 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             else {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("marry_no_partner"));
                             }
+
+                        }
+                        else if (args[0].equalsIgnoreCase("list")) {
+                            List<String> marryList = Main.getDatabase().getMarryList();
+                            String msg = plugin.prefix + "\n";
+                            for (String e : marryList) {
+                                FamilyManager player1Fam = new FamilyManager(e, plugin);
+                                String player2 = player1Fam.getPartner();
+                                FamilyManager player2Fam = new FamilyManager(player2, plugin);
+
+                                msg = msg + player1Fam.getName() + " \u2764 " + player2Fam.getName() + "\n";
+                            }
+                            sender.sendMessage(msg);
+                            Bukkit.getLogger().info(marryList.toString());
 
                         }
                         //subcommand does not exist

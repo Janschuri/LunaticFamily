@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 
@@ -147,6 +149,39 @@ public abstract class Database {
         }
         return null;
     }
+    public List<String> getMarryList() {
+        List<String> marryList = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection(); // Assuming getSQLConnection() returns a valid Connection object
+            ps = conn.prepareStatement("SELECT uuid, partner FROM " + table + " WHERE uuid < partner;");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                String player = rs.getString("uuid");
+                String partner = rs.getString("partner");
+                if (partner != null && !partner.isEmpty()) {
+                    marryList.add(player);
+                }
+            }
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+        return marryList;
+    }
+
     public String getFirstParent(String uuid) {
         Connection conn = null;
         PreparedStatement ps = null;
