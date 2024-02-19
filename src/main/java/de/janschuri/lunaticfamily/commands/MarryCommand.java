@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.Location;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 public class MarryCommand implements CommandExecutor, TabCompleter {
@@ -75,6 +76,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             String partner = player1Fam.getPartner();
                             FamilyManager partnerFam = new FamilyManager(partner, plugin);
                             partnerFam.setPartner(null);
+                            partnerFam.setMarryDate(null);
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
                         }
                         //cancel marriage player2
@@ -82,6 +84,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             String partner = player2Fam.getPartner();
                             FamilyManager partnerFam = new FamilyManager(partner, plugin);
                             partnerFam.setPartner(null);
+                            partnerFam.setMarryDate(null);
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player2Fam.getName()).replace("%player2%", partnerFam.getName()));
                         }
                         //remove as parent player1
@@ -123,8 +126,11 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                         //set marriage
                         Bukkit.getLogger().info(player1 + "+" + player2);
+                        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
                         player1Fam.setPartner(player2);
+                        player1Fam.setMarryDate(currentTimestamp);
                         player2Fam.setPartner(player1);
+                        player2Fam.setMarryDate(currentTimestamp);
 
                         sender.sendMessage(plugin.prefix + plugin.messages.get("admin_set_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
                     } else {
@@ -180,6 +186,8 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                             player1Fam.setPartner(null);
                             player2Fam.setPartner(null);
+                            player1Fam.setMarryDate(null);
+                            player2Fam.setMarryDate(null);
 
                         } else {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_no_partner").replace("%player%", player1Fam.getName()));
@@ -219,6 +227,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             String partner = player1Fam.getPartner();
                             FamilyManager partnerFam = new FamilyManager(partner, plugin);
                             partnerFam.setPartner(null);
+                            partnerFam.setMarryDate(null);
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
                         }
                         //cancel marriage player2
@@ -226,6 +235,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             String partner = player2Fam.getPartner();
                             FamilyManager partnerFam = new FamilyManager(partner, plugin);
                             partnerFam.setPartner(null);
+                            partnerFam.setMarryDate(null);
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player2Fam.getName()).replace("%player2%", partnerFam.getName()));
                         }
                         //remove as parent player1
@@ -267,8 +277,11 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                         //set marriage
                         Bukkit.getLogger().info(player1 + "+" + player2);
+                        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
                         player1Fam.setPartner(player2);
+                        player1Fam.setMarryDate(currentTimestamp);
                         player2Fam.setPartner(player1);
+                        player2Fam.setMarryDate(currentTimestamp);
 
                         sender.sendMessage(plugin.prefix + plugin.messages.get("admin_set_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
                     } else {
@@ -323,6 +336,8 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             }
 
                             player1Fam.setPartner(null);
+                            player1Fam.setPartner(null);
+                            player2Fam.setPartner(null);
                             player2Fam.setPartner(null);
 
                         } else {
@@ -462,9 +477,12 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             if (plugin.marryRequests.containsKey(uuid)) {
 
                                 String partner = plugin.marryRequests.get(uuid);
+                                Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
                                 playerFam.setPartner(partner);
+                                playerFam.setMarryDate(currentTimestamp);
                                 FamilyManager partnerFam = new FamilyManager(partner, plugin);
                                 partnerFam.setPartner(uuid);
+                                partnerFam.setMarryDate(currentTimestamp);
 
                                 if (plugin.marryPriest.containsKey(partner)) {
                                     String priest = plugin.marryPriest.get(partner);
@@ -549,8 +567,11 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 String partner = playerFam.getPartner();
                                 FamilyManager partnerFam = new FamilyManager(partner, plugin);
 
+                                Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
                                 partnerFam.setPartner(null);
+                                partnerFam.setMarryDate(currentTimestamp);
                                 playerFam.setPartner(null);
+                                playerFam.setMarryDate(currentTimestamp);
 
                                 if (playerFam.getFirstChild() != null) {
                                     String firstChild = playerFam.getFirstChild();
@@ -620,7 +641,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 String player2 = player1Fam.getPartner();
                                 FamilyManager player2Fam = new FamilyManager(player2, plugin);
 
-                                msg = msg + player1Fam.getName() + " \u2764 " + player2Fam.getName() + "\n";
+                                msg = msg + player1Fam.getName() + " \u2764 " + player2Fam.getName() + " (" + playerFam.getMarryDate() + ")" + "\n";
                             }
                             sender.sendMessage(msg);
                             Bukkit.getLogger().info(marryList.toString());

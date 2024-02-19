@@ -49,6 +49,7 @@ public class MySQL extends Database {
             "`name` varchar(16) NULL," +
             "`skinURL` varchar(127)," +
             "`partner` varchar(36) NULL," +
+            "`marryDate` DATETIME NULL," +
             "`sibling` varchar(36) NULL," +
             "`firstParent` varchar(36) NULL," +
             "`secondParent` varchar(36) NULL," +

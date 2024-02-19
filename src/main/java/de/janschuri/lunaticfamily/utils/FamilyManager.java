@@ -5,6 +5,8 @@ import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticfamily.Main;
 import org.bukkit.Bukkit;
 
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class FamilyManager {
@@ -15,6 +17,7 @@ public class FamilyManager {
     private String name;
     private final String skinURL;
     private String partner;
+    private Timestamp marryDate;
     private String sibling;
     private String firstParent;
     private String secondParent;
@@ -29,6 +32,7 @@ public class FamilyManager {
         this.uuid = uuid;
 
         partner = Main.getDatabase().getPartner(uuid);
+        marryDate = Main.getDatabase().getMarryDate(uuid);
         sibling = Main.getDatabase().getSibling(uuid);
         firstParent = Main.getDatabase().getFirstParent(uuid);
         secondParent = Main.getDatabase().getSecondParent(uuid);
@@ -71,7 +75,7 @@ public class FamilyManager {
     }
 
     public void savePlayerData() {
-        Main.getDatabase().saveData(uuid, name, skinURL, partner, sibling, firstParent, secondParent, firstChild, secondChild, gender);
+        Main.getDatabase().saveData(uuid, name, skinURL, partner, marryDate, sibling, firstParent, secondParent, firstChild, secondChild, gender);
     }
 
     public void setName(String name) {
@@ -92,6 +96,21 @@ public class FamilyManager {
 
     public void setPartner(String partner) {
         this.partner = partner;
+        savePlayerData();
+    }
+
+    public String getMarryDate() {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        // Format the timestamp
+        String formattedDate = formatter.format(this.marryDate.toLocalDateTime());
+
+        return formattedDate;
+    }
+
+    public void setMarryDate(Timestamp marryDate) {
+        this.marryDate = marryDate;
         savePlayerData();
     }
 

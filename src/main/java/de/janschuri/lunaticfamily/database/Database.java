@@ -3,10 +3,7 @@ package de.janschuri.lunaticfamily.database;
 import de.janschuri.lunaticfamily.Main;
 import org.bukkit.Bukkit;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -105,6 +102,34 @@ public abstract class Database {
             while(rs.next()){
                 if(rs.getString("uuid").equals(uuid)){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
                     return rs.getString("partner"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
+                }
+            }
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+        return null;
+    }
+    public Timestamp getMarryDate(String uuid) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE uuid = '"+uuid+"';");
+
+            rs = ps.executeQuery();
+            while(rs.next()){
+                if(rs.getString("uuid").equals(uuid)){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
+                    return rs.getTimestamp("marryDate"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
                 }
             }
         } catch (SQLException ex) {
@@ -324,22 +349,23 @@ public abstract class Database {
     }
 
     // Now we need methods to save things to the database
-    public void saveData(String uuid, String name, String skinURL, String partner, String sibling, String firstParent, String secondParent, String firstChild, String secondChild, String gender) {
+    public void saveData(String uuid, String name, String skinURL, String partner, Timestamp marryDate, String sibling, String firstParent, String secondParent, String firstChild, String secondChild, String gender) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("REPLACE INTO " + table + " (uuid,name,skinURL,partner,sibling,firstParent,secondParent,firstChild,secondChild,gender) VALUES(?,?,?,?,?,?,?,?,?,?)"); // IMPORTANT. In SQLite class, We made 3 colums. player, Kills, Total.
+            ps = conn.prepareStatement("REPLACE INTO " + table + " (uuid,name,skinURL,partner,marryDate,sibling,firstParent,secondParent,firstChild,secondChild,gender) VALUES(?,?,?,?,?,?,?,?,?,?,?)"); // IMPORTANT. In SQLite class, We made 3 colums. player, Kills, Total.
             ps.setString(1, uuid);
             ps.setString(2, name);
             ps.setString(3, skinURL);
             ps.setString(4, partner);
-            ps.setString(5, sibling);
-            ps.setString(6, firstParent);
-            ps.setString(7, secondParent);
-            ps.setString(8, firstChild);
-            ps.setString(9, secondChild);
-            ps.setString(10, gender);
+            ps.setTimestamp(5, marryDate);
+            ps.setString(6, sibling);
+            ps.setString(7, firstParent);
+            ps.setString(8, secondParent);
+            ps.setString(9, firstChild);
+            ps.setString(10, secondChild);
+            ps.setString(11, gender);
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {
