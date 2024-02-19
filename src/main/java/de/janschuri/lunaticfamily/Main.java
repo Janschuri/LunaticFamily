@@ -226,11 +226,10 @@ public final class Main extends JavaPlugin {
     }
 
     // Method to check if a player is within a certain range of blocks from a location
-    public static boolean isPlayerInRange(Player player, Location targetLocation, double range) {
-        Location playerLocation = player.getLocation();
+    public static boolean isInRange(Location firstLocation, Location secondLocation, double range) {
 
         // Calculate the distance between player's location and target location
-        double distance = playerLocation.distance(targetLocation);
+        double distance = firstLocation.distance(secondLocation);
 
         // Check if the distance is within the range
         return distance <= range;

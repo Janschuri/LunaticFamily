@@ -611,7 +611,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 if (Bukkit.getPlayer(UUID.fromString(partner)) != null) {
                                     Player partnerPlayer = Bukkit.getPlayer(UUID.fromString(partner));
 
-                                    if(Main.isPlayerInRange(partnerPlayer, player.getLocation(), 3)) {
+                                    if(Main.isInRange(partnerPlayer.getLocation(), player.getLocation(), 3)) {
                                         Location location = Main.getPositionBetweenLocations(player.getLocation(), partnerPlayer.getLocation());
                                         location.setY(location.getY() + 2);
 
