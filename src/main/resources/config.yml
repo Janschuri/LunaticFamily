@@ -9,6 +9,7 @@ Database:
   SQLite:
     Filename:
 default_gender: "fe"
+language: "EN"
 family:
   - partner
   - sibling

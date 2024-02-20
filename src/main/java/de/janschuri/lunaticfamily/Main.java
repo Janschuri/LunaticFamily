@@ -18,7 +18,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.Location;
@@ -35,6 +34,7 @@ import java.util.*;
 public final class Main extends JavaPlugin {
     private static Database db;
 
+    public String language;
     public String prefix;
     public String defaultGender;
 
@@ -87,16 +87,33 @@ public final class Main extends JavaPlugin {
         File cfgfile = new File(plugin.getDataFolder().getAbsolutePath() + "/config.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(cfgfile);
 
-        File langfile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang.yml");
+        File langfileEN = new File(plugin.getDataFolder().getAbsolutePath() + "/langEN.yml");
+        File langfileDE = new File(plugin.getDataFolder().getAbsolutePath() + "/langDE.yml");
 
-        FileConfiguration lang;
 
-        if (!langfile.exists()) {
-            langfile.getParentFile().mkdirs();
-            plugin.saveResource("lang.yml", false);
+        if (!langfileEN.exists()) {
+            langfileEN.getParentFile().mkdirs();
+            plugin.saveResource("langEN.yml", false);
         }
 
-        lang = YamlConfiguration.loadConfiguration(langfile);
+        if (!langfileDE.exists()) {
+            langfileDE.getParentFile().mkdirs();
+            plugin.saveResource("langDE.yml", false);
+        }
+
+        language = config.getString("language");
+
+        FileConfiguration lang = null;
+
+        if (language.equalsIgnoreCase("EN"))
+        {
+            lang = YamlConfiguration.loadConfiguration(langfileEN);
+        }
+
+        if (language.equalsIgnoreCase("DE"))
+        {
+            lang = YamlConfiguration.loadConfiguration(langfileDE);
+        }
 
         defaultGender = config.getString("default_gender");
         prefix = ChatColor.translateAlternateColorCodes('&', lang.getString("prefix"));
@@ -133,7 +150,7 @@ public final class Main extends JavaPlugin {
         relationshipsFe.put("ChildInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.daughter_in_law")));
         relationshipsFe.put("GrandchildInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.granddaughter_in_law")));
 
-        relationshipsFe.put("ego", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.egoMa")));
+        relationshipsMa.put("ego", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.egoMa")));
         relationshipsMa.put("partner", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.husband")));
         relationshipsMa.put("Child", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.son")));
         relationshipsMa.put("Parent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.father")));

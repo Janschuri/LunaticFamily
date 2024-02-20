@@ -337,8 +337,8 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                             player1Fam.setPartner(null);
                             player1Fam.setPartner(null);
-                            player2Fam.setPartner(null);
-                            player2Fam.setPartner(null);
+                            player2Fam.setMarryDate(null);
+                            player2Fam.setMarryDate(null);
 
                         } else {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_no_partner").replace("%player%", player1Fam.getName()));
@@ -376,22 +376,31 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                                             //player has no open request
                                             else {
-                                                Bukkit.getPlayer(UUID.fromString(partner)).sendMessage(plugin.prefix + plugin.messages.get("marry_request").replace("%player1%", partnerFam.getName()).replace("%player2", playerFam.getName()));
+                                                Player playerPartner = Bukkit.getPlayer(UUID.fromString(partner));
 
-                                                TextComponent yes = new TextComponent(ChatColor.GREEN + "[" + plugin.messages.get("marry_yes") + "]");
-                                                yes.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry accept"));
-                                                yes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "[" + plugin.messages.get("marry_yes") + "]").create()));
+                                                if (Main.isInRange(player.getLocation(), playerPartner.getLocation(), 5)) {
 
-                                                TextComponent no = new TextComponent(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]");
-                                                no.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry deny"));
-                                                no.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]").create()));
+                                                    playerPartner.sendMessage(plugin.prefix + plugin.messages.get("marry_request").replace("%player1%", partnerFam.getName()).replace("%player2%", playerFam.getName()));
 
-                                                TextComponent space = new TextComponent(ChatColor.WHITE + "---");
+                                                    TextComponent yes = new TextComponent(ChatColor.GREEN + "[" + plugin.messages.get("marry_yes") + "]");
+                                                    yes.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry accept"));
+                                                    yes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "[" + plugin.messages.get("marry_yes") + "]").create()));
 
-                                                Bukkit.getPlayer(UUID.fromString(partner)).spigot().sendMessage(yes, space, no);
+                                                    TextComponent no = new TextComponent(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]");
+                                                    no.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry deny"));
+                                                    no.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]").create()));
+
+                                                    TextComponent space = new TextComponent(ChatColor.WHITE + "---");
+
+                                                    Bukkit.getPlayer(UUID.fromString(partner)).spigot().sendMessage(yes, space, no);
 
 
-                                                plugin.marryRequests.put(partner, uuid);
+                                                    plugin.marryRequests.put(partner, uuid);
+
+                                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_request_sent").replace("%player%", partnerFam.getName()));
+                                                } else {
+                                                    sender.sendMessage(plugin.prefix + plugin.messages.get("player_too_far_away").replace("%player%", partnerFam.getName()));
+                                                }
                                             }
                                         } else {
                                             String partner = playerFam.getPartner();

@@ -79,7 +79,6 @@ public class FamilyManager {
     }
 
     public void setName(String name) {
-        Bukkit.getLogger().info(name + "wurde als name gesetzt");
         if (name != null) {
             this.name = name;
         }
