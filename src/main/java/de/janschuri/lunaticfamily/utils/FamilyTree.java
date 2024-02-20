@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.utils;
 
 import com.google.common.collect.BiMap;
 import de.janschuri.lunaticfamily.Main;
-import eu.endercentral.crazy_advancements.CrazyAdvancementsAPI;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
 import eu.endercentral.crazy_advancements.advancement.AdvancementDisplay;
@@ -33,14 +32,6 @@ public class FamilyTree {
         this.playerFam = new FamilyManager(uuid, plugin);
         this.familyList = playerFam.getFamilyList();
 
-        AdvancementManager manager = new AdvancementManager(new NameKey("manager", uuid));
-
-        if (Bukkit.getPlayer(UUID.fromString(uuid)) != null) {
-            Player player = Bukkit.getPlayer(UUID.fromString(uuid));
-            manager.removePlayer(player);
-            manager.addPlayer(player);
-        }
-
 
 
 
@@ -58,10 +49,11 @@ public class FamilyTree {
 
         String skinURL = playerFam.getSkinURL();
         ItemStack icon = Main.getSkull(skinURL);
+        String background = playerFam.getBackground();
 
 
         AdvancementDisplay display = new AdvancementDisplay(icon, title, description, frame, visibility);
-        display.setBackgroundTexture("textures/block/moss_block.png");
+        display.setBackgroundTexture(background);
         display.setX(0.0f);
         display.setY(-2.0f);
 
@@ -322,6 +314,14 @@ public class FamilyTree {
                             Advancement eighthGreatGrandchildFirstHolder = createAdvancement(fourthGrandchild, "eighthGreatGrandchildFirstHolder", 0.5f,0.0f);
                             Advancement eighthGreatGrandchildSecondHolder = createAdvancement(eighthGreatGrandchildFirstHolder, "eighthGreatGrandchildSecondHolder", 1.0f,1.0f);
                             Advancement eighthGreatGrandchild = createAdvancement(eighthGreatGrandchildSecondHolder, "eighthGreatGrandchild", 0.5f,1.0f);
+
+
+        AdvancementManager manager = new AdvancementManager(new NameKey("manager", uuid));
+
+        if (Bukkit.getPlayer(UUID.fromString(uuid)) != null) {
+            Player player = Bukkit.getPlayer(UUID.fromString(uuid));
+            manager.addPlayer(player);
+        }
 
         manager.addAdvancement(ego);
 

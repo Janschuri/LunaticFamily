@@ -182,6 +182,15 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                     FamilyTree familyTree = new FamilyTree(uuid, plugin);
                     sender.sendMessage("tree reloaded");
                 }
+                else if (args[0].equalsIgnoreCase("background")) {
+                    if (args.length == 2) {
+                            playerFam.setBackground(args[1]);
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("family_background_set"));
+                    }
+                    else {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                    }
+                }
 
                 else if (args[0].equalsIgnoreCase("reload") && player.hasPermission("family.admin")){
                     plugin.loadConfig(plugin);

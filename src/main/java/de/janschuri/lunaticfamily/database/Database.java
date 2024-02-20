@@ -348,13 +348,42 @@ public abstract class Database {
         return null;
     }
 
+    public String getBackground(String uuid) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE uuid = '"+uuid+"';");
+
+            rs = ps.executeQuery();
+            while(rs.next()){
+                if(rs.getString("uuid").equals(uuid)){
+                    return rs.getString("background");
+                }
+            }
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+        return null;
+    }
+
     // Now we need methods to save things to the database
-    public void saveData(String uuid, String name, String skinURL, String partner, Timestamp marryDate, String sibling, String firstParent, String secondParent, String firstChild, String secondChild, String gender) {
+    public void saveData(String uuid, String name, String skinURL, String partner, Timestamp marryDate, String sibling, String firstParent, String secondParent, String firstChild, String secondChild, String gender, String background) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("REPLACE INTO " + table + " (uuid,name,skinURL,partner,marryDate,sibling,firstParent,secondParent,firstChild,secondChild,gender) VALUES(?,?,?,?,?,?,?,?,?,?,?)"); // IMPORTANT. In SQLite class, We made 3 colums. player, Kills, Total.
+            ps = conn.prepareStatement("REPLACE INTO " + table + " (uuid,name,skinURL,partner,marryDate,sibling,firstParent,secondParent,firstChild,secondChild,gender,background) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1, uuid);
             ps.setString(2, name);
             ps.setString(3, skinURL);
@@ -366,6 +395,7 @@ public abstract class Database {
             ps.setString(9, firstChild);
             ps.setString(10, secondChild);
             ps.setString(11, gender);
+            ps.setString(12, background);
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {

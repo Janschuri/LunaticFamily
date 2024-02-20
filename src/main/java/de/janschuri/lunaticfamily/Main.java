@@ -37,6 +37,7 @@ public final class Main extends JavaPlugin {
     public String language;
     public String prefix;
     public String defaultGender;
+    public String defaultBackground;
 
     public Map<String, String> messages = new HashMap<>();
     public List<String> familyList;
@@ -115,6 +116,7 @@ public final class Main extends JavaPlugin {
             lang = YamlConfiguration.loadConfiguration(langfileDE);
         }
 
+        defaultBackground = "textures/block/" + config.getString("default_background") + ".png";
         defaultGender = config.getString("default_gender");
         prefix = ChatColor.translateAlternateColorCodes('&', lang.getString("prefix"));
 
@@ -251,6 +253,5 @@ public final class Main extends JavaPlugin {
         // Check if the distance is within the range
         return distance <= range;
     }
-
 
 }

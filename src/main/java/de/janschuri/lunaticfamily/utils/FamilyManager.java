@@ -24,6 +24,7 @@ public class FamilyManager {
     private String firstChild;
     private String secondChild;
     private String gender;
+    private String background;
     private final BiMap<String, String> familyList = HashBiMap.create();
 
     public FamilyManager(String uuid, Main plugin) {
@@ -62,6 +63,13 @@ public class FamilyManager {
             gender = Main.getDatabase().getGender(uuid);
         }
 
+        if (Main.getDatabase().getGender(uuid) == null) {
+            background = plugin.defaultBackground;
+        } else {
+            background = Main.getDatabase().getBackground(uuid);
+        }
+
+
         savePlayerData();
 
     }
@@ -75,7 +83,7 @@ public class FamilyManager {
     }
 
     public void savePlayerData() {
-        Main.getDatabase().saveData(uuid, name, skinURL, partner, marryDate, sibling, firstParent, secondParent, firstChild, secondChild, gender);
+        Main.getDatabase().saveData(uuid, name, skinURL, partner, marryDate, sibling, firstParent, secondParent, firstChild, secondChild, gender, background);
     }
 
     public void setName(String name) {
@@ -165,6 +173,15 @@ public class FamilyManager {
 
     public void setGender(String gender) {
         this.gender = gender;
+        savePlayerData();
+    }
+
+    public String getBackground() {
+        return background;
+    }
+
+    public void setBackground(String background) {
+        this.background = "textures/block/"+background+".png";
         savePlayerData();
     }
 

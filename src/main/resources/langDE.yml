@@ -47,6 +47,7 @@ messages:
   gender_changed_ma: "Du hast dein Geschlecht zu männlich geändert."
   gender_already_fe: "Dein Geschlecht ist bereits weiblich."
   gender_already_ma: "Dein Geschlecht ist bereits männlich."
+  family_background_set: "Hintergrund wurde neu gesetzt."
   wrong_usage: "Falsche Verwendung dieses Befehls!"
   player_not_exist: "%player% existiert nicht."
   player_quit: "%player% hat den Server verlassen."

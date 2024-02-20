@@ -47,6 +47,7 @@ messages:
   gender_changed_ma: "You changed your gender to masculine."
   gender_already_fe: "Your gender is already feminine."
   gender_already_ma: "Your gender is already masculine."
+  family_background_set: "Background was set."
   wrong_usage: "Wrong usage of this command!"
   player_not_exist: "%player% does not exist."
   player_quit: "%player% left the server."

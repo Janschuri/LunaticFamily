@@ -31,6 +31,7 @@ public class SQLite extends Database{
             "`firstChild` varchar(36) NULL," +
             "`secondChild` varchar(36) NULL," +
             "`gender` varchar(2) NULL," +
+            "`background` varchar(127) NULL," +
             "PRIMARY KEY (`uuid`)" +
             ");";
 
