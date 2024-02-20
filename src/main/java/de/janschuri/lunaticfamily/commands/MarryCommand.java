@@ -336,8 +336,8 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             }
 
                             player1Fam.setPartner(null);
-                            player1Fam.setPartner(null);
-                            player2Fam.setMarryDate(null);
+                            player2Fam.setPartner(null);
+                            player1Fam.setMarryDate(null);
                             player2Fam.setMarryDate(null);
 
                         } else {

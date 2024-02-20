@@ -10,7 +10,7 @@ Database:
     Filename:
 default_gender: "fe"
 default_gender: "moss_block"
-language: "EN"
+language: "DE"
 family:
   - partner
   - sibling

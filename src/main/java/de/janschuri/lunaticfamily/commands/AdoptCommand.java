@@ -246,6 +246,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                                 else {
                                                     Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_request").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));
                                                     plugin.adoptRequests.put(child, uuid);
+                                                    sender.sendMessage(plugin.messages.get("adopt_request_sent").replace("%player%", childFam.getName()));;
                                                 }
                                             }
 

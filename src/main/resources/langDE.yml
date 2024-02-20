@@ -24,6 +24,7 @@ messages:
   adopt_no_child: "Du hast kein Kind."
   adopt_open_request: "%player% hat schon eine offene Adoptionsanfrage."
   adopt_request: "%player1% und %player2% möchten dich adoptieren. Bist du einverstanden?"
+  adopt_request_sent: "Du hast %player% die Adoption angeboten."
   adopt_self_request: "Du kannst dich nicht selbst adoptieren."
   adopt_not_married: "Du musst verheiratet sein, um ein Kind zu adoptieren."
   adopt_already_adopted: "%player% ist bereits adoptiert."
