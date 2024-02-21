@@ -63,7 +63,7 @@ public class FamilyManager {
             gender = Main.getDatabase().getGender(uuid);
         }
 
-        if (Main.getDatabase().getGender(uuid) == null) {
+        if (Main.getDatabase().getBackground(uuid) == null) {
             background = plugin.defaultBackground;
         } else {
             background = Main.getDatabase().getBackground(uuid);

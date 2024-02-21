@@ -2,12 +2,14 @@ package de.janschuri.lunaticfamily.commands;
 
 import de.janschuri.lunaticfamily.Main;
 import de.janschuri.lunaticfamily.utils.FamilyManager;
+import de.janschuri.lunaticfamily.utils.FamilyTree;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.UUID;
@@ -247,6 +249,15 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                                     Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_request").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));
                                                     plugin.adoptRequests.put(child, uuid);
                                                     sender.sendMessage(plugin.messages.get("adopt_request_sent").replace("%player%", childFam.getName()));;
+
+                                                    new BukkitRunnable() {
+                                                        public void run() {
+                                                            plugin.adoptRequests.remove(child);
+                                                            Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_request_expired").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));
+
+                                                            sender.sendMessage(plugin.messages.get("adopt_request_sent_expired").replace("%player%", childFam.getName()));;
+                                                        }
+                                                    }.runTaskLater(plugin, 600L);
                                                 }
                                             }
 

@@ -13,16 +13,12 @@ import de.janschuri.lunaticfamily.database.SQLite;
 import de.janschuri.lunaticfamily.utils.JoinListener;
 import de.janschuri.lunaticfamily.utils.QuitListener;
 import org.apache.commons.codec.binary.Base64;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
@@ -117,6 +113,7 @@ public final class Main extends JavaPlugin {
         }
 
         defaultBackground = "textures/block/" + config.getString("default_background") + ".png";
+        Bukkit.getLogger().info("Default:BG" + defaultBackground);
         defaultGender = config.getString("default_gender");
         prefix = ChatColor.translateAlternateColorCodes('&', lang.getString("prefix"));
 
@@ -131,6 +128,7 @@ public final class Main extends JavaPlugin {
         }
 
         familyList = Objects.requireNonNull(config.getStringList("family"));
+        Bukkit.getLogger().info(familyList.toString());
 
         //family relationships
 

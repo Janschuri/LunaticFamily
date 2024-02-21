@@ -9,7 +9,7 @@ Database:
   SQLite:
     Filename:
 default_gender: "fe"
-default_gender: "moss_block"
+default_background: "moss_block"
 language: "DE"
 family:
   - partner

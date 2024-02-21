@@ -398,6 +398,15 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                                     plugin.marryRequests.put(partner, uuid);
 
                                                     sender.sendMessage(plugin.prefix + plugin.messages.get("marry_request_sent").replace("%player%", partnerFam.getName()));
+
+                                                    new BukkitRunnable() {
+                                                        public void run() {
+                                                            plugin.marryRequests.remove(partner);
+                                                            playerPartner.sendMessage(plugin.prefix + plugin.messages.get("marry_request_expired").replace("%player%", playerFam.getName()));
+
+                                                            sender.sendMessage(plugin.prefix + plugin.messages.get("marry_request_sent_expired").replace("%player%", partnerFam.getName()));
+                                                        }
+                                                    }.runTaskLater(plugin, 600L);
                                                 } else {
                                                     sender.sendMessage(plugin.prefix + plugin.messages.get("player_too_far_away").replace("%player%", partnerFam.getName()));
                                                 }
