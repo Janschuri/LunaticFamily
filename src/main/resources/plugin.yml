@@ -20,3 +20,5 @@ permissions:
   family.admin.marry:
     description: Marry and get Married.
 api-version: 1.20
+softdepend:
+  - CrazyAdvancementAPI

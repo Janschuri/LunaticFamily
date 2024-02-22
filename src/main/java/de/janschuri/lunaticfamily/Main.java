@@ -23,11 +23,9 @@ import org.bukkit.profile.PlayerTextures;
 import org.bukkit.util.Vector;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
-import java.util.logging.Level;
 
 //TODO allow singles to adopt
 //TODO /siblinghood
@@ -66,9 +64,10 @@ public final class Main extends JavaPlugin {
 
         loadConfig(this);
 
+        isCrazyAdvancementAPILoaded();
+
         if (getConfig().getBoolean("database.MySQL.enabled")) {
             db = new MySQL(this);
-
         }
         else {
             db = new SQLite(this);
@@ -261,6 +260,19 @@ public final class Main extends JavaPlugin {
 
         // Check if the distance is within the range
         return distance <= range;
+    }
+
+    public static boolean isCrazyAdvancementAPILoaded(){
+        Boolean isLoaded = false;
+        try {
+            Class.forName("eu.endercentral.crazy_advancements.CrazyAdvancementsAPI");
+            Bukkit.getLogger().info("CrazyAdvancementAPI loaded.");
+            isLoaded = true;
+        } catch(ClassNotFoundException e) {
+            Bukkit.getLogger().warning("Could not find CrazyAdvancementsAPI.");
+        }
+
+        return isLoaded;
     }
 
 }

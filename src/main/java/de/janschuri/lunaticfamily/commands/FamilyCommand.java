@@ -4,10 +4,7 @@ import com.google.common.collect.BiMap;
 import de.janschuri.lunaticfamily.utils.FamilyManager;
 import de.janschuri.lunaticfamily.Main;
 import de.janschuri.lunaticfamily.utils.FamilyTree;
-import eu.endercentral.crazy_advancements.CrazyAdvancementsAPI;
-import org.apache.logging.log4j.message.Message;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -179,8 +176,14 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
 
                 }
                 else if (args[0].equalsIgnoreCase("tree")) {
-                    FamilyTree familyTree = new FamilyTree(uuid, plugin);
-                    sender.sendMessage("tree reloaded");
+
+                    if (Main.isCrazyAdvancementAPILoaded()){
+                        FamilyTree familyTree = new FamilyTree(uuid, plugin);
+                        sender.sendMessage(plugin.messages.get("tree_loaded"));
+                    }
+                    else {
+                        sender.sendMessage(plugin.messages.get("internal_error"));
+                    }
                 }
                 else if (args[0].equalsIgnoreCase("background")) {
                     if (args.length == 2) {

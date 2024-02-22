@@ -60,6 +60,8 @@ messages:
   player_too_far_away: "%player% ist zu weit entfernt."
   player_offline: "%player% ist offline."
   no_permission: "Du hast keine Berechtigung, diesen Befehl zu verwenden!"
+  tree_loaded: "Dein Familienstammbaum wurde neu geladen."
+  internal_error: "Interner Fehler. Bitte kontaktiere einen Admin."
   admin_set_marry: "Du hast %player1% und %player2% verheiratet."
   admin_unset_marry: "Du hast die Ehe von %player1% und %player2% beendet."
   admin_gender_changed_fe: "Du hast das Geschlecht von %player% zu weiblich geändert."

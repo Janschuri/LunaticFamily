@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.commands;
 
 import de.janschuri.lunaticfamily.Main;
 import de.janschuri.lunaticfamily.utils.FamilyManager;
-import de.janschuri.lunaticfamily.utils.FamilyTree;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

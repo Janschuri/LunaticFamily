@@ -1,7 +1,6 @@
 package de.janschuri.lunaticfamily.utils;
 
 import de.janschuri.lunaticfamily.Main;
-import eu.endercentral.crazy_advancements.CrazyAdvancementsAPI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,7 +34,7 @@ public class JoinListener implements Listener {
                 Player player = event.getPlayer();
                 String uuid = player.getUniqueId().toString();
                 FamilyTree familyTree = new FamilyTree(uuid, plugin);
-                player.sendMessage("tree reloaded");
+                player.sendMessage(plugin.messages.get("tree_loaded"));
 
             }
         }.runTaskLater(plugin, 100L);
