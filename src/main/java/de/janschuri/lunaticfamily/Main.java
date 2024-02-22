@@ -1,9 +1,8 @@
 package de.janschuri.lunaticfamily;
 
+import org.bukkit.profile.PlayerProfile;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import de.janschuri.lunaticfamily.commands.AdoptCommand;
 import de.janschuri.lunaticfamily.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.commands.MarryCommand;
@@ -12,7 +11,6 @@ import de.janschuri.lunaticfamily.database.MySQL;
 import de.janschuri.lunaticfamily.database.SQLite;
 import de.janschuri.lunaticfamily.utils.JoinListener;
 import de.janschuri.lunaticfamily.utils.QuitListener;
-import org.apache.commons.codec.binary.Base64;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,12 +19,24 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.profile.PlayerTextures;
 import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
 
+//TODO allow singles to adopt
+//TODO /siblinghood
+//TODO hook into Vault
+//TODO config list for background blocks
+//TODO hook into Minepacks
+//TODO /marry gift
+//TODO split money after divorce
+//TODO add command aliases to lang
 public final class Main extends JavaPlugin {
     private static Database db;
 
@@ -182,27 +192,28 @@ public final class Main extends JavaPlugin {
     }
 
     public static ItemStack getSkull(String url) {
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
-        if (url == null || url.isEmpty())
-            return skull;
-        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), "test");
-        byte[] encodedData = Base64.encodeBase64(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
-        profile.getProperties().put("textures", new Property("textures", new String(encodedData)));
-        Field profileField = null;
+
+        PlayerProfile pProfile = getProfile(url);
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        meta.setOwnerProfile(pProfile);
+        head.setItemMeta(meta);
+
+        return head;
+    }
+
+    private static PlayerProfile getProfile(String url) {
+        PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID());
+        PlayerTextures textures = profile.getTextures();
+        URL urlObject;
         try {
-            profileField = skullMeta.getClass().getDeclaredField("profile");
-        } catch (NoSuchFieldException | SecurityException e) {
-            e.printStackTrace();
+            urlObject = new URL(url);
+        } catch (MalformedURLException exception) {
+            throw new RuntimeException("Invalid URL", exception);
         }
-        profileField.setAccessible(true);
-        try {
-            profileField.set(skullMeta, profile);
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        skull.setItemMeta(skullMeta);
-        return skull;
+        textures.setSkin(urlObject);
+        profile.setTextures(textures);
+        return profile;
     }
 
     // Method to spawn particles
