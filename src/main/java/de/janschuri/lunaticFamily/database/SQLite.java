@@ -33,9 +33,8 @@ public class SQLite extends Database{
             "`secondChild` INT DEFAULT 0," +
             "`gender` varchar(2) NULL," +
             "`background` varchar(127) NULL," +
-            "`fake` INT DEFAULT 0," +
-            ");";
-
+            "`fake` INT DEFAULT 0" + // Removed comma here
+            ")";
 
     public Connection getSQLConnection() {
         File dataFolder = new File(plugin.getDataFolder(), dbname+".db");

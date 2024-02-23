@@ -18,32 +18,6 @@ public class MySQL extends Database {
         password = plugin.getConfig().getString("Database.MySQL.Password", "");
     }
 
-    public void createDatabaseIfNotExists() {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/", username, password);
-            Statement stmt = conn.createStatement()) {
-            ResultSet resultSet = conn.getMetaData().getCatalogs();
-            boolean databaseExists = false;
-            while (resultSet.next()) {
-                String dbName = resultSet.getString(1);
-                if (dbName.equalsIgnoreCase(database)) {
-                    databaseExists = true;
-                    break;
-                }
-            }
-            resultSet.close();
-
-            if (!databaseExists) {
-                String createDatabaseQuery = "CREATE DATABASE " + database;
-                stmt.executeUpdate(createDatabaseQuery);
-                plugin.getLogger().info("Database created successfully.");
-            } else {
-                plugin.getLogger().info("Database already exists.");
-            }
-        } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, "An error occurred while creating the database", ex);
-        }
-    }
-
     public Connection getSQLConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -55,7 +29,6 @@ public class MySQL extends Database {
     }
 
     public void load() {
-        createDatabaseIfNotExists(); // Call this method to create the database if it doesn't exist
         connection = getSQLConnection();
         try {
             Statement s = connection.createStatement();
@@ -81,7 +54,7 @@ public class MySQL extends Database {
             "`secondChild` INT DEFAULT 0," +
             "`gender` varchar(2) NULL," +
             "`background` varchar(127) NULL," +
-            "`fake` INT DEFAULT 0" + // Removed the comma here
+            "`fake` INT DEFAULT 0" +
             ") AUTO_INCREMENT=1;";
 }
 

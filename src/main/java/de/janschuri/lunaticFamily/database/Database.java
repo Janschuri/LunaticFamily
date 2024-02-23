@@ -467,7 +467,7 @@ public abstract class Database {
         return;
     }
 
-    public void saveData(String uuid, String name, String skinURL, int partner, Timestamp marryDate, int sibling, int firstParent, int secondParent, int firstChild, int secondChild, String gender, String background, int fake) {
+    public void createNewRow(String uuid, String name, String skinURL, int partner, Timestamp marryDate, int sibling, int firstParent, int secondParent, int firstChild, int secondChild, String gender, String background, int fake) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
