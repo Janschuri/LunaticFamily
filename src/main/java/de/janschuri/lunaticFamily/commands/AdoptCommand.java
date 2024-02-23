@@ -22,6 +22,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        Bukkit.getLogger().info("adopt command aufgerufen");
 
         if (args.length == 0) {
 

@@ -50,9 +50,17 @@ public final class Main extends JavaPlugin {
     public Map relationshipsFe = new HashMap<>();
     public Map relationshipsMa = new HashMap<>();
 
+    public List<String> familyCommands;
+    public List<String> familySubcommands;
+    public List<String> reloadCommands;
+    public List<String> adoptCommands;
+    public List<String> adoptSubcommands;
+    public List<String> adoptAdminSubcommands;
+    public List<String> marryCommands;
+    public List<String> marrySubcommands;
+    public List<String> marryPriestSubcommands;
+    public List<String> marryAdminSubcommands;
 
-    //family relationships
-    public String ego;
 
     public BiMap<String, String> marryRequests = HashBiMap.create();
     public BiMap<String, String> marryPriestRequests = HashBiMap.create();
@@ -127,6 +135,18 @@ public final class Main extends JavaPlugin {
         defaultBackground = "textures/block/" + config.getString("default_background") + ".png";
         defaultGender = config.getString("default_gender");
         prefix = ChatColor.translateAlternateColorCodes('&', lang.getString("prefix"));
+
+        familyCommands = Arrays.asList("family");
+        familySubcommands = Arrays.asList("gender", "tree", "list", "background");
+        reloadCommands = Arrays.asList("reload");
+        adoptCommands = Arrays.asList("adopt");
+        adoptSubcommands = Arrays.asList("propose", "accept", "deny", "kickout", "moveout", "list");
+        marryPriestSubcommands = Arrays.asList("priest");
+        adoptAdminSubcommands = Arrays.asList("set", "unset");
+        marryCommands = Arrays.asList("marry");
+        marrySubcommands = Arrays.asList("propose", "accept", "deny", "divorce", "list", "kiss");
+        marryAdminSubcommands = Arrays.asList("set", "unset");
+
 
         //messages
         ConfigurationSection messagesSection = lang.getConfigurationSection("messages");

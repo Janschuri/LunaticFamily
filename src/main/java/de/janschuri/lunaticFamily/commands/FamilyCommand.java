@@ -5,10 +5,8 @@ import de.janschuri.lunaticFamily.utils.FamilyManager;
 import de.janschuri.lunaticFamily.Main;
 import de.janschuri.lunaticFamily.utils.FamilyTree;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
+import org.bukkit.command.defaults.PluginsCommand;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -27,7 +25,6 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-            Bukkit.getLogger().info(sender.toString() + "\n" + command.toString() + "\n" + label.toString() + "\n" + args.toString());
             Player player = (Player) sender;
             String uuid = player.getUniqueId().toString();
             FamilyManager playerFam = new FamilyManager(uuid, plugin);
@@ -194,7 +191,32 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                     plugin.loadConfig(plugin);
                     sender.sendMessage(plugin.prefix + plugin.messages.get("admin_reload"));
                 }
+                else if (args[0].equalsIgnoreCase("adopt")){
+                    AdoptCommand adoptCommand = new AdoptCommand(plugin);
+                    String stringLabel = "adopt";
+                    PluginCommand pluginCommand = plugin.getCommand(stringLabel);
+                    String[] arrayArgs = new String[args.length - 1];
 
+                    // Copy elements starting from the second element of the original array
+                    for (int i = 1; i < args.length; i++) {
+                        arrayArgs[i - 1] = args[i];
+                    }
+
+                    adoptCommand.onCommand(player,pluginCommand, stringLabel, arrayArgs);
+                }
+                else if (args[0].equalsIgnoreCase("marry")){
+                    MarryCommand marryCommand = new MarryCommand(plugin);
+                    String stringLabel = "marry";
+                    PluginCommand pluginCommand = plugin.getCommand(stringLabel);
+                    String[] arrayArgs = new String[args.length - 1];
+
+                    // Copy elements starting from the second element of the original array
+                    for (int i = 1; i < args.length; i++) {
+                        arrayArgs[i - 1] = args[i];
+                    }
+
+                    marryCommand.onCommand(player,pluginCommand, stringLabel, arrayArgs);
+                }
                 else {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
                 }
@@ -205,35 +227,120 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
-        List<String> mainSubcommands = Arrays.asList("gender", "tree", "list");
-        List<String> adminSubcommands = Arrays.asList("reload");
+        List<String> familySubcommands = plugin.familySubcommands;
+        List<String> adoptCommands = plugin.adoptCommands;
+        List<String> adoptSubcommands = plugin.adoptSubcommands;
+        List<String> adoptAdminSubcommands = plugin.adoptAdminSubcommands;
+        List<String> marryCommands = plugin.marryCommands;
+        List<String> marrySubcommands = plugin.marrySubcommands;
+        List<String> marryPriestSubcommands = plugin.marryPriestSubcommands;
+        List<String> marryAdminSubcommands = plugin.marryAdminSubcommands;
+        List<String> reloadCommands = plugin.reloadCommands;
+
         List<String> list = new ArrayList<>();
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (cmd.getName().equalsIgnoreCase("family")) {
                 if (args.length == 0) {
-                    list.addAll(mainSubcommands);
-                    Collections.sort(list);
+                    list.addAll(familySubcommands);
                     if (player.hasPermission("lunaticFamily.admin.reload")) {
-                        list.addAll(adminSubcommands);
+                        list.addAll(reloadCommands);
                     }
+                    if (player.hasPermission("lunaticFamily.adopt")) {
+                        list.addAll(adoptCommands);
+                    }
+                    if (player.hasPermission("lunaticFamily.marry")) {
+                        list.addAll(marryCommands);
+                    }
+                    Collections.sort(list);
                     return list;
                 } else if (args.length == 1) {
                     if (player.hasPermission("lunaticFamily.admin.reload")) {
-                        for (String s : adminSubcommands) {
+                        for (String s : reloadCommands) {
                             if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
                                 list.add(s);
                             }
                         }
                     }
-                    for (String s : mainSubcommands) {
+                    if (player.hasPermission("lunaticFamily.adopt")) {
+                        for (String s : adoptCommands) {
+                            if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                                list.add(s);
+                            }
+                        }
+                    }
+                    for (String s : familySubcommands) {
                         if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
                             list.add(s);
                         }
                     }
                     Collections.sort(list);
                     return list;
+                } else if (args[0].equalsIgnoreCase("adopt")) {
+                    if (player.hasPermission("lunaticFamily.adopt")) {
+
+
+                        if (args[1].equalsIgnoreCase("")) {
+                            list.addAll(adoptSubcommands);
+                            if (player.hasPermission("lunaticFamily.admin.adopt")) {
+                                list.addAll(adoptAdminSubcommands);
+                            }
+                        } else {
+
+                            for (String s : adoptSubcommands) {
+                                if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
+                                    list.add(s);
+                                }
+                            }
+                            if (player.hasPermission("lunaticFamily.admin.adopt")) {
+                                for (String s : adoptAdminSubcommands) {
+                                    if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                                        list.add(s);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    Collections.sort(list);
+                    return list;
+                } else if (args[0].equalsIgnoreCase("marry")) {
+                if (player.hasPermission("lunaticFamily.marry")) {
+
+
+                    if (args[1].equalsIgnoreCase("")) {
+                        list.addAll(marrySubcommands);
+                        if (player.hasPermission("lunaticFamily.admin.marry")) {
+                            list.addAll(marryAdminSubcommands);
+                        }
+                        if (player.hasPermission("lunaticFamily.marry.priest")) {
+                            list.addAll(marryPriestSubcommands);
+                        }
+                    } else {
+
+                        for (String s : marrySubcommands) {
+                            if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
+                                list.add(s);
+                            }
+                        }
+                        if (player.hasPermission("lunaticFamily.admin.marry")) {
+                            for (String s : marryAdminSubcommands) {
+                                if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                                    list.add(s);
+                                }
+                            }
+                        }
+                        if (player.hasPermission("lunaticFamily.marry.priest")) {
+                            for (String s : marryPriestSubcommands) {
+                                if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                                    list.add(s);
+                                }
+                            }
+                        }
+                    }
                 }
+                Collections.sort(list);
+                return list;
+            }
             }
         }
         // return null at the end.
