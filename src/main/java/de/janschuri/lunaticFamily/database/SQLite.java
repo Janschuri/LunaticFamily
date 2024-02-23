@@ -20,19 +20,20 @@ public class SQLite extends Database{
     }
 
     public String SQLiteCreateTokensTable = "CREATE TABLE IF NOT EXISTS playerData (" +
+            "`id` INTEGER PRIMARY KEY," +
             "`uuid` varchar(36) NOT NULL," +
             "`name` varchar(16) NULL," +
-            "`skinURL` varchar(127) NULL," +
-            "`partner` varchar(36) NULL," +
+            "`skinURL` varchar(127)," +
+            "`partner` INT DEFAULT 0," +
             "`marryDate` DATETIME NULL," +
-            "`sibling` varchar(36) NULL," +
-            "`firstParent` varchar(36) NULL," +
-            "`secondParent` varchar(36) NULL," +
-            "`firstChild` varchar(36) NULL," +
-            "`secondChild` varchar(36) NULL," +
+            "`sibling` INT DEFAULT 0," +
+            "`firstParent` INT DEFAULT 0," +
+            "`secondParent` INT DEFAULT 0," +
+            "`firstChild` INT DEFAULT 0," +
+            "`secondChild` INT DEFAULT 0," +
             "`gender` varchar(2) NULL," +
             "`background` varchar(127) NULL," +
-            "PRIMARY KEY (`uuid`)" +
+            "`fake` INT DEFAULT 0," +
             ");";
 
 

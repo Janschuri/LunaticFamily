@@ -44,13 +44,12 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                 if (firstParentFam.getPartner() == null) {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_by_single_set").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
                                 } else {
-                                    String secondParent = firstParentFam.getPartner();
-                                    FamilyManager secondParentFam = new FamilyManager(secondParent, plugin);
+                                    FamilyManager secondParentFam = firstParentFam.getPartner();;
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_set").replace("%child%", childFam.getName()).replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()));
                                 }
 
                                 plugin.adoptRequests.remove(childUUID);
-                                firstParentFam.adopt(childUUID);
+                                firstParentFam.adopt(childFam.getID());
                             } else {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_limit").replace("%player%", firstParentFam.getName()));
                             }
@@ -66,14 +65,12 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                     FamilyManager childFam = new FamilyManager(childUUID, plugin);
 
                     if (childFam.getFirstParent() != null) {
-                        String firstParentUUID = childFam.getFirstParent();
-                        FamilyManager firstParentFam = new FamilyManager(firstParentUUID, plugin);
+                        FamilyManager firstParentFam = childFam.getFirstParent();
 
-                        firstParentFam.unadopt(childUUID);
+                        firstParentFam.unadopt(childFam.getID());
 
                         if (firstParentFam.isMarried()) {
-                            String secondParentUUID = firstParentFam.getPartner();
-                            FamilyManager secondParentFam = new FamilyManager(secondParentUUID, plugin);
+                            FamilyManager secondParentFam = firstParentFam.getPartner();
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_unset").replace("%child%", childFam.getName()).replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()));
                         } else {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_by_single_unset").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
@@ -103,13 +100,12 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                 if (firstParentFam.getPartner() == null) {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_by_single_set").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
                                 } else {
-                                    String secondParent = firstParentFam.getPartner();
-                                    FamilyManager secondParentFam = new FamilyManager(secondParent, plugin);
+                                    FamilyManager secondParentFam = firstParentFam.getPartner();
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_set").replace("%child%", childFam.getName()).replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()));
                                 }
 
                                 plugin.adoptRequests.remove(childUUID);
-                                firstParentFam.adopt(childUUID);
+                                firstParentFam.adopt(childFam.getID());
                             } else {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_limit").replace("%player%", firstParentFam.getName()));
                             }
@@ -125,15 +121,13 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                     FamilyManager childFam = new FamilyManager(childUUID, plugin);
 
                     if (childFam.getFirstParent() != null) {
-                        String firstParentUUID = childFam.getFirstParent();
-                        FamilyManager firstParentFam = new FamilyManager(firstParentUUID, plugin);
+                        FamilyManager firstParentFam = childFam.getFirstParent();
 
-                        firstParentFam.unadopt(childUUID);
+                        firstParentFam.unadopt(childFam.getID());
 
 
                         if (firstParentFam.isMarried()) {
-                            String secondParentUUID = firstParentFam.getPartner();
-                            FamilyManager secondParentFam = new FamilyManager(secondParentUUID, plugin);
+                            FamilyManager secondParentFam = firstParentFam.getPartner();
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_unset").replace("%child%", childFam.getName()).replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()));
                         } else {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_by_single_unset").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
@@ -174,8 +168,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                                 //player has no open request
                                                 else {
                                                     if (playerFam.isMarried()) {
-                                                        String partner = playerFam.getPartner();
-                                                        FamilyManager partnerFam = new FamilyManager(partner, plugin);
+                                                        FamilyManager partnerFam = playerFam.getPartner();
                                                         Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_request").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));
                                                     } else {
                                                         Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_by_single_request").replace("%player%", playerFam.getName()));
@@ -189,8 +182,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                                             if (plugin.adoptRequests.containsKey(child)) {
                                                                 plugin.adoptRequests.remove(child);
                                                                 if (playerFam.isMarried()) {
-                                                                    String partner = playerFam.getPartner();
-                                                                    FamilyManager partnerFam = new FamilyManager(partner, plugin);
+                                                                    FamilyManager partnerFam = playerFam.getPartner();
                                                                     Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_request_expired").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));
                                                                 } else {
                                                                     Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_by_single_request_expired").replace("%player%", playerFam.getName()));
@@ -227,11 +219,10 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                 if (firstParentFam.getChildrenAmount() < 3) {
 
                                     if (firstParentFam.isMarried()) {
-                                        String secondParent = firstParentFam.getPartner();
-                                        FamilyManager secondParentFam = new FamilyManager(secondParent, plugin);
+                                        FamilyManager secondParentFam = firstParentFam.getPartner();
                                         sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_got_adopted").replace("%player1%", firstParentFam.getName()).replace("%player2%", secondParentFam.getName()));
-                                        if (Bukkit.getPlayer(UUID.fromString(secondParent)) != null) {
-                                            Bukkit.getPlayer(UUID.fromString(secondParent)).sendMessage(plugin.prefix + plugin.messages.get("adopt_adopted").replace("%player%", playerFam.getName()));
+                                        if (Bukkit.getPlayer(UUID.fromString(secondParentFam.getUUID())) != null) {
+                                            Bukkit.getPlayer(UUID.fromString(secondParentFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_adopted").replace("%player%", playerFam.getName()));
                                         }
                                     } else {
                                         sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_got_adopted_by_single").replace("%player%", firstParentFam.getName()));
@@ -242,7 +233,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 
                                     plugin.adoptRequests.remove(playerUUID);
 
-                                    firstParentFam.adopt(playerUUID);
+                                    firstParentFam.adopt(playerFam.getID());
                                 } else {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_parent_limit").replace("%player%", firstParentFam.getName()));
                                 }
@@ -257,25 +248,18 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                     String child;
 
                                     if (playerFam.getFirstChild() == null) {
-                                        child = playerFam.getSecondChild();
+                                        child = playerFam.getSecondChild().getName();
                                     } else {
-                                        child = playerFam.getFirstChild();
+                                        child = playerFam.getFirstChild().getName();
                                     }
 
-                                    FamilyManager childFam = new FamilyManager(child, plugin);
 
-
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_one_child").replace("%player%", childFam.getName()));
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_one_child").replace("%player%", child));
                                 }
 
                                 if (playerFam.getChildrenAmount() == 2) {
 
-                                    String firstChild = playerFam.getFirstChild();
-                                    FamilyManager firstChildFam = new FamilyManager(firstChild, plugin);
-                                    String secondChild = playerFam.getSecondChild();
-                                    FamilyManager secondChildFam = new FamilyManager(secondChild, plugin);
-
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_two_children").replace("%player1%", firstChildFam.getName()).replace("%player2%", secondChildFam.getName()));
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_two_children").replace("%player1%", playerFam.getFirstChild().getName()).replace("%player2%", playerFam.getSecondChild().getName()));
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_limit"));
                                 }
                             } else {
@@ -297,17 +281,15 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                         } else if (args[0].equalsIgnoreCase("moveout")) {
                             //TODO confirm moveout
                             if (playerFam.isAdopted()) {
-                                String firstParent = playerFam.getFirstParent();
-                                FamilyManager firstParentFam = new FamilyManager(firstParent, plugin);
+                                FamilyManager firstParentFam = playerFam.getFirstParent();
 
                                 Bukkit.getLogger().info(playerFam.getName() + "->1");
                                 Bukkit.getLogger().info(firstParentFam.getName() + "->1");
 
                                 if (playerFam.getSibling() != null) {
-                                    String sibling = playerFam.getSibling();
-                                    FamilyManager siblingFam = new FamilyManager(sibling, plugin);
-                                    if (Bukkit.getPlayer(UUID.fromString(sibling)) != null) {
-                                        Bukkit.getPlayer(UUID.fromString(sibling)).sendMessage(plugin.prefix + plugin.messages.get("adopt_sibling_move_out"));
+                                    FamilyManager siblingFam = playerFam.getSibling();
+                                    if (Bukkit.getPlayer(UUID.fromString(siblingFam.getUUID())) != null) {
+                                        Bukkit.getPlayer(UUID.fromString(siblingFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_sibling_move_out"));
                                     }
                                     Bukkit.getLogger().info(playerFam.getName() + "->2");
                                     Bukkit.getLogger().info(firstParentFam.getName() + "->2");
@@ -315,20 +297,19 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_move_out"));
 
-                                if (Bukkit.getPlayer(UUID.fromString(firstParent)) != null) {
-                                    Bukkit.getPlayer(UUID.fromString(firstParent)).sendMessage(plugin.prefix + plugin.messages.get("adopt_child_move_out").replace("%player%", playerFam.getName()));
+                                if (Bukkit.getPlayer(UUID.fromString(firstParentFam.getUUID())) != null) {
+                                    Bukkit.getPlayer(UUID.fromString(firstParentFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_child_move_out").replace("%player%", playerFam.getName()));
                                 }
                                 if (firstParentFam.isMarried()) {
-                                    String secondParent = firstParentFam.getPartner();
-                                    FamilyManager secondParentFam = new FamilyManager(secondParent, plugin);
-                                    if (Bukkit.getPlayer(UUID.fromString(secondParent)) != null) {
-                                        Bukkit.getPlayer(UUID.fromString(secondParent)).sendMessage(plugin.prefix + plugin.messages.get("adopt_child_move_out").replace("%player%", playerFam.getName()));
+                                    FamilyManager secondParentFam = firstParentFam.getPartner();
+                                    if (Bukkit.getPlayer(UUID.fromString(secondParentFam.getUUID())) != null) {
+                                        Bukkit.getPlayer(UUID.fromString(secondParentFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_child_move_out").replace("%player%", playerFam.getName()));
                                     }
                                 }
                                 Bukkit.getLogger().info(playerFam.getName() + "->3");
                                 Bukkit.getLogger().info(firstParentFam.getName() + "->3");
 
-                                firstParentFam.unadopt(playerUUID);
+                                firstParentFam.unadopt(playerFam.getID());
 
                                 Bukkit.getLogger().info(playerFam.getName() + "->4");
                                 Bukkit.getLogger().info(firstParentFam.getName() + "->4");
@@ -348,24 +329,22 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 //                                    FamilyManager partnerFam = new FamilyManager(partner, plugin);
                                     String childUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
                                     FamilyManager childFam = new FamilyManager(childUUID, plugin);
-                                    if (childFam.isChildOf(playerUUID)) {
+                                    if (childFam.isChildOf(playerFam.getID())) {
 
 
                                         sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_kicked_out").replace("%player%", childFam.getName()));
                                         if (playerFam.isMarried()) {
-                                            String partnerUUID = playerFam.getPartner();
-                                            if (Bukkit.getPlayer(UUID.fromString(partnerUUID)) != null)
-                                            Bukkit.getPlayer(UUID.fromString(partnerUUID)).sendMessage(plugin.prefix + plugin.messages.get("adopt_partner_kicked_out").replace("%player1%", playerFam.getName()).replace("%player2%", childFam.getName()));
+                                            if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) != null)
+                                            Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_partner_kicked_out").replace("%player1%", playerFam.getName()).replace("%player2%", childFam.getName()));
                                         }
 
                                         if (childFam.hasSibling()) {
-                                            String sibling = childFam.getSibling();
-                                            FamilyManager siblingFam = new FamilyManager(sibling, plugin);
-                                            if (Bukkit.getPlayer(UUID.fromString(sibling)) != null) {
-                                                Bukkit.getPlayer(UUID.fromString(sibling)).sendMessage(plugin.prefix + plugin.messages.get("adopt_sibling_kicked_out").replace("%player%", playerFam.getName()));
+                                            FamilyManager siblingFam = childFam.getSibling();
+                                            if (Bukkit.getPlayer(UUID.fromString(siblingFam.getUUID())) != null) {
+                                                Bukkit.getPlayer(UUID.fromString(siblingFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_sibling_kicked_out").replace("%player%", playerFam.getName()));
                                             }
                                         }
-                                        playerFam.unadopt(childUUID);
+                                        playerFam.unadopt(childFam.getID());
 
                                     } else {
                                         sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_not_your_child"));

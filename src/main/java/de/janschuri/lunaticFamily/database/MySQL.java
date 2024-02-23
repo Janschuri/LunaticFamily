@@ -2,10 +2,7 @@ package de.janschuri.lunaticFamily.database;
 
 import de.janschuri.lunaticFamily.Main;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.logging.Level;
 
 public class MySQL extends Database {
@@ -21,6 +18,31 @@ public class MySQL extends Database {
         password = plugin.getConfig().getString("Database.MySQL.Password", "");
     }
 
+    public void createDatabaseIfNotExists() {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/", username, password);
+            Statement stmt = conn.createStatement()) {
+            ResultSet resultSet = conn.getMetaData().getCatalogs();
+            boolean databaseExists = false;
+            while (resultSet.next()) {
+                String dbName = resultSet.getString(1);
+                if (dbName.equalsIgnoreCase(database)) {
+                    databaseExists = true;
+                    break;
+                }
+            }
+            resultSet.close();
+
+            if (!databaseExists) {
+                String createDatabaseQuery = "CREATE DATABASE " + database;
+                stmt.executeUpdate(createDatabaseQuery);
+                plugin.getLogger().info("Database created successfully.");
+            } else {
+                plugin.getLogger().info("Database already exists.");
+            }
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, "An error occurred while creating the database", ex);
+        }
+    }
 
     public Connection getSQLConnection() {
         try {
@@ -33,6 +55,7 @@ public class MySQL extends Database {
     }
 
     public void load() {
+        createDatabaseIfNotExists(); // Call this method to create the database if it doesn't exist
         connection = getSQLConnection();
         try {
             Statement s = connection.createStatement();
@@ -45,18 +68,20 @@ public class MySQL extends Database {
     }
 
     String MySQLCreateTokensTable = "CREATE TABLE IF NOT EXISTS playerData (" +
+            "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
             "`uuid` varchar(36) NOT NULL," +
             "`name` varchar(16) NULL," +
             "`skinURL` varchar(127)," +
-            "`partner` varchar(36) NULL," +
+            "`partner` INT DEFAULT 0," +
             "`marryDate` DATETIME NULL," +
-            "`sibling` varchar(36) NULL," +
-            "`firstParent` varchar(36) NULL," +
-            "`secondParent` varchar(36) NULL," +
-            "`firstChild` varchar(36) NULL," +
-            "`secondChild` varchar(36) NULL," +
+            "`sibling` INT DEFAULT 0," +
+            "`firstParent` INT DEFAULT 0," +
+            "`secondParent` INT DEFAULT 0," +
+            "`firstChild` INT DEFAULT 0," +
+            "`secondChild` INT DEFAULT 0," +
             "`gender` varchar(2) NULL," +
             "`background` varchar(127) NULL," +
-            "PRIMARY KEY (`uuid`)" +
-            ");";
+            "`fake` INT DEFAULT 0" + // Removed the comma here
+            ") AUTO_INCREMENT=1;";
 }
+

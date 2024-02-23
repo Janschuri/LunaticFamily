@@ -38,8 +38,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                 FamilyManager playerFam = new FamilyManager(uuid, plugin);
                 if (playerFam.getPartner() != null) {
 
-                    String partner = playerFam.getPartner();
-                    FamilyManager partnerFam = new FamilyManager(partner, plugin);
+                    FamilyManager partnerFam = playerFam.getPartner();
                     sender.sendMessage(plugin.prefix + plugin.messages.get("marry_already_married").replace("%player%", partnerFam.getName()));
 
                 } else {
@@ -67,15 +66,13 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                     if (args[3].equalsIgnoreCase("force")) {
                                         //cancel marriage player1
                                         if (player1Fam.isMarried()) {
-                                            String partner = player1Fam.getPartner();
-                                            FamilyManager partnerFam = new FamilyManager(partner, plugin);
+                                            FamilyManager partnerFam = player1Fam.getPartner();
                                             player1Fam.divorce();
                                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
                                         }
                                         //cancel marriage player2
                                         if (player2Fam.isMarried()) {
-                                            String partner = player2Fam.getPartner();
-                                            FamilyManager partnerFam = new FamilyManager(partner, plugin);
+                                            FamilyManager partnerFam = player2Fam.getPartner();
                                             player2Fam.divorce();
                                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player2Fam.getName()).replace("%player2%", partnerFam.getName()));
                                         }
@@ -87,7 +84,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                         plugin.marryPriestRequests.remove(player1UUID);
                                         plugin.marryPriest.remove(player1UUID);
 
-                                        player1Fam.marry(player2UUID);
+                                        player1Fam.marry(player2Fam.getID());
 
 
                                         sender.sendMessage(plugin.prefix + plugin.messages.get("admin_set_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
@@ -107,7 +104,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 plugin.marryPriestRequests.remove(player1UUID);
                                 plugin.marryPriest.remove(player1UUID);
 
-                                player1Fam.marry(player2UUID);
+                                player1Fam.marry(player2Fam.getID());
 
 
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("admin_set_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
@@ -127,8 +124,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         FamilyManager player1Fam = new FamilyManager(player1, plugin);
 
                         if (player1Fam.getPartner() != null) {
-                            String partnerUUID = player1Fam.getPartner();
-                            FamilyManager partnerFam = new FamilyManager(partnerUUID, plugin);
+                            FamilyManager partnerFam = player1Fam.getPartner();
                             player1Fam.divorce();
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_marry_divorced").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
 
@@ -161,15 +157,13 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                     if (args[3].equalsIgnoreCase("force")) {
                                         //cancel marriage player1
                                         if (player1Fam.isMarried()) {
-                                            String partner = player1Fam.getPartner();
-                                            FamilyManager partnerFam = new FamilyManager(partner, plugin);
+                                            FamilyManager partnerFam = player1Fam.getPartner();
                                             player1Fam.divorce();
                                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
                                         }
                                         //cancel marriage player2
                                         if (player2Fam.isMarried()) {
-                                            String partner = player2Fam.getPartner();
-                                            FamilyManager partnerFam = new FamilyManager(partner, plugin);
+                                            FamilyManager partnerFam = player2Fam.getPartner();
                                             player2Fam.divorce();
                                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player2Fam.getName()).replace("%player2%", partnerFam.getName()));
                                         }
@@ -181,7 +175,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                         plugin.marryPriestRequests.remove(player1UUID);
                                         plugin.marryPriest.remove(player1UUID);
 
-                                        player1Fam.marry(player2UUID);
+                                        player1Fam.marry(player2Fam.getID());
 
 
                                         sender.sendMessage(plugin.prefix + plugin.messages.get("admin_set_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
@@ -201,7 +195,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 plugin.marryPriestRequests.remove(player1UUID);
                                 plugin.marryPriest.remove(player1UUID);
 
-                                player1Fam.marry(player2UUID);
+                                player1Fam.marry(player2Fam.getID());
 
 
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("admin_set_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
@@ -221,8 +215,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         FamilyManager player1Fam = new FamilyManager(player1, plugin);
 
                         if (player1Fam.getPartner() != null) {
-                            String partnerUUID = player1Fam.getPartner();
-                            FamilyManager partnerFam = new FamilyManager(partnerUUID, plugin);
+                            FamilyManager partnerFam = player1Fam.getPartner();
                             player1Fam.divorce();
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_marry_divorced").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
 
@@ -304,8 +297,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                                 sender.sendMessage(plugin.prefix + plugin.messages.get("marry_too_many_children").replace("%partner%", partnerFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
                                             }
                                         } else {
-                                            String partner = playerFam.getPartner();
-                                            FamilyManager partnerFam = new FamilyManager(partner, plugin);
+                                            FamilyManager partnerFam = playerFam.getPartner();
                                             sender.sendMessage(plugin.prefix + plugin.messages.get("marry_already_married").replace("%player%", partnerFam.getName()));
                                         }
                                     }
@@ -424,7 +416,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                         plugin.marryPriestRequests.remove(partnerUUID);
                                         plugin.marryPriest.remove(partnerUUID);
 
-                                        playerFam.marry(partnerUUID);
+                                        playerFam.marry(partnerFam.getID());
                                     } else {
                                         sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", partnerFam.getName()));
                                     }
@@ -500,13 +492,12 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             //TODO confirm divorce
                             //player has partner
                             if (playerFam.getPartner() != null) {
-                                String partner = playerFam.getPartner();
 
                                 playerFam.divorce();
 
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("marry_divorced"));
-                                if (Bukkit.getPlayer(UUID.fromString(partner)) != null) {
-                                    Bukkit.getPlayer(UUID.fromString(partner)).sendMessage(plugin.prefix + plugin.messages.get("marry_divorced"));
+                                if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) != null) {
+                                    Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())).sendMessage(plugin.prefix + plugin.messages.get("marry_divorced"));
                                 }
 
 
@@ -519,9 +510,8 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         }
                         else if (args[0].equalsIgnoreCase("kiss")) {
                             if (playerFam.getPartner() != null) {
-                                String partner = playerFam.getPartner();
-                                if (Bukkit.getPlayer(UUID.fromString(partner)) != null) {
-                                    Player partnerPlayer = Bukkit.getPlayer(UUID.fromString(partner));
+                                if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) != null) {
+                                    Player partnerPlayer = Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID()));
 
                                     if(Main.isInRange(partnerPlayer.getLocation(), player.getLocation(), 3)) {
                                         Location location = Main.getPositionBetweenLocations(player.getLocation(), partnerPlayer.getLocation());
@@ -536,7 +526,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                     }
                                 }
                                 else {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", Bukkit.getOfflinePlayer(UUID.fromString(partner)).getName()));
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", Bukkit.getOfflinePlayer(UUID.fromString(playerFam.getPartner().getUUID())).getName()));
                                 }
 
                             }
@@ -546,12 +536,11 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                         }
                         else if (args[0].equalsIgnoreCase("list")) {
-                            List<String> marryList = Main.getDatabase().getMarryList();
+                            List<Integer> marryList = Main.getDatabase().getMarryList();
                             String msg = plugin.prefix + "\n";
-                            for (String e : marryList) {
+                            for (Integer e : marryList) {
                                 FamilyManager player1Fam = new FamilyManager(e, plugin);
-                                String player2 = player1Fam.getPartner();
-                                FamilyManager player2Fam = new FamilyManager(player2, plugin);
+                                FamilyManager player2Fam = new FamilyManager(player1Fam.getPartner().getID(), plugin);
 
                                 msg = msg + player1Fam.getName() + " \u2764 " + player2Fam.getName() + " (" + playerFam.getMarryDate() + ")" + "\n";
                             }

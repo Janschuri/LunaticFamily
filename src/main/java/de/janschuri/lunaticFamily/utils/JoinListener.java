@@ -32,7 +32,8 @@ public class JoinListener implements Listener {
             public void run() {
                 Player player = event.getPlayer();
                 String uuid = player.getUniqueId().toString();
-                FamilyTree familyTree = new FamilyTree(uuid, plugin);
+                FamilyManager familyManager = new FamilyManager(uuid, plugin);
+                FamilyTree familyTree = new FamilyTree(familyManager.getID(), plugin);
                 player.sendMessage(plugin.messages.get("tree_loaded"));
 
             }

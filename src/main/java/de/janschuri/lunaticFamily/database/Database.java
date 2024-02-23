@@ -32,8 +32,7 @@ public abstract class Database {
         }
     }
 
-
-    public String getName(String uuid) {
+    public int getID(String uuid) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -44,6 +43,62 @@ public abstract class Database {
             rs = ps.executeQuery();
             while(rs.next()){
                 if(rs.getString("uuid").equals(uuid)){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
+                    return rs.getInt("id"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
+                }
+            }
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+        return 0;
+    }
+    public String getUUID(int id) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
+
+            rs = ps.executeQuery();
+            while(rs.next()){
+                if(rs.getInt("id") == id){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
+                    return rs.getString("uuid"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
+                }
+            }
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+        return null;
+    }
+    public String getName(int id) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
+
+            rs = ps.executeQuery();
+            while(rs.next()){
+                if(rs.getInt("id") == id){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
                     return rs.getString("name"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
                 }
             }
@@ -61,17 +116,17 @@ public abstract class Database {
         }
         return null;
     }
-    public String getSkinURL(String uuid) {
+    public String getSkinURL(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE uuid = '"+uuid+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
 
             rs = ps.executeQuery();
             while(rs.next()){
-                if(rs.getString("uuid").equals(uuid)){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
+                if(rs.getInt("id") == id){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
                     return rs.getString("skinURL"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
                 }
             }
@@ -89,18 +144,18 @@ public abstract class Database {
         }
         return null;
     }
-    public String getPartner(String uuid) {
+    public int getPartner(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE uuid = '"+uuid+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
 
             rs = ps.executeQuery();
             while(rs.next()){
-                if(rs.getString("uuid").equals(uuid)){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
-                    return rs.getString("partner"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
+                if(rs.getInt("id") == id){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
+                    return rs.getInt("partner"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
                 }
             }
         } catch (SQLException ex) {
@@ -115,19 +170,19 @@ public abstract class Database {
                 plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
             }
         }
-        return null;
+        return 0;
     }
-    public Timestamp getMarryDate(String uuid) {
+    public Timestamp getMarryDate(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE uuid = '"+uuid+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
 
             rs = ps.executeQuery();
             while(rs.next()){
-                if(rs.getString("uuid").equals(uuid)){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
+                if(rs.getInt("id") == id){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
                     return rs.getTimestamp("marryDate"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
                 }
             }
@@ -145,18 +200,18 @@ public abstract class Database {
         }
         return null;
     }
-    public String getSibling(String uuid) {
+    public int getSibling(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE uuid = '"+uuid+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
 
             rs = ps.executeQuery();
             while(rs.next()){
-                if(rs.getString("uuid").equals(uuid)){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
-                    return rs.getString("sibling"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
+                if(rs.getInt("id") == id){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
+                    return rs.getInt("sibling"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
                 }
             }
         } catch (SQLException ex) {
@@ -171,23 +226,21 @@ public abstract class Database {
                 plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
             }
         }
-        return null;
+        return 0;
     }
-    public List<String> getMarryList() {
-        List<String> marryList = new ArrayList<>();
+    public List<Integer> getMarryList() {
+        List<Integer> marryList = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection(); // Assuming getSQLConnection() returns a valid Connection object
-            ps = conn.prepareStatement("SELECT uuid, partner FROM " + table + " WHERE uuid < partner;");
+            ps = conn.prepareStatement("SELECT id, partner FROM " + table + " WHERE id < partner;");
             rs = ps.executeQuery();
             while (rs.next()) {
-                String player = rs.getString("uuid");
-                String partner = rs.getString("partner");
-                if (partner != null && !partner.isEmpty()) {
-                    marryList.add(player);
-                }
+                int player = rs.getInt("id");
+                int partner = rs.getInt("partner");
+                marryList.add(player);
             }
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
@@ -206,18 +259,18 @@ public abstract class Database {
         return marryList;
     }
 
-    public String getFirstParent(String uuid) {
+    public int getFirstParent(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE uuid = '"+uuid+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
 
             rs = ps.executeQuery();
             while(rs.next()){
-                if(rs.getString("uuid").equals(uuid)){
-                    return rs.getString("firstParent");
+                if(rs.getInt("id") == id){
+                    return rs.getInt("firstParent");
                 }
             }
         } catch (SQLException ex) {
@@ -232,20 +285,20 @@ public abstract class Database {
                 plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
             }
         }
-        return null;
+        return 0;
     }
-    public String getSecondParent(String uuid) {
+    public int getSecondParent(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE uuid = '"+uuid+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
 
             rs = ps.executeQuery();
             while(rs.next()){
-                if(rs.getString("uuid").equals(uuid)){
-                    return rs.getString("secondParent");
+                if(rs.getInt("id") == id){
+                    return rs.getInt("secondParent");
                 }
             }
         } catch (SQLException ex) {
@@ -260,20 +313,20 @@ public abstract class Database {
                 plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
             }
         }
-        return null;
+        return 0;
     }
-    public String getFirstChild(String uuid) {
+    public int getFirstChild(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE uuid = '"+uuid+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
 
             rs = ps.executeQuery();
             while(rs.next()){
-                if(rs.getString("uuid").equals(uuid)){
-                    return rs.getString("firstChild");
+                if(rs.getInt("id") == id){
+                    return rs.getInt("firstChild");
                 }
             }
         } catch (SQLException ex) {
@@ -288,20 +341,20 @@ public abstract class Database {
                 plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
             }
         }
-        return null;
+        return 0;
     }
-    public String getSecondChild(String uuid) {
+    public int getSecondChild(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE uuid = '"+uuid+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
 
             rs = ps.executeQuery();
             while(rs.next()){
-                if(rs.getString("uuid").equals(uuid)){
-                    return rs.getString("secondChild");
+                if(rs.getInt("id") == id){
+                    return rs.getInt("secondChild");
                 }
             }
         } catch (SQLException ex) {
@@ -316,19 +369,19 @@ public abstract class Database {
                 plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
             }
         }
-        return null;
+        return 0;
     }
-    public String getGender(String uuid) {
+    public String getGender(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE uuid = '"+uuid+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
 
             rs = ps.executeQuery();
             while(rs.next()){
-                if(rs.getString("uuid").equals(uuid)){
+                if(rs.getInt("id") == id){
                     return rs.getString("gender");
                 }
             }
@@ -377,24 +430,62 @@ public abstract class Database {
     }
 
     // Now we need methods to save things to the database
-    public void saveData(String uuid, String name, String skinURL, String partner, Timestamp marryDate, String sibling, String firstParent, String secondParent, String firstChild, String secondChild, String gender, String background) {
+    public void saveData(int id, String uuid, String name, String skinURL, int partner, Timestamp marryDate, int sibling, int firstParent, int secondParent, int firstChild, int secondChild, String gender, String background, int fake) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("REPLACE INTO " + table + " (uuid,name,skinURL,partner,marryDate,sibling,firstParent,secondParent,firstChild,secondChild,gender,background) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
+            ps = conn.prepareStatement("REPLACE INTO " + table + " (id,uuid,name,skinURL,partner,marryDate,sibling,firstParent,secondParent,firstChild,secondChild,gender,background,fake) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            ps.setInt(1, id);
+            ps.setString(2, uuid);
+            ps.setString(3, name);
+            ps.setString(4, skinURL);
+            ps.setInt(5, partner);
+            ps.setTimestamp(6, marryDate);
+            ps.setInt(7, sibling);
+            ps.setInt(8, firstParent);
+            ps.setInt(9, secondParent);
+            ps.setInt(10, firstChild);
+            ps.setInt(11, secondChild);
+            ps.setString(12, gender);
+            ps.setString(13, background);
+            ps.setInt(14, fake);
+            ps.executeUpdate();
+            return;
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+        return;
+    }
+
+    public void saveData(String uuid, String name, String skinURL, int partner, Timestamp marryDate, int sibling, int firstParent, int secondParent, int firstChild, int secondChild, String gender, String background, int fake) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("REPLACE INTO " + table + " (uuid,name,skinURL,partner,marryDate,sibling,firstParent,secondParent,firstChild,secondChild,gender,background,fake) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1, uuid);
             ps.setString(2, name);
             ps.setString(3, skinURL);
-            ps.setString(4, partner);
+            ps.setInt(4, partner);
             ps.setTimestamp(5, marryDate);
-            ps.setString(6, sibling);
-            ps.setString(7, firstParent);
-            ps.setString(8, secondParent);
-            ps.setString(9, firstChild);
-            ps.setString(10, secondChild);
+            ps.setInt(6, sibling);
+            ps.setInt(7, firstParent);
+            ps.setInt(8, secondParent);
+            ps.setInt(9, firstChild);
+            ps.setInt(10, secondChild);
             ps.setString(11, gender);
             ps.setString(12, background);
+            ps.setInt(13, fake);
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {

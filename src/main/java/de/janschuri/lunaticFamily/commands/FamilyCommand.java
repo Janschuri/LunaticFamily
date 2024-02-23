@@ -149,8 +149,8 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
 
                         for (String e : list) {
                             if (familyList.containsKey(e)) {
-                                String relationUUID = (String) familyList.get(e);
-                                FamilyManager relationFam = new FamilyManager(relationUUID, plugin);
+                                int relationID = (int) familyList.get(e);
+                                FamilyManager relationFam = new FamilyManager(relationID, plugin);
                                 String relationKey = e.replace("first", "")
                                         .replace("second", "")
                                         .replace("third", "")
@@ -222,7 +222,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 } else if (args[0].equalsIgnoreCase("tree")) {
 
                     if (Main.isCrazyAdvancementAPILoaded()) {
-                        FamilyTree familyTree = new FamilyTree(uuid, plugin);
+                        FamilyTree familyTree = new FamilyTree(playerFam.getID(), plugin);
                         sender.sendMessage(plugin.messages.get("tree_loaded"));
                     } else {
                         sender.sendMessage(plugin.messages.get("internal_error"));

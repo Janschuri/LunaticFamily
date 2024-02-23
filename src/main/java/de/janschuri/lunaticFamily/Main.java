@@ -28,7 +28,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-//TODO add own ID with auto increment and isFake column
 //TODO /siblinghood
 //TODO hook into Vault
 //TODO config list for background blocks
@@ -39,7 +38,7 @@ import java.util.*;
 //TODO /family fake <name>
 public final class Main extends JavaPlugin {
     private static Database db;
-
+    private static FileConfiguration config;
     public String language;
     public String prefix;
     public String defaultGender;
@@ -80,7 +79,10 @@ public final class Main extends JavaPlugin {
 
         isCrazyAdvancementAPILoaded();
 
-        if (getConfig().getBoolean("database.MySQL.enabled")) {
+        Bukkit.getLogger().info(String.valueOf(config.getBoolean("Database.MySQL.enabled")));
+
+        if (config.getBoolean("Database.MySQL.enabled")) {
+            Bukkit.getLogger().info("mysql");
             db = new MySQL(this);
         }
         else {
@@ -108,7 +110,7 @@ public final class Main extends JavaPlugin {
 
     public void loadConfig(Plugin plugin) {
         File cfgfile = new File(plugin.getDataFolder().getAbsolutePath() + "/config.yml");
-        FileConfiguration config = YamlConfiguration.loadConfiguration(cfgfile);
+        config = YamlConfiguration.loadConfiguration(cfgfile);
 
         File langfileEN = new File(plugin.getDataFolder().getAbsolutePath() + "/langEN.yml");
         File langfileDE = new File(plugin.getDataFolder().getAbsolutePath() + "/langDE.yml");

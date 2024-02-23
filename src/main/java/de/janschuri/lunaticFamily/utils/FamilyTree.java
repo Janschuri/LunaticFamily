@@ -22,13 +22,13 @@ public class FamilyTree {
 
     private final BiMap familyList;
 
-    public FamilyTree(String uuid, Main plugin) {
+    public FamilyTree(int id, Main plugin) {
         this.plugin = plugin;
 
-        this.playerFam = new FamilyManager(uuid, plugin);
+        this.playerFam = new FamilyManager(id, plugin);
         this.familyList = playerFam.getFamilyList();
 
-
+        String uuid = playerFam.getUUID();
 
 
         String title = playerFam.getName();
@@ -603,8 +603,8 @@ public class FamilyTree {
         Advancement advancement;
 
         if (familyList.containsKey(relation)) {
-            String uuid = familyList.get(relation).toString();
-            FamilyManager relationFam = new FamilyManager(uuid, plugin);
+            int id = (int) familyList.get(relation);
+            FamilyManager relationFam = new FamilyManager(id, plugin);
             title = relationFam.getName();
 
                 String relationKey = relation.replace("first", "")
