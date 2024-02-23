@@ -1,7 +1,7 @@
-package de.janschuri.lunaticfamily.utils;
+package de.janschuri.lunaticFamily.utils;
 
 import com.google.common.collect.BiMap;
-import de.janschuri.lunaticfamily.Main;
+import de.janschuri.lunaticFamily.Main;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
 import eu.endercentral.crazy_advancements.advancement.AdvancementDisplay;

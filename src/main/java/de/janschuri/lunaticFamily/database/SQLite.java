@@ -1,6 +1,6 @@
-package de.janschuri.lunaticfamily.database;
+package de.janschuri.lunaticFamily.database;
 
-import de.janschuri.lunaticfamily.Main;
+import de.janschuri.lunaticFamily.Main;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,6 +1,6 @@
 name: Family
 version: '${project.version}'
-main: de.janschuri.lunaticfamily.Main
+main: de.janschuri.lunaticFamily.Main
 commands:
   family:
     description: Get information about your family.
@@ -11,14 +11,22 @@ commands:
   sibling:
     description: Get yourself a sibling without having parents.
 permissions:
-  family.adopt:
-    description: Adopt and get adopted.
-  family.list:
+  lunaticFamily.adopt:
+    description: Use /adopt Command.
+  lunaticFamily.marry:
+    description: Use /marry Command.
+  lunaticFamily.marry.priest:
+    description: Use /marry priest Command.
+  lunaticFamily.family.list:
     description: List own family.
-  family.list.others:
+  lunaticFamily.family.list.others:
     description: List others family.
-  family.admin.marry:
-    description: Marry and get Married.
+  lunaticFamily.admin.marry:
+    description: Set and unset Marriage by command.
+  lunaticFamily.admin.reload:
+    description: Reload Plugin Config.
+  lunaticFamily.admin.adopt:
+    description: Set and unset Adoption by command.
 api-version: 1.20
 softdepend:
   - CrazyAdvancementAPI

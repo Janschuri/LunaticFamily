@@ -1,8 +1,8 @@
-package de.janschuri.lunaticfamily.utils;
+package de.janschuri.lunaticFamily.utils;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import de.janschuri.lunaticfamily.Main;
+import de.janschuri.lunaticFamily.Main;
 import org.bukkit.Bukkit;
 
 import java.sql.Timestamp;

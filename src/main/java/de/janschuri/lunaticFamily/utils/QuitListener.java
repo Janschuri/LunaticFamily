@@ -1,6 +1,6 @@
-package de.janschuri.lunaticfamily.utils;
+package de.janschuri.lunaticFamily.utils;
 
-import de.janschuri.lunaticfamily.Main;
+import de.janschuri.lunaticFamily.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -1,16 +1,16 @@
-package de.janschuri.lunaticfamily;
+package de.janschuri.lunaticFamily;
 
 import org.bukkit.profile.PlayerProfile;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import de.janschuri.lunaticfamily.commands.AdoptCommand;
-import de.janschuri.lunaticfamily.commands.FamilyCommand;
-import de.janschuri.lunaticfamily.commands.MarryCommand;
-import de.janschuri.lunaticfamily.database.Database;
-import de.janschuri.lunaticfamily.database.MySQL;
-import de.janschuri.lunaticfamily.database.SQLite;
-import de.janschuri.lunaticfamily.utils.JoinListener;
-import de.janschuri.lunaticfamily.utils.QuitListener;
+import de.janschuri.lunaticFamily.commands.AdoptCommand;
+import de.janschuri.lunaticFamily.commands.FamilyCommand;
+import de.janschuri.lunaticFamily.commands.MarryCommand;
+import de.janschuri.lunaticFamily.database.Database;
+import de.janschuri.lunaticFamily.database.MySQL;
+import de.janschuri.lunaticFamily.database.SQLite;
+import de.janschuri.lunaticFamily.utils.JoinListener;
+import de.janschuri.lunaticFamily.utils.QuitListener;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
+//TODO add own ID with auto increment and isFake column
 //TODO /siblinghood
 //TODO hook into Vault
 //TODO config list for background blocks

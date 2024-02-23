@@ -1,4 +1,4 @@
-package de.janschuri.lunaticfamily.database;
+package de.janschuri.lunaticFamily.database;
 
 public class Errors {
     public static String sqlConnectionExecute(){

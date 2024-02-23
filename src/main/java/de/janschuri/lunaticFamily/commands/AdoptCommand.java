@@ -1,7 +1,7 @@
-package de.janschuri.lunaticfamily.commands;
+package de.janschuri.lunaticFamily.commands;
 
-import de.janschuri.lunaticfamily.Main;
-import de.janschuri.lunaticfamily.utils.FamilyManager;
+import de.janschuri.lunaticFamily.Main;
+import de.janschuri.lunaticFamily.utils.FamilyManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,8 +10,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class AdoptCommand implements CommandExecutor, TabCompleter {
 
@@ -88,7 +87,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                 }
             } else {
                 Player player = (Player) sender;
-                if (args[0].equalsIgnoreCase("set") && player.hasPermission("family.admin") && args.length == 3) {
+                if (args[0].equalsIgnoreCase("set") && player.hasPermission("lunaticFamily.admin.adopt") && args.length == 3) {
 
                     String firstParentUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
                     FamilyManager firstParentFam = new FamilyManager(firstParentUUID, plugin);
@@ -120,7 +119,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                     } else {
                         sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_not_married").replace("%player%", firstParentFam.getName()));
                     }
-                } else if (args[0].equalsIgnoreCase("unset") && player.hasPermission("family.admin") && args.length == 2) {
+                } else if (args[0].equalsIgnoreCase("unset") && player.hasPermission("lunaticFamily.family.admin") && args.length == 2) {
 
                     String childUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
                     FamilyManager childFam = new FamilyManager(childUUID, plugin);
@@ -144,7 +143,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                     }
 
                 } else {
-                    if (player.hasPermission("family.adopt")) {
+                    if (player.hasPermission("lunaticFamily.adopt")) {
                         String playerUUID = player.getUniqueId().toString();
                         FamilyManager playerFam = new FamilyManager(playerUUID, plugin);
 
@@ -391,7 +390,44 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+
+        List<String> mainSubcommands = Arrays.asList("propose", "accept", "deny", "kickout", "moveout", "list");
+        List<String> adminSubcommands = Arrays.asList("set", "unset");
+        List<String> list = new ArrayList<>();
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            if (cmd.getName().equalsIgnoreCase("adopt")) {
+                if (args.length == 0) {
+                    if (player.hasPermission("lunaticFamily.admin.adopt")) {
+                        list.addAll(adminSubcommands);
+                    }
+                    if (player.hasPermission("lunaticFamily.adopt")) {
+                        list.addAll(mainSubcommands);
+                    }
+                    Collections.sort(list);
+                    return list;
+                } else if (args.length == 1) {
+                    if (player.hasPermission("lunaticFamily.admin.adopt")) {
+                        for (String s : adminSubcommands) {
+                            if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                                list.add(s);
+                            }
+                        }
+                    }
+                    if (player.hasPermission("lunaticFamily.adopt")) {
+                        for (String s : mainSubcommands) {
+                            if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                                list.add(s);
+                            }
+                        }
+                    }
+                    Collections.sort(list);
+                    return list;
+                }
+            }
+        }
+        // return null at the end.
         return null;
     }
 }

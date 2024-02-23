@@ -1,7 +1,7 @@
-package de.janschuri.lunaticfamily.commands;
+package de.janschuri.lunaticFamily.commands;
 
-import de.janschuri.lunaticfamily.Main;
-import de.janschuri.lunaticfamily.utils.FamilyManager;
+import de.janschuri.lunaticFamily.Main;
+import de.janschuri.lunaticFamily.utils.FamilyManager;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.Location;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 public class MarryCommand implements CommandExecutor, TabCompleter {
@@ -145,7 +144,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
             } else {
                 Player player = (Player) sender;
                 //admin subcommand "set"
-                if (args[0].equalsIgnoreCase("set") && player.hasPermission("family.admin.marry")) {
+                if (args[0].equalsIgnoreCase("set") && player.hasPermission("lunaticFamily.admin.marry")) {
 
                     if (args.length >= 3) {
 
@@ -215,7 +214,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
                     }
 
-                } else if (args[0].equalsIgnoreCase("unset") && player.hasPermission("family.admin.marry")) {
+                } else if (args[0].equalsIgnoreCase("unset") && player.hasPermission("lunaticFamily.admin.marry")) {
                     if (args.length > 1) {
 
                         String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
@@ -234,7 +233,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
                     }
                 } else {
-                    if (player.hasPermission("family.marry")) {
+                    if (player.hasPermission("lunaticFamily.marry")) {
 
                         String playerUUID = player.getUniqueId().toString();
                         FamilyManager playerFam = new FamilyManager(playerUUID, plugin);
@@ -323,7 +322,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         }
                         else if (args[0].equalsIgnoreCase("priest") && args.length > 2) {
 
-                            if (player.hasPermission("family.marry.priest")) {
+                            if (player.hasPermission("lunaticFamily.marry.priest")) {
                                 if (plugin.marryPriest.containsValue(playerUUID)) {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("marry_already_priest"));
                                 } else {
@@ -579,31 +578,45 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
-        List<String> mainSubcommands = Arrays.asList("propose", "accept", "deny", "divorce");
+        List<String> mainSubcommands = Arrays.asList("propose", "accept", "deny", "divorce", "list", "kiss");
+        List<String> priestSubcommands = Arrays.asList("priest");
         List<String> adminSubcommands = Arrays.asList("set", "unset");
         List<String> list = new ArrayList<>();
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (cmd.getName().equalsIgnoreCase("marry")) {
                 if (args.length == 0) {
-                    if (player.hasPermission("family.admin")) {
+                    if (player.hasPermission("lunaticFamily.admin.marry")) {
                         list.addAll(adminSubcommands);
                     }
-                    list.addAll(mainSubcommands);
+                    if (player.hasPermission("lunaticFamily.marry.priest")) {
+                        list.addAll(priestSubcommands);
+                    }
+                    if (player.hasPermission("lunaticFamily.marry")) {
+                        list.addAll(mainSubcommands);
+                    }
                     Collections.sort(list);
                     return list;
                 } else if (args.length == 1) {
-                    if (player.hasPermission("family.admin")) {
-
+                    if (player.hasPermission("lunaticFamily.admin.marry")) {
                         for (String s : adminSubcommands) {
                             if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
                                 list.add(s);
                             }
                         }
                     }
-                    for (String s : mainSubcommands) {
-                        if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
-                            list.add(s);
+                    if (player.hasPermission("lunaticFamily.marry.priest")) {
+                        for (String s : priestSubcommands) {
+                            if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                                list.add(s);
+                            }
+                        }
+                    }
+                    if (player.hasPermission("lunaticFamily.marry")) {
+                        for (String s : mainSubcommands) {
+                            if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                                list.add(s);
+                            }
                         }
                     }
                     Collections.sort(list);

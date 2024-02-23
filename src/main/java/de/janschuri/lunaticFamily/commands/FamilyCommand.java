@@ -1,9 +1,9 @@
-package de.janschuri.lunaticfamily.commands;
+package de.janschuri.lunaticFamily.commands;
 
 import com.google.common.collect.BiMap;
-import de.janschuri.lunaticfamily.utils.FamilyManager;
-import de.janschuri.lunaticfamily.Main;
-import de.janschuri.lunaticfamily.utils.FamilyTree;
+import de.janschuri.lunaticFamily.utils.FamilyManager;
+import de.janschuri.lunaticFamily.Main;
+import de.janschuri.lunaticFamily.utils.FamilyTree;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,6 +11,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class FamilyCommand implements CommandExecutor, TabCompleter {
@@ -24,6 +27,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
+            Bukkit.getLogger().info(sender.toString() + "\n" + command.toString() + "\n" + label.toString() + "\n" + args.toString());
             Player player = (Player) sender;
             String uuid = player.getUniqueId().toString();
             FamilyManager playerFam = new FamilyManager(uuid, plugin);
@@ -53,7 +57,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
                         }
                     }
-                    else if (args.length > 2 && player.hasPermission("family.admin.gender")) {
+                    else if (args.length > 2 && player.hasPermission("lunaticFamily.admin.gender")) {
 
                             String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
                             Bukkit.getLogger().info(player1);
@@ -122,7 +126,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
 
                         sender.sendMessage(msg);
                     }
-                    else if (args.length > 1 && player.hasPermission("family.listothers")) {
+                    else if (args.length > 1 && player.hasPermission("lunaticFamily.family.listothers")) {
 
 
                         String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
@@ -186,7 +190,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                     }
                 }
 
-                else if (args[0].equalsIgnoreCase("reload") && player.hasPermission("family.admin")){
+                else if (args[0].equalsIgnoreCase("reload") && player.hasPermission("lunaticFamily.admin.reload")){
                     plugin.loadConfig(plugin);
                     sender.sendMessage(plugin.prefix + plugin.messages.get("admin_reload"));
                 }
@@ -199,7 +203,40 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+
+        List<String> mainSubcommands = Arrays.asList("gender", "tree", "list");
+        List<String> adminSubcommands = Arrays.asList("reload");
+        List<String> list = new ArrayList<>();
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            if (cmd.getName().equalsIgnoreCase("family")) {
+                if (args.length == 0) {
+                    list.addAll(mainSubcommands);
+                    Collections.sort(list);
+                    if (player.hasPermission("lunaticFamily.admin.reload")) {
+                        list.addAll(adminSubcommands);
+                    }
+                    return list;
+                } else if (args.length == 1) {
+                    if (player.hasPermission("lunaticFamily.admin.reload")) {
+                        for (String s : adminSubcommands) {
+                            if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                                list.add(s);
+                            }
+                        }
+                    }
+                    for (String s : mainSubcommands) {
+                        if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                            list.add(s);
+                        }
+                    }
+                    Collections.sort(list);
+                    return list;
+                }
+            }
+        }
+        // return null at the end.
         return null;
     }
 }

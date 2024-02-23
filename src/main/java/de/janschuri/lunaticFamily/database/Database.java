@@ -1,7 +1,6 @@
-package de.janschuri.lunaticfamily.database;
+package de.janschuri.lunaticFamily.database;
 
-import de.janschuri.lunaticfamily.Main;
-import org.bukkit.Bukkit;
+import de.janschuri.lunaticFamily.Main;
 
 import java.sql.*;
 import java.util.ArrayList;
