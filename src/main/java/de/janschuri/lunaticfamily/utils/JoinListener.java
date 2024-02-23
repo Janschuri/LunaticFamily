@@ -23,7 +23,6 @@ public class JoinListener implements Listener {
                 Player player = event.getPlayer();
                 String uuid = player.getUniqueId().toString();
                 FamilyManager playerFam = new FamilyManager(uuid, plugin);
-                playerFam.savePlayerData();
 
 
             }

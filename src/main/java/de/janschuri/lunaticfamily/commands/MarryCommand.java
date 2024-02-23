@@ -50,89 +50,73 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
         } else if (args.length > 0) {
             if (!(sender instanceof Player)) {
+                //TODO confirm set if player has to be divorced first
                 if (args[0].equalsIgnoreCase("set")) {
 
-                    if (args.length == 3) {
+                    if (args.length >= 3) {
 
-                        String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
-                        String player2 = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
+                        String player1UUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
+                        String player2UUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
 
-                        //remove requests
-                        plugin.marryRequests.remove(player1);
-                        plugin.marryRequests.remove(player2);
-                        plugin.marryPriestRequests.remove(player1);
-                        plugin.marryPriestRequests.remove(player2);
+                        FamilyManager player2Fam = new FamilyManager(player2UUID, plugin);
+                        FamilyManager player1Fam = new FamilyManager(player1UUID, plugin);
 
-                        FamilyManager player1Fam = new FamilyManager(player1, plugin);
-                        if (player1Fam.getName() == null) {
-                            player1Fam.setName(args[1]);
-                        }
-                        FamilyManager player2Fam = new FamilyManager(player2, plugin);
-                        if (player2Fam.getName() == null) {
-                            player2Fam.setName(args[2]);
-                        }
-                        //cancel marriage player1
-                        if (player1Fam.getPartner() != null) {
-                            String partner = player1Fam.getPartner();
-                            FamilyManager partnerFam = new FamilyManager(partner, plugin);
-                            partnerFam.setPartner(null);
-                            partnerFam.setMarryDate(null);
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
-                        }
-                        //cancel marriage player2
-                        if (player2Fam.getPartner() != null) {
-                            String partner = player2Fam.getPartner();
-                            FamilyManager partnerFam = new FamilyManager(partner, plugin);
-                            partnerFam.setPartner(null);
-                            partnerFam.setMarryDate(null);
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player2Fam.getName()).replace("%player2%", partnerFam.getName()));
-                        }
-                        //remove as parent player1
-                        if (player1Fam.getFirstChild() != null) {
-                            String firstChild = player1Fam.getFirstChild();
-                            FamilyManager firstChildFam = new FamilyManager(firstChild, plugin);
-                            firstChildFam.setFirstParent(null);
-                            firstChildFam.setSecondParent(null);
-                            firstChildFam.setSibling(null);
-                            player1Fam.setFirstChild(null);
-                        }
-                        if (player1Fam.getSecondChild() != null) {
-                            String secondChild = player1Fam.getSecondChild();
-                            FamilyManager secondChildFam = new FamilyManager(secondChild, plugin);
-                            secondChildFam.setFirstParent(null);
-                            secondChildFam.setSecondParent(null);
-                            secondChildFam.setSibling(null);
-                            player1Fam.setSecondChild(null);
-                        }
+                        if (player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() < 3) {
 
-                        //remove as parent player2
-                        if (player2Fam.getFirstChild() != null) {
-                            String firstChild = player2Fam.getFirstChild();
-                            FamilyManager firstChildFam = new FamilyManager(firstChild, plugin);
-                            firstChildFam.setFirstParent(null);
-                            firstChildFam.setSecondParent(null);
-                            firstChildFam.setSibling(null);
-                            player2Fam.setFirstChild(null);
-                        }
-                        if (player2Fam.getSecondChild() != null) {
-                            String secondChild = player2Fam.getSecondChild();
-                            FamilyManager secondChildFam = new FamilyManager(secondChild, plugin);
-                            secondChildFam.setFirstParent(null);
-                            secondChildFam.setSecondParent(null);
-                            secondChildFam.setSibling(null);
-                            player2Fam.setSecondChild(null);
-                        }
+                            if (player1Fam.isMarried() || player2Fam.isMarried()) {
+                                if (args.length >= 4) {
+                                    if (args[3].equalsIgnoreCase("force")) {
+                                        //cancel marriage player1
+                                        if (player1Fam.isMarried()) {
+                                            String partner = player1Fam.getPartner();
+                                            FamilyManager partnerFam = new FamilyManager(partner, plugin);
+                                            player1Fam.divorce();
+                                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
+                                        }
+                                        //cancel marriage player2
+                                        if (player2Fam.isMarried()) {
+                                            String partner = player2Fam.getPartner();
+                                            FamilyManager partnerFam = new FamilyManager(partner, plugin);
+                                            player2Fam.divorce();
+                                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player2Fam.getName()).replace("%player2%", partnerFam.getName()));
+                                        }
+                                        plugin.marryRequests.remove(player1UUID);
+                                        plugin.marryPriestRequests.remove(player1UUID);
+                                        plugin.marryPriest.remove(player1UUID);
+
+                                        plugin.marryRequests.remove(player1UUID);
+                                        plugin.marryPriestRequests.remove(player1UUID);
+                                        plugin.marryPriest.remove(player1UUID);
+
+                                        player1Fam.marry(player2UUID);
 
 
-                        //set marriage
-                        Bukkit.getLogger().info(player1 + "+" + player2);
-                        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-                        player1Fam.setPartner(player2);
-                        player1Fam.setMarryDate(currentTimestamp);
-                        player2Fam.setPartner(player1);
-                        player2Fam.setMarryDate(currentTimestamp);
+                                        sender.sendMessage(plugin.prefix + plugin.messages.get("admin_set_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
+                                    } else {
+                                        sender.sendMessage("already married");
+                                    }
+                                } else {
+                                    sender.sendMessage("already married");
+                                }
+                            } else {
 
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("admin_set_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
+                                plugin.marryRequests.remove(player1UUID);
+                                plugin.marryPriestRequests.remove(player1UUID);
+                                plugin.marryPriest.remove(player1UUID);
+
+                                plugin.marryRequests.remove(player1UUID);
+                                plugin.marryPriestRequests.remove(player1UUID);
+                                plugin.marryPriest.remove(player1UUID);
+
+                                player1Fam.marry(player2UUID);
+
+
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("admin_set_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
+                            }
+                        } else {
+                            int amountDiff = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() - 2;
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_marry_too_many_children").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()).replace("%amount%", Integer.toString(amountDiff)));
+                        }
                     } else {
                         sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
                     }
@@ -144,50 +128,10 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         FamilyManager player1Fam = new FamilyManager(player1, plugin);
 
                         if (player1Fam.getPartner() != null) {
-                            String player2 = player1Fam.getPartner();
-                            FamilyManager player2Fam = new FamilyManager(player2, plugin);
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_marry_divorced").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
-
-                            //remove as parent player1
-                            if (player1Fam.getFirstChild() != null) {
-                                String firstChild = player1Fam.getFirstChild();
-                                FamilyManager firstChildFam = new FamilyManager(firstChild, plugin);
-                                firstChildFam.setFirstParent(null);
-                                firstChildFam.setSecondParent(null);
-                                firstChildFam.setSibling(null);
-                                player1Fam.setFirstChild(null);
-                            }
-                            if (player1Fam.getSecondChild() != null) {
-                                String secondChild = player1Fam.getSecondChild();
-                                FamilyManager secondChildFam = new FamilyManager(secondChild, plugin);
-                                secondChildFam.setFirstParent(null);
-                                secondChildFam.setSecondParent(null);
-                                secondChildFam.setSibling(null);
-                                player1Fam.setSecondChild(null);
-                            }
-
-                            //remove as parent player2
-                            if (player2Fam.getFirstChild() != null) {
-                                String firstChild = player2Fam.getFirstChild();
-                                FamilyManager firstChildFam = new FamilyManager(firstChild, plugin);
-                                firstChildFam.setFirstParent(null);
-                                firstChildFam.setSecondParent(null);
-                                firstChildFam.setSibling(null);
-                                player2Fam.setFirstChild(null);
-                            }
-                            if (player2Fam.getSecondChild() != null) {
-                                String secondChild = player2Fam.getSecondChild();
-                                FamilyManager secondChildFam = new FamilyManager(secondChild, plugin);
-                                secondChildFam.setFirstParent(null);
-                                secondChildFam.setSecondParent(null);
-                                secondChildFam.setSibling(null);
-                                player2Fam.setSecondChild(null);
-                            }
-
-                            player1Fam.setPartner(null);
-                            player2Fam.setPartner(null);
-                            player1Fam.setMarryDate(null);
-                            player2Fam.setMarryDate(null);
+                            String partnerUUID = player1Fam.getPartner();
+                            FamilyManager partnerFam = new FamilyManager(partnerUUID, plugin);
+                            player1Fam.divorce();
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_marry_divorced").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
 
                         } else {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_no_partner").replace("%player%", player1Fam.getName()));
@@ -203,87 +147,70 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                 //admin subcommand "set"
                 if (args[0].equalsIgnoreCase("set") && player.hasPermission("family.admin.marry")) {
 
-                    if (args.length == 3) {
+                    if (args.length >= 3) {
 
-                        String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
-                        String player2 = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
+                        String player1UUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
+                        String player2UUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
 
-                        //remove requests
-                        plugin.marryRequests.remove(player1);
-                        plugin.marryRequests.remove(player2);
-                        plugin.marryPriestRequests.remove(player1);
-                        plugin.marryPriestRequests.remove(player2);
+                        FamilyManager player2Fam = new FamilyManager(player2UUID, plugin);
+                        FamilyManager player1Fam = new FamilyManager(player1UUID, plugin);
 
-                        FamilyManager player1Fam = new FamilyManager(player1, plugin);
-                        if (player1Fam.getName() == null) {
-                            player1Fam.setName(args[1]);
-                        }
-                        FamilyManager player2Fam = new FamilyManager(player2, plugin);
-                        if (player2Fam.getName() == null) {
-                            player2Fam.setName(args[2]);
-                        }
-                        //cancel marriage player1
-                        if (player1Fam.getPartner() != null) {
-                            String partner = player1Fam.getPartner();
-                            FamilyManager partnerFam = new FamilyManager(partner, plugin);
-                            partnerFam.setPartner(null);
-                            partnerFam.setMarryDate(null);
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
-                        }
-                        //cancel marriage player2
-                        if (player2Fam.getPartner() != null) {
-                            String partner = player2Fam.getPartner();
-                            FamilyManager partnerFam = new FamilyManager(partner, plugin);
-                            partnerFam.setPartner(null);
-                            partnerFam.setMarryDate(null);
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player2Fam.getName()).replace("%player2%", partnerFam.getName()));
-                        }
-                        //remove as parent player1
-                        if (player1Fam.getFirstChild() != null) {
-                            String firstChild = player1Fam.getFirstChild();
-                            FamilyManager firstChildFam = new FamilyManager(firstChild, plugin);
-                            firstChildFam.setFirstParent(null);
-                            firstChildFam.setSecondParent(null);
-                            firstChildFam.setSibling(null);
-                            player1Fam.setFirstChild(null);
-                        }
-                        if (player1Fam.getSecondChild() != null) {
-                            String secondChild = player1Fam.getSecondChild();
-                            FamilyManager secondChildFam = new FamilyManager(secondChild, plugin);
-                            secondChildFam.setFirstParent(null);
-                            secondChildFam.setSecondParent(null);
-                            secondChildFam.setSibling(null);
-                            player1Fam.setSecondChild(null);
-                        }
+                        if (player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() < 3) {
 
-                        //remove as parent player2
-                        if (player2Fam.getFirstChild() != null) {
-                            String firstChild = player2Fam.getFirstChild();
-                            FamilyManager firstChildFam = new FamilyManager(firstChild, plugin);
-                            firstChildFam.setFirstParent(null);
-                            firstChildFam.setSecondParent(null);
-                            firstChildFam.setSibling(null);
-                            player2Fam.setFirstChild(null);
-                        }
-                        if (player2Fam.getSecondChild() != null) {
-                            String secondChild = player2Fam.getSecondChild();
-                            FamilyManager secondChildFam = new FamilyManager(secondChild, plugin);
-                            secondChildFam.setFirstParent(null);
-                            secondChildFam.setSecondParent(null);
-                            secondChildFam.setSibling(null);
-                            player2Fam.setSecondChild(null);
-                        }
+                            if (player1Fam.isMarried() || player2Fam.isMarried()) {
+                                if (args.length >= 4) {
+                                    if (args[3].equalsIgnoreCase("force")) {
+                                        //cancel marriage player1
+                                        if (player1Fam.isMarried()) {
+                                            String partner = player1Fam.getPartner();
+                                            FamilyManager partnerFam = new FamilyManager(partner, plugin);
+                                            player1Fam.divorce();
+                                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
+                                        }
+                                        //cancel marriage player2
+                                        if (player2Fam.isMarried()) {
+                                            String partner = player2Fam.getPartner();
+                                            FamilyManager partnerFam = new FamilyManager(partner, plugin);
+                                            player2Fam.divorce();
+                                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_unset_marry").replace("%player1%", player2Fam.getName()).replace("%player2%", partnerFam.getName()));
+                                        }
+                                        plugin.marryRequests.remove(player1UUID);
+                                        plugin.marryPriestRequests.remove(player1UUID);
+                                        plugin.marryPriest.remove(player1UUID);
+
+                                        plugin.marryRequests.remove(player1UUID);
+                                        plugin.marryPriestRequests.remove(player1UUID);
+                                        plugin.marryPriest.remove(player1UUID);
+
+                                        player1Fam.marry(player2UUID);
 
 
-                        //set marriage
-                        Bukkit.getLogger().info(player1 + "+" + player2);
-                        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-                        player1Fam.setPartner(player2);
-                        player1Fam.setMarryDate(currentTimestamp);
-                        player2Fam.setPartner(player1);
-                        player2Fam.setMarryDate(currentTimestamp);
+                                        sender.sendMessage(plugin.prefix + plugin.messages.get("admin_set_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
+                                    } else {
+                                        sender.sendMessage("already married");
+                                    }
+                                } else {
+                                    sender.sendMessage("already married");
+                                }
+                            } else {
 
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("admin_set_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
+                                plugin.marryRequests.remove(player1UUID);
+                                plugin.marryPriestRequests.remove(player1UUID);
+                                plugin.marryPriest.remove(player1UUID);
+
+                                plugin.marryRequests.remove(player1UUID);
+                                plugin.marryPriestRequests.remove(player1UUID);
+                                plugin.marryPriest.remove(player1UUID);
+
+                                player1Fam.marry(player2UUID);
+
+
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("admin_set_marry").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
+                            }
+                        } else {
+                            int amountDiff = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() - 2;
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_marry_too_many_children").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()).replace("%amount%", Integer.toString(amountDiff)));
+                        }
                     } else {
                         sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
                     }
@@ -295,50 +222,10 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         FamilyManager player1Fam = new FamilyManager(player1, plugin);
 
                         if (player1Fam.getPartner() != null) {
-                            String player2 = player1Fam.getPartner();
-                            FamilyManager player2Fam = new FamilyManager(player2, plugin);
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_marry_divorced").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
-
-                            //remove as parent player1
-                            if (player1Fam.getFirstChild() != null) {
-                                String firstChild = player1Fam.getFirstChild();
-                                FamilyManager firstChildFam = new FamilyManager(firstChild, plugin);
-                                firstChildFam.setFirstParent(null);
-                                firstChildFam.setSecondParent(null);
-                                firstChildFam.setSibling(null);
-                                player1Fam.setFirstChild(null);
-                            }
-                            if (player1Fam.getSecondChild() != null) {
-                                String secondChild = player1Fam.getSecondChild();
-                                FamilyManager secondChildFam = new FamilyManager(secondChild, plugin);
-                                secondChildFam.setFirstParent(null);
-                                secondChildFam.setSecondParent(null);
-                                secondChildFam.setSibling(null);
-                                player1Fam.setSecondChild(null);
-                            }
-
-                            //remove as parent player2
-                            if (player2Fam.getFirstChild() != null) {
-                                String firstChild = player2Fam.getFirstChild();
-                                FamilyManager firstChildFam = new FamilyManager(firstChild, plugin);
-                                firstChildFam.setFirstParent(null);
-                                firstChildFam.setSecondParent(null);
-                                firstChildFam.setSibling(null);
-                                player2Fam.setFirstChild(null);
-                            }
-                            if (player2Fam.getSecondChild() != null) {
-                                String secondChild = player2Fam.getSecondChild();
-                                FamilyManager secondChildFam = new FamilyManager(secondChild, plugin);
-                                secondChildFam.setFirstParent(null);
-                                secondChildFam.setSecondParent(null);
-                                secondChildFam.setSibling(null);
-                                player2Fam.setSecondChild(null);
-                            }
-
-                            player1Fam.setPartner(null);
-                            player2Fam.setPartner(null);
-                            player1Fam.setMarryDate(null);
-                            player2Fam.setMarryDate(null);
+                            String partnerUUID = player1Fam.getPartner();
+                            FamilyManager partnerFam = new FamilyManager(partnerUUID, plugin);
+                            player1Fam.divorce();
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_marry_divorced").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
 
                         } else {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_no_partner").replace("%player%", player1Fam.getName()));
@@ -349,8 +236,8 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                 } else {
                     if (player.hasPermission("family.marry")) {
 
-                        String uuid = player.getUniqueId().toString();
-                        FamilyManager playerFam = new FamilyManager(uuid, plugin);
+                        String playerUUID = player.getUniqueId().toString();
+                        FamilyManager playerFam = new FamilyManager(playerUUID, plugin);
                         //player subcommand "propose"
                         if (args[0].equalsIgnoreCase("propose")) {
                             if (args.length == 2) {
@@ -366,50 +253,56 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                             String partner = Bukkit.getPlayer(args[1]).getUniqueId().toString();
                                             FamilyManager partnerFam = new FamilyManager(partner, plugin);
 
-                                            //partner has open request
-                                            if (plugin.marryRequests.containsKey(partner) || plugin.marryPriest.containsKey(partner)) {
+                                            if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() < 3) {
 
-                                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_open_request").replace("%player%", partnerFam.getName()));
-                                            } else if (partnerFam.getPartner() != null) {
-                                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_player_already_married").replace("%player%", partnerFam.getName()));
-                                            }
+                                                //partner has open request
+                                                if (plugin.marryRequests.containsKey(partner) || plugin.marryPriest.containsKey(partner)) {
 
-                                            //player has no open request
-                                            else {
-                                                Player playerPartner = Bukkit.getPlayer(UUID.fromString(partner));
-
-                                                if (Main.isInRange(player.getLocation(), playerPartner.getLocation(), 5)) {
-
-                                                    playerPartner.sendMessage(plugin.prefix + plugin.messages.get("marry_request").replace("%player1%", partnerFam.getName()).replace("%player2%", playerFam.getName()));
-
-                                                    TextComponent yes = new TextComponent(ChatColor.GREEN + "[" + plugin.messages.get("marry_yes") + "]");
-                                                    yes.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry accept"));
-                                                    yes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "[" + plugin.messages.get("marry_yes") + "]").create()));
-
-                                                    TextComponent no = new TextComponent(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]");
-                                                    no.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry deny"));
-                                                    no.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]").create()));
-
-                                                    TextComponent space = new TextComponent(ChatColor.WHITE + "---");
-
-                                                    Bukkit.getPlayer(UUID.fromString(partner)).spigot().sendMessage(yes, space, no);
-
-
-                                                    plugin.marryRequests.put(partner, uuid);
-
-                                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_request_sent").replace("%player%", partnerFam.getName()));
-
-                                                    new BukkitRunnable() {
-                                                        public void run() {
-                                                            plugin.marryRequests.remove(partner);
-                                                            playerPartner.sendMessage(plugin.prefix + plugin.messages.get("marry_request_expired").replace("%player%", playerFam.getName()));
-
-                                                            sender.sendMessage(plugin.prefix + plugin.messages.get("marry_request_sent_expired").replace("%player%", partnerFam.getName()));
-                                                        }
-                                                    }.runTaskLater(plugin, 600L);
-                                                } else {
-                                                    sender.sendMessage(plugin.prefix + plugin.messages.get("player_too_far_away").replace("%player%", partnerFam.getName()));
+                                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_open_request").replace("%player%", partnerFam.getName()));
+                                                } else if (partnerFam.getPartner() != null) {
+                                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_player_already_married").replace("%player%", partnerFam.getName()));
                                                 }
+
+                                                //player has no open request
+                                                else {
+                                                    Player playerPartner = Bukkit.getPlayer(UUID.fromString(partner));
+
+                                                    if (Main.isInRange(player.getLocation(), playerPartner.getLocation(), 5)) {
+
+                                                        playerPartner.sendMessage(plugin.prefix + plugin.messages.get("marry_request").replace("%player1%", partnerFam.getName()).replace("%player2%", playerFam.getName()));
+
+                                                        TextComponent yes = new TextComponent(ChatColor.GREEN + "[" + plugin.messages.get("marry_yes") + "]");
+                                                        yes.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry accept"));
+                                                        yes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "[" + plugin.messages.get("marry_yes") + "]").create()));
+
+                                                        TextComponent no = new TextComponent(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]");
+                                                        no.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry deny"));
+                                                        no.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]").create()));
+
+                                                        TextComponent space = new TextComponent(ChatColor.WHITE + "---");
+
+                                                        Bukkit.getPlayer(UUID.fromString(partner)).spigot().sendMessage(yes, space, no);
+
+
+                                                        plugin.marryRequests.put(partner, playerUUID);
+
+                                                        sender.sendMessage(plugin.prefix + plugin.messages.get("marry_request_sent").replace("%player%", partnerFam.getName()));
+
+                                                        new BukkitRunnable() {
+                                                            public void run() {
+                                                                plugin.marryRequests.remove(partner);
+                                                                playerPartner.sendMessage(plugin.prefix + plugin.messages.get("marry_request_expired").replace("%player%", playerFam.getName()));
+
+                                                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_request_sent_expired").replace("%player%", partnerFam.getName()));
+                                                            }
+                                                        }.runTaskLater(plugin, 600L);
+                                                    } else {
+                                                        sender.sendMessage(plugin.prefix + plugin.messages.get("player_too_far_away").replace("%player%", partnerFam.getName()));
+                                                    }
+                                                }
+                                            } else {
+                                                int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
+                                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_too_many_children").replace("%partner%", partnerFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
                                             }
                                         } else {
                                             String partner = playerFam.getPartner();
@@ -419,141 +312,167 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                     }
 
                                 }
-
                                 //first parameter is not an online player
                                 else {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", Bukkit.getOfflinePlayer(args[1]).getName()));
                                 }
 
-                            } else if (args.length > 2) {
+                            } else {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                            }
+                        }
+                        else if (args[0].equalsIgnoreCase("priest") && args.length > 2) {
 
-                                if (player.hasPermission("family.marry.priest")) {
-                                    if (plugin.marryPriest.containsValue(uuid)) {
-                                        sender.sendMessage(plugin.prefix + plugin.messages.get("marry_already_priest"));
-                                    } else {
-                                        if (args[2].equalsIgnoreCase(player.getName())) {
-                                            player.sendMessage(plugin.prefix + plugin.messages.get("marry_self_request"));
+                            if (player.hasPermission("family.marry.priest")) {
+                                if (plugin.marryPriest.containsValue(playerUUID)) {
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_already_priest"));
+                                } else {
+                                    if (args[2].equalsIgnoreCase(player.getName())) {
+                                        player.sendMessage(plugin.prefix + plugin.messages.get("marry_self_request"));
+                                    }
+
+                                    //second parameter is online player
+                                    else if (Bukkit.getPlayer(args[2]) != null) {
+
+                                        String player1 = Bukkit.getPlayer(args[1]).getUniqueId().toString();
+                                        FamilyManager player1Fam = new FamilyManager(player1, plugin);
+                                        String player2 = Bukkit.getPlayer(args[2]).getUniqueId().toString();
+                                        FamilyManager player2Fam = new FamilyManager(player2, plugin);
+
+                                        //player1 or player2 have open request
+                                        if (plugin.marryRequests.containsKey(player1) || plugin.marryRequests.containsKey(player2) || plugin.marryPriest.containsValue(player1) || plugin.marryPriest.containsValue(player2)) {
+                                            if (plugin.marryRequests.containsKey(player1) || plugin.marryPriest.containsValue(player1)) {
+                                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_open_request").replace("%player%", player1Fam.getName()));
+                                            }
+
+                                            if (plugin.marryRequests.containsKey(player2) || plugin.marryPriest.containsValue(player2)) {
+                                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_open_request").replace("%player%", player2Fam.getName()));
+                                            }
                                         }
 
-                                        //second parameter is online player
-                                        else if (Bukkit.getPlayer(args[2]) != null) {
-
-                                            String player1 = Bukkit.getPlayer(args[1]).getUniqueId().toString();
-                                            FamilyManager player1Fam = new FamilyManager(player1, plugin);
-                                            String player2 = Bukkit.getPlayer(args[2]).getUniqueId().toString();
-                                            FamilyManager player2Fam = new FamilyManager(player2, plugin);
-
-                                            //player1 or player2 have open request
-                                            if (plugin.marryRequests.containsKey(player1) || plugin.marryRequests.containsKey(player2) || plugin.marryPriest.containsValue(player1) || plugin.marryPriest.containsValue(player2)) {
-                                                if (plugin.marryRequests.containsKey(player1) || plugin.marryPriest.containsValue(player1)) {
-                                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_open_request").replace("%player%", player1Fam.getName()));
-                                                }
-
-                                                if (plugin.marryRequests.containsKey(player2) || plugin.marryPriest.containsValue(player2)) {
-                                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_open_request").replace("%player%", player2Fam.getName()));
-                                                }
+                                        //player1 or player2 is already married
+                                        else if (player1Fam.getPartner() != null || player2Fam.getPartner() != null) {
+                                            if (player1Fam.getPartner() != null) {
+                                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_player_already_married").replace("%player%", player1Fam.getName()));
                                             }
 
-                                            //player1 or player2 is already married
-                                            else if (player1Fam.getPartner() != null || player2Fam.getPartner() != null) {
-                                                if (player1Fam.getPartner() != null) {
-                                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_player_already_married").replace("%player%", player1Fam.getName()));
-                                                }
-
-                                                if (player2Fam.getPartner() != null) {
-                                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_player_already_married").replace("%player%", player2Fam.getName()));
-                                                }
+                                            if (player2Fam.getPartner() != null) {
+                                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_player_already_married").replace("%player%", player2Fam.getName()));
                                             }
+                                        }
 
-                                            //player1 and player2 have no open request
-                                            else {
+                                        //player1 and player2 have no open request
+                                        else {
+
+                                            if (player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() < 3) {
                                                 //send request to player1
                                                 player.chat(plugin.messages.get("marry_request").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
                                                 plugin.marryPriestRequests.put(player1, player2);
-                                                plugin.marryPriest.put(player1, uuid);
-
+                                                plugin.marryPriest.put(player1, playerUUID);
+                                            } else {
+                                                int amountDiff = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() - 2;
+                                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_priest_too_many_children").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()).replace("%amount%", Integer.toString(amountDiff)));
                                             }
 
                                         }
 
-                                        //second parameter is not a online player
-                                        else {
-                                            sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", Bukkit.getOfflinePlayer(args[2]).getName()));
-                                        }
                                     }
-                                } else {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
+
+                                    //second parameter is not a online player
+                                    else {
+                                        sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", Bukkit.getOfflinePlayer(args[2]).getName()));
+                                    }
                                 }
                             } else {
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
                             }
                         }
                         //player subcommand "accept"
                         else if (args[0].equalsIgnoreCase("accept")) {
 
                             //check for request
-                            if (plugin.marryRequests.containsKey(uuid)) {
+                            if (plugin.marryRequests.containsKey(playerUUID)) {
 
-                                String partner = plugin.marryRequests.get(uuid);
-                                Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-                                playerFam.setPartner(partner);
-                                playerFam.setMarryDate(currentTimestamp);
+                                String partnerUUID = plugin.marryRequests.get(playerUUID);
+                                FamilyManager partnerFam = new FamilyManager(partnerUUID, plugin);
+
+                                if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() < 3) {
+
+                                    if (Bukkit.getPlayer(UUID.fromString(partnerUUID)) != null) {
+
+                                        if (plugin.marryPriest.containsKey(partnerUUID)) {
+                                            String priest = plugin.marryPriest.get(partnerUUID);
+
+                                            player.chat(plugin.messages.get("marry_yes"));
+
+                                            new BukkitRunnable() {
+                                                public void run() {
+                                                    Bukkit.getPlayer(UUID.fromString(priest)).chat(plugin.messages.get("marry_complete"));
+                                                }
+                                            }.runTaskLater(plugin, 20L);
+
+                                            plugin.marryPriest.remove(partnerUUID);
+                                        } else {
+                                            sender.sendMessage(plugin.prefix + plugin.messages.get("marry_complete"));
+                                            Bukkit.getPlayer(UUID.fromString(partnerUUID)).sendMessage(plugin.prefix + plugin.messages.get("marry_complete"));
+                                        }
+
+                                        plugin.marryRequests.remove(playerUUID);
+                                        plugin.marryPriestRequests.remove(playerUUID);
+                                        plugin.marryPriest.remove(playerUUID);
+
+                                        plugin.marryRequests.remove(partnerUUID);
+                                        plugin.marryPriestRequests.remove(partnerUUID);
+                                        plugin.marryPriest.remove(partnerUUID);
+
+                                        playerFam.marry(partnerUUID);
+                                    } else {
+                                        sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", partnerFam.getName()));
+                                    }
+                                } else {
+                                    int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_too_many_children").replace("%partner%", partnerFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
+                                }
+                            }
+
+                            //check for priest request
+                            else if (plugin.marryPriestRequests.containsKey(playerUUID)) {
+
+                                String partner = plugin.marryPriestRequests.get(playerUUID);
                                 FamilyManager partnerFam = new FamilyManager(partner, plugin);
-                                partnerFam.setPartner(uuid);
-                                partnerFam.setMarryDate(currentTimestamp);
 
-                                if (plugin.marryPriest.containsKey(partner)) {
-                                    String priest = plugin.marryPriest.get(partner);
+                                if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() < 3) {
+                                    String priest = plugin.marryPriest.get(playerUUID);
 
+                                    plugin.marryPriestRequests.remove(playerUUID);
+                                    plugin.marryRequests.put(partner, playerUUID);
                                     player.chat(plugin.messages.get("marry_yes"));
 
                                     new BukkitRunnable() {
                                         public void run() {
-                                            Bukkit.getPlayer(UUID.fromString(priest)).chat(plugin.messages.get("marry_complete"));
+                                            Bukkit.getPlayer(UUID.fromString(priest)).chat(plugin.messages.get("marry_request").replace("%player1%", partnerFam.getName()).replace("%player2%", playerFam.getName()));
                                         }
                                     }.runTaskLater(plugin, 20L);
-
-                                    plugin.marryPriest.remove(partner);
                                 } else {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_complete"));
-                                    Bukkit.getPlayer(UUID.fromString(partner)).sendMessage(plugin.prefix + plugin.messages.get("marry_complete"));
+                                    int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_too_many_children").replace("%partner%", partnerFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
                                 }
-
-                                plugin.marryRequests.remove(uuid);
-                            }
-
-                            //check for priest request
-                            else if (plugin.marryPriestRequests.containsKey(uuid)) {
-                                String partner = plugin.marryPriestRequests.get(uuid);
-                                FamilyManager partnerFam = new FamilyManager(partner, plugin);
-
-                                String priest = plugin.marryPriest.get(uuid);
-
-                                plugin.marryPriestRequests.remove(uuid);
-                                plugin.marryRequests.put(partner, uuid);
-                                player.chat(plugin.messages.get("marry_yes"));
-
-                                new BukkitRunnable() {
-                                    public void run() {
-                                        Bukkit.getPlayer(UUID.fromString(priest)).chat(plugin.messages.get("marry_request").replace("%player1%", partnerFam.getName()).replace("%player2%", playerFam.getName()));
-                                    }
-                                }.runTaskLater(plugin, 20L);
 
                             }
 
                             //no request
                             else {
 
-                                if (plugin.marryPriestRequests.containsValue(uuid)) {
+                                if (plugin.marryPriestRequests.containsValue(playerUUID)) {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("marry_open_request_partner"));
                                 } else {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("marry_no_request"));
                                 }
                             }
                         } else if (args[0].equalsIgnoreCase("deny")) {
-                            if (plugin.marryRequests.containsKey(uuid)) {
+                            if (plugin.marryRequests.containsKey(playerUUID)) {
 
-                                String partner = plugin.marryRequests.get(uuid);
+                                String partner = plugin.marryRequests.get(playerUUID);
 
                                 if (plugin.marryPriest.containsKey(partner)) {
                                     player.chat(plugin.messages.get("marry_no"));
@@ -565,13 +484,13 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                     Bukkit.getPlayer(UUID.fromString(partner)).sendMessage(plugin.prefix + plugin.messages.get("marry_deny").replace("%player%", playerFam.getName()));
                                 }
 
-                                plugin.marryRequests.remove(uuid);
-                            } else if (plugin.marryPriestRequests.containsKey(uuid)) {
+                                plugin.marryRequests.remove(playerUUID);
+                            } else if (plugin.marryPriestRequests.containsKey(playerUUID)) {
                                 player.chat(plugin.messages.get("marry_no"));
-                                String priest = plugin.marryPriest.get(uuid);
+                                String priest = plugin.marryPriest.get(playerUUID);
                                 Bukkit.getPlayer(UUID.fromString(priest)).chat(plugin.messages.get("marry_cancel"));
-                                plugin.marryPriestRequests.remove(uuid);
-                                plugin.marryPriest.remove(uuid);
+                                plugin.marryPriestRequests.remove(playerUUID);
+                                plugin.marryPriest.remove(playerUUID);
 
                             } else {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("marry_no_request"));
@@ -579,36 +498,12 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         }
                         //player subcommand "divorce"
                         else if (args[0].equalsIgnoreCase("divorce")) {
-
+                            //TODO confirm divorce
                             //player has partner
                             if (playerFam.getPartner() != null) {
                                 String partner = playerFam.getPartner();
-                                FamilyManager partnerFam = new FamilyManager(partner, plugin);
 
-                                Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-                                partnerFam.setPartner(null);
-                                partnerFam.setMarryDate(currentTimestamp);
-                                playerFam.setPartner(null);
-                                playerFam.setMarryDate(currentTimestamp);
-
-                                if (playerFam.getFirstChild() != null) {
-                                    String firstChild = playerFam.getFirstChild();
-                                    FamilyManager firstChildFam = new FamilyManager(firstChild, plugin);
-                                    firstChildFam.setFirstParent(null);
-                                    firstChildFam.setSecondParent(null);
-                                    firstChildFam.setSibling(null);
-                                    playerFam.setFirstParent(null);
-                                    partnerFam.setFirstChild(null);
-                                }
-                                if (playerFam.getSecondChild() != null) {
-                                    String secondChild = playerFam.getSecondChild();
-                                    FamilyManager secondChildFam = new FamilyManager(secondChild, plugin);
-                                    secondChildFam.setFirstParent(null);
-                                    secondChildFam.setSecondParent(null);
-                                    secondChildFam.setSibling(null);
-                                    playerFam.setSecondParent(null);
-                                    partnerFam.setSecondChild(null);
-                                }
+                                playerFam.divorce();
 
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("marry_divorced"));
                                 if (Bukkit.getPlayer(UUID.fromString(partner)) != null) {
@@ -638,7 +533,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                         }
                                     }
                                     else {
-                                        sender.sendMessage("zu weit weg :(");
+                                        sender.sendMessage(plugin.prefix + plugin.messages.get("player_too_far_away"));
                                     }
                                 }
                                 else {

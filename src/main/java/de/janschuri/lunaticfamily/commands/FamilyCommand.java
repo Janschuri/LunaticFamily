@@ -59,10 +59,6 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                             Bukkit.getLogger().info(player1);
                             FamilyManager player1Fam = new FamilyManager(player1, plugin);
 
-                            if (player1Fam.getName() == null) {
-                                player1Fam.setName(args[1]);
-                            }
-
                             if (args[2].equalsIgnoreCase("fe") || args[2].equalsIgnoreCase("feminine")) {
                                 if (player1Fam.getGender().equalsIgnoreCase("fe")) {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("admin_gender_already_fe").replace("%player%", player1Fam.getName()));
@@ -80,8 +76,6 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                             } else {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
                             }
-
-                            player1Fam.savePlayerData();
 
                     } else {
                         sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
@@ -133,9 +127,6 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
 
                         String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
                         FamilyManager player1Fam = new FamilyManager(player1, plugin);
-                        if (player1Fam.getName() == null) {
-                            player1Fam.setName(args[1]);
-                        }
                         BiMap familyList = player1Fam.getFamilyList();
                         String msg = plugin.prefix + plugin.messages.get("family_list").replace("%player%", player1Fam.getName()) + "\n";
 

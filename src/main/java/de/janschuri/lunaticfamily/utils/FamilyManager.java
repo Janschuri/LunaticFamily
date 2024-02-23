@@ -82,15 +82,12 @@ public class FamilyManager {
         }
     }
 
-    public void savePlayerData() {
-        Main.getDatabase().saveData(uuid, name, skinURL, partner, marryDate, sibling, firstParent, secondParent, firstChild, secondChild, gender, background);
+    public String getUUID() {
+        return uuid;
     }
 
-    public void setName(String name) {
-        if (name != null) {
-            this.name = name;
-        }
-        savePlayerData();
+    private void savePlayerData() {
+        Main.getDatabase().saveData(uuid, name, skinURL, partner, marryDate, sibling, firstParent, secondParent, firstChild, secondChild, gender, background);
     }
 
     public String getSkinURL() {
@@ -101,9 +98,18 @@ public class FamilyManager {
         return partner;
     }
 
-    public void setPartner(String partner) {
+    private void setPartner(String partner) {
         this.partner = partner;
         savePlayerData();
+    }
+
+    public boolean isMarried() {
+        if (this.partner != null) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public String getMarryDate() {
@@ -125,9 +131,18 @@ public class FamilyManager {
         return sibling;
     }
 
-    public void setSibling(String sibling) {
+    private void setSibling(String sibling) {
         this.sibling = sibling;
         savePlayerData();
+    }
+
+    public boolean hasSibling() {
+        if (this.sibling != null) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public String getFirstParent() {
@@ -138,14 +153,34 @@ public class FamilyManager {
         return secondParent;
     }
 
-    public void setFirstParent(String firstParent) {
+    private void setFirstParent(String firstParent) {
         this.firstParent = firstParent;
         savePlayerData();
     }
 
-    public void setSecondParent(String secondParent) {
+    private void setSecondParent(String secondParent) {
         this.secondParent = secondParent;
         savePlayerData();
+    }
+
+    public boolean isAdopted() {
+        if (this.firstParent != null) {
+            return true;
+        } else if (this.secondParent != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isChildOf (String parentUUID) {
+        if (parentUUID.equalsIgnoreCase(this.firstParent)) {
+            return true;
+        } else if (parentUUID.equalsIgnoreCase(this.secondParent)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
@@ -157,12 +192,12 @@ public class FamilyManager {
         return secondChild;
     }
 
-    public void setFirstChild(String firstChild) {
+    private void setFirstChild(String firstChild) {
         this.firstChild = firstChild;
         savePlayerData();
     }
 
-    public void setSecondChild(String secondChild) {
+    private void setSecondChild(String secondChild) {
         this.secondChild = secondChild;
         savePlayerData();
     }
@@ -183,6 +218,206 @@ public class FamilyManager {
     public void setBackground(String background) {
         this.background = "textures/block/"+background+".png";
         savePlayerData();
+    }
+
+    public Integer getChildrenAmount (){
+        Integer amount = 0;
+        if (this.firstChild != null) {
+            amount++;
+        }
+        if (this.secondChild != null) {
+            amount++;
+        }
+
+        return amount;
+    }
+
+    public void marry(String partnerUUID) {
+        FamilyManager playerFam = this;
+        String playerUUID = playerFam.getUUID();
+        FamilyManager partnerFam = new FamilyManager(partnerUUID, plugin);
+
+        String firstChildUUID = null;
+        String secondChildUUID = null;
+
+
+
+        if (playerFam.getFirstChild() != null) {
+            firstChildUUID = playerFam.getFirstChild();
+        }
+        if (playerFam.getSecondChild() != null) {
+            secondChildUUID = playerFam.getSecondChild();
+        }
+        if (firstChildUUID == null) {
+            firstChildUUID = partnerFam.getFirstChild();
+            if (firstChildUUID == null) {
+                firstChildUUID = partnerFam.getSecondChild();
+            }
+
+        }
+        if (secondChildUUID == null) {
+            secondChildUUID = partnerFam.getFirstChild();
+            if (secondChildUUID == null) {
+                secondChildUUID = partnerFam.getSecondChild();
+            }
+
+        }
+
+
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+
+        playerFam.setFirstChild(firstChildUUID);
+        playerFam.setSecondChild(secondChildUUID);
+        playerFam.setPartner(partnerUUID);
+        playerFam.setMarryDate(currentTimestamp);
+
+        partnerFam.setFirstChild(firstChildUUID);
+        partnerFam.setSecondChild(secondChildUUID);
+        partnerFam.setPartner(playerUUID);
+        partnerFam.setMarryDate(currentTimestamp);
+
+        if (playerFam.getFirstChild() != null) {
+            FamilyManager childFam = new FamilyManager(playerFam.getFirstChild(), plugin);
+            childFam.setFirstParent(playerUUID);
+            childFam.setSecondParent(partnerUUID);
+            childFam.setSibling(playerFam.getSecondChild());
+        }
+        if (playerFam.getSecondChild() != null) {
+            FamilyManager childFam = new FamilyManager(playerFam.getSecondChild(), plugin);
+            childFam.setFirstParent(playerUUID);
+            childFam.setSecondParent(partnerUUID);
+            childFam.setSibling(playerFam.getFirstChild());
+        }
+    }
+
+    public void divorce() {
+        FamilyManager playerFam = this;
+        String playerUUID = playerFam.getUUID();
+
+        String partnerUUID = playerFam.getPartner();
+        FamilyManager partnerFam = new FamilyManager(partnerUUID, plugin);
+
+        if (playerFam.getFirstChild() != null) {
+            String childUUID = playerFam.getFirstChild();
+            FamilyManager childFam = new FamilyManager(childUUID, plugin);
+            childFam.setFirstParent(null);
+            childFam.setSecondParent(null);
+            if (plugin.allowSingleAdopt) {
+                childFam.setFirstParent(partnerUUID);
+            } else {
+                childFam.setSibling(null);
+            }
+        }
+
+        if (playerFam.getSecondChild() != null) {
+            String childUUID = playerFam.getSecondChild();
+            FamilyManager childFam = new FamilyManager(childUUID, plugin);
+            childFam.setFirstParent(null);
+            childFam.setSecondParent(null);
+            if (plugin.allowSingleAdopt) {
+                childFam.setFirstParent(partnerUUID);
+            } else {
+                childFam.setSibling(null);
+            }
+        }
+
+
+        playerFam.setPartner(null);
+        playerFam.setMarryDate(null);
+        playerFam.setFirstChild(null);
+        playerFam.setSecondChild(null);
+
+
+        partnerFam.setPartner(null);
+        partnerFam.setMarryDate(null);
+
+        if (!plugin.allowSingleAdopt) {
+            partnerFam.setFirstChild(null);
+            partnerFam.setSecondChild(null);
+
+        }
+
+    }
+
+    public void adopt(String childUUID) {
+        FamilyManager playerFam = this;
+        String playerUUID = playerFam.getUUID();
+
+        FamilyManager childFam = new FamilyManager(childUUID, plugin);
+        childFam.setFirstParent(playerUUID);
+
+        if (playerFam.isMarried()) {
+            String partnerUUID = playerFam.getPartner();
+            FamilyManager partnerFam = new FamilyManager(partnerUUID, plugin);
+            childFam.setSecondParent(partnerUUID);
+            if (partnerFam.getFirstChild() != null) {
+                partnerFam.setSecondChild(childUUID);
+            } else {
+                partnerFam.setFirstChild(childUUID);
+            }
+        }
+
+        if (playerFam.getFirstChild() != null) {
+            playerFam.setSecondChild(childUUID);
+            String siblingUUID = playerFam.getFirstChild();
+            FamilyManager siblingFam = new FamilyManager(siblingUUID, plugin);
+            siblingFam.setSibling(childUUID);
+            childFam.setSibling(siblingUUID);
+        } else {
+            playerFam.setFirstChild(childUUID);
+            if (playerFam.getSecondChild() != null) {
+                String siblingUUID = playerFam.getSecondChild();
+                FamilyManager siblingFam = new FamilyManager(siblingUUID, plugin);
+                siblingFam.setSibling(childUUID);
+                childFam.setSibling(siblingUUID);
+            }
+        }
+    }
+
+    public void unadopt(String childUUID) {
+        FamilyManager playerFam = this;
+        String playerUUID = playerFam.getUUID();
+        String firstChildUUID = childUUID;
+        FamilyManager firstChildFam = new FamilyManager(firstChildUUID, plugin);
+
+        firstChildFam.setFirstParent(null);
+        firstChildFam.setSecondParent(null);
+
+        if (playerFam.isMarried()) {
+            String partner = playerFam.getPartner();
+            FamilyManager partnerFam = new FamilyManager(partner, plugin);
+            if (partnerFam.getFirstChild().equalsIgnoreCase(childUUID)) {
+                partnerFam.setFirstChild(null);
+            }
+            if (partnerFam.getSecondChild().equalsIgnoreCase(childUUID)) {
+                partnerFam.setSecondChild(null);
+            }
+        }
+
+        if (playerFam.getFirstChild() != null) {
+            if (playerFam.getFirstChild().equalsIgnoreCase(childUUID)) {
+                playerFam.setFirstChild(null);
+                if (playerFam.getSecondChild() != null) {
+                    String secondChildUUID = playerFam.getSecondChild();
+                    FamilyManager secondChildFam = new FamilyManager(secondChildUUID, plugin);
+                    secondChildFam.setSibling(null);
+                }
+            }
+        }
+        if (playerFam.getSecondChild() != null) {
+            if (playerFam.getSecondChild().equalsIgnoreCase(childUUID)) {
+                playerFam.setSecondChild(null);
+                if (playerFam.getFirstChild() != null) {
+                    String secondChildUUID = playerFam.getFirstChild();
+                    FamilyManager secondChildFam = new FamilyManager(secondChildUUID, plugin);
+                    secondChildFam.setSibling(null);
+
+                }
+            }
+        }
+
+        firstChildFam.setSibling(null);
+
     }
 
     public BiMap<String, String> getFamilyList() {
@@ -457,6 +692,7 @@ public class FamilyManager {
 
         return familyList;
     }
+
 }
 
 

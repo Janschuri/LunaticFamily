@@ -10,6 +10,7 @@ Database:
     Filename:
 default_gender: "fe"
 default_background: "moss_block"
+allow_single_adopt: true
 language: "DE"
 family:
   - partner

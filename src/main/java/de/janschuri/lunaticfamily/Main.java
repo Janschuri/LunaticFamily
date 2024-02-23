@@ -27,7 +27,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-//TODO allow singles to adopt
 //TODO /siblinghood
 //TODO hook into Vault
 //TODO config list for background blocks
@@ -35,6 +34,7 @@ import java.util.*;
 //TODO /marry gift
 //TODO split money after divorce
 //TODO add command aliases to lang
+//TODO /family fake <name>
 public final class Main extends JavaPlugin {
     private static Database db;
 
@@ -42,6 +42,7 @@ public final class Main extends JavaPlugin {
     public String prefix;
     public String defaultGender;
     public String defaultBackground;
+    public boolean allowSingleAdopt;
 
     public Map<String, String> messages = new HashMap<>();
     public List<String> familyList;
@@ -108,6 +109,7 @@ public final class Main extends JavaPlugin {
         }
 
         language = config.getString("language");
+        allowSingleAdopt = config.getBoolean("allow_single_adopt");
 
         FileConfiguration lang = null;
 
@@ -122,7 +124,6 @@ public final class Main extends JavaPlugin {
         }
 
         defaultBackground = "textures/block/" + config.getString("default_background") + ".png";
-        Bukkit.getLogger().info("Default:BG" + defaultBackground);
         defaultGender = config.getString("default_gender");
         prefix = ChatColor.translateAlternateColorCodes('&', lang.getString("prefix"));
 
@@ -137,7 +138,6 @@ public final class Main extends JavaPlugin {
         }
 
         familyList = Objects.requireNonNull(config.getStringList("family"));
-        Bukkit.getLogger().info(familyList.toString());
 
         //family relationships
 
