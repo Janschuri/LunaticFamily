@@ -8,6 +8,8 @@ commands:
     description: Get married.
   adopt:
     description: Adopt or get adopted.
+  gender:
+    description: Change your gender.
   sibling:
     description: Get yourself a sibling without having parents.
 permissions:

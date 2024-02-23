@@ -22,7 +22,6 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Bukkit.getLogger().info("adopt command aufgerufen");
 
         if (args.length == 0) {
 
@@ -393,31 +392,31 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
-        List<String> mainSubcommands = Arrays.asList("propose", "accept", "deny", "kickout", "moveout", "list");
-        List<String> adminSubcommands = Arrays.asList("set", "unset");
+        List<String> adoptSubcommands = plugin.adoptSubcommands;
+        List<String> adoptAdminSubcommands = plugin.adoptAdminSubcommands;
         List<String> list = new ArrayList<>();
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (cmd.getName().equalsIgnoreCase("adopt")) {
                 if (args.length == 0) {
                     if (player.hasPermission("lunaticFamily.admin.adopt")) {
-                        list.addAll(adminSubcommands);
+                        list.addAll(adoptAdminSubcommands);
                     }
                     if (player.hasPermission("lunaticFamily.adopt")) {
-                        list.addAll(mainSubcommands);
+                        list.addAll(adoptSubcommands);
                     }
                     Collections.sort(list);
                     return list;
                 } else if (args.length == 1) {
                     if (player.hasPermission("lunaticFamily.admin.adopt")) {
-                        for (String s : adminSubcommands) {
+                        for (String s : adoptAdminSubcommands) {
                             if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
                                 list.add(s);
                             }
                         }
                     }
                     if (player.hasPermission("lunaticFamily.adopt")) {
-                        for (String s : mainSubcommands) {
+                        for (String s : adoptSubcommands) {
                             if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
                                 list.add(s);
                             }

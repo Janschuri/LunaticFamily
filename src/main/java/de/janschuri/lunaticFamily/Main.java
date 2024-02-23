@@ -1,5 +1,6 @@
 package de.janschuri.lunaticFamily;
 
+import de.janschuri.lunaticFamily.commands.GenderCommand;
 import org.bukkit.profile.PlayerProfile;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -52,6 +53,9 @@ public final class Main extends JavaPlugin {
 
     public List<String> familyCommands;
     public List<String> familySubcommands;
+    public List<String> genderCommands;
+    public List<String> genderSubcommands;
+    public List<String> genderAdminSubcommands;
     public List<String> reloadCommands;
     public List<String> adoptCommands;
     public List<String> adoptSubcommands;
@@ -97,6 +101,9 @@ public final class Main extends JavaPlugin {
         getCommand("adopt").setExecutor(new AdoptCommand(this));
         getCommand("adopt").setTabCompleter(new AdoptCommand(this));
 
+        getCommand("gender").setExecutor(new GenderCommand(this));
+        getCommand("gender").setTabCompleter(new GenderCommand(this));
+
     }
 
     public void loadConfig(Plugin plugin) {
@@ -139,12 +146,15 @@ public final class Main extends JavaPlugin {
         familyCommands = Arrays.asList("family");
         familySubcommands = Arrays.asList("gender", "tree", "list", "background");
         reloadCommands = Arrays.asList("reload");
+        genderCommands = Arrays.asList("gender");
+        genderSubcommands = Arrays.asList("fe", "feminine", "ma", "masculine");
+        genderAdminSubcommands = Arrays.asList("set");
         adoptCommands = Arrays.asList("adopt");
         adoptSubcommands = Arrays.asList("propose", "accept", "deny", "kickout", "moveout", "list");
-        marryPriestSubcommands = Arrays.asList("priest");
         adoptAdminSubcommands = Arrays.asList("set", "unset");
         marryCommands = Arrays.asList("marry");
         marrySubcommands = Arrays.asList("propose", "accept", "deny", "divorce", "list", "kiss");
+        marryPriestSubcommands = Arrays.asList("priest");
         marryAdminSubcommands = Arrays.asList("set", "unset");
 
 
