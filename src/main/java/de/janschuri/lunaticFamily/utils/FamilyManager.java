@@ -148,7 +148,7 @@ public class FamilyManager {
 
     private void savePlayerData() {
         if (id == 0) {
-            Main.getDatabase().createNewRow(uuid, name, skinURL, partner, marryDate, sibling, firstParent, secondParent, firstChild, secondChild, gender, background, fake);
+            Main.getDatabase().saveData(uuid, name, skinURL, partner, marryDate, sibling, firstParent, secondParent, firstChild, secondChild, gender, background, fake);
         } else {
             Main.getDatabase().saveData(id, uuid, name, skinURL, partner, marryDate, sibling, firstParent, secondParent, firstChild, secondChild, gender, background, fake);
         }
