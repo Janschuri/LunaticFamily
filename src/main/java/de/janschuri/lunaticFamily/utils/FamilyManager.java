@@ -356,7 +356,9 @@ public class FamilyManager {
             childFam.setFirstParent(playerID);
             childFam.setSecondParent(partnerID);
             if (playerFam.getSecondChild() != null) {
-                childFam.setSibling(playerFam.getSecondChild().getID());
+                if(playerFam.getSecondChild().getID() != childFam.getID()) {
+                    childFam.setSibling(playerFam.getSecondChild().getID());
+                }
             }
         }
         if (playerFam.getSecondChild() != null) {
@@ -364,7 +366,9 @@ public class FamilyManager {
             childFam.setFirstParent(playerID);
             childFam.setSecondParent(partnerID);
             if (playerFam.getFirstChild() != null) {
-                childFam.setSibling(playerFam.getFirstChild().getID());
+                if(playerFam.getFirstChild().getID() != childFam.getID()) {
+                    childFam.setSibling(playerFam.getFirstChild().getID());
+                }
             }
         }
     }
