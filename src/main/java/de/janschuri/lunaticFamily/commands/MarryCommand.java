@@ -282,10 +282,12 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                                                         new BukkitRunnable() {
                                                             public void run() {
-                                                                plugin.marryRequests.remove(partner);
-                                                                playerPartner.sendMessage(plugin.prefix + plugin.messages.get("marry_request_expired").replace("%player%", playerFam.getName()));
+                                                                if (plugin.marryRequests.containsKey(partner)) {
+                                                                    plugin.marryRequests.remove(partner);
+                                                                    playerPartner.sendMessage(plugin.prefix + plugin.messages.get("marry_request_expired").replace("%player%", playerFam.getName()));
 
-                                                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_request_sent_expired").replace("%player%", partnerFam.getName()));
+                                                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_request_sent_expired").replace("%player%", partnerFam.getName()));
+                                                                }
                                                             }
                                                         }.runTaskLater(plugin, 600L);
                                                     } else {
