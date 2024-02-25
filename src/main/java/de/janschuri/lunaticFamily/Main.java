@@ -316,4 +316,11 @@ public final class Main extends JavaPlugin {
         return isLoaded;
     }
 
+    public static boolean playerExists(String name) {
+        for(OfflinePlayer player : Bukkit.getOfflinePlayers()) {
+            if(player.getName().equals(name)) return true;
+//            if(player.getUniqueId().equals(UUID.fromString(uuid))) return true;
+        }
+        return false;
+    }
 }
