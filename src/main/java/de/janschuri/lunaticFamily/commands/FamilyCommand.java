@@ -23,9 +23,9 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
+        if (args.length == 0) {
 
-
-        if (!(sender instanceof Player)) {
+        } else {
             if (args[0].equalsIgnoreCase("gender")) {
                 GenderCommand genderCommand = new GenderCommand(plugin);
                 String stringLabel = "gender";
@@ -36,59 +36,9 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 for (int i = 1; i < args.length; i++) {
                     arrayArgs[i - 1] = args[i];
                 }
-
                 genderCommand.onCommand(sender, pluginCommand, stringLabel, arrayArgs);
 
-            } else if (args[0].equalsIgnoreCase("list")) {
-
-                List<String> list = plugin.familyList;
-
-                if (args.length > 1) {
-                    String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
-                    FamilyManager player1Fam = new FamilyManager(player1, plugin);
-                    BiMap familyList = player1Fam.getFamilyList();
-                    String msg = plugin.prefix + plugin.messages.get("family_list").replace("%player%", player1Fam.getName()) + "\n";
-
-                    for (String e : list) {
-                        if (familyList.containsKey(e)) {
-                            String relationUUID = (String) familyList.get(e);
-                            FamilyManager relationFam = new FamilyManager(relationUUID, plugin);
-                            String relationKey = e.replace("first", "")
-                                    .replace("second", "")
-                                    .replace("third", "")
-                                    .replace("fourth", "")
-                                    .replace("fifth", "")
-                                    .replace("sixth", "")
-                                    .replace("seventh", "")
-                                    .replace("eighth", "");
-
-
-                            if (relationFam.getGender().equalsIgnoreCase("fe")) {
-                                Bukkit.getLogger().info(relationKey + "fe");
-                                msg = msg + plugin.relationshipsFe.get(relationKey) + ": " + relationFam.getName() + "\n";
-                                Bukkit.getLogger().info((String) plugin.relationshipsFe.get(relationKey));
-                            }
-                            if (relationFam.getGender().equalsIgnoreCase("ma")) {
-                                Bukkit.getLogger().info(relationKey + "ma");
-                                msg = msg + plugin.relationshipsMa.get(relationKey) + ": " + relationFam.getName() + "\n";
-                                Bukkit.getLogger().info((String) plugin.relationshipsMa.get(relationKey));
-                            }
-
-                        }
-                    }
-
-
-                    sender.sendMessage(msg);
-                } else {
-                    sender.sendMessage(plugin.prefix + plugin.messages.get("no_console_command"));
-                }
-
-            }
-            else if (args[0].equalsIgnoreCase("reload")) {
-            plugin.loadConfig(plugin);
-            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_reload"));
-            }
-            else if (args[0].equalsIgnoreCase("adopt")) {
+            } else if (args[0].equalsIgnoreCase("adopt")) {
                 AdoptCommand adoptCommand = new AdoptCommand(plugin);
                 String stringLabel = "adopt";
                 PluginCommand pluginCommand = plugin.getCommand(stringLabel);
@@ -112,79 +62,58 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 }
 
                 marryCommand.onCommand(sender, pluginCommand, stringLabel, arrayArgs);
-            }
-            else {
-                sender.sendMessage(plugin.prefix + plugin.messages.get("no_console_command"));
-            }
-        } else {
-            Player player = (Player) sender;
-            String uuid = player.getUniqueId().toString();
-            FamilyManager playerFam = new FamilyManager(uuid, plugin);
-            if (args.length == 0) {
+            } else if (args[0].equalsIgnoreCase("reload")) {
+                plugin.loadConfig(plugin);
+                sender.sendMessage(plugin.prefix + plugin.messages.get("admin_reload"));
+            } else if (args[0].equalsIgnoreCase("list")) {
 
+                List<String> list = plugin.familyList;
 
-            } else if (args.length > 0) {
+                if (!(sender instanceof Player) && args.length < 2) {
 
-                if (args[0].equalsIgnoreCase("gender")) {
-                    GenderCommand genderCommand = new GenderCommand(plugin);
-                    String stringLabel = "gender";
-                    PluginCommand pluginCommand = plugin.getCommand(stringLabel);
-                    String[] arrayArgs = new String[args.length - 1];
+                } else if (args.length == 1) {
+                    Player player = (Player) sender;
+                    String uuid = player.getUniqueId().toString();
+                    FamilyManager playerFam = new FamilyManager(uuid, plugin);
 
-                    // Copy elements starting from the second element of the original array
-                    for (int i = 1; i < args.length; i++) {
-                        arrayArgs[i - 1] = args[i];
-                    }
+                    BiMap familyList = playerFam.getFamilyList();
+                    String msg = plugin.prefix + plugin.messages.get("family_list") + "\n";
 
-                    genderCommand.onCommand(player, pluginCommand, stringLabel, arrayArgs);
-
-                } else if (args[0].equalsIgnoreCase("list")) {
-
-                    List<String> list = plugin.familyList;
-
-                    if (args.length == 1) {
-
-                        BiMap familyList = playerFam.getFamilyList();
-                        String msg = plugin.prefix + plugin.messages.get("family_list").replace("%player%", playerFam.getName()) + "\n";
-
-                        for (String e : list) {
-                            if (familyList.containsKey(e)) {
-                                int relationID = (int) familyList.get(e);
-                                FamilyManager relationFam = new FamilyManager(relationID, plugin);
-                                String relationKey = e.replace("first", "")
-                                        .replace("second", "")
-                                        .replace("third", "")
-                                        .replace("fourth", "")
-                                        .replace("fifth", "")
-                                        .replace("sixth", "")
-                                        .replace("seventh", "")
-                                        .replace("eighth", "");
-
-
-                                if (relationFam.getGender().equalsIgnoreCase("fe")) {
-                                    Bukkit.getLogger().info(relationKey + "fe");
-                                    msg = msg + plugin.relationshipsFe.get(relationKey) + ": " + relationFam.getName() + "\n";
-                                    Bukkit.getLogger().info((String) plugin.relationshipsFe.get(relationKey));
-                                }
-                                if (relationFam.getGender().equalsIgnoreCase("ma")) {
-                                    Bukkit.getLogger().info(relationKey + "ma");
-                                    msg = msg + plugin.relationshipsMa.get(relationKey) + ": " + relationFam.getName() + "\n";
-                                    Bukkit.getLogger().info((String) plugin.relationshipsMa.get(relationKey));
-                                }
-
+                    for (String e : list) {
+                        if (familyList.containsKey(e)) {
+                            int relationID = (int) familyList.get(e);
+                            FamilyManager relationFam = new FamilyManager(relationID, plugin);
+                            String relationKey = e.replace("first", "")
+                                    .replace("second", "")
+                                    .replace("third", "")
+                                    .replace("fourth", "")
+                                    .replace("fifth", "")
+                                    .replace("sixth", "")
+                                    .replace("seventh", "")
+                                    .replace("eighth", "");
+                            if (relationFam.getGender().equalsIgnoreCase("fe")) {
+                                Bukkit.getLogger().info(relationKey + "fe");
+                                msg = msg + plugin.relationshipsFe.get(relationKey) + ": " + relationFam.getName() + "\n";
+                                Bukkit.getLogger().info((String) plugin.relationshipsFe.get(relationKey));
+                            }
+                            if (relationFam.getGender().equalsIgnoreCase("ma")) {
+                                Bukkit.getLogger().info(relationKey + "ma");
+                                msg = msg + plugin.relationshipsMa.get(relationKey) + ": " + relationFam.getName() + "\n";
+                                Bukkit.getLogger().info((String) plugin.relationshipsMa.get(relationKey));
                             }
                         }
-
-
-                        sender.sendMessage(msg);
-                    } else if (args.length > 1 && player.hasPermission("lunaticFamily.family.listothers")) {
-
-
+                    }
+                    sender.sendMessage(msg);
+                } else {
+                    if (!sender.hasPermission("lunaticFamily.family.listothers")) {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
+                    } else if (!Main.playerExists(args[1])) {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("player_not_exist").replace("%player%", args[1]));
+                    } else {
                         String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
                         FamilyManager player1Fam = new FamilyManager(player1, plugin);
                         BiMap familyList = player1Fam.getFamilyList();
-                        String msg = plugin.prefix + plugin.messages.get("family_list").replace("%player%", player1Fam.getName()) + "\n";
-
+                        String msg = plugin.prefix + plugin.messages.get("family_others_list").replace("%player%", player1Fam.getName()) + "\n";
                         for (String e : list) {
                             if (familyList.containsKey(e)) {
                                 String relationUUID = (String) familyList.get(e);
@@ -197,8 +126,6 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                                         .replace("sixth", "")
                                         .replace("seventh", "")
                                         .replace("eighth", "");
-
-
                                 if (relationFam.getGender().equalsIgnoreCase("fe")) {
                                     Bukkit.getLogger().info(relationKey + "fe");
                                     msg = msg + plugin.relationshipsFe.get(relationKey) + ": " + relationFam.getName() + "\n";
@@ -209,61 +136,37 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                                     msg = msg + plugin.relationshipsMa.get(relationKey) + ": " + relationFam.getName() + "\n";
                                     Bukkit.getLogger().info((String) plugin.relationshipsMa.get(relationKey));
                                 }
-
                             }
                         }
-
-
                         sender.sendMessage(msg);
-                    } else {
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
                     }
+                }
 
-                } else if (args[0].equalsIgnoreCase("tree")) {
+            } else if (!(sender instanceof Player)) {
+                sender.sendMessage(plugin.prefix + plugin.messages.get("no_console_command"));
+            }
+            else{
+                Player player = (Player) sender;
+                String uuid = player.getUniqueId().toString();
+                FamilyManager playerFam = new FamilyManager(uuid, plugin);
+                    if (args[0].equalsIgnoreCase("tree")) {
 
-                    if (Main.isCrazyAdvancementAPILoaded()) {
-                        FamilyTree familyTree = new FamilyTree(playerFam.getID(), plugin);
-                        sender.sendMessage(plugin.messages.get("tree_loaded"));
-                    } else {
-                        sender.sendMessage(plugin.messages.get("internal_error"));
-                    }
-                } else if (args[0].equalsIgnoreCase("background")) {
-                    if (args.length == 2) {
-                        playerFam.setBackground(args[1]);
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("family_background_set"));
+                        if (Main.isCrazyAdvancementAPILoaded()) {
+                            FamilyTree familyTree = new FamilyTree(playerFam.getID(), plugin);
+                            sender.sendMessage(plugin.messages.get("tree_loaded"));
+                        } else {
+                            sender.sendMessage(plugin.messages.get("internal_error"));
+                        }
+                    } else if (args[0].equalsIgnoreCase("background")) {
+                        if (args.length == 2) {
+                            playerFam.setBackground(args[1]);
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("family_background_set"));
+                        } else {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                        }
                     } else {
                         sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
                     }
-                } else if (args[0].equalsIgnoreCase("reload") && player.hasPermission("lunaticFamily.admin.reload")) {
-                    plugin.loadConfig(plugin);
-                    sender.sendMessage(plugin.prefix + plugin.messages.get("admin_reload"));
-                } else if (args[0].equalsIgnoreCase("adopt")) {
-                    AdoptCommand adoptCommand = new AdoptCommand(plugin);
-                    String stringLabel = "adopt";
-                    PluginCommand pluginCommand = plugin.getCommand(stringLabel);
-                    String[] arrayArgs = new String[args.length - 1];
-
-                    // Copy elements starting from the second element of the original array
-                    for (int i = 1; i < args.length; i++) {
-                        arrayArgs[i - 1] = args[i];
-                    }
-
-                    adoptCommand.onCommand(player, pluginCommand, stringLabel, arrayArgs);
-                } else if (args[0].equalsIgnoreCase("marry")) {
-                    MarryCommand marryCommand = new MarryCommand(plugin);
-                    String stringLabel = "marry";
-                    PluginCommand pluginCommand = plugin.getCommand(stringLabel);
-                    String[] arrayArgs = new String[args.length - 1];
-
-                    // Copy elements starting from the second element of the original array
-                    for (int i = 1; i < args.length; i++) {
-                        arrayArgs[i - 1] = args[i];
-                    }
-
-                    marryCommand.onCommand(player, pluginCommand, stringLabel, arrayArgs);
-                } else {
-                    sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
-                }
             }
         }
         return true;

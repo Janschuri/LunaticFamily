@@ -154,7 +154,9 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         }
                     }
                 }
-            } else if (sender instanceof Player) {
+            } else if (!(sender instanceof Player)) {
+                sender.sendMessage(plugin.prefix + plugin.messages.get("no_console_command"));
+            } else {
                 Player player = (Player) sender;
                 if (!player.hasPermission("lunaticFamily.marry")) {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
