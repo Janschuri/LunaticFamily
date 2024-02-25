@@ -47,9 +47,9 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
             }
         } else {
             //admin subcommand "set"
-            if (args[0].equalsIgnoreCase("set") && sender.hasPermission("lunaticFamily.admin.marry")) {
+            if (args[0].equalsIgnoreCase("set")) {
 
-                Boolean forced = false;
+                boolean forced = false;
 
                 if (args.length > 3) {
                     if (args[3].equalsIgnoreCase("force")) {
@@ -131,27 +131,23 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                     }
                 }
 
-            } else if (args[0].equalsIgnoreCase("unset") && sender.hasPermission("lunaticFamily.admin.marry")) {
+            } else if (args[0].equalsIgnoreCase("unset")) {
                 if (!sender.hasPermission("lunaticFamily.admin.marry")) {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
                 } else if (args.length < 2) {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                } else if (!Main.playerExists(args[1])) {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("player_not_exist").replace("%player%", Bukkit.getOfflinePlayer(args[1]).getName()));
                 } else {
-                    String player1Name = args[1];
+                    String player1UUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
+                    FamilyManager player1Fam = new FamilyManager(player1UUID, plugin);
 
-                    if (!Main.playerExists(player1Name)) {
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("player_not_exist").replace("%player%", Bukkit.getOfflinePlayer(player1Name).getName()));
+                    if (!player1Fam.isMarried()) {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("admin_marry_unset_no_partner").replace("%player%", player1Fam.getName()));
                     } else {
-                        String player1UUID = Bukkit.getOfflinePlayer(player1Name).getUniqueId().toString();
-                        FamilyManager player1Fam = new FamilyManager(player1UUID, plugin);
-
-                        if (!player1Fam.isMarried()) {
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_marry_unset_no_partner").replace("%player%", player1Fam.getName()));
-                        } else {
-                            FamilyManager partnerFam = player1Fam.getPartner();
-                            player1Fam.divorce();
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_marry_unset_divorced").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
-                        }
+                        FamilyManager partnerFam = player1Fam.getPartner();
+                        player1Fam.divorce();
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("admin_marry_unset_divorced").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
                     }
                 }
             } else if (!(sender instanceof Player)) {
@@ -168,63 +164,60 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_already_married").replace("%player%", playerFam.getName()));
                         } else if (args.length < 2) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                        } else if (!Main.playerExists(args[1])) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("player_not_exist").replace("%player%", args[1]));
+                        } else if (Bukkit.getPlayer(args[1]) == null) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", Bukkit.getOfflinePlayer(args[1]).getName()));
                         } else {
-                            String partnerName = args[1];
-                            if (!Main.playerExists(partnerName)) {
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("player_not_exist").replace("%player%", partnerName));
-                            } else if (Bukkit.getPlayer(partnerName) == null) {
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", Bukkit.getOfflinePlayer(partnerName).getName()));
+                            String partnerUUID = Bukkit.getPlayer(args[1]).getUniqueId().toString();
+                            args[1] = Bukkit.getPlayer(args[1]).getName();
+                            Player partnerPlayer = Bukkit.getPlayer(args[1]);
+                            FamilyManager partnerFam = new FamilyManager(partnerUUID, plugin);
+                            if (playerFam.getID() == partnerFam.getID()) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_self_request"));
+                            } else if (playerFam.isFamilyMember(partnerFam.getID())) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_family_request").replace("%player%", partnerFam.getName()));
+                            } else if (partnerFam.isFamilyMember(playerFam.getID())) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_family_request").replace("%player%", partnerFam.getName()));
+                            } else if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
+                                int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_too_many_children").replace("%partner%", partnerFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
+                            } else if (plugin.marryRequests.containsKey(partnerUUID) || plugin.marryPriest.containsKey(partnerUUID)) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_open_request").replace("%player%", partnerFam.getName()));
+                            } else if (partnerFam.isMarried()) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_player_already_married").replace("%player%", partnerFam.getName()));
+                            } else if (!Main.isInRange(player.getLocation(), partnerPlayer.getLocation(), 5)) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("player_too_far_away").replace("%player%", partnerFam.getName()));
                             } else {
-                                String partnerUUID = Bukkit.getPlayer(partnerName).getUniqueId().toString();
-                                partnerName = Bukkit.getPlayer(partnerName).getName();
-                                Player partnerPlayer = Bukkit.getPlayer(partnerName);
-                                FamilyManager partnerFam = new FamilyManager(partnerUUID, plugin);
-                                if (playerFam.getID() == partnerFam.getID()) {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_self_request"));
-                                } else if (playerFam.isFamilyMember(partnerFam.getID())) {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_family_request").replace("%player%", partnerFam.getName()));
-                                } else if (partnerFam.isFamilyMember(playerFam.getID())) {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_family_request").replace("%player%", partnerFam.getName()));
-                                } else if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
-                                    int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_too_many_children").replace("%partner%", partnerFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
-                                } else if (plugin.marryRequests.containsKey(partnerUUID) || plugin.marryPriest.containsKey(partnerUUID)) {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_open_request").replace("%player%", partnerFam.getName()));
-                                } else if (partnerFam.isMarried()) {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_player_already_married").replace("%player%", partnerFam.getName()));
-                                } else if (!Main.isInRange(player.getLocation(), partnerPlayer.getLocation(), 5)) {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("player_too_far_away").replace("%player%", partnerFam.getName()));
-                                } else {
-                                    partnerPlayer.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_request").replace("%player1%", partnerFam.getName()).replace("%player2%", playerFam.getName()));
+                                partnerPlayer.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_request").replace("%player1%", partnerFam.getName()).replace("%player2%", playerFam.getName()));
 
-                                    TextComponent yes = new TextComponent(ChatColor.GREEN + "[" + plugin.messages.get("marry_yes") + "]");
-                                    yes.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry accept"));
-                                    yes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "[" + plugin.messages.get("marry_yes") + "]").create()));
+                                TextComponent yes = new TextComponent(ChatColor.GREEN + "[" + plugin.messages.get("marry_yes") + "]");
+                                yes.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry accept"));
+                                yes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "[" + plugin.messages.get("marry_yes") + "]").create()));
 
-                                    TextComponent no = new TextComponent(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]");
-                                    no.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry deny"));
-                                    no.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]").create()));
+                                TextComponent no = new TextComponent(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]");
+                                no.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry deny"));
+                                no.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]").create()));
 
-                                    TextComponent space = new TextComponent(ChatColor.WHITE + "---");
+                                TextComponent space = new TextComponent(ChatColor.WHITE + "---");
 
-                                    partnerPlayer.sendMessage(yes, space, no);
+                                partnerPlayer.sendMessage(yes, space, no);
 
 
-                                    plugin.marryRequests.put(partnerUUID, playerUUID);
+                                plugin.marryRequests.put(partnerUUID, playerUUID);
 
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_request_sent").replace("%player%", partnerFam.getName()));
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_request_sent").replace("%player%", partnerFam.getName()));
 
-                                    new BukkitRunnable() {
-                                        public void run() {
-                                            if (plugin.marryRequests.containsKey(partnerUUID)) {
-                                                plugin.marryRequests.remove(partnerUUID);
-                                                partnerPlayer.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_request_expired").replace("%player%", playerFam.getName()));
+                                new BukkitRunnable() {
+                                    public void run() {
+                                        if (plugin.marryRequests.containsKey(partnerUUID)) {
+                                            plugin.marryRequests.remove(partnerUUID);
+                                            partnerPlayer.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_request_expired").replace("%player%", playerFam.getName()));
 
-                                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_request_sent_expired").replace("%player%", partnerFam.getName()));
-                                            }
+                                            sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_request_sent_expired").replace("%player%", partnerFam.getName()));
                                         }
-                                    }.runTaskLater(plugin, 600L);
-                                }
+                                    }
+                                }.runTaskLater(plugin, 600L);
                             }
                         }
                     } else if (args[0].equalsIgnoreCase("priest")) {
@@ -374,7 +367,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                     //player subcommand "divorce"
                     else if (args[0].equalsIgnoreCase("divorce")) {
 
-                        Boolean confirm = false;
+                        boolean confirm = false;
 
                         if (args.length > 1) {
                             if (args[1].equalsIgnoreCase("confirm")) {

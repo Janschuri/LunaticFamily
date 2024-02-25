@@ -25,342 +25,275 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 0) {
 
-        } else if (args.length > 0) {
+        } else {
 
-            if (!(sender instanceof Player)) {
-                if (args[0].equalsIgnoreCase("set") && args.length == 3) {
+                if (args[0].equalsIgnoreCase("set") && sender.hasPermission("lunaticFamily.admin.adopt")) {
 
-                    String firstParentUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
-                    FamilyManager firstParentFam = new FamilyManager(firstParentUUID, plugin);
-                    String childUUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
-                    FamilyManager childFam = new FamilyManager(childUUID, plugin);
+                    boolean forced = false;
 
-                    if (firstParentFam.getPartner() != null  || plugin.allowSingleAdopt) {
+                    if (args.length > 3) {
+                        if (args[3].equalsIgnoreCase("force")) {
+                            forced = true;
+                        }
+                    }
 
-                        if (childFam.getFirstParent() == null) {
+                    if (!sender.hasPermission("lunaticFamily.admin.adopt")) {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
+                    } else if (args.length < 3) {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                    } else if (!Main.playerExists(args[1]) && !forced) {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("player_not_exist").replace("%player%", args[1]));
+                    } else if (!Main.playerExists(args[2]) && !forced) {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("player_not_exist").replace("%player%", args[2]));
+                    } else if (args[1].equalsIgnoreCase(args[2])) {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_set_same_player"));
+                    } else {
 
-                            if (firstParentFam.getChildrenAmount() < 2) {
+                        String firstParentUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
+                        FamilyManager firstParentFam = new FamilyManager(firstParentUUID, plugin);
+                        String childUUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
+                        FamilyManager childFam = new FamilyManager(childUUID, plugin);
 
-                                if (firstParentFam.getPartner() == null) {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_by_single_set").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
-                                } else {
-                                    FamilyManager secondParentFam = firstParentFam.getPartner();;
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_set").replace("%child%", childFam.getName()).replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()));
-                                }
+                        if (!firstParentFam.isMarried() && !plugin.allowSingleAdopt) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_set_no_single_adopt").replace("%player%", firstParentFam.getName()));
+                        } else if (childFam.isAdopted()) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_set_already_adopted").replace("%child%", childFam.getName()));
+                        } else if (firstParentFam.getChildrenAmount() > 1) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_limit").replace("%player%", firstParentFam.getName()));
+                        } else {
 
-                                plugin.adoptRequests.remove(childUUID);
-                                firstParentFam.adopt(childFam.getID());
+                            if (firstParentFam.getPartner() == null) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_set_by_single").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
                             } else {
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_limit").replace("%player%", firstParentFam.getName()));
+                                FamilyManager secondParentFam = firstParentFam.getPartner();
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_set").replace("%child%", childFam.getName()).replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()));
                             }
-                        } else {
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_already_adopted").replace("%child%", childFam.getName()));
+
+                            plugin.adoptRequests.remove(childUUID);
+                            firstParentFam.adopt(childFam.getID());
                         }
-                    } else {
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_not_married").replace("%player%", firstParentFam.getName()));
+
                     }
-                } else if (args[0].equalsIgnoreCase("unset") && args.length == 2) {
+                } else if (args[0].equalsIgnoreCase("unset") && sender.hasPermission("lunaticFamily.admin.adopt") && args.length == 2) {
 
-                    String childUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
-                    FamilyManager childFam = new FamilyManager(childUUID, plugin);
+                    if (!sender.hasPermission("lunaticFamily.admin.adopt")) {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
+                    } else if (args.length < 2) {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                    } else if (!Main.playerExists(args[1])) {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("player_not_exist").replace("%player%", Bukkit.getOfflinePlayer(args[1]).getName()));
+                    } else {
 
-                    if (childFam.getFirstParent() != null) {
-                        FamilyManager firstParentFam = childFam.getFirstParent();
+                        String childUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
+                        FamilyManager childFam = new FamilyManager(childUUID, plugin);
 
-                        firstParentFam.unadopt(childFam.getID());
-
-                        if (firstParentFam.isMarried()) {
-                            FamilyManager secondParentFam = firstParentFam.getPartner();
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_unset").replace("%child%", childFam.getName()).replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()));
+                        if (!childFam.isAdopted()) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_unset_not_adopted").replace("%child%", childFam.getName()));
                         } else {
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_by_single_unset").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
+                            FamilyManager firstParentFam = childFam.getFirstParent();
+
+                            if (firstParentFam.isMarried()) {
+                                FamilyManager secondParentFam = firstParentFam.getPartner();
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_unset").replace("%child%", childFam.getName()).replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()));
+                            } else {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_unset_by_single").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
+                            }
+                            firstParentFam.unadopt(childFam.getID());
                         }
-                    } else {
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_not_adopted").replace("%child%", childFam.getName()));
                     }
 
-                } else {
+                } else if (!(sender instanceof Player)) {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("no_console_command"));
-                }
-            } else {
-                Player player = (Player) sender;
-                if (args[0].equalsIgnoreCase("set") && player.hasPermission("lunaticFamily.admin.adopt") && args.length == 3) {
-
-                    String firstParentUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
-                    FamilyManager firstParentFam = new FamilyManager(firstParentUUID, plugin);
-                    String childUUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
-                    FamilyManager childFam = new FamilyManager(childUUID, plugin);
-
-                    if (firstParentFam.getPartner() != null  || plugin.allowSingleAdopt) {
-
-                        if (childFam.getFirstParent() == null) {
-
-                            if (firstParentFam.getChildrenAmount() < 2) {
-
-                                if (firstParentFam.getPartner() == null) {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_by_single_set").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
-                                } else {
-                                    FamilyManager secondParentFam = firstParentFam.getPartner();
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_set").replace("%child%", childFam.getName()).replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()));
-                                }
-
-                                plugin.adoptRequests.remove(childUUID);
-                                firstParentFam.adopt(childFam.getID());
-                            } else {
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_limit").replace("%player%", firstParentFam.getName()));
-                            }
-                        } else {
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_already_adopted").replace("%child%", childFam.getName()));
-                        }
-                    } else {
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_not_married").replace("%player%", firstParentFam.getName()));
-                    }
-                } else if (args[0].equalsIgnoreCase("unset") && player.hasPermission("lunaticFamily.admin.adopt") && args.length == 2) {
-
-                    String childUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
-                    FamilyManager childFam = new FamilyManager(childUUID, plugin);
-
-                    if (childFam.getFirstParent() != null) {
-                        FamilyManager firstParentFam = childFam.getFirstParent();
-
-                        firstParentFam.unadopt(childFam.getID());
-
-
-                        if (firstParentFam.isMarried()) {
-                            FamilyManager secondParentFam = firstParentFam.getPartner();
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_unset").replace("%child%", childFam.getName()).replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()));
-                        } else {
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_by_single_unset").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
-                        }
-                    } else {
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_not_adopted").replace("%child%", childFam.getName()));
-                    }
-
                 } else {
-                    if (player.hasPermission("lunaticFamily.adopt")) {
+                    Player player = (Player) sender;
+                    if (!player.hasPermission("lunaticFamily.adopt")) {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
+                    } else {
                         String playerUUID = player.getUniqueId().toString();
                         FamilyManager playerFam = new FamilyManager(playerUUID, plugin);
 
                         if (args[0].equalsIgnoreCase("propose")) {
-                            if (args.length > 1) {
-
-                                if ((playerFam.getPartner() != null) || plugin.allowSingleAdopt) {
-                                    if (playerFam.getFirstChild() == null || playerFam.getSecondChild() == null) {
-                                        if (Bukkit.getPlayer(args[1]) != null) {
-
-                                            if (args[1].equalsIgnoreCase(player.getName())) {
-                                                player.sendMessage(plugin.prefix + plugin.messages.get("adopt_self_request"));
-                                            } else if (args[1].equalsIgnoreCase(playerFam.getName())) {
-                                                player.sendMessage(plugin.prefix + plugin.messages.get("adopt_family_request").replace("%player%", Bukkit.getPlayer(args[1]).getName()));
-                                            } else {
-
-                                                String child = Bukkit.getPlayer(args[1]).getUniqueId().toString();
-                                                FamilyManager childFam = new FamilyManager(child, plugin);
-
-                                                //child has open request
-                                                if (plugin.adoptRequests.containsKey(child)) {
-
-                                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_open_request").replace("%player%", childFam.getName()));
-                                                } else if (childFam.getFirstParent() != null) {
-                                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_already_adopted").replace("%player%", childFam.getName()));
-                                                }
-
-                                                //player has no open request
-                                                else {
-                                                    if (playerFam.isMarried()) {
-                                                        FamilyManager partnerFam = playerFam.getPartner();
-                                                        Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_request").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));
-                                                    } else {
-                                                        Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_by_single_request").replace("%player%", playerFam.getName()));
-
-                                                    }
-                                                    plugin.adoptRequests.put(child, playerUUID);
-                                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_request_sent").replace("%player%", childFam.getName()));;
-
-                                                    new BukkitRunnable() {
-                                                        public void run() {
-                                                            if (plugin.adoptRequests.containsKey(child)) {
-                                                                plugin.adoptRequests.remove(child);
-                                                                if (playerFam.isMarried()) {
-                                                                    FamilyManager partnerFam = playerFam.getPartner();
-                                                                    Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_request_expired").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));
-                                                                } else {
-                                                                    Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_by_single_request_expired").replace("%player%", playerFam.getName()));
-                                                                }
-                                                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_request_sent_expired").replace("%player%", childFam.getName()));
-                                                            }
-                                                        }
-                                                    }.runTaskLater(plugin, 600L);
-                                                }
-                                            }
-
-                                        } else {
-                                            sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", args[1]));
-                                        }
-                                    } else {
-                                        sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_limit"));
-                                    }
-                                } else {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_not_married"));
-                                }
-
-
-                            } else {
+                            if (args.length < 2) {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                            } else if (!playerFam.isMarried() && !plugin.allowSingleAdopt) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_no_single_adopt"));
+                            } else if (playerFam.getChildrenAmount() > 1){
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_limit"));
+                            } else if (Bukkit.getPlayer(args[1]) == null) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", args[1]));
+                            } else {
+                                String child = Bukkit.getPlayer(args[1]).getUniqueId().toString();
+                                FamilyManager childFam = new FamilyManager(child, plugin);
+
+                                if (args[1].equalsIgnoreCase(player.getName())) {
+                                    player.sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_self_request"));
+                                } else if (playerFam.isFamilyMember(childFam.getID())) {
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_family_request").replace("%player%", childFam.getName()));
+                                } else if (plugin.adoptRequests.containsKey(child)) {
+
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_open_request").replace("%player%", childFam.getName()));
+                                } else if (childFam.getFirstParent() != null) {
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_already_adopted").replace("%player%", childFam.getName()));
+                                } else {
+                                    if (playerFam.isMarried()) {
+                                        FamilyManager partnerFam = playerFam.getPartner();
+                                        Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_request").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));
+                                    } else {
+                                        Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_request_by_single").replace("%player%", playerFam.getName()));
+
+                                    }
+                                    plugin.adoptRequests.put(child, playerUUID);
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_request_sent").replace("%player%", childFam.getName()));
+                                    ;
+
+                                    new BukkitRunnable() {
+                                        public void run() {
+                                            if (plugin.adoptRequests.containsKey(child)) {
+                                                plugin.adoptRequests.remove(child);
+                                                if (playerFam.isMarried()) {
+                                                    FamilyManager partnerFam = playerFam.getPartner();
+                                                    Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_request_expired").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));
+                                                } else {
+                                                    Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_request_by_single_expired").replace("%player%", playerFam.getName()));
+                                                }
+                                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_request_sent_expired").replace("%player%", childFam.getName()));
+                                            }
+                                        }
+                                    }.runTaskLater(plugin, 600L);
+                                }
                             }
+
                         } else if (args[0].equalsIgnoreCase("accept")) {
 
                             //check for request
-                            if (plugin.adoptRequests.containsKey(playerUUID)) {
+                            if (!plugin.adoptRequests.containsKey(playerUUID)) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_accept_no_request"));
+                            } else {
 
                                 String firstParent = plugin.adoptRequests.get(playerUUID);
                                 FamilyManager firstParentFam = new FamilyManager(firstParent, plugin);
 
-                                if (firstParentFam.getChildrenAmount() < 3) {
+                                if (firstParentFam.getChildrenAmount() > 1) {
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_accept_parent_limit").replace("%player%", firstParentFam.getName()));
+                                } else {
 
                                     if (firstParentFam.isMarried()) {
                                         FamilyManager secondParentFam = firstParentFam.getPartner();
-                                        sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_got_adopted").replace("%player1%", firstParentFam.getName()).replace("%player2%", secondParentFam.getName()));
+                                        sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_accept_got_adopted").replace("%player1%", firstParentFam.getName()).replace("%player2%", secondParentFam.getName()));
                                         if (Bukkit.getPlayer(UUID.fromString(secondParentFam.getUUID())) != null) {
-                                            Bukkit.getPlayer(UUID.fromString(secondParentFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_adopted").replace("%player%", playerFam.getName()));
+                                            Bukkit.getPlayer(UUID.fromString(secondParentFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_accept_adopted").replace("%player%", playerFam.getName()));
                                         }
                                     } else {
-                                        sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_got_adopted_by_single").replace("%player%", firstParentFam.getName()));
+                                        sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_accept_adopted_by_single").replace("%player%", firstParentFam.getName()));
                                     }
 
-                                    Bukkit.getPlayer(UUID.fromString(firstParent)).sendMessage(plugin.prefix + plugin.messages.get("adopt_adopted").replace("%player%", playerFam.getName()));
-
-
+                                    Bukkit.getPlayer(UUID.fromString(firstParent)).sendMessage(plugin.prefix + plugin.messages.get("adopt_accept_adopted").replace("%player%", playerFam.getName()));
                                     plugin.adoptRequests.remove(playerUUID);
-
                                     firstParentFam.adopt(playerFam.getID());
-                                } else {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_parent_limit").replace("%player%", firstParentFam.getName()));
                                 }
-                            } else {
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_no_request"));
                             }
                         } else if (args[0].equalsIgnoreCase("list")) {
                             if (playerFam.getFirstChild() != null || playerFam.getSecondChild() != null) {
-
-                                if (playerFam.getChildrenAmount() == 1) {
-
-                                    String child;
-
-                                    if (playerFam.getFirstChild() == null) {
-                                        child = playerFam.getSecondChild().getName();
-                                    } else {
-                                        child = playerFam.getFirstChild().getName();
-                                    }
-
-
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_one_child").replace("%player%", child));
-                                }
-
-                                if (playerFam.getChildrenAmount() == 2) {
-
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_two_children").replace("%player1%", playerFam.getFirstChild().getName()).replace("%player2%", playerFam.getSecondChild().getName()));
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_limit"));
-                                }
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_list_no_child"));
                             } else {
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_no_child"));
+                                    String msg = plugin.prefix + plugin.messages.get("adopt_list") + "\n";
+                                    if (playerFam.getFirstChild() != null) {
+                                        msg = msg + playerFam.getFirstChild().getName() + "\n";
+                                    }
+                                    if (playerFam.getSecondChild() != null) {
+                                        msg = msg + playerFam.getSecondChild().getName() + "\n";
+                                    }
+                                    sender.sendMessage(msg);
                             }
                         } else if (args[0].equalsIgnoreCase("deny")) {
-                            if (plugin.adoptRequests.containsKey(playerUUID)) {
-
-                                String firstParent = plugin.adoptRequests.get(playerUUID);
-
-
-                                Bukkit.getPlayer(UUID.fromString(firstParent)).sendMessage(plugin.prefix + plugin.messages.get("adopt_deny").replace("%player%", playerFam.getName()));
-
-
-                                plugin.marryRequests.remove(playerUUID);
+                            if (!plugin.adoptRequests.containsKey(playerUUID)) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_deny_no_request"));
                             } else {
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_no_request"));
+                                String firstParent = plugin.adoptRequests.get(playerUUID);
+                                Bukkit.getPlayer(UUID.fromString(firstParent)).sendMessage(plugin.prefix + plugin.messages.get("adopt_deny").replace("%player%", playerFam.getName()));
+                                plugin.marryRequests.remove(playerUUID);
                             }
                         } else if (args[0].equalsIgnoreCase("moveout")) {
-                            //TODO confirm moveout
-                            if (playerFam.isAdopted()) {
+
+                            boolean confirm = false;
+
+                            if (args.length > 1) {
+                                if (args[1].equalsIgnoreCase("confirm")) {
+                                    confirm = true;
+                                }
+                            }
+
+                            if (!playerFam.isAdopted()) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_moveout_no_parents"));
+
+                            } else if (!confirm) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_moveout_confirm"));
+                            } else {
                                 FamilyManager firstParentFam = playerFam.getFirstParent();
 
-                                Bukkit.getLogger().info(playerFam.getName() + "->1");
-                                Bukkit.getLogger().info(firstParentFam.getName() + "->1");
-
-                                if (playerFam.getSibling() != null) {
+                                if (playerFam.hasSibling()) {
                                     FamilyManager siblingFam = playerFam.getSibling();
                                     if (Bukkit.getPlayer(UUID.fromString(siblingFam.getUUID())) != null) {
-                                        Bukkit.getPlayer(UUID.fromString(siblingFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_sibling_move_out"));
+                                        Bukkit.getPlayer(UUID.fromString(siblingFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_moveout_sibling"));
                                     }
-                                    Bukkit.getLogger().info(playerFam.getName() + "->2");
-                                    Bukkit.getLogger().info(firstParentFam.getName() + "->2");
                                 }
 
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_move_out"));
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_moveout"));
 
                                 if (Bukkit.getPlayer(UUID.fromString(firstParentFam.getUUID())) != null) {
-                                    Bukkit.getPlayer(UUID.fromString(firstParentFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_child_move_out").replace("%player%", playerFam.getName()));
+                                    Bukkit.getPlayer(UUID.fromString(firstParentFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_moveout_child").replace("%player%", playerFam.getName()));
                                 }
                                 if (firstParentFam.isMarried()) {
                                     FamilyManager secondParentFam = firstParentFam.getPartner();
                                     if (Bukkit.getPlayer(UUID.fromString(secondParentFam.getUUID())) != null) {
-                                        Bukkit.getPlayer(UUID.fromString(secondParentFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_child_move_out").replace("%player%", playerFam.getName()));
+                                        Bukkit.getPlayer(UUID.fromString(secondParentFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_moveout_child").replace("%player%", playerFam.getName()));
                                     }
                                 }
-                                Bukkit.getLogger().info(playerFam.getName() + "->3");
-                                Bukkit.getLogger().info(firstParentFam.getName() + "->3");
 
                                 firstParentFam.unadopt(playerFam.getID());
 
-                                Bukkit.getLogger().info(playerFam.getName() + "->4");
-                                Bukkit.getLogger().info(firstParentFam.getName() + "->4");
-
-                            }
-
-                            else {
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_no_parents"));
                             }
                         } else if (args[0].equalsIgnoreCase("kickout")) {
                             if (playerFam.getFirstChild() != null || playerFam.getSecondChild() != null) {
                                 if (args.length == 1) {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_specify_child"));
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_kickout_specify_child"));
                                 } else {
-
-//                                    String partner = playerFam.getPartner();
-//                                    FamilyManager partnerFam = new FamilyManager(partner, plugin);
                                     String childUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
                                     FamilyManager childFam = new FamilyManager(childUUID, plugin);
                                     if (childFam.isChildOf(playerFam.getID())) {
 
-
-                                        sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_kicked_out").replace("%player%", childFam.getName()));
+                                        sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_kickout").replace("%player%", childFam.getName()));
                                         if (playerFam.isMarried()) {
                                             if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) != null)
-                                            Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_partner_kicked_out").replace("%player1%", playerFam.getName()).replace("%player2%", childFam.getName()));
+                                            Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_kickout_partner").replace("%player1%", playerFam.getName()).replace("%player2%", childFam.getName()));
                                         }
 
                                         if (childFam.hasSibling()) {
                                             FamilyManager siblingFam = childFam.getSibling();
                                             if (Bukkit.getPlayer(UUID.fromString(siblingFam.getUUID())) != null) {
-                                                Bukkit.getPlayer(UUID.fromString(siblingFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_sibling_kicked_out").replace("%player%", playerFam.getName()));
+                                                Bukkit.getPlayer(UUID.fromString(siblingFam.getUUID())).sendMessage(plugin.prefix + plugin.messages.get("adopt_kickout_sibling").replace("%player%", playerFam.getName()));
                                             }
                                         }
+
+                                        if (Bukkit.getPlayer(UUID.fromString(childUUID)) != null) {
+                                            Bukkit.getPlayer(UUID.fromString(childUUID)).sendMessage(plugin.prefix + plugin.messages.get("adopt_kickout_child"));
+                                        }
+
+
                                         playerFam.unadopt(childFam.getID());
 
                                     } else {
-                                        sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_not_your_child"));
+                                        sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_kickout_not_your_child"));
                                     }
                                 }
                             } else {
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_no_child"));
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_kickout_no_child"));
                             }
                         } else {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
                         }
-                    } else {
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
                     }
                 }
-            }
 
 
         }

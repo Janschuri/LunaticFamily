@@ -25,7 +25,7 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 0) {
 
-        } else if (args.length > 0) {
+        } else {
 
             if (!(sender instanceof Player)) {
                 String player1UUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
