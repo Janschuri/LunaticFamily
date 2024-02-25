@@ -48,6 +48,7 @@ messages:
   marry_divorce_confirm: "Bitte bestätige, dass du dich scheiden lassen möchtest!"
   marry_kiss_no_partner: "Du bist nicht verheiratet! Wenn du jemanden heiraten möchtest, benutze bitte /family marry propose <Name>"
   marry_list: "Alle Ehepaare auf diesem Server: "
+  marry_list_no_number: "%input% ist keine ganze Zahl!"
   adopt_one_child: "Dein Kind ist %player%."
   adopt_two_children: "Deine Kinder sind %player1% und %player2%."
   adopt_limit: "Du kannst kein weiteres Kind adoptieren. Du hast bereits das Limit von zwei Kindern erreicht."

@@ -49,6 +49,14 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
             //admin subcommand "set"
             if (args[0].equalsIgnoreCase("set") && sender.hasPermission("lunaticFamily.admin.marry")) {
 
+                Boolean forced = false;
+
+                if (args.length > 3) {
+                    if (args[3].equalsIgnoreCase("force")) {
+                        forced = true;
+                    }
+                }
+
                 if (!sender.hasPermission("lunaticFamily.admin.marry")) {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
                 } else if (args.length < 2) {
@@ -57,9 +65,9 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("admin_marry_set_denied"));
                 } else if (args.length < 3) {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
-                } else if (!Main.playerExists(args[1])) {
+                } else if (!Main.playerExists(args[1]) && !forced) {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("player_not_exist").replace("%player%", args[1]));
-                } else if (!Main.playerExists(args[2])) {
+                } else if (!Main.playerExists(args[2]) && !forced) {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("player_not_exist").replace("%player%", args[2]));
                 } else if (args[1].equalsIgnoreCase(args[2])) {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("admin_marry_set_same_player"));
@@ -71,14 +79,6 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                     FamilyManager player2Fam = new FamilyManager(player2UUID, plugin);
                     FamilyManager player1Fam = new FamilyManager(player1UUID, plugin);
-
-                    Boolean forced = false;
-
-                    if (args.length > 3) {
-                        if (args[3].equalsIgnoreCase("force")) {
-                            forced = true;
-                        }
-                    }
 
                     if (player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() > 2) {
                         int amountDiff = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() - 2;
@@ -414,13 +414,24 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             }
                         }
                     } else if (args[0].equalsIgnoreCase("list")) {
-                        List<Integer> marryList = Main.getDatabase().getMarryList();
-                        String msg = plugin.prefix + "\n";
+                        int page = 1;
+                        if (args.length > 1) {
+                            try {
+                                page = Integer.parseInt(args[1]);
+                            } catch (NumberFormatException e) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_list_no_number").replace("%input%", args[1]));
+                            }
+                        }
+
+                        List<Integer> marryList = Main.getDatabase().getMarryList(page, 10);
+                        String msg = plugin.prefix + plugin.messages.get("marry_list") + "\n";
+                        int index = 1 + (10*(page-1));
                         for (Integer e : marryList) {
                             FamilyManager player1Fam = new FamilyManager(e, plugin);
                             FamilyManager player2Fam = new FamilyManager(player1Fam.getPartner().getID(), plugin);
 
-                            msg = msg + player1Fam.getName() + " \u2764 " + player2Fam.getName() + " (" + playerFam.getMarryDate() + ")" + "\n";
+                            msg = msg + index + ": " + player1Fam.getName() + " \u2764 " + player2Fam.getName() + " (" + playerFam.getMarryDate() + ")" + "\n";
+                            index++;
                         }
                         sender.sendMessage(msg);
                         Bukkit.getLogger().info(marryList.toString());

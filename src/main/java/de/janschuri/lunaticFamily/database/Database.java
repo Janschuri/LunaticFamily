@@ -228,14 +228,17 @@ public abstract class Database {
         }
         return 0;
     }
-    public List<Integer> getMarryList() {
+    public List<Integer> getMarryList(int page, int pageSize) {
         List<Integer> marryList = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection(); // Assuming getSQLConnection() returns a valid Connection object
-            ps = conn.prepareStatement("SELECT id, partner FROM " + table + " WHERE id < partner;");
+            int offset = (page - 1) * pageSize;
+            ps = conn.prepareStatement("SELECT id, partner FROM " + table + " WHERE id < partner LIMIT ? OFFSET ?;");
+            ps.setInt(1, pageSize);
+            ps.setInt(2, offset);
             rs = ps.executeQuery();
             while (rs.next()) {
                 int player = rs.getInt("id");
