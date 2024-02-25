@@ -115,7 +115,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                     } else {
                         sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_not_married").replace("%player%", firstParentFam.getName()));
                     }
-                } else if (args[0].equalsIgnoreCase("unset") && player.hasPermission("lunaticFamily.family.admin") && args.length == 2) {
+                } else if (args[0].equalsIgnoreCase("unset") && player.hasPermission("lunaticFamily.admin.adopt") && args.length == 2) {
 
                     String childUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
                     FamilyManager childFam = new FamilyManager(childUUID, plugin);

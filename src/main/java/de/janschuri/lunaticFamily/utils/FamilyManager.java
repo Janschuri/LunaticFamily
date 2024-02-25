@@ -492,11 +492,21 @@ public class FamilyManager {
 
     }
 
+    public void addSibling(int sibling) {
+        FamilyManager player1Fam = this;
+        FamilyManager siblingFam = new FamilyManager(sibling, plugin);
+
+        player1Fam.setSibling(siblingFam.getID());
+        siblingFam.setSibling(player1Fam.getID());
+    }
+
+    public  boolean isFamilyMember (int id){
+        return this.getFamilyList().containsValue(id);
+    }
     public BiMap<String, Integer> getFamilyList() {
 
-        FamilyManager playerFam = this;
-        if (playerFam.getPartner() != null) {
-            int partner = playerFam.getPartner().getID();
+        if (this.getPartner() != null) {
+            int partner = this.getPartner().getID();
             familyList.put("partner", partner);
             FamilyManager partnerFam = new FamilyManager(partner, plugin);
 
@@ -504,21 +514,6 @@ public class FamilyManager {
                 int secondSiblingInLaw = partnerFam.getSibling().getID();
                 familyList.put("secondSiblingInLaw", secondSiblingInLaw);
                 FamilyManager secondSiblingInLawFam = new FamilyManager(secondSiblingInLaw, plugin);
-
-                if (secondSiblingInLawFam.getPartner() != null) {
-                    int thirdSiblingInLaw = secondSiblingInLawFam.getPartner().getID();
-                    familyList.put("thirdSiblingInLaw", thirdSiblingInLaw);
-                }
-
-                if (secondSiblingInLawFam.getFirstChild() != null) {
-                    int thirdNieceOrNephew = secondSiblingInLawFam.getFirstChild().getID();
-                    familyList.put("thirdNieceOrNephew", thirdNieceOrNephew);
-                }
-
-                if (secondSiblingInLawFam.getSecondChild() != null) {
-                    int fourthNieceOrNephew = secondSiblingInLawFam.getSecondChild().getID();
-                    familyList.put("fourthNieceOrNephew", fourthNieceOrNephew);
-                }
 
             }
 

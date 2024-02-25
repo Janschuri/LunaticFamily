@@ -64,19 +64,6 @@ public class FamilyTree {
                     Advancement secondSiblingInLawSecondHolder = createAdvancement(secondSiblingInLawFirstHolder, "secondSiblingInLawSecondHolder", 0.0f, -1.0f);
                     Advancement secondSiblingInLawThirdHolder = createAdvancement(secondSiblingInLawSecondHolder, "secondSiblingInLawThirdHolder", 2.0f, 0.0f);
                     Advancement secondSiblingInLaw = createAdvancement(secondSiblingInLawThirdHolder, "secondSiblingInLaw", 0.5f, 1.0f);
-                        //family of sibling of partner
-                            //partner of sibling of partner
-                            Advancement thirdSiblingInLaw = createAdvancement(secondSiblingInLaw, "thirdSiblingInLaw", 4.0f, 0.0f);
-                            //first child of sibling of partner
-                            Advancement thirdNieceOrNephewFirstHolder = createAdvancement(secondSiblingInLaw, "thirdNieceOrNephewFirstHolder", 2.5f,0.0f);
-                            Advancement thirdNieceOrNephewSecondHolder = createAdvancement(thirdNieceOrNephewFirstHolder, "thirdNieceOrNephewSecondHolder", 0.0f,1.0f);
-                            Advancement thirdNieceOrNephewThirdHolder = createAdvancement(thirdNieceOrNephewSecondHolder, "thirdNieceOrNephewThirdHolder", -1.0f,0.0f);
-                            Advancement thirdNieceOrNephew = createAdvancement(thirdNieceOrNephewThirdHolder, "thirdNieceOrNephew", 0.5f,1.0f);
-                            //second child of sibling of partner
-                            Advancement fourthNieceOrNephewFirstHolder = createAdvancement(secondSiblingInLaw, "fourthNieceOrNephewFirstHolder", 2.5f,0.0f);
-                            Advancement fourthNieceOrNephewSecondHolder = createAdvancement(fourthNieceOrNephewFirstHolder, "fourthNieceOrNephewSecondHolder", 1.0f,1.0f);
-                            Advancement fourthNieceOrNephew = createAdvancement(fourthNieceOrNephewSecondHolder, "fourthNieceOrNephew", 0.5f,1.0f);
-
                     //first parent of partner
                     Advancement firstParentInLawFirstHolder = createAdvancement(partner, "firstParentInLawFirstHolder", -0.5f, 0.0f);
                     Advancement firstParentInLawSecondHolder = createAdvancement(firstParentInLawFirstHolder, "firstParentInLawSecondHolder", 0.0f, -1.0f);
@@ -177,14 +164,14 @@ public class FamilyTree {
                     Advancement thirdAuntOrUncle = createAdvancement(thirdAuntOrUncleThirdHolder, "thirdAuntOrUncle", 0.5f, 1.0f);
                         //family of sibling of second Parent
                             //partner of sibling of second Parent
-                            Advancement fourthAuntOrUncle = createAdvancement(thirdAuntOrUncle, "fourthAuntOrUncle", 6.0f, 0.0f);
+                            Advancement fourthAuntOrUncle = createAdvancement(thirdAuntOrUncle, "fourthAuntOrUncle", 2.0f, 0.0f);
                             //first child of sibling of second Parent
-                            Advancement thirdCousinFirstHolder = createAdvancement(thirdAuntOrUncle, "thirdCousinFirstHolder", 4.5f,0.0f);
+                            Advancement thirdCousinFirstHolder = createAdvancement(thirdAuntOrUncle, "thirdCousinFirstHolder", 0.5f,0.0f);
                             Advancement thirdCousinSecondHolder = createAdvancement(thirdCousinFirstHolder, "thirdCousinSecondHolder", 0.0f,1.0f);
                             Advancement thirdCousinThirdHolder = createAdvancement(thirdCousinSecondHolder, "thirdCousinThirdHolder", -1.0f,0.0f);
                             Advancement thirdCousin = createAdvancement(thirdCousinThirdHolder, "thirdCousin", 0.5f,1.0f);
                             //second child of sibling of second Parent
-                            Advancement fourthCousinFirstHolder = createAdvancement(thirdAuntOrUncle, "fourthCousinFirstHolder", 4.5f,0.0f);
+                            Advancement fourthCousinFirstHolder = createAdvancement(thirdAuntOrUncle, "fourthCousinFirstHolder", 0.5f,0.0f);
                             Advancement fourthCousinSecondHolder = createAdvancement(fourthCousinFirstHolder, "fourthCousinSecondHolder", 1.0f,1.0f);
                             Advancement fourthCousin = createAdvancement(fourthCousinSecondHolder, "fourthCousin", 0.5f,1.0f);
                     //first parent of second parent
@@ -329,18 +316,6 @@ public class FamilyTree {
                 manager.addAdvancement(secondSiblingInLawSecondHolder);
                 manager.addAdvancement(secondSiblingInLawThirdHolder);
                 manager.addAdvancement(secondSiblingInLaw);
-                    //family of sibling of partner
-                        //partner of sibling of partner
-                        manager.addAdvancement(thirdSiblingInLaw);
-                        //first child of sibling of partner
-                        manager.addAdvancement(thirdNieceOrNephewFirstHolder);
-                        manager.addAdvancement(thirdNieceOrNephewSecondHolder);
-                        manager.addAdvancement(thirdNieceOrNephewThirdHolder);
-                        manager.addAdvancement(thirdNieceOrNephew);
-                        //second child of sibling of partner
-                        manager.addAdvancement(fourthNieceOrNephewFirstHolder);
-                        manager.addAdvancement(fourthNieceOrNephewSecondHolder);
-                        manager.addAdvancement(fourthNieceOrNephew);
                 //first parent of partner
                 manager.addAdvancement(firstParentInLawFirstHolder);
                 manager.addAdvancement(firstParentInLawSecondHolder);

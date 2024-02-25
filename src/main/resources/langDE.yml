@@ -88,6 +88,9 @@ messages:
   admin_adopt_not_adopted: "%player% ist nicht adoptiert."
   admin_adopt_unset: "Du hast die Adoption von %child% durch %parent1% und %parent2% aufgelöst."
   admin_adopt_by_single_unset: "Du hast die Adoption von %child% durch %parent% aufgelöst."
+  admin_sibling_added: "Geschwister wurden erfolgreich hinzugefügt!"
+  admin_sibling_is_adopted: "%player% is adoptiert. Setze die Adoption durch die Eltern, um %player% zum Geschwisterkind zu machen."
+  admin_sibling_both_adopted: "%player1% und %player2% sind adoptiert. Setze die Adoption durch die Eltern oder verheirate die Eltern, um %player1% und %player2% zu Geschwistern zu machen."
 family_relationships:
   egoFe: "&6du"
   egoMa: "&6du"

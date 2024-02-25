@@ -1,12 +1,9 @@
 package de.janschuri.lunaticFamily;
 
-import de.janschuri.lunaticFamily.commands.GenderCommand;
+import de.janschuri.lunaticFamily.commands.*;
 import org.bukkit.profile.PlayerProfile;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import de.janschuri.lunaticFamily.commands.AdoptCommand;
-import de.janschuri.lunaticFamily.commands.FamilyCommand;
-import de.janschuri.lunaticFamily.commands.MarryCommand;
 import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.database.MySQL;
 import de.janschuri.lunaticFamily.database.SQLite;
@@ -27,6 +24,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
 
 //TODO /siblinghood
 //TODO hook into Vault
@@ -84,6 +82,13 @@ public final class Main extends JavaPlugin {
         if (config.getBoolean("Database.MySQL.enabled")) {
             Bukkit.getLogger().info("mysql");
             db = new MySQL(this);
+            if (db.getSQLConnection() == null) {
+                Bukkit.getLogger().log(Level.SEVERE, "Error initializing MySQL database");
+                Bukkit.getLogger().info("Falling back to SQLite due to initialization error");
+
+                db = new SQLite(this);
+
+            }
         }
         else {
             db = new SQLite(this);
@@ -105,6 +110,9 @@ public final class Main extends JavaPlugin {
 
         getCommand("gender").setExecutor(new GenderCommand(this));
         getCommand("gender").setTabCompleter(new GenderCommand(this));
+
+        getCommand("sibling").setExecutor(new SiblingCommand(this));
+        getCommand("sibling").setTabCompleter(new SiblingCommand(this));
 
     }
 
