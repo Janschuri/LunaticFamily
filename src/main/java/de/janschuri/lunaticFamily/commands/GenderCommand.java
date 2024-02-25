@@ -25,66 +25,47 @@ public class GenderCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!(sender instanceof Player)) {
-            if (args.length > 2) {
-
-                if (args[0].equalsIgnoreCase("set")) {
-                    String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
-                    Bukkit.getLogger().info(player1);
-                    FamilyManager player1Fam = new FamilyManager(player1, plugin);
-
-                    if (args[2].equalsIgnoreCase("fe") || args[2].equalsIgnoreCase("feminine")) {
-                        if (player1Fam.getGender().equalsIgnoreCase("fe")) {
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_gender_already_fe").replace("%player%", player1Fam.getName()));
-                        } else {
-                            player1Fam.setGender("fe");
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_gender_changed_fe").replace("%player%", player1Fam.getName()));
-                        }
-                    } else if (args[2].equalsIgnoreCase("ma") || args[2].equalsIgnoreCase("masculine")) {
-                        if (player1Fam.getGender().equalsIgnoreCase("ma")) {
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_gender_already_ma").replace("%player%", player1Fam.getName()));
-                        } else {
-                            player1Fam.setGender("ma");
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_gender_changed_ma").replace("%player%", player1Fam.getName()));
-                        }
-                    } else {
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
-                    }
-                } else {
-                    sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
-                }
-            }
-            else {
+        if (args.length == 0) {
+            if (!(sender instanceof Player)) {
                 sender.sendMessage(plugin.prefix + plugin.messages.get("no_console_command"));
+            } else {
+                Player player = (Player) sender;
+                String uuid = player.getUniqueId().toString();
+                FamilyManager playerFam = new FamilyManager(uuid, plugin);
+
+                if (playerFam.getGender().equalsIgnoreCase("fe")) {
+                    player.sendMessage(plugin.prefix + plugin.messages.get("gender_fe"));
+                } else if (playerFam.getGender().equalsIgnoreCase("ma")) {
+                    player.sendMessage(plugin.prefix + plugin.messages.get("gender_ma"));
+                }
             }
         } else {
-            Player player = (Player) sender;
-            String uuid = player.getUniqueId().toString();
-            FamilyManager playerFam = new FamilyManager(uuid, plugin);
-
             if (args.length == 1) {
-                Bukkit.getLogger().info("1");
-                if (args[0].equalsIgnoreCase("fe") || args[0].equalsIgnoreCase("feminine")) {
-                    Bukkit.getLogger().info("2");
-                    if (playerFam.getGender().equalsIgnoreCase("fe")) {
-                        player.sendMessage(plugin.prefix + plugin.messages.get("gender_already_fe"));
-                    } else {
-                        playerFam.setGender("fe");
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("gender_changed_fe"));
-                    }
-                } else if (args[0].equalsIgnoreCase("ma") || args[0].equalsIgnoreCase("masculine")) {
-                    Bukkit.getLogger().info("3");
-                    if (playerFam.getGender().equalsIgnoreCase("ma")) {
-                        player.sendMessage(plugin.prefix + plugin.messages.get("gender_already_ma"));
-                    } else {
-                        playerFam.setGender("ma");
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("gender_changed_ma"));
-                    }
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(plugin.prefix + plugin.messages.get("no_console_command"));
                 } else {
-                    Bukkit.getLogger().info("4");
-                    sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                    Player player = (Player) sender;
+                    String uuid = player.getUniqueId().toString();
+                    FamilyManager playerFam = new FamilyManager(uuid, plugin);
+                    if (args[0].equalsIgnoreCase("fe") || args[0].equalsIgnoreCase("feminine")) {
+                        if (playerFam.getGender().equalsIgnoreCase("fe")) {
+                            player.sendMessage(plugin.prefix + plugin.messages.get("gender_already_fe"));
+                        } else {
+                            playerFam.setGender("fe");
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("gender_changed_fe"));
+                        }
+                    } else if (args[0].equalsIgnoreCase("ma") || args[0].equalsIgnoreCase("masculine")) {
+                        if (playerFam.getGender().equalsIgnoreCase("ma")) {
+                            player.sendMessage(plugin.prefix + plugin.messages.get("gender_already_ma"));
+                        } else {
+                            playerFam.setGender("ma");
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("gender_changed_ma"));
+                        }
+                    } else {
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                    }
                 }
-            } else if (args.length > 2 && player.hasPermission("lunaticFamily.admin.gender")) {
+            } else if (args.length > 2 && sender.hasPermission("lunaticFamily.admin.gender")) {
 
                 if (args[0].equalsIgnoreCase("set")) {
                     String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
@@ -110,15 +91,11 @@ public class GenderCommand implements CommandExecutor, TabCompleter {
                     }
                 } else {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
-                    Bukkit.getLogger().info("5");
                 }
             } else {
                 sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
-                Bukkit.getLogger().info("6");
             }
         }
-
-
         return true;
     }
 

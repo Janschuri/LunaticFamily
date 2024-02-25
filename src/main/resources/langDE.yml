@@ -16,6 +16,8 @@ messages:
   gender_changed_ma: "Du hast dein Geschlecht zu männlich geändert."
   gender_already_fe: "Dein Geschlecht ist bereits weiblich."
   gender_already_ma: "Dein Geschlecht ist bereits männlich."
+  gender_fe: "Dein Geschlecht ist weiblich."
+  gender_ma: "Dein Geschlecht ist männlich."
   marry_propose_already_married: "Du bist bereits mit %player% verheiratet."
   marry_propose_player_already_married: "%player% ist bereits verheiratet."
   marry_propose_request: "%player1%, möchtest du %player2% auf diesem Minecraft-Server heiraten?"
