@@ -434,17 +434,32 @@ public class FamilyManager {
             }
         }
 
-        if (playerFam.getFirstChild() != null) {
-            playerFam.setSecondChild(childID);
-            FamilyManager siblingFam = playerFam.getFirstChild();
-            siblingFam.setSibling(childID);
-            childFam.setSibling(siblingFam.getID());
-        } else {
+        if (childFam.hasSibling()) {
+            FamilyManager siblingFam = childFam.getSibling();
+            siblingFam.setFirstParent(playerID);
+            if (playerFam.isMarried()) {
+                FamilyManager partnerFam = playerFam.getPartner();
+                childFam.setSecondParent(partnerFam.getID());
+                siblingFam.setSecondParent(partnerFam.getID());
+                partnerFam.setFirstChild(childID);
+                partnerFam.setSecondChild(siblingFam.getID());
+            }
+
             playerFam.setFirstChild(childID);
-            if (playerFam.getSecondChild() != null) {
-                FamilyManager siblingFam = playerFam.getSecondChild();
+            playerFam.setSecondChild(childFam.getSibling().getID());
+        } else {
+            if (playerFam.getFirstChild() != null) {
+                playerFam.setSecondChild(childID);
+                FamilyManager siblingFam = playerFam.getFirstChild();
                 siblingFam.setSibling(childID);
                 childFam.setSibling(siblingFam.getID());
+            } else {
+                playerFam.setFirstChild(childID);
+                if (playerFam.getSecondChild() != null) {
+                    FamilyManager siblingFam = playerFam.getSecondChild();
+                    siblingFam.setSibling(childID);
+                    childFam.setSibling(siblingFam.getID());
+                }
             }
         }
     }
@@ -460,10 +475,10 @@ public class FamilyManager {
 
         if (playerFam.isMarried()) {
             FamilyManager partnerFam = playerFam.getPartner();
-            if (partnerFam.getFirstChild().getID() == childID) {
+            if (partnerFam.getFirstChild() != null && partnerFam.getFirstChild().getID() == childID) {
                 partnerFam.setFirstChild(0);
             }
-            if (partnerFam.getSecondChild().getID() == childID) {
+            if (partnerFam.getSecondChild() != null && partnerFam.getSecondChild().getID() == childID) {
                 partnerFam.setSecondChild(0);
             }
         }

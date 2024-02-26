@@ -2,7 +2,12 @@ package de.janschuri.lunaticFamily.commands;
 
 import de.janschuri.lunaticFamily.Main;
 import de.janschuri.lunaticFamily.utils.FamilyManager;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -60,7 +65,29 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_set_already_adopted").replace("%child%", childFam.getName()));
                         } else if (firstParentFam.getChildrenAmount() > 1) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_limit").replace("%player%", firstParentFam.getName()));
+                        } else if (childFam.hasSibling() && !forced) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_set_has_sibling").replace("%player%", childFam.getName()));
+                        } else if (childFam.hasSibling() && firstParentFam.getChildrenAmount() > 0) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_set_has_sibling_limit").replace("%player1%", childFam.getName()).replace("%player2%", firstParentFam.getName()));
                         } else {
+                            if (childFam.hasSibling()) {
+                                if (firstParentFam.getFirstChild() != null) {
+                                    firstParentFam.unadopt(firstParentFam.getFirstChild().getID());
+                                }
+                                if (firstParentFam.getSecondChild() != null) {
+                                    firstParentFam.unadopt(firstParentFam.getSecondChild().getID());
+                                }
+
+                                if (firstParentFam.isMarried()) {
+                                    FamilyManager partnerFam = firstParentFam.getPartner();
+                                    if (partnerFam.getFirstChild() != null) {
+                                        partnerFam.unadopt(partnerFam.getFirstChild().getID());
+                                    }
+                                    if (partnerFam.getSecondChild() != null) {
+                                        partnerFam.unadopt(partnerFam.getSecondChild().getID());
+                                    }
+                                }
+                            }
 
                             if (firstParentFam.getPartner() == null) {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_set_by_single").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
@@ -88,7 +115,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                         FamilyManager childFam = new FamilyManager(childUUID, plugin);
 
                         if (!childFam.isAdopted()) {
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_unset_not_adopted").replace("%child%", childFam.getName()));
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_unset_not_adopted").replace("%player%", childFam.getName()));
                         } else {
                             FamilyManager firstParentFam = childFam.getFirstParent();
 
@@ -113,6 +140,15 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                         FamilyManager playerFam = new FamilyManager(playerUUID, plugin);
 
                         if (args[0].equalsIgnoreCase("propose") || plugin.getAliases("adopt", "propose").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+
+                            boolean confirm = false;
+
+                            if (args.length > 1) {
+                                if (args[1].equalsIgnoreCase("confirm")) {
+                                    confirm = true;
+                                }
+                            }
+
                             if (args.length < 2) {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
                             } else if (!playerFam.isMarried() && !plugin.allowSingleAdopt) {
@@ -130,10 +166,22 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                 } else if (playerFam.isFamilyMember(childFam.getID())) {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_family_request").replace("%player%", childFam.getName()));
                                 } else if (plugin.adoptRequests.containsKey(child)) {
-
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_open_request").replace("%player%", childFam.getName()));
                                 } else if (childFam.getFirstParent() != null) {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_already_adopted").replace("%player%", childFam.getName()));
+                                } else if (childFam.hasSibling() && !confirm){
+                                    TextComponent yes = new TextComponent(ChatColor.GREEN + " \u2713");
+                                    yes.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry set " + args[1] + " " + args[2] + " force"));
+                                    yes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + " \u2713").create()));
+
+                                    TextComponent prefix = new TextComponent(plugin.prefix);
+                                    TextComponent msg = new TextComponent(plugin.messages.get("adopt_propose_has_sibling").replace("%player1%", childFam.getName()).replace("%player2%", childFam.getSibling().getName()));
+                                    TextComponent newRow = new TextComponent("\n");
+
+                                    sender.sendMessage(prefix, msg, yes, newRow);
+
+                                } else if (childFam.hasSibling() && playerFam.getChildrenAmount() > 0){
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_has_sibling_limit").replace("%player1%", childFam.getName()).replace("%player2%", childFam.getSibling().getName()));
                                 } else {
                                     if (playerFam.isMarried()) {
                                         FamilyManager partnerFam = playerFam.getPartner();
@@ -283,7 +331,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                         playerFam.unadopt(childFam.getID());
 
                                     } else {
-                                        sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_kickout_not_your_child"));
+                                        sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_kickout_not_your_child").replace("%player%", childFam.getName()));
                                     }
                                 }
                             } else {

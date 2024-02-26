@@ -104,6 +104,22 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new JoinListener(this), this);
         getServer().getPluginManager().registerEvents(new QuitListener(this), this);
 
+        getCommand("family").setExecutor(new FamilyCommand(this));
+        getCommand("family").setTabCompleter(new FamilyCommand(this));
+
+        getCommand("adopt").setExecutor(new AdoptCommand(this));
+        getCommand("adopt").setTabCompleter(new AdoptCommand(this));
+
+        getCommand("gender").setExecutor(new GenderCommand(this));
+        getCommand("gender").setTabCompleter(new GenderCommand(this));
+
+        getCommand("marry").setExecutor(new MarryCommand(this));
+        getCommand("marry").setTabCompleter(new MarryCommand(this));
+
+        getCommand("sibling").setExecutor(new SiblingCommand(this));
+        getCommand("sibling").setTabCompleter(new SiblingCommand(this));
+
+
     }
 
     public void loadConfig(Plugin plugin) {
@@ -387,8 +403,6 @@ public final class Main extends JavaPlugin {
     }
 
     private void registerCommand (String command) {
-        getCommand(command).setExecutor(new FamilyCommand(this));
-        getCommand(command).setTabCompleter(new FamilyCommand(this));
 
         PluginCommand cmd = getCommand(command);
 
