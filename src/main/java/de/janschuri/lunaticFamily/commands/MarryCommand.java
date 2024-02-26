@@ -170,7 +170,6 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", Bukkit.getOfflinePlayer(args[1]).getName()));
                         } else {
                             String partnerUUID = Bukkit.getPlayer(args[1]).getUniqueId().toString();
-                            args[1] = Bukkit.getPlayer(args[1]).getName();
                             Player partnerPlayer = Bukkit.getPlayer(args[1]);
                             FamilyManager partnerFam = new FamilyManager(partnerUUID, plugin);
                             if (playerFam.getID() == partnerFam.getID()) {
@@ -181,7 +180,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_family_request").replace("%player%", partnerFam.getName()));
                             } else if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
                                 int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_too_many_children").replace("%partner%", partnerFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_too_many_children").replace("%player%", partnerFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
                             } else if (plugin.marryRequests.containsKey(partnerUUID) || plugin.marryPriest.containsKey(partnerUUID)) {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_open_request").replace("%player%", partnerFam.getName()));
                             } else if (partnerFam.isMarried()) {
@@ -298,7 +297,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                                     plugin.marryPriest.remove(partnerUUID);
                                 } else {
-                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_complete"));
+                                    sender.sendMessage(plugin.prefix + plugin.messages.get("marry_accept_complete"));
                                     Bukkit.getPlayer(UUID.fromString(partnerUUID)).sendMessage(plugin.prefix + plugin.messages.get("marry_accept_complete"));
                                 }
 
@@ -382,7 +381,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         } else {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("marry_divorce_divorced"));
                             if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) != null) {
-                                Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())).sendMessage(plugin.prefix + plugin.messages.get("marry_divorced"));
+                                Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())).sendMessage(plugin.prefix + plugin.messages.get("marry_divorce_divorced"));
                             }
                             playerFam.divorce();
                         }

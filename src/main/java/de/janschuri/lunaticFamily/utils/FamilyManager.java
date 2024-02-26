@@ -500,6 +500,14 @@ public class FamilyManager {
         siblingFam.setSibling(player1Fam.getID());
     }
 
+    public void removeSibling() {
+        FamilyManager player1Fam = this;
+        FamilyManager siblingFam = player1Fam.getSibling();
+
+        player1Fam.setSibling(0);
+        siblingFam.setSibling(0);
+    }
+
     public  boolean isFamilyMember (int id){
         return this.getFamilyList().containsValue(id);
     }

@@ -116,8 +116,8 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                         String msg = plugin.prefix + plugin.messages.get("family_others_list").replace("%player%", player1Fam.getName()) + "\n";
                         for (String e : list) {
                             if (familyList.containsKey(e)) {
-                                String relationUUID = (String) familyList.get(e);
-                                FamilyManager relationFam = new FamilyManager(relationUUID, plugin);
+                                int relationID = (int) familyList.get(e);
+                                FamilyManager relationFam = new FamilyManager(relationID, plugin);
                                 String relationKey = e.replace("first", "")
                                         .replace("second", "")
                                         .replace("third", "")

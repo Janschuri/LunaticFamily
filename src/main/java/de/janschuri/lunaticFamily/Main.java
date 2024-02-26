@@ -62,11 +62,16 @@ public final class Main extends JavaPlugin {
     public List<String> marryPriestSubcommands;
     public List<String> marryAdminSubcommands;
 
+    public List<String> siblingCommands;
+    public List<String> siblingSubcommands;
+    public List<String> siblingAdminSubcommands;
+
 
     public BiMap<String, String> marryRequests = HashBiMap.create();
     public BiMap<String, String> marryPriestRequests = HashBiMap.create();
     public BiMap<String, String> marryPriest = HashBiMap.create();
     public BiMap<String, String> adoptRequests = HashBiMap.create();
+    public BiMap<String, String> siblingRequests = HashBiMap.create();
 
     @Override
     public void onEnable() {
@@ -166,6 +171,9 @@ public final class Main extends JavaPlugin {
         marrySubcommands = Arrays.asList("propose", "accept", "deny", "divorce", "list", "kiss");
         marryPriestSubcommands = Arrays.asList("priest");
         marryAdminSubcommands = Arrays.asList("set", "unset");
+        siblingCommands = Arrays.asList("sibling");
+        siblingSubcommands = Arrays.asList("propose", "accept", "deny", "stab");
+        siblingAdminSubcommands = Arrays.asList("set", "unset");
 
 
         //messages
@@ -319,7 +327,12 @@ public final class Main extends JavaPlugin {
     public static boolean playerExists(String name) {
         for(OfflinePlayer player : Bukkit.getOfflinePlayers()) {
             if(player.getName().equals(name)) return true;
-//            if(player.getUniqueId().equals(UUID.fromString(uuid))) return true;
+        }
+
+        String uuid = Bukkit.getOfflinePlayer(name).getUniqueId().toString();
+
+        if (db.getID(uuid) != 0) {
+            return true;
         }
         return false;
     }
