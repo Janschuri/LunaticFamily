@@ -10,9 +10,17 @@ Database:
     Filename:
 default_gender: "fe"
 default_background: "moss_block"
+backgrounds:
+  - "mossblock"
+  - "oak_planks"
+  - "red_wool"
+  - "pink_wool"
+  - "diamond_block"
+  - "gold_block"
 allow_single_adopt: true
 language: "DE"
-family:
+
+family_list:
   - partner
   - sibling
   - firstChild

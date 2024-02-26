@@ -185,6 +185,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
 
         List<String> familySubcommands = plugin.familySubcommands;
         List<String> reloadCommands = plugin.familyAdminSubcommands;
+        List<String> backgrounds = plugin.backgrounds;
         List<String> adoptCommands = plugin.adoptCommands;
         List<String> adoptSubcommands = plugin.adoptSubcommands;
         List<String> adoptAdminSubcommands = plugin.adoptAdminSubcommands;
@@ -261,6 +262,20 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                     for (String s : familySubcommands) {
                         if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
                             list.add(s);
+                        }
+                    }
+                    Collections.sort(list);
+                    return list;
+                } else if (args[0].equalsIgnoreCase("background") || plugin.getAliases("background").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                    if (args.length < 3) {
+                        if (args[1].equalsIgnoreCase("")) {
+                            list.addAll(backgrounds);
+                        } else {
+                            for (String s : backgrounds) {
+                                if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
+                                    list.add(s);
+                                }
+                            }
                         }
                     }
                     Collections.sort(list);

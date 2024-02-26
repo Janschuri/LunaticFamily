@@ -30,7 +30,6 @@ import java.util.*;
 import java.util.logging.Level;
 
 //TODO hook into Vault
-//TODO config list for background blocks
 //TODO hook into Minepacks
 //TODO /marry gift
 //TODO split money after divorce
@@ -49,6 +48,7 @@ public final class Main extends JavaPlugin {
 
     public Map<String, Map> aliases = new HashMap<>();
     public List<String> familyList;
+    public List<String> backgrounds;
     public Map relationshipsFe = new HashMap<>();
     public Map relationshipsMa = new HashMap<>();
 
@@ -229,7 +229,8 @@ public final class Main extends JavaPlugin {
             getLogger().warning("Could not find 'messages' section in lang.yml");
         }
 
-        familyList = Objects.requireNonNull(config.getStringList("family"));
+        familyList = Objects.requireNonNull(config.getStringList("family_list"));
+        backgrounds = Objects.requireNonNull(config.getStringList("backgrounds"));
 
         //family relationships
 
