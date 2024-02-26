@@ -1,8 +1,12 @@
 package de.janschuri.lunaticFamily;
 
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
 import de.janschuri.lunaticFamily.commands.*;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.profile.PlayerProfile;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -31,7 +35,6 @@ import java.util.logging.Level;
 
 //TODO hook into Vault
 //TODO hook into Minepacks
-//TODO /marry gift
 //TODO split money after divorce
 //TODO /family fake <name>
 public final class Main extends JavaPlugin {
@@ -192,6 +195,8 @@ public final class Main extends JavaPlugin {
         marrySubcommands.addAll(getAliases("marry", "divorce"));
         marrySubcommands.addAll(getAliases("marry", "list"));
         marrySubcommands.addAll(getAliases("marry", "kiss"));
+        marrySubcommands.addAll(getAliases("marry", "gift"));
+        marrySubcommands.addAll(getAliases("marry", "backpack"));
         marryAdminSubcommands.addAll(getAliases("marry", "set"));
         marryAdminSubcommands.addAll(getAliases("marry", "unset"));
 
@@ -379,6 +384,8 @@ public final class Main extends JavaPlugin {
         }
         return "block.minecraft.dirt";
     }
+
+
 
     // Method to check if a player is within a certain range of blocks from a location
     public static boolean isInRange(Location firstLocation, Location secondLocation, double range) {

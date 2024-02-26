@@ -37,6 +37,11 @@ aliases:
       - list
     kiss:
       - kiss
+    gift:
+      - gift
+    backpack:
+      - backpack
+      - bp
     set:
       - set
     unset:

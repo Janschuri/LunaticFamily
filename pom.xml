@@ -70,6 +70,10 @@
           <id>jitpack.io</id>
           <url>https://jitpack.io</url>
       </repository>
+      <repository>
+          <id>pcgf-repo</id>
+          <url>https://repo.pcgamingfreaks.at/repository/maven-everything</url>
+      </repository>
   </repositories>
 
   <dependencies>
@@ -110,6 +114,11 @@
           <groupId>com.github.ZockerAxel</groupId>
           <artifactId>CrazyAdvancementsAPI</artifactId>
           <version>v2.1.17a</version>
+      </dependency>
+      <dependency>
+          <groupId>at.pcgamingfreaks</groupId>
+          <artifactId>Minepacks-API</artifactId>
+          <version>2.4.27</version><!-- Check api-version shield for newest version -->
       </dependency>
   </dependencies>
 </project>

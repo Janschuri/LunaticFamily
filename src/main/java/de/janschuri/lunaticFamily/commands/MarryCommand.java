@@ -2,6 +2,7 @@ package de.janschuri.lunaticFamily.commands;
 
 import de.janschuri.lunaticFamily.Main;
 import de.janschuri.lunaticFamily.utils.FamilyManager;
+import de.janschuri.lunaticFamily.utils.Minepacks;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.*;
@@ -10,6 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -456,6 +458,17 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                             }
 
+                        }
+                    } else if (args[0].equalsIgnoreCase("backpack") || plugin.getAliases("marry", "backpack").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+
+                        if (!playerFam.isMarried()) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("marry_backpack_no_partner"));
+                        } else if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) == null) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", Bukkit.getOfflinePlayer(UUID.fromString(playerFam.getPartner().getUUID())).getName()));
+                        } else {
+                            Player partnerPlayer = Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID()));
+                            
+                            Minepacks.getMinepacks().openBackpack(player, partnerPlayer, true);
                         }
                     } else if (args[0].equalsIgnoreCase("list") || plugin.getAliases("marry", "list").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                         int page = 1;
