@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -418,11 +419,16 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 player.getInventory().remove(item);
                                 partnerPlayer.getInventory().addItem(item);
                                 Material material = item.getType();
+                                int amount = item.getAmount();
 
-                                TranslatableComponent itemComponent = new TranslatableComponent(Main.getKey(material));
+                                ItemMeta itemMeta = item.getItemMeta();
+
+
 
                                 String[] msgPlayer = plugin.messages.get("marry_gift_sent").split("%item%");
                                 String[] msgPartner = plugin.messages.get("marry_gift_got").split("%item%");
+
+                                TextComponent componentAmount = new TextComponent(amount + "x ");
 
                                 TextComponent componentPlayer1 = new TextComponent(msgPlayer[0]);
                                 TextComponent componentPlayer2 = new TextComponent(msgPlayer[1]);
@@ -430,8 +436,21 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 TextComponent componentPartner1 = new TextComponent(msgPartner[0]);
                                 TextComponent componentPartner2 = new TextComponent(msgPartner[1]);
 
-                                player.sendMessage(componentPlayer1, itemComponent, componentPlayer2);
-                                partnerPlayer.sendMessage(componentPartner1, itemComponent, componentPartner2);
+                                if (itemMeta.hasDisplayName()) {
+                                    TextComponent componentItem = new TextComponent(itemMeta.getDisplayName());
+
+                                    Bukkit.getLogger().info(itemMeta.getDisplayName());
+
+                                    player.sendMessage(componentPlayer1, componentAmount, componentItem, componentPlayer2);
+                                    partnerPlayer.sendMessage(componentPartner1, componentAmount, componentItem, componentPartner2);
+                                } else {
+                                    TranslatableComponent componentItem = new TranslatableComponent(Main.getKey(material));
+
+                                    player.sendMessage(componentPlayer1, componentAmount, componentItem, componentPlayer2);
+                                    partnerPlayer.sendMessage(componentPartner1, componentAmount, componentItem, componentPartner2);
+                                }
+
+
 
                             }
 
