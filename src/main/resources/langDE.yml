@@ -129,6 +129,11 @@ messages:
   marry_divorce_divorced: "Du hast dich geschieden geschieden!"
   marry_divorce_confirm: "Bitte bestätige, dass du dich scheiden lassen möchtest!"
   marry_kiss_no_partner: "Du bist nicht verheiratet! Wenn du jemanden heiraten möchtest, benutze bitte /family marry propose <Name>"
+  marry_gift_no_partner: "Du bist nicht verheiratet! Wenn du jemanden heiraten möchtest, benutze bitte /family marry propose <Name>"
+  marry_gift_empty_Hand: "Du musst ein Item in der Hand halten."
+  marry_gift_partner_full_inv: "Dein Partner hat kein Platz im Inventar."
+  marry_gift_sent: "Du hast deinem Partner %item% geschenkt."
+  marry_gift_got: "Dein Partner hat dir %item% geschenkt."
   marry_list: "Alle Ehepaare auf diesem Server: "
   marry_list_no_number: "%input% ist keine ganze Zahl!"
   #adopt command

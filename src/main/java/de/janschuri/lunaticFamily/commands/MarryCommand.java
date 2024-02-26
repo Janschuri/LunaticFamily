@@ -2,20 +2,16 @@ package de.janschuri.lunaticFamily.commands;
 
 import de.janschuri.lunaticFamily.Main;
 import de.janschuri.lunaticFamily.utils.FamilyManager;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Particle;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.*;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.Location;
 
 import java.util.*;
 
@@ -389,7 +385,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                         if (!playerFam.isMarried()) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("marry_kiss_no_partner"));
-                        } else if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) != null) {
+                        } else if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) == null) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", Bukkit.getOfflinePlayer(UUID.fromString(playerFam.getPartner().getUUID())).getName()));
                         } else {
                             Player partnerPlayer = Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID()));
@@ -404,6 +400,41 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                     Bukkit.getScheduler().runTaskLater(plugin, () -> Main.spawnParticles(location, Particle.HEART), i * 5L); // Delay between clouds: i * 20 ticks (1 second)
                                 }
                             }
+                        }
+                    } else if (args[0].equalsIgnoreCase("gift") || plugin.getAliases("marry", "gift").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+
+                        if (!playerFam.isMarried()) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("marry_gift_no_partner"));
+                        } else if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) == null) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", Bukkit.getOfflinePlayer(UUID.fromString(playerFam.getPartner().getUUID())).getName()));
+                        } else if (player.getInventory().getItemInMainHand().isEmpty()) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("marry_gift_hand_empty"));
+                        } else {
+                            Player partnerPlayer = Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID()));
+                            if (partnerPlayer.getInventory().firstEmpty() == -1) {
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("marry_gift_partner_full_inv"));
+                            } else {
+                                ItemStack item = player.getInventory().getItemInMainHand();
+                                player.getInventory().remove(item);
+                                partnerPlayer.getInventory().addItem(item);
+                                Material material = item.getType();
+
+                                TranslatableComponent itemComponent = new TranslatableComponent(Main.getKey(material));
+
+                                String[] msgPlayer = plugin.messages.get("marry_gift_sent").split("%item%");
+                                String[] msgPartner = plugin.messages.get("marry_gift_got").split("%item%");
+
+                                TextComponent componentPlayer1 = new TextComponent(msgPlayer[0]);
+                                TextComponent componentPlayer2 = new TextComponent(msgPlayer[1]);
+
+                                TextComponent componentPartner1 = new TextComponent(msgPartner[0]);
+                                TextComponent componentPartner2 = new TextComponent(msgPartner[1]);
+
+                                player.sendMessage(componentPlayer1, itemComponent, componentPlayer2);
+                                partnerPlayer.sendMessage(componentPartner1, itemComponent, componentPartner2);
+
+                            }
+
                         }
                     } else if (args[0].equalsIgnoreCase("list") || plugin.getAliases("marry", "list").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                         int page = 1;

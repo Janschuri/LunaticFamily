@@ -367,6 +367,19 @@ public final class Main extends JavaPlugin {
         return position;
     }
 
+    public static String getKey(Material material){
+        if(material.isBlock()){
+            String id = material.getKey().getKey();
+
+            return "block.minecraft."+id;
+        } else if(material.isItem()){
+            String id = material.getKey().getKey();
+
+            return "item.minecraft."+id;
+        }
+        return "block.minecraft.dirt";
+    }
+
     // Method to check if a player is within a certain range of blocks from a location
     public static boolean isInRange(Location firstLocation, Location secondLocation, double range) {
 
