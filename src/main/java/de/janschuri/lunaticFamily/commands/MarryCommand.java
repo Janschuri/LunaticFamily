@@ -406,6 +406,8 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                         if (!playerFam.isMarried()) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("marry_gift_no_partner"));
+                        } else if (!player.hasPermission("lunaticFamily.marry.gift")) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
                         } else if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) == null) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", Bukkit.getOfflinePlayer(UUID.fromString(playerFam.getPartner().getUUID())).getName()));
                         } else if (player.getInventory().getItemInMainHand().isEmpty()) {
