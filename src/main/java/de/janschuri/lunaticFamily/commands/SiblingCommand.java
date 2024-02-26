@@ -32,7 +32,7 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
 
         } else{
 
-            if (args[0].equalsIgnoreCase("set")) {
+            if (args[0].equalsIgnoreCase("set") || plugin.getAliases("sibling", "set").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
                 boolean forced = false;
 
@@ -71,7 +71,7 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
                         player1Fam.addSibling(player2Fam.getID());
                     }
                 }
-            } else if (args[0].equalsIgnoreCase("unset")) {
+            } else if (args[0].equalsIgnoreCase("unset") || plugin.getAliases("sibling", "unset").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                 if (!sender.hasPermission("lunaticFamily.admin.sibling")) {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
                 } else if (args.length < 2) {
@@ -103,7 +103,7 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
                         String playerUUID = player.getUniqueId().toString();
                         FamilyManager playerFam = new FamilyManager(playerUUID, plugin);
 
-                        if (args[0].equalsIgnoreCase("propose")) {
+                        if (args[0].equalsIgnoreCase("propose") || plugin.getAliases("sibling", "propose").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                             if (playerFam.hasSibling()) {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("sibling_propose_has_sibling").replace("%player%", playerFam.getName()));
                             } else if (playerFam.isAdopted()) {
@@ -151,7 +151,7 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
                                 }
                             }
 
-                        } else if (args[0].equalsIgnoreCase("accept")) {
+                        } else if (args[0].equalsIgnoreCase("accept") || plugin.getAliases("sibling", "accept").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                             if (!plugin.marryRequests.containsKey(playerUUID)) {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("sibling_accept_no_request"));
                             } else {
@@ -173,7 +173,7 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
                                         playerFam.addSibling(siblingFam.getID());
                                     }
                             }
-                        } else if (args[0].equalsIgnoreCase("deny")) {
+                        } else if (args[0].equalsIgnoreCase("deny") || plugin.getAliases("sibling", "deny").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                             if (!plugin.siblingRequests.containsKey(playerUUID) && !plugin.marryPriestRequests.containsKey(playerUUID)) {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("propose_deny_no_request"));
                             } else {
@@ -184,7 +184,7 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
                                 Bukkit.getPlayer(UUID.fromString(partnerUUID)).sendMessage(plugin.prefix + plugin.messages.get("propose_deny_denied").replace("%player%", playerFam.getName()));
                                 plugin.marryRequests.remove(playerUUID);
                             }
-                        } else if (args[0].equalsIgnoreCase("stab")) {
+                        } else if (args[0].equalsIgnoreCase("unsibling") || plugin.getAliases("sibling", "unsibling").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                             boolean confirm = false;
 
                             if (args.length > 1) {
@@ -194,15 +194,15 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
                             }
 
                             if (!playerFam.isMarried()) {
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("sibling_stab_no_sibling"));
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("sibling_unsibling_no_sibling"));
                             } else if (!confirm) {
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("sibling_stab_confirm"));
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("sibling_unsibling_confirm"));
                             } else if (playerFam.isAdopted()) {
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("sibling_stab_is_adsibling"));
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("sibling_unsibling_is_adsibling"));
                             }else {
-                                sender.sendMessage(plugin.prefix + plugin.messages.get("sibling_stab_complete"));
+                                sender.sendMessage(plugin.prefix + plugin.messages.get("sibling_unsibling_complete"));
                                 if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) != null) {
-                                    Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())).sendMessage(plugin.prefix + plugin.messages.get("sibling_stab_complete"));
+                                    Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())).sendMessage(plugin.prefix + plugin.messages.get("sibling_unsibling_complete"));
                                 }
                                 playerFam.removeSibling();
                             }

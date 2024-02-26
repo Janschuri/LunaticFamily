@@ -1,6 +1,8 @@
 package de.janschuri.lunaticFamily;
 
 import de.janschuri.lunaticFamily.commands.*;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.profile.PlayerProfile;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -21,22 +23,22 @@ import org.bukkit.profile.PlayerTextures;
 import org.bukkit.util.Vector;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 
-//TODO /siblinghood
 //TODO hook into Vault
 //TODO config list for background blocks
 //TODO hook into Minepacks
 //TODO /marry gift
 //TODO split money after divorce
-//TODO add command aliases to lang
 //TODO /family fake <name>
 public final class Main extends JavaPlugin {
     private static Database db;
     private static FileConfiguration config;
+    private static FileConfiguration lang;
     public String language;
     public String prefix;
     public String defaultGender;
@@ -44,27 +46,28 @@ public final class Main extends JavaPlugin {
     public boolean allowSingleAdopt;
 
     public Map<String, String> messages = new HashMap<>();
+
+    public Map<String, Map> aliases = new HashMap<>();
     public List<String> familyList;
     public Map relationshipsFe = new HashMap<>();
     public Map relationshipsMa = new HashMap<>();
 
-    public List<String> familyCommands;
-    public List<String> familySubcommands;
-    public List<String> genderCommands;
-    public List<String> genderSubcommands;
-    public List<String> genderAdminSubcommands;
-    public List<String> reloadCommands;
-    public List<String> adoptCommands;
-    public List<String> adoptSubcommands;
-    public List<String> adoptAdminSubcommands;
-    public List<String> marryCommands;
-    public List<String> marrySubcommands;
-    public List<String> marryPriestSubcommands;
-    public List<String> marryAdminSubcommands;
-
-    public List<String> siblingCommands;
-    public List<String> siblingSubcommands;
-    public List<String> siblingAdminSubcommands;
+    public List<String> familyCommands = new ArrayList<>();
+    public List<String> familySubcommands = new ArrayList<>();
+    public List<String> genderCommands = new ArrayList<>();
+    public List<String> genderSubcommands = new ArrayList<>();
+    public List<String> genderAdminSubcommands = new ArrayList<>();
+    public List<String> familyAdminSubcommands = new ArrayList<>();
+    public List<String> adoptCommands = new ArrayList<>();
+    public List<String> adoptSubcommands = new ArrayList<>();
+    public List<String> adoptAdminSubcommands = new ArrayList<>();
+    public List<String> marryCommands = new ArrayList<>();
+    public List<String> marrySubcommands = new ArrayList<>();
+    public List<String> marryPriestSubcommands = new ArrayList<>();
+    public List<String> marryAdminSubcommands = new ArrayList<>();
+    public List<String> siblingCommands = new ArrayList<>();
+    public List<String> siblingSubcommands = new ArrayList<>();
+    public List<String> siblingAdminSubcommands = new ArrayList<>();
 
 
     public BiMap<String, String> marryRequests = HashBiMap.create();
@@ -82,10 +85,7 @@ public final class Main extends JavaPlugin {
 
         isCrazyAdvancementAPILoaded();
 
-        Bukkit.getLogger().info(String.valueOf(config.getBoolean("Database.MySQL.enabled")));
-
         if (config.getBoolean("Database.MySQL.enabled")) {
-            Bukkit.getLogger().info("mysql");
             db = new MySQL(this);
             if (db.getSQLConnection() == null) {
                 Bukkit.getLogger().log(Level.SEVERE, "Error initializing MySQL database");
@@ -104,24 +104,10 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new JoinListener(this), this);
         getServer().getPluginManager().registerEvents(new QuitListener(this), this);
 
-        getCommand("family").setExecutor(new FamilyCommand(this));
-        getCommand("family").setTabCompleter(new FamilyCommand(this));
-
-        getCommand("marry").setExecutor(new MarryCommand(this));
-        getCommand("marry").setTabCompleter(new MarryCommand(this));
-
-        getCommand("adopt").setExecutor(new AdoptCommand(this));
-        getCommand("adopt").setTabCompleter(new AdoptCommand(this));
-
-        getCommand("gender").setExecutor(new GenderCommand(this));
-        getCommand("gender").setTabCompleter(new GenderCommand(this));
-
-        getCommand("sibling").setExecutor(new SiblingCommand(this));
-        getCommand("sibling").setTabCompleter(new SiblingCommand(this));
-
     }
 
     public void loadConfig(Plugin plugin) {
+
         File cfgfile = new File(plugin.getDataFolder().getAbsolutePath() + "/config.yml");
         config = YamlConfiguration.loadConfiguration(cfgfile);
 
@@ -142,8 +128,6 @@ public final class Main extends JavaPlugin {
         language = config.getString("language");
         allowSingleAdopt = config.getBoolean("allow_single_adopt");
 
-        FileConfiguration lang = null;
-
         if (language.equalsIgnoreCase("EN"))
         {
             lang = YamlConfiguration.loadConfiguration(langfileEN);
@@ -158,23 +142,66 @@ public final class Main extends JavaPlugin {
         defaultGender = config.getString("default_gender");
         prefix = ChatColor.translateAlternateColorCodes('&', lang.getString("prefix"));
 
-        familyCommands = Arrays.asList("family");
-        familySubcommands = Arrays.asList("gender", "tree", "list", "background");
-        reloadCommands = Arrays.asList("reload");
-        genderCommands = Arrays.asList("gender");
-        genderSubcommands = Arrays.asList("fe", "feminine", "ma", "masculine");
-        genderAdminSubcommands = Arrays.asList("set");
-        adoptCommands = Arrays.asList("adopt");
-        adoptSubcommands = Arrays.asList("propose", "accept", "deny", "kickout", "moveout", "list");
-        adoptAdminSubcommands = Arrays.asList("set", "unset");
-        marryCommands = Arrays.asList("marry");
-        marrySubcommands = Arrays.asList("propose", "accept", "deny", "divorce", "list", "kiss");
-        marryPriestSubcommands = Arrays.asList("priest");
-        marryAdminSubcommands = Arrays.asList("set", "unset");
-        siblingCommands = Arrays.asList("sibling");
-        siblingSubcommands = Arrays.asList("propose", "accept", "deny", "stab");
-        siblingAdminSubcommands = Arrays.asList("set", "unset");
+        List<String> commands = Arrays.asList("family", "marry", "sibling", "adopt", "gender");
 
+        for (String command : commands) {
+            Map<String, List<String>> map = new HashMap<>();
+            ConfigurationSection section = lang.getConfigurationSection("aliases." + command);
+            if (section != null) {
+                for (String key : section.getKeys(false)) {
+                    List<String> list = section.getStringList(key);
+                    map.put(key, list);
+                }
+            } else {
+                getLogger().warning("Could not find 'aliases." + command + "' section in lang.yml");
+            }
+            aliases.put(command, map);
+        }
+
+        familyCommands = getAliases("family");
+        familySubcommands.addAll(getAliases("family", "tree"));
+        familySubcommands.addAll(getAliases("family", "list"));
+        familySubcommands.addAll(getAliases("family", "background"));
+        familyAdminSubcommands.addAll(getAliases("family", "reload"));
+
+        genderCommands = getAliases("gender");
+        genderSubcommands.addAll(getAliases("gender", "fe"));
+        genderSubcommands.addAll(getAliases("gender", "ma"));
+        genderAdminSubcommands.addAll(getAliases("gender", "set"));
+
+        marryCommands = getAliases("marry");
+        marrySubcommands.addAll(getAliases("marry", "propose"));
+        marrySubcommands.addAll(getAliases("marry", "accept"));
+        marrySubcommands.addAll(getAliases("marry", "deny"));
+        marrySubcommands.addAll(getAliases("marry", "divorce"));
+        marrySubcommands.addAll(getAliases("marry", "list"));
+        marrySubcommands.addAll(getAliases("marry", "kiss"));
+        marryAdminSubcommands.addAll(getAliases("marry", "set"));
+        marryAdminSubcommands.addAll(getAliases("marry", "unset"));
+
+        adoptCommands = getAliases("adopt");
+        adoptSubcommands.addAll(getAliases("adopt", "propose"));
+        adoptSubcommands.addAll(getAliases("adopt", "accept"));
+        adoptSubcommands.addAll(getAliases("adopt", "deny"));
+        adoptSubcommands.addAll(getAliases("adopt", "kickout"));
+        adoptSubcommands.addAll(getAliases("adopt", "moveout"));
+        adoptSubcommands.addAll(getAliases("adopt", "list"));
+        adoptAdminSubcommands.addAll(getAliases("adopt", "set"));
+        adoptAdminSubcommands.addAll(getAliases("adopt", "unset"));
+
+        siblingCommands = getAliases("sibling");
+        siblingSubcommands.addAll(getAliases("sibling", "propose"));
+        siblingSubcommands.addAll(getAliases("sibling", "accept"));
+        siblingSubcommands.addAll(getAliases("sibling", "deny"));
+        siblingSubcommands.addAll(getAliases("sibling", "unsibling"));
+        siblingAdminSubcommands.addAll(getAliases("sibling", "set"));
+        siblingAdminSubcommands.addAll(getAliases("sibling", "unset"));
+
+        registerCommand("family");
+        registerCommand("marry");
+        registerCommand("adopt");
+        registerCommand("sibling");
+        registerCommand("gender");
 
         //messages
         ConfigurationSection messagesSection = lang.getConfigurationSection("messages");
@@ -183,7 +210,7 @@ public final class Main extends JavaPlugin {
                 messages.put(key, ChatColor.translateAlternateColorCodes('&', messagesSection.getString(key)));
             }
         } else {
-            getLogger().warning("Could not find 'messages' section in config.yml");
+            getLogger().warning("Could not find 'messages' section in lang.yml");
         }
 
         familyList = Objects.requireNonNull(config.getStringList("family"));
@@ -225,8 +252,6 @@ public final class Main extends JavaPlugin {
         relationshipsMa.put("SiblingInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.brother_in_law")));
         relationshipsMa.put("ChildInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.son_in_law")));
         relationshipsMa.put("GrandchildInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.grandson_in_law")));
-
-
     }
 
     @Override
@@ -248,6 +273,30 @@ public final class Main extends JavaPlugin {
         head.setItemMeta(meta);
 
         return head;
+    }
+
+    public List<String> getAliases(String command, String subcommand) {
+        Map<String, List<String>> commandAliases = this.aliases.getOrDefault(command, new HashMap<>());
+
+        List<String> list = commandAliases.getOrDefault(subcommand, new ArrayList<>());
+        if (list.isEmpty()) {
+            if (subcommand.equalsIgnoreCase("base_command")) {
+                list.add(command);
+            } else {
+                list.add(subcommand);
+            }
+        }
+        return list;
+    }
+
+    public List<String> getAliases(String command) {
+        Map<String, List<String>> commandAliases = this.aliases.getOrDefault(command, new HashMap<>());
+
+        List<String> list = commandAliases.getOrDefault("base_command", new ArrayList<>());
+        if (list.isEmpty()) {
+            list.add(command);
+        }
+        return list;
     }
 
     private static PlayerProfile getProfile(String url) {
@@ -335,5 +384,28 @@ public final class Main extends JavaPlugin {
             return true;
         }
         return false;
+    }
+
+    private void registerCommand (String command) {
+        getCommand(command).setExecutor(new FamilyCommand(this));
+        getCommand(command).setTabCompleter(new FamilyCommand(this));
+
+        PluginCommand cmd = getCommand(command);
+
+        try {
+            final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+            bukkitCommandMap.setAccessible(true);
+            CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+
+            List<String> list = this.getAliases(command);
+
+            list.forEach(alias -> {
+                commandMap.register(alias, "lunaticFamily", cmd);
+            });
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 }

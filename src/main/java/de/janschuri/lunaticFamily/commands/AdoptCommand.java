@@ -27,7 +27,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 
         } else {
 
-                if (args[0].equalsIgnoreCase("set") && sender.hasPermission("lunaticFamily.admin.adopt")) {
+                if (args[0].equalsIgnoreCase("set") || plugin.getAliases("adopt", "set").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
                     boolean forced = false;
 
@@ -74,7 +74,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                         }
 
                     }
-                } else if (args[0].equalsIgnoreCase("unset") && sender.hasPermission("lunaticFamily.admin.adopt") && args.length == 2) {
+                } else if (args[0].equalsIgnoreCase("unset") || plugin.getAliases("adopt", "unset").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
                     if (!sender.hasPermission("lunaticFamily.admin.adopt")) {
                         sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
@@ -112,7 +112,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                         String playerUUID = player.getUniqueId().toString();
                         FamilyManager playerFam = new FamilyManager(playerUUID, plugin);
 
-                        if (args[0].equalsIgnoreCase("propose")) {
+                        if (args[0].equalsIgnoreCase("propose") || plugin.getAliases("adopt", "propose").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                             if (args.length < 2) {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
                             } else if (!playerFam.isMarried() && !plugin.allowSingleAdopt) {
@@ -163,7 +163,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                 }
                             }
 
-                        } else if (args[0].equalsIgnoreCase("accept")) {
+                        } else if (args[0].equalsIgnoreCase("accept") || plugin.getAliases("adopt", "accept").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
                             //check for request
                             if (!plugin.adoptRequests.containsKey(playerUUID)) {
@@ -192,7 +192,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                     firstParentFam.adopt(playerFam.getID());
                                 }
                             }
-                        } else if (args[0].equalsIgnoreCase("list")) {
+                        } else if (args[0].equalsIgnoreCase("list") || plugin.getAliases("adopt", "list").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                             if (playerFam.getFirstChild() != null || playerFam.getSecondChild() != null) {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_list_no_child"));
                             } else {
@@ -205,7 +205,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                     }
                                     sender.sendMessage(msg);
                             }
-                        } else if (args[0].equalsIgnoreCase("deny")) {
+                        } else if (args[0].equalsIgnoreCase("deny") || plugin.getAliases("adopt", "deny").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                             if (!plugin.adoptRequests.containsKey(playerUUID)) {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_deny_no_request"));
                             } else {
@@ -213,7 +213,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                 Bukkit.getPlayer(UUID.fromString(firstParent)).sendMessage(plugin.prefix + plugin.messages.get("adopt_deny").replace("%player%", playerFam.getName()));
                                 plugin.marryRequests.remove(playerUUID);
                             }
-                        } else if (args[0].equalsIgnoreCase("moveout")) {
+                        } else if (args[0].equalsIgnoreCase("moveout") || plugin.getAliases("adopt", "moveout").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
                             boolean confirm = false;
 
@@ -253,7 +253,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                 firstParentFam.unadopt(playerFam.getID());
 
                             }
-                        } else if (args[0].equalsIgnoreCase("kickout")) {
+                        } else if (args[0].equalsIgnoreCase("kickout") || plugin.getAliases("adopt", "kickout").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                             if (playerFam.getFirstChild() != null || playerFam.getSecondChild() != null) {
                                 if (args.length == 1) {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_kickout_specify_child"));

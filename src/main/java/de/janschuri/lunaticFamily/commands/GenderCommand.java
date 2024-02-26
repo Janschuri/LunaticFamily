@@ -47,14 +47,14 @@ public class GenderCommand implements CommandExecutor, TabCompleter {
                     Player player = (Player) sender;
                     String uuid = player.getUniqueId().toString();
                     FamilyManager playerFam = new FamilyManager(uuid, plugin);
-                    if (args[0].equalsIgnoreCase("fe") || args[0].equalsIgnoreCase("feminine")) {
+                    if (args[0].equalsIgnoreCase("fe") || plugin.getAliases("gender", "fe").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                         if (playerFam.getGender().equalsIgnoreCase("fe")) {
                             player.sendMessage(plugin.prefix + plugin.messages.get("gender_already_fe"));
                         } else {
                             playerFam.setGender("fe");
                             sender.sendMessage(plugin.prefix + plugin.messages.get("gender_changed_fe"));
                         }
-                    } else if (args[0].equalsIgnoreCase("ma") || args[0].equalsIgnoreCase("masculine")) {
+                    } else if (args[0].equalsIgnoreCase("ma") || plugin.getAliases("gender", "ma").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                         if (playerFam.getGender().equalsIgnoreCase("ma")) {
                             player.sendMessage(plugin.prefix + plugin.messages.get("gender_already_ma"));
                         } else {
@@ -67,19 +67,18 @@ public class GenderCommand implements CommandExecutor, TabCompleter {
                 }
             } else if (args.length > 2 && sender.hasPermission("lunaticFamily.admin.gender")) {
 
-                if (args[0].equalsIgnoreCase("set")) {
+                if (args[0].equalsIgnoreCase("set") || plugin.getAliases("gender", "set").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                     String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
-                    Bukkit.getLogger().info(player1);
                     FamilyManager player1Fam = new FamilyManager(player1, plugin);
 
-                    if (args[2].equalsIgnoreCase("fe") || args[2].equalsIgnoreCase("feminine")) {
+                    if (args[2].equalsIgnoreCase("fe") || plugin.getAliases("gender", "fe").stream().anyMatch(element -> args[2].equalsIgnoreCase(element))) {
                         if (player1Fam.getGender().equalsIgnoreCase("fe")) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_gender_already_fe").replace("%player%", player1Fam.getName()));
                         } else {
                             player1Fam.setGender("fe");
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_gender_changed_fe").replace("%player%", player1Fam.getName()));
                         }
-                    } else if (args[2].equalsIgnoreCase("ma") || args[2].equalsIgnoreCase("masculine")) {
+                    } else if (args[2].equalsIgnoreCase("ma") || plugin.getAliases("gender", "ma").stream().anyMatch(element -> args[2].equalsIgnoreCase(element))) {
                         if (player1Fam.getGender().equalsIgnoreCase("ma")) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_gender_already_ma").replace("%player%", player1Fam.getName()));
                         } else {

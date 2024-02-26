@@ -1,4 +1,80 @@
 prefix: "&9[Familienplugin]&r "
+aliases:
+  family:
+    base_command:
+      - family
+    tree:
+      - tree
+    background:
+      - background
+    list:
+      - list
+    reload:
+      - reload
+  gender:
+    base_command:
+      - gender
+    fe:
+      - fe
+      - feminine
+    ma:
+      - ma
+      - masculine
+    set:
+      - set
+  marry:
+    base_command:
+      - marry
+    propose:
+      - propose
+    accept:
+      - accept
+    deny:
+      - deny
+    divorce:
+      - divorce
+    list:
+      - list
+    kiss:
+      - kiss
+    set:
+      - set
+    unset:
+      - unset
+  adopt:
+    base_command:
+      - adopt
+    propose:
+      - propose
+    accept:
+      - accept
+    deny:
+      - deny
+    kickout:
+      - kickout
+    moveout:
+      - moveout
+    list:
+      - list
+    set:
+      - set
+    unset:
+      - unset
+  sibling:
+    base_command:
+      - sibling
+    propose:
+      - propose
+    accept:
+      - accept
+    deny:
+      - deny
+    kickout:
+      - unsibling
+    set:
+      - set
+    unset:
+      - unset
 messages:
   #general messages
   wrong_usage: "Falsche Verwendung dieses Befehls!"
@@ -104,10 +180,10 @@ messages:
   sibling_accept_complete: "Du und %player% seid nun Geschwister!"
   sibling_deny_no_request: "Du hast keine Geschwisteranfrage."
   sibling_propose_deny_denied: "Du hast die Geschwisteranfrage von %player% abgelehnt."
-  sibling_stab_no_sibling: "Du hast kein Geschwisterkind."
-  sibling_stab_adopted: "Du kannst dein Geschwisterkind nicht abstechen, da deine Eltern DICH sonst abstechen."
-  sibling_stab_confirm: "Bitte bestätige, dass du dein Geschwisterkind abstechen möchtest."
-  sibling_stab_complete: "Du hast dein Geschwisterkind abgestochen."
+  sibling_unsibling_no_sibling: "Du hast kein Geschwisterkind."
+  sibling_unsibling_adopted: "Du kannst dein Geschwisterkind nicht abstechen, da deine Eltern DICH sonst abstechen."
+  sibling_unsibling_confirm: "Bitte bestätige, dass du dein Geschwisterkind abstechen möchtest."
+  sibling_unsibling_complete: "Du hast dein Geschwisterkind abgestochen."
   #admin commands
   #admin gender commands
   admin_gender_changed_fe: "Du hast das Geschlecht von %player% zu weiblich geändert."

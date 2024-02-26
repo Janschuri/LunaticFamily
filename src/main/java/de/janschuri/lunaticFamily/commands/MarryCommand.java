@@ -47,7 +47,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
             }
         } else {
             //admin subcommand "set"
-            if (args[0].equalsIgnoreCase("set")) {
+            if (args[0].equalsIgnoreCase("set") || plugin.getAliases("marry", "set").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
                 boolean forced = false;
 
@@ -131,7 +131,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                     }
                 }
 
-            } else if (args[0].equalsIgnoreCase("unset")) {
+            } else if (args[0].equalsIgnoreCase("unset") || plugin.getAliases("marry", "unset").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                 if (!sender.hasPermission("lunaticFamily.admin.marry")) {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
                 } else if (args.length < 2) {
@@ -159,7 +159,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                 } else {
                     String playerUUID = player.getUniqueId().toString();
                     FamilyManager playerFam = new FamilyManager(playerUUID, plugin);
-                    if (args[0].equalsIgnoreCase("propose")) {
+                    if (args[0].equalsIgnoreCase("propose") || plugin.getAliases("marry", "propose").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                         if (playerFam.isMarried()) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_already_married").replace("%player%", playerFam.getName()));
                         } else if (args.length < 2) {
@@ -219,7 +219,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 }.runTaskLater(plugin, 600L);
                             }
                         }
-                    } else if (args[0].equalsIgnoreCase("priest")) {
+                    } else if (args[0].equalsIgnoreCase("priest") || plugin.getAliases("marry", "priest").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                         if (!player.hasPermission("lunaticFamily.marry.priest")) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
                         } else if (args.length < 3) {
@@ -265,7 +265,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         }
                     }
                     //player subcommand "accept"
-                    else if (args[0].equalsIgnoreCase("accept")) {
+                    else if (args[0].equalsIgnoreCase("accept") || plugin.getAliases("marry", "accept").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
                         if (!plugin.marryRequests.containsKey(playerUUID) && !plugin.marryPriestRequests.containsKey(playerUUID)) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("marry_accept_no_request"));
@@ -337,7 +337,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 }
                             }
                         }
-                    } else if (args[0].equalsIgnoreCase("deny")) {
+                    } else if (args[0].equalsIgnoreCase("deny") || plugin.getAliases("marry", "deny").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
                         if (!plugin.marryRequests.containsKey(playerUUID) && !plugin.marryPriestRequests.containsKey(playerUUID)) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("marry_deny_no_request"));
@@ -364,7 +364,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         }
                     }
                     //player subcommand "divorce"
-                    else if (args[0].equalsIgnoreCase("divorce")) {
+                    else if (args[0].equalsIgnoreCase("divorce") || plugin.getAliases("marry", "divorce").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
                         boolean confirm = false;
 
@@ -385,7 +385,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             }
                             playerFam.divorce();
                         }
-                    } else if (args[0].equalsIgnoreCase("kiss")) {
+                    } else if (args[0].equalsIgnoreCase("kiss") || plugin.getAliases("marry", "kiss").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
                         if (!playerFam.isMarried()) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("marry_kiss_no_partner"));
@@ -405,7 +405,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 }
                             }
                         }
-                    } else if (args[0].equalsIgnoreCase("list")) {
+                    } else if (args[0].equalsIgnoreCase("list") || plugin.getAliases("marry", "list").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                         int page = 1;
                         if (args.length > 1) {
                             try {
@@ -426,7 +426,6 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             index++;
                         }
                         sender.sendMessage(msg);
-                        Bukkit.getLogger().info(marryList.toString());
 
                     }
                     //subcommand does not exist
