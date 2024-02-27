@@ -143,11 +143,13 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 
                             boolean confirm = false;
 
-                            if (args.length > 1) {
-                                if (args[1].equalsIgnoreCase("confirm")) {
+                            if (args.length > 2) {
+                                if (args[2].equalsIgnoreCase("confirm")) {
                                     confirm = true;
                                 }
                             }
+
+                            Bukkit.getLogger().info(String.valueOf(confirm));
 
                             if (args.length < 2) {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
@@ -171,7 +173,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_already_adopted").replace("%player%", childFam.getName()));
                                 } else if (childFam.hasSibling() && !confirm){
                                     TextComponent yes = new TextComponent(ChatColor.GREEN + " \u2713");
-                                    yes.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry set " + args[1] + " " + args[2] + " force"));
+                                    yes.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/adopt propose " + args[1] + " confirm"));
                                     yes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + " \u2713").create()));
 
                                     TextComponent prefix = new TextComponent(plugin.prefix);
