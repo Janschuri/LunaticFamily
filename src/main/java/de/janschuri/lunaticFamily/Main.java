@@ -37,6 +37,8 @@ import java.util.logging.Level;
 //TODO hook into Minepacks
 //TODO split money after divorce
 //TODO /family fake <name>
+//TODO partner is online
+//TODO marry date notification
 public final class Main extends JavaPlugin {
     private static Database db;
     private static FileConfiguration config;
