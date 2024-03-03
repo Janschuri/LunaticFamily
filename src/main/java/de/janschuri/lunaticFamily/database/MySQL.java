@@ -13,7 +13,7 @@ public class MySQL extends Database {
         super(instance);
         host = plugin.getConfig().getString("Database.MySQL.Host", "localhost");
         port = plugin.getConfig().getInt("Database.MySQL.Port", 3306);
-        database = plugin.getConfig().getString("Database.MySQL.Database", "playerData");
+        database = plugin.getConfig().getString("Database.MySQL.Database", "lunaticfamily");
         username = plugin.getConfig().getString("Database.MySQL.Username", "root");
         password = plugin.getConfig().getString("Database.MySQL.Password", "");
     }
@@ -21,7 +21,17 @@ public class MySQL extends Database {
     public Connection getSQLConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            return DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+            Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/", username, password);
+
+            // Create the database if it doesn't exist
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS " + database);
+            stmt.close();
+
+            // Connect to the specified database
+            conn.setCatalog(database);
+
+            return conn;
         } catch (SQLException | ClassNotFoundException ex) {
             plugin.getLogger().log(Level.SEVERE, "MySQL exception on initialize", ex);
         }
@@ -32,7 +42,7 @@ public class MySQL extends Database {
         connection = getSQLConnection();
         try {
             Statement s = connection.createStatement();
-            s.executeUpdate(MySQLCreateTokensTable);
+            s.executeUpdate(MySQLCreatePlayerDataTable);
             s.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -40,7 +50,7 @@ public class MySQL extends Database {
         initialize();
     }
 
-    String MySQLCreateTokensTable = "CREATE TABLE IF NOT EXISTS playerData (" +
+    String MySQLCreatePlayerDataTable = "CREATE TABLE IF NOT EXISTS playerData (" +
             "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
             "`uuid` varchar(36) NOT NULL," +
             "`name` varchar(16) NULL," +
