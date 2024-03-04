@@ -36,12 +36,7 @@ public class FamilyTree {
         AdvancementDisplay.AdvancementFrame frame = AdvancementDisplay.AdvancementFrame.CHALLENGE;
         AdvancementVisibility visibility = AdvancementVisibility.ALWAYS;
 
-        if (playerFam.getGender().equalsIgnoreCase("fe")) {
-            description = plugin.relationshipsFe.get("ego").toString();
-        }
-        if (playerFam.getGender().equalsIgnoreCase("ma")) {
-            description = plugin.relationshipsMa.get("ego").toString();
-        }
+        description = plugin.relationships.get(playerFam.getGender()).get("ego");
 
         String skinURL = playerFam.getSkinURL();
         ItemStack icon = Main.getSkull(skinURL);
@@ -53,250 +48,250 @@ public class FamilyTree {
         display.setX(0.0f);
         display.setY(-2.0f);
 
-        Advancement ego = new Advancement(new NameKey("familyTree", "ego"), display);
+        Advancement ego = new Advancement(new NameKey("family_tree", "ego"), display);
 
         //own family
             //partner
             Advancement partner = createAdvancement(ego, "partner", 2.0f, 0.0f);
                 //family of partner
                     //sibling of partner
-                    Advancement secondSiblingInLawFirstHolder = createAdvancement(partner, "secondSiblingInLawFirstHolder", -0.5f, 0.0f);
-                    Advancement secondSiblingInLawSecondHolder = createAdvancement(secondSiblingInLawFirstHolder, "secondSiblingInLawSecondHolder", 0.0f, -1.0f);
-                    Advancement secondSiblingInLawThirdHolder = createAdvancement(secondSiblingInLawSecondHolder, "secondSiblingInLawThirdHolder", 2.0f, 0.0f);
-                    Advancement secondSiblingInLaw = createAdvancement(secondSiblingInLawThirdHolder, "secondSiblingInLaw", 0.5f, 1.0f);
+                    Advancement secondSiblingInLawFirstHolder = createAdvancement(partner, "second_sibling_in_law_first_holder", -0.5f, 0.0f);
+                    Advancement secondSiblingInLawSecondHolder = createAdvancement(secondSiblingInLawFirstHolder, "second_sibling_in_law_second_holder", 0.0f, -1.0f);
+                    Advancement secondSiblingInLawThirdHolder = createAdvancement(secondSiblingInLawSecondHolder, "second_sibling_in_law_third_holder", 2.0f, 0.0f);
+                    Advancement secondSiblingInLaw = createAdvancement(secondSiblingInLawThirdHolder, "second_sibling_in_law", 0.5f, 1.0f);
                     //first parent of partner
-                    Advancement firstParentInLawFirstHolder = createAdvancement(partner, "firstParentInLawFirstHolder", -0.5f, 0.0f);
-                    Advancement firstParentInLawSecondHolder = createAdvancement(firstParentInLawFirstHolder, "firstParentInLawSecondHolder", 0.0f, -1.0f);
-                    Advancement firstParentInLawThirdHolder = createAdvancement(firstParentInLawSecondHolder, "firstParentInLawThirdHolder", 1.0f, 0.0f);
-                    Advancement firstParentInLaw = createAdvancement(firstParentInLawThirdHolder, "firstParentInLaw", -0.5f, -1.0f);
+                    Advancement firstParentInLawFirstHolder = createAdvancement(partner, "first_parent_in_law_first_holder", -0.5f, 0.0f);
+                    Advancement firstParentInLawSecondHolder = createAdvancement(firstParentInLawFirstHolder, "first_parent_in_law_second_holder", 0.0f, -1.0f);
+                    Advancement firstParentInLawThirdHolder = createAdvancement(firstParentInLawSecondHolder, "first_parent_in_law_third_holder", 1.0f, 0.0f);
+                    Advancement firstParentInLaw = createAdvancement(firstParentInLawThirdHolder, "first_parent_in_law", -0.5f, -1.0f);
                     //second parent of partner
-                    Advancement secondParentInLawFirstHolder = createAdvancement(partner, "secondParentInLawFirstHolder", -0.5f, 0.0f);
-                    Advancement secondParentInLawSecondHolder = createAdvancement(secondParentInLawFirstHolder, "secondParentInLawSecondHolder", 0.0f, -1.0f);
-                    Advancement secondParentInLawThirdHolder = createAdvancement(secondParentInLawSecondHolder, "secondParentInLawThirdHolder", 1.0f, 0.0f);
-                    Advancement secondParentInLaw = createAdvancement(secondParentInLawThirdHolder, "secondParentInLaw", 1.5f, -1.0f);
+                    Advancement secondParentInLawFirstHolder = createAdvancement(partner, "second_parent_in_law_first_holder", -0.5f, 0.0f);
+                    Advancement secondParentInLawSecondHolder = createAdvancement(secondParentInLawFirstHolder, "second_parent_in_law_second_holder", 0.0f, -1.0f);
+                    Advancement secondParentInLawThirdHolder = createAdvancement(secondParentInLawSecondHolder, "second_parent_in_law_third_holder", 1.0f, 0.0f);
+                    Advancement secondParentInLaw = createAdvancement(secondParentInLawThirdHolder, "second_parent_in_law", 1.5f, -1.0f);
             //sibling
-            Advancement siblingFirstHolder = createAdvancement(ego, "siblingFirstHolder", -0.5f, 0.0f);
-            Advancement siblingSecondHolder = createAdvancement(siblingFirstHolder, "siblingSecondHolder", -2.0f,-1.0f);
-            Advancement siblingThirdHolder = createAdvancement(siblingSecondHolder, "siblingThirdHolder", 0.0f,1.0f);
+            Advancement siblingFirstHolder = createAdvancement(ego, "sibling_first_holder", -0.5f, 0.0f);
+            Advancement siblingSecondHolder = createAdvancement(siblingFirstHolder, "sibling_second_holder", -2.0f,-1.0f);
+            Advancement siblingThirdHolder = createAdvancement(siblingSecondHolder, "sibling_third_holder", 0.0f,1.0f);
             Advancement sibling = createAdvancement(siblingThirdHolder, "sibling", 0.5f,0.0f);
                 //family of sibling
                     //partner of sibling
-                    Advancement firstSiblingInLaw = createAdvancement(sibling, "firstSiblingInLaw", -4.0f, 0.0f);
+                    Advancement firstSiblingInLaw = createAdvancement(sibling, "first_sibling_in_law", -4.0f, 0.0f);
                     //first child of sibling
-                    Advancement firstNieceOrNephewFirstHolder = createAdvancement(sibling, "firstNieceOrNephewFirstHolder", -3.5f, 0.0f);
-                    Advancement firstNieceOrNephewSecondHolder = createAdvancement(firstNieceOrNephewFirstHolder, "firstNieceOrNephewSecondHolder", 0.0f, 1.0f);
-                    Advancement firstNieceOrNephewThirdHolder = createAdvancement(firstNieceOrNephewSecondHolder, "firstNieceOrNephewThirdHolder", -1.0f, 0.0f);
-                    Advancement firstNieceOrNephew = createAdvancement(firstNieceOrNephewThirdHolder, "firstNieceOrNephew", 0.5f, 1.0f);
+                    Advancement firstNieceOrNephewFirstHolder = createAdvancement(sibling, "first_niece_or_nephew_first_holder", -3.5f, 0.0f);
+                    Advancement firstNieceOrNephewSecondHolder = createAdvancement(firstNieceOrNephewFirstHolder, "first_niece_or_nephew_second_holder", 0.0f, 1.0f);
+                    Advancement firstNieceOrNephewThirdHolder = createAdvancement(firstNieceOrNephewSecondHolder, "first_niece_or_nephew_third_holder", -1.0f, 0.0f);
+                    Advancement firstNieceOrNephew = createAdvancement(firstNieceOrNephewThirdHolder, "first_niece_or_nephew", 0.5f, 1.0f);
                     //second child of sibling
-                    Advancement secondNieceOrNephewFirstHolder = createAdvancement(sibling, "secondNieceOrNephewFirstHolder", -3.5f, 0.0f);
-                    Advancement secondNieceOrNephewSecondHolder = createAdvancement(secondNieceOrNephewFirstHolder, "secondNieceOrNephewSecondHolder", 1.0f, 1.0f);
-                    Advancement secondNieceOrNephew = createAdvancement(secondNieceOrNephewSecondHolder, "secondNieceOrNephew", 0.5f, 1.0f);
+                    Advancement secondNieceOrNephewFirstHolder = createAdvancement(sibling, "second_niece_or_nephew_first_holder", -3.5f, 0.0f);
+                    Advancement secondNieceOrNephewSecondHolder = createAdvancement(secondNieceOrNephewFirstHolder, "second_niece_or_nephew_second_holder", 1.0f, 1.0f);
+                    Advancement secondNieceOrNephew = createAdvancement(secondNieceOrNephewSecondHolder, "second_niece_or_nephew", 0.5f, 1.0f);
             //first parent
-            Advancement firstParentFirstHolder = createAdvancement(ego, "firstParentFirstHolder", -0.5f,0.0f);
-            Advancement firstParentSecondHolder = createAdvancement(firstParentFirstHolder, "firstParentSecondHolder", -1.0f,-1.0f);
-            Advancement firstParent = createAdvancement(firstParentSecondHolder, "firstParent", -0.5f,-1.0f);
+            Advancement firstParentFirstHolder = createAdvancement(ego, "first_parent_first_holder", -0.5f,0.0f);
+            Advancement firstParentSecondHolder = createAdvancement(firstParentFirstHolder, "first_parent_second_holder", -1.0f,-1.0f);
+            Advancement firstParent = createAdvancement(firstParentSecondHolder, "first_parent", -0.5f,-1.0f);
                 //family of first parent
                     //sibling of first parent
-                    Advancement secondAuntOrUncleFirstHolder = createAdvancement(firstParent, "secondAuntOrUncleFirstHolder", -0.5f, 0.0f);
-                    Advancement secondAuntOrUncleSecondHolder = createAdvancement(secondAuntOrUncleFirstHolder, "secondAuntOrUncleSecondHolder", -6.0f,-1.0f);
-                    Advancement secondAuntOrUncleThirdHolder = createAdvancement(secondAuntOrUncleSecondHolder, "secondAuntOrUncleThirdHolder", 0.0f,1.0f);
-                    Advancement secondAuntOrUncle = createAdvancement(secondAuntOrUncleThirdHolder, "secondAuntOrUncle", 0.5f,0.0f);
+                    Advancement secondAuntOrUncleFirstHolder = createAdvancement(firstParent, "second_aunt_or_uncle_first_holder", -0.5f, 0.0f);
+                    Advancement secondAuntOrUncleSecondHolder = createAdvancement(secondAuntOrUncleFirstHolder, "second_aunt_or_uncle_second_holder", -6.0f,-1.0f);
+                    Advancement secondAuntOrUncleThirdHolder = createAdvancement(secondAuntOrUncleSecondHolder, "second_aunt_or_uncle_third_holder", 0.0f,1.0f);
+                    Advancement secondAuntOrUncle = createAdvancement(secondAuntOrUncleThirdHolder, "second_aunt_or_uncle", 0.5f,0.0f);
                         //family of sibling of first parent
                             //partner of sibling of first parent
-                            Advancement firstAuntOrUncle = createAdvancement(secondAuntOrUncle, "firstAuntOrUncle", -2.0f, 0.0f);
+                            Advancement firstAuntOrUncle = createAdvancement(secondAuntOrUncle, "first_aunt_or_uncle", -2.0f, 0.0f);
                             //first child of sibling
-                            Advancement firstCousinFirstHolder = createAdvancement(secondAuntOrUncle, "firstCousinFirstHolder", -1.5f, 0.0f);
-                            Advancement firstCousinSecondHolder = createAdvancement(firstCousinFirstHolder, "firstCousinSecondHolder", 0.0f, 1.0f);
-                            Advancement firstCousinThirdHolder = createAdvancement(firstCousinSecondHolder, "firstCousinThirdHolder", -1.0f, 0.0f);
-                            Advancement firstCousin = createAdvancement(firstCousinThirdHolder, "firstCousin", 0.5f, 1.0f);
+                            Advancement firstCousinFirstHolder = createAdvancement(secondAuntOrUncle, "first_cousin_first_holder", -1.5f, 0.0f);
+                            Advancement firstCousinSecondHolder = createAdvancement(firstCousinFirstHolder, "first_cousin_second_holder", 0.0f, 1.0f);
+                            Advancement firstCousinThirdHolder = createAdvancement(firstCousinSecondHolder, "first_cousin_third_holder", -1.0f, 0.0f);
+                            Advancement firstCousin = createAdvancement(firstCousinThirdHolder, "first_cousin", 0.5f, 1.0f);
                             //second child of sibling
-                            Advancement secondCousinFirstHolder = createAdvancement(secondAuntOrUncle, "secondCousinFirstHolder", -1.5f, 0.0f);
-                            Advancement secondCousinSecondHolder = createAdvancement(secondCousinFirstHolder, "secondCousinSecondHolder", 1.0f, 1.0f);
-                            Advancement secondCousin = createAdvancement(secondCousinSecondHolder, "secondCousin", 0.5f, 1.0f);
+                            Advancement secondCousinFirstHolder = createAdvancement(secondAuntOrUncle, "second_cousin_first_holder", -1.5f, 0.0f);
+                            Advancement secondCousinSecondHolder = createAdvancement(secondCousinFirstHolder, "second_cousin_second_holder", 1.0f, 1.0f);
+                            Advancement secondCousin = createAdvancement(secondCousinSecondHolder, "second_cousin", 0.5f, 1.0f);
                     //first parent of first parent
-                    Advancement firstGrandparentFirstHolder = createAdvancement(firstParent, "firstGrandparentFirstHolder", -0.5f,0.0f);
-                    Advancement firstGrandparentSecondHolder = createAdvancement(firstGrandparentFirstHolder, "firstGrandparentSecondHolder", -3.0f,-1.0f);
-                    Advancement firstGrandparent = createAdvancement(firstGrandparentSecondHolder, "firstGrandparent", -0.5f,-1.0f);
+                    Advancement firstGrandparentFirstHolder = createAdvancement(firstParent, "first_grandparent_first_holder", -0.5f,0.0f);
+                    Advancement firstGrandparentSecondHolder = createAdvancement(firstGrandparentFirstHolder, "first_grandparent_second_holder", -3.0f,-1.0f);
+                    Advancement firstGrandparent = createAdvancement(firstGrandparentSecondHolder, "first_grandparent", -0.5f,-1.0f);
                         //family of first parent of first parent
                             //sibling of first parent of first parent
-                            Advancement firstGreatAuntOrUncleFirstHolder = createAdvancement(firstGrandparent, "firstGreatAuntOrUncleFirstHolder", -0.5f, 0.0f);
-                            Advancement firstGreatAuntOrUncleSecondHolder = createAdvancement(firstGreatAuntOrUncleFirstHolder, "firstGreatAuntOrUncleSecondHolder", -2.0f,-1.0f);
-                            Advancement firstGreatAuntOrUncleThirdHolder = createAdvancement(firstGreatAuntOrUncleSecondHolder, "firstGreatAuntOrUncleThirdHolder", 0.0f,1.0f);
-                            Advancement firstGreatAuntOrUncle = createAdvancement(firstGreatAuntOrUncleThirdHolder, "firstGreatAuntOrUncle", 0.5f,0.0f);
+                            Advancement firstGreatAuntOrUncleFirstHolder = createAdvancement(firstGrandparent, "first_great_gaunt_or_uncle_first_holder", -0.5f, 0.0f);
+                            Advancement firstGreatAuntOrUncleSecondHolder = createAdvancement(firstGreatAuntOrUncleFirstHolder, "first_great_gaunt_or_uncle_second_holder", -2.0f,-1.0f);
+                            Advancement firstGreatAuntOrUncleThirdHolder = createAdvancement(firstGreatAuntOrUncleSecondHolder, "first_great_gaunt_or_uncle_third_holder", 0.0f,1.0f);
+                            Advancement firstGreatAuntOrUncle = createAdvancement(firstGreatAuntOrUncleThirdHolder, "first_great_gaunt_or_uncle", 0.5f,0.0f);
                             //first parent of first parent of first parent
-                            Advancement firstGreatGrandparentFirstHolder = createAdvancement(firstGrandparent, "firstGreatGrandparentFirstHolder", -0.5f,0.0f);
-                            Advancement firstGreatGrandparentSecondHolder = createAdvancement(firstGreatGrandparentFirstHolder, "firstGreatGrandparentSecondHolder", -1.0f,-1.0f);
-                            Advancement firstGreatGrandparent = createAdvancement(firstGreatGrandparentSecondHolder, "firstGreatGrandparent", -0.5f,-1.0f);
+                            Advancement firstGreatGrandparentFirstHolder = createAdvancement(firstGrandparent, "first_great_grandparent_first_holder", -0.5f,0.0f);
+                            Advancement firstGreatGrandparentSecondHolder = createAdvancement(firstGreatGrandparentFirstHolder, "first_great_grandparent_second_holder", -1.0f,-1.0f);
+                            Advancement firstGreatGrandparent = createAdvancement(firstGreatGrandparentSecondHolder, "first_great_grandparent", -0.5f,-1.0f);
                             //second parent of first parent of first parent
-                            Advancement secondGreatGrandparentFirstHolder = createAdvancement(firstGrandparent, "secondGreatGrandparentFirstHolder", -0.5f,0.0f);
-                            Advancement secondGreatGrandparentSecondHolder = createAdvancement(secondGreatGrandparentFirstHolder, "secondGreatGrandparentSecondHolder", -1.0f,-1.0f);
-                            Advancement secondGreatGrandparent = createAdvancement(secondGreatGrandparentSecondHolder, "secondGreatGrandparent", 1.5f,-1.0f);
+                            Advancement secondGreatGrandparentFirstHolder = createAdvancement(firstGrandparent, "second_great_grandparent_first_holder", -0.5f,0.0f);
+                            Advancement secondGreatGrandparentSecondHolder = createAdvancement(secondGreatGrandparentFirstHolder, "second_great_grandparent_second_holder", -1.0f,-1.0f);
+                            Advancement secondGreatGrandparent = createAdvancement(secondGreatGrandparentSecondHolder, "second_great_grandparent", 1.5f,-1.0f);
                     //second parent of first parent
-                    Advancement secondGrandparentFirstHolder = createAdvancement(firstParent, "secondGrandparentFirstHolder", -0.5f,0.0f);
-                    Advancement secondGrandparentSecondHolder = createAdvancement(secondGrandparentFirstHolder, "secondGrandparentSecondHolder", -3.0f,-1.0f);
-                    Advancement secondGrandparent = createAdvancement(secondGrandparentSecondHolder, "secondGrandparent", 1.5f,-1.0f);
+                    Advancement secondGrandparentFirstHolder = createAdvancement(firstParent, "second_grandparent_first_holder", -0.5f,0.0f);
+                    Advancement secondGrandparentSecondHolder = createAdvancement(secondGrandparentFirstHolder, "second_grandparent_second_holder", -3.0f,-1.0f);
+                    Advancement secondGrandparent = createAdvancement(secondGrandparentSecondHolder, "second_grandparent", 1.5f,-1.0f);
                         //family of second parent of first parent
                             //sibling of second parent of first parent
-                            Advancement secondGreatAuntOrUncleFirstHolder = createAdvancement(secondGrandparent, "secondGreatAuntOrUncleFirstHolder", -0.5f, 0.0f);
-                            Advancement secondGreatAuntOrUncleSecondHolder = createAdvancement(secondGreatAuntOrUncleFirstHolder, "secondGreatAuntOrUncleSecondHolder", 0.0f, -1.0f);
-                            Advancement secondGreatAuntOrUncleThirdHolder = createAdvancement(secondGreatAuntOrUncleSecondHolder, "secondGreatAuntOrUncleThirdHolder", 2.0f, 0.0f);
-                            Advancement secondGreatAuntOrUncle = createAdvancement(secondGreatAuntOrUncleThirdHolder, "secondGreatAuntOrUncle", 0.5f, 1.0f);
+                            Advancement secondGreatAuntOrUncleFirstHolder = createAdvancement(secondGrandparent, "second_great_gaunt_or_uncle_first_holder", -0.5f, 0.0f);
+                            Advancement secondGreatAuntOrUncleSecondHolder = createAdvancement(secondGreatAuntOrUncleFirstHolder, "second_great_gaunt_or_uncle_second_holder", 0.0f, -1.0f);
+                            Advancement secondGreatAuntOrUncleThirdHolder = createAdvancement(secondGreatAuntOrUncleSecondHolder, "second_great_gaunt_or_uncle_third_holder", 2.0f, 0.0f);
+                            Advancement secondGreatAuntOrUncle = createAdvancement(secondGreatAuntOrUncleThirdHolder, "second_great_gaunt_or_uncle", 0.5f, 1.0f);
                             //first parent of second parent of first parent
-                            Advancement thirdGreatGrandparentFirstHolder = createAdvancement(secondGrandparent, "thirdGreatGrandparentFirstHolder", -0.5f, 0.0f);
-                            Advancement thirdGreatGrandparentSecondHolder = createAdvancement(thirdGreatGrandparentFirstHolder, "thirdGreatGrandparentSecondHolder", 0.0f, -1.0f);
-                            Advancement thirdGreatGrandparentThirdHolder = createAdvancement(thirdGreatGrandparentSecondHolder, "thirdGreatGrandparentThirdHolder", 1.0f, 0.0f);
-                            Advancement thirdGreatGrandparent = createAdvancement(thirdGreatGrandparentThirdHolder, "thirdGreatGrandparent", -0.5f, -1.0f);
+                            Advancement thirdGreatGrandparentFirstHolder = createAdvancement(secondGrandparent, "third_great_grandparent_first_holder", -0.5f, 0.0f);
+                            Advancement thirdGreatGrandparentSecondHolder = createAdvancement(thirdGreatGrandparentFirstHolder, "third_great_grandparent_second_holder", 0.0f, -1.0f);
+                            Advancement thirdGreatGrandparentThirdHolder = createAdvancement(thirdGreatGrandparentSecondHolder, "third_great_grandparent_third_holder", 1.0f, 0.0f);
+                            Advancement thirdGreatGrandparent = createAdvancement(thirdGreatGrandparentThirdHolder, "third_great_grandparent", -0.5f, -1.0f);
                             //second parent of second parent of first parent
-                            Advancement fourthGreatGrandparentFirstHolder = createAdvancement(secondGrandparent, "fourthGreatGrandparentFirstHolder", -0.5f, 0.0f);
-                            Advancement fourthGreatGrandparentSecondHolder = createAdvancement(fourthGreatGrandparentFirstHolder, "fourthGreatGrandparentSecondHolder", 0.0f, -1.0f);
-                            Advancement fourthGreatGrandparentThirdHolder = createAdvancement(fourthGreatGrandparentSecondHolder, "fourthGreatGrandparentThirdHolder", 1.0f, 0.0f);
-                            Advancement fourthGreatGrandparent = createAdvancement(fourthGreatGrandparentThirdHolder, "fourthGreatGrandparent", 1.5f, -1.0f);
+                            Advancement fourthGreatGrandparentFirstHolder = createAdvancement(secondGrandparent, "fourth_great_grandparent_first_holder", -0.5f, 0.0f);
+                            Advancement fourthGreatGrandparentSecondHolder = createAdvancement(fourthGreatGrandparentFirstHolder, "fourth_great_grandparent_second_holder", 0.0f, -1.0f);
+                            Advancement fourthGreatGrandparentThirdHolder = createAdvancement(fourthGreatGrandparentSecondHolder, "fourth_great_grandparent_third_holder", 1.0f, 0.0f);
+                            Advancement fourthGreatGrandparent = createAdvancement(fourthGreatGrandparentThirdHolder, "fourth_great_grandparent", 1.5f, -1.0f);
 
             //second parent
-            Advancement secondParentFirstHolder = createAdvancement(ego, "secondParentFirstHolder", -0.5f,0.0f);
-            Advancement secondParentSecondHolder = createAdvancement(secondParentFirstHolder, "secondParentSecondHolder", -1.0f,-1.0f);
-            Advancement secondParent = createAdvancement(secondParentSecondHolder, "secondParent", 1.5f,-1.0f);
+            Advancement secondParentFirstHolder = createAdvancement(ego, "second_parent_first_holder", -0.5f,0.0f);
+            Advancement secondParentSecondHolder = createAdvancement(secondParentFirstHolder, "second_parent_second_holder", -1.0f,-1.0f);
+            Advancement secondParent = createAdvancement(secondParentSecondHolder, "second_parent", 1.5f,-1.0f);
                 //family of second parent
                     //sibling of second parent
-                    Advancement thirdAuntOrUncleFirstHolder = createAdvancement(secondParent, "thirdAuntOrUncleFirstHolder", -0.5f, 0.0f);
-                    Advancement thirdAuntOrUncleSecondHolder = createAdvancement(thirdAuntOrUncleFirstHolder, "thirdAuntOrUncleSecondHolder", 0.0f, -1.0f);
-                    Advancement thirdAuntOrUncleThirdHolder = createAdvancement(thirdAuntOrUncleSecondHolder, "thirdAuntOrUncleThirdHolder", 6.0f, 0.0f);
-                    Advancement thirdAuntOrUncle = createAdvancement(thirdAuntOrUncleThirdHolder, "thirdAuntOrUncle", 0.5f, 1.0f);
+                    Advancement thirdAuntOrUncleFirstHolder = createAdvancement(secondParent, "third_aunt_or_uncle_first_holder", -0.5f, 0.0f);
+                    Advancement thirdAuntOrUncleSecondHolder = createAdvancement(thirdAuntOrUncleFirstHolder, "third_aunt_or_uncle_second_holder", 0.0f, -1.0f);
+                    Advancement thirdAuntOrUncleThirdHolder = createAdvancement(thirdAuntOrUncleSecondHolder, "third_aunt_or_uncle_third_holder", 6.0f, 0.0f);
+                    Advancement thirdAuntOrUncle = createAdvancement(thirdAuntOrUncleThirdHolder, "third_aunt_or_uncle", 0.5f, 1.0f);
                         //family of sibling of second Parent
                             //partner of sibling of second Parent
-                            Advancement fourthAuntOrUncle = createAdvancement(thirdAuntOrUncle, "fourthAuntOrUncle", 2.0f, 0.0f);
+                            Advancement fourthAuntOrUncle = createAdvancement(thirdAuntOrUncle, "fourth_aunt_or_uncle", 2.0f, 0.0f);
                             //first child of sibling of second Parent
-                            Advancement thirdCousinFirstHolder = createAdvancement(thirdAuntOrUncle, "thirdCousinFirstHolder", 0.5f,0.0f);
-                            Advancement thirdCousinSecondHolder = createAdvancement(thirdCousinFirstHolder, "thirdCousinSecondHolder", 0.0f,1.0f);
-                            Advancement thirdCousinThirdHolder = createAdvancement(thirdCousinSecondHolder, "thirdCousinThirdHolder", -1.0f,0.0f);
-                            Advancement thirdCousin = createAdvancement(thirdCousinThirdHolder, "thirdCousin", 0.5f,1.0f);
+                            Advancement thirdCousinFirstHolder = createAdvancement(thirdAuntOrUncle, "third_cousin_first_holder", 0.5f,0.0f);
+                            Advancement thirdCousinSecondHolder = createAdvancement(thirdCousinFirstHolder, "third_cousin_second_holder", 0.0f,1.0f);
+                            Advancement thirdCousinThirdHolder = createAdvancement(thirdCousinSecondHolder, "third_cousin_third_holder", -1.0f,0.0f);
+                            Advancement thirdCousin = createAdvancement(thirdCousinThirdHolder, "third_cousin", 0.5f,1.0f);
                             //second child of sibling of second Parent
-                            Advancement fourthCousinFirstHolder = createAdvancement(thirdAuntOrUncle, "fourthCousinFirstHolder", 0.5f,0.0f);
-                            Advancement fourthCousinSecondHolder = createAdvancement(fourthCousinFirstHolder, "fourthCousinSecondHolder", 1.0f,1.0f);
-                            Advancement fourthCousin = createAdvancement(fourthCousinSecondHolder, "fourthCousin", 0.5f,1.0f);
+                            Advancement fourthCousinFirstHolder = createAdvancement(thirdAuntOrUncle, "fourth_cousin_first_holder", 0.5f,0.0f);
+                            Advancement fourthCousinSecondHolder = createAdvancement(fourthCousinFirstHolder, "fourth_cousin_second_holder", 1.0f,1.0f);
+                            Advancement fourthCousin = createAdvancement(fourthCousinSecondHolder, "fourth_cousin", 0.5f,1.0f);
                     //first parent of second parent
-                    Advancement thirdGrandparentFirstHolder = createAdvancement(secondParent, "thirdGrandparentFirstHolder", -0.5f, 0.0f);
-                    Advancement thirdGrandparentSecondHolder = createAdvancement(thirdGrandparentFirstHolder, "thirdGrandparentSecondHolder", 0.0f, -1.0f);
-                    Advancement thirdGrandparentThirdHolder = createAdvancement(thirdGrandparentSecondHolder, "thirdGrandparentThirdHolder", 3.0f, 0.0f);
-                    Advancement thirdGrandparent = createAdvancement(thirdGrandparentThirdHolder, "thirdGrandparent", -0.5f, -1.0f);
+                    Advancement thirdGrandparentFirstHolder = createAdvancement(secondParent, "third_grandparent_first_holder", -0.5f, 0.0f);
+                    Advancement thirdGrandparentSecondHolder = createAdvancement(thirdGrandparentFirstHolder, "third_grandparent_second_holder", 0.0f, -1.0f);
+                    Advancement thirdGrandparentThirdHolder = createAdvancement(thirdGrandparentSecondHolder, "third_grandparent_third_holder", 3.0f, 0.0f);
+                    Advancement thirdGrandparent = createAdvancement(thirdGrandparentThirdHolder, "third_grandparent", -0.5f, -1.0f);
                         //family of first parent of second parent
                             //sibling of first parent of second parent
-                            Advancement thirdGreatAuntOrUncleFirstHolder = createAdvancement(thirdGrandparent, "thirdGreatAuntOrUncleFirstHolder", -0.5f, 0.0f);
-                            Advancement thirdGreatAuntOrUncleSecondHolder = createAdvancement(thirdGreatAuntOrUncleFirstHolder, "thirdGreatAuntOrUncleSecondHolder", -2.0f,-1.0f);
-                            Advancement thirdGreatAuntOrUncleThirdHolder = createAdvancement(thirdGreatAuntOrUncleSecondHolder, "thirdGreatAuntOrUncleThirdHolder", 0.0f,1.0f);
-                            Advancement thirdGreatAuntOrUncle = createAdvancement(thirdGreatAuntOrUncleThirdHolder, "thirdGreatAuntOrUncle", 0.5f,0.0f);
+                            Advancement thirdGreatAuntOrUncleFirstHolder = createAdvancement(thirdGrandparent, "third_great_gaunt_or_uncle_first_holder", -0.5f, 0.0f);
+                            Advancement thirdGreatAuntOrUncleSecondHolder = createAdvancement(thirdGreatAuntOrUncleFirstHolder, "third_great_gaunt_or_uncle_second_holder", -2.0f,-1.0f);
+                            Advancement thirdGreatAuntOrUncleThirdHolder = createAdvancement(thirdGreatAuntOrUncleSecondHolder, "third_great_gaunt_or_uncle_third_holder", 0.0f,1.0f);
+                            Advancement thirdGreatAuntOrUncle = createAdvancement(thirdGreatAuntOrUncleThirdHolder, "third_great_gaunt_or_uncle", 0.5f,0.0f);
                             //first parent of first parent of second parent
-                            Advancement fifthGreatGrandparentFirstHolder = createAdvancement(thirdGrandparent, "fifthGreatGrandparentFirstHolder", -0.5f,0.0f);
-                            Advancement fifthGreatGrandparentSecondHolder = createAdvancement(fifthGreatGrandparentFirstHolder, "fifthGreatGrandparentSecondHolder", -1.0f,-1.0f);
-                            Advancement fifthGreatGrandparent = createAdvancement(fifthGreatGrandparentSecondHolder, "fifthGreatGrandparent", -0.5f,-1.0f);
+                            Advancement fifthGreatGrandparentFirstHolder = createAdvancement(thirdGrandparent, "fifth_great_grandparent_first_holder", -0.5f,0.0f);
+                            Advancement fifthGreatGrandparentSecondHolder = createAdvancement(fifthGreatGrandparentFirstHolder, "fifth_great_grandparent_second_holder", -1.0f,-1.0f);
+                            Advancement fifthGreatGrandparent = createAdvancement(fifthGreatGrandparentSecondHolder, "fifth_great_grandparent", -0.5f,-1.0f);
                             //second parent of first parent of second parent
-                            Advancement sixthGreatGrandparentFirstHolder = createAdvancement(thirdGrandparent, "sixthGreatGrandparentFirstHolder", -0.5f,0.0f);
-                            Advancement sixthGreatGrandparentSecondHolder = createAdvancement(sixthGreatGrandparentFirstHolder, "sixthGreatGrandparentSecondHolder", -1.0f,-1.0f);
-                            Advancement sixthGreatGrandparent = createAdvancement(sixthGreatGrandparentSecondHolder, "sixthGreatGrandparent", 1.5f,-1.0f);
+                            Advancement sixthGreatGrandparentFirstHolder = createAdvancement(thirdGrandparent, "sixth_great_grandparent_first_holder", -0.5f,0.0f);
+                            Advancement sixthGreatGrandparentSecondHolder = createAdvancement(sixthGreatGrandparentFirstHolder, "sixth_great_grandparent_second_holder", -1.0f,-1.0f);
+                            Advancement sixthGreatGrandparent = createAdvancement(sixthGreatGrandparentSecondHolder, "sixth_great_grandparent", 1.5f,-1.0f);
                     //second parent of second parent
-                    Advancement fourthGrandparentFirstHolder = createAdvancement(secondParent, "fourthGrandparentFirstHolder", -0.5f, 0.0f);
-                    Advancement fourthGrandparentSecondHolder = createAdvancement(fourthGrandparentFirstHolder, "fourthGrandparentSecondHolder", 0.0f, -1.0f);
-                    Advancement fourthGrandparentThirdHolder = createAdvancement(fourthGrandparentSecondHolder, "fourthGrandparentThirdHolder", 3.0f, 0.0f);
-                    Advancement fourthGrandparent = createAdvancement(fourthGrandparentThirdHolder, "fourthGrandparent", 1.5f, -1.0f);
+                    Advancement fourthGrandparentFirstHolder = createAdvancement(secondParent, "fourth_grandparent_first_holder", -0.5f, 0.0f);
+                    Advancement fourthGrandparentSecondHolder = createAdvancement(fourthGrandparentFirstHolder, "fourth_grandparent_second_holder", 0.0f, -1.0f);
+                    Advancement fourthGrandparentThirdHolder = createAdvancement(fourthGrandparentSecondHolder, "fourth_grandparent_third_holder", 3.0f, 0.0f);
+                    Advancement fourthGrandparent = createAdvancement(fourthGrandparentThirdHolder, "fourth_grandparent", 1.5f, -1.0f);
                         //family of second parent of first parent
                             //sibling of second parent of first parent
-                            Advancement fourthGreatAuntOrUncleFirstHolder = createAdvancement(fourthGrandparent, "fourthGreatAuntOrUncleFirstHolder", -0.5f, 0.0f);
-                            Advancement fourthGreatAuntOrUncleSecondHolder = createAdvancement(fourthGreatAuntOrUncleFirstHolder, "fourthGreatAuntOrUncleSecondHolder", 0.0f, -1.0f);
-                            Advancement fourthGreatAuntOrUncleThirdHolder = createAdvancement(fourthGreatAuntOrUncleSecondHolder, "fourthGreatAuntOrUncleThirdHolder", 2.0f, 0.0f);
-                            Advancement fourthGreatAuntOrUncle = createAdvancement(fourthGreatAuntOrUncleThirdHolder, "fourthGreatAuntOrUncle", 0.5f, 1.0f);
+                            Advancement fourthGreatAuntOrUncleFirstHolder = createAdvancement(fourthGrandparent, "fourth_great_gaunt_or_uncle_first_holder", -0.5f, 0.0f);
+                            Advancement fourthGreatAuntOrUncleSecondHolder = createAdvancement(fourthGreatAuntOrUncleFirstHolder, "fourth_great_gaunt_or_uncle_second_holder", 0.0f, -1.0f);
+                            Advancement fourthGreatAuntOrUncleThirdHolder = createAdvancement(fourthGreatAuntOrUncleSecondHolder, "fourth_great_gaunt_or_uncle_third_holder", 2.0f, 0.0f);
+                            Advancement fourthGreatAuntOrUncle = createAdvancement(fourthGreatAuntOrUncleThirdHolder, "fourth_great_gaunt_or_uncle", 0.5f, 1.0f);
                             //first parent of second parent of first parent
-                            Advancement seventhGreatGrandparentFirstHolder = createAdvancement(fourthGrandparent, "seventhGreatGrandparentFirstHolder", -0.5f, 0.0f);
-                            Advancement seventhGreatGrandparentSecondHolder = createAdvancement(seventhGreatGrandparentFirstHolder, "seventhGreatGrandparentSecondHolder", 0.0f, -1.0f);
-                            Advancement seventhGreatGrandparentThirdHolder = createAdvancement(seventhGreatGrandparentSecondHolder, "seventhGreatGrandparentThirdHolder", 1.0f, 0.0f);
-                            Advancement seventhGreatGrandparent = createAdvancement(seventhGreatGrandparentThirdHolder, "seventhGreatGrandparent", -0.5f, -1.0f);
+                            Advancement seventhGreatGrandparentFirstHolder = createAdvancement(fourthGrandparent, "seventh_great_grandparent_first_holder", -0.5f, 0.0f);
+                            Advancement seventhGreatGrandparentSecondHolder = createAdvancement(seventhGreatGrandparentFirstHolder, "seventh_great_grandparent_second_holder", 0.0f, -1.0f);
+                            Advancement seventhGreatGrandparentThirdHolder = createAdvancement(seventhGreatGrandparentSecondHolder, "seventh_great_grandparent_third_holder", 1.0f, 0.0f);
+                            Advancement seventhGreatGrandparent = createAdvancement(seventhGreatGrandparentThirdHolder, "seventh_great_grandparent", -0.5f, -1.0f);
                             //second parent of second parent of first parent
-                            Advancement eighthGreatGrandparentFirstHolder = createAdvancement(fourthGrandparent, "eighthGreatGrandparentFirstHolder", -0.5f, 0.0f);
-                            Advancement eighthGreatGrandparentSecondHolder = createAdvancement(eighthGreatGrandparentFirstHolder, "eighthGreatGrandparentSecondHolder", 0.0f, -1.0f);
-                            Advancement eighthGreatGrandparentThirdHolder = createAdvancement(eighthGreatGrandparentSecondHolder, "eighthGreatGrandparentThirdHolder", 1.0f, 0.0f);
-                            Advancement eighthGreatGrandparent = createAdvancement(eighthGreatGrandparentThirdHolder, "eighthGreatGrandparent", 1.5f, -1.0f);
+                            Advancement eighthGreatGrandparentFirstHolder = createAdvancement(fourthGrandparent, "eighth_great_grandparent_first_holder", -0.5f, 0.0f);
+                            Advancement eighthGreatGrandparentSecondHolder = createAdvancement(eighthGreatGrandparentFirstHolder, "eighth_great_grandparent_second_holder", 0.0f, -1.0f);
+                            Advancement eighthGreatGrandparentThirdHolder = createAdvancement(eighthGreatGrandparentSecondHolder, "eighth_great_grandparent_third_holder", 1.0f, 0.0f);
+                            Advancement eighthGreatGrandparent = createAdvancement(eighthGreatGrandparentThirdHolder, "eighth_great_grandparent", 1.5f, -1.0f);
             //first child
-            Advancement firstChildFirstHolder = createAdvancement(ego, "firstChildFirstHolder", 0.5f,0.0f);
-            Advancement firstChildSecondHolder = createAdvancement(firstChildFirstHolder, "firstChildSecondHolder", 0.0f,1.0f);
-            Advancement firstChildThirdHolder = createAdvancement(firstChildSecondHolder, "firstChildThirdHolder", -1.0f,0.0f);
-            Advancement firstChild = createAdvancement(firstChildThirdHolder, "firstChild", 0.5f,1.0f);
+            Advancement firstChildFirstHolder = createAdvancement(ego, "first_child_first_holder", 0.5f,0.0f);
+            Advancement firstChildSecondHolder = createAdvancement(firstChildFirstHolder, "first_child_second_holder", 0.0f,1.0f);
+            Advancement firstChildThirdHolder = createAdvancement(firstChildSecondHolder, "first_child_third_holder", -1.0f,0.0f);
+            Advancement firstChild = createAdvancement(firstChildThirdHolder, "first_child", 0.5f,1.0f);
                 //family of first child
                     //partner of first child
-                    Advancement firstChildInLaw = createAdvancement(firstChild, "firstChildInLaw", -2.0f, 0.0f);
+                    Advancement firstChildInLaw = createAdvancement(firstChild, "first_child_in_law", -2.0f, 0.0f);
                     //first child of first child
-                    Advancement firstGrandchildFirstHolder = createAdvancement(firstChild, "firstGrandchildFirstHolder", -1.5f,0.0f);
-                    Advancement firstGrandchildSecondHolder = createAdvancement(firstGrandchildFirstHolder, "firstGrandchildSecondHolder", 0.0f,1.0f);
-                    Advancement firstGrandchildThirdHolder = createAdvancement(firstGrandchildSecondHolder, "firstGrandchildThirdHolder", -3.0f,0.0f);
-                    Advancement firstGrandchild = createAdvancement(firstGrandchildThirdHolder, "firstGrandchild", 0.5f,1.0f);
+                    Advancement firstGrandchildFirstHolder = createAdvancement(firstChild, "first_grandchild_first_holder", -1.5f,0.0f);
+                    Advancement firstGrandchildSecondHolder = createAdvancement(firstGrandchildFirstHolder, "first_grandchild_second_holder", 0.0f,1.0f);
+                    Advancement firstGrandchildThirdHolder = createAdvancement(firstGrandchildSecondHolder, "first_grandchild_third_holder", -3.0f,0.0f);
+                    Advancement firstGrandchild = createAdvancement(firstGrandchildThirdHolder, "first_grandchild", 0.5f,1.0f);
                         //family of first child of first child
                             //partner of first child of first child
-                            Advancement firstGrandchildInLaw = createAdvancement(firstGrandchild, "firstGrandchildInLaw", -2.0f, 0.0f);
+                            Advancement firstGrandchildInLaw = createAdvancement(firstGrandchild, "first_grandchild_in_law", -2.0f, 0.0f);
                             //first child of first child of first child
-                            Advancement firstGreatGrandchildFirstHolder = createAdvancement(firstGrandchild, "firstGreatGrandchildFirstHolder", -1.5f, 0.0f);
-                            Advancement firstGreatGrandchildSecondHolder = createAdvancement(firstGreatGrandchildFirstHolder, "firstGreatGrandchildSecondHolder", 0.0f, 1.0f);
-                            Advancement firstGreatGrandchildThirdHolder = createAdvancement(firstGreatGrandchildSecondHolder, "firstGreatGrandchildThirdHolder", -1.0f, 0.0f);
-                            Advancement firstGreatGrandchild = createAdvancement(firstGreatGrandchildThirdHolder, "firstGreatGrandchild", 0.5f, 1.0f);
+                            Advancement firstGreatGrandchildFirstHolder = createAdvancement(firstGrandchild, "first_great_grandchild_first_holder", -1.5f, 0.0f);
+                            Advancement firstGreatGrandchildSecondHolder = createAdvancement(firstGreatGrandchildFirstHolder, "first_great_grandchild_second_holder", 0.0f, 1.0f);
+                            Advancement firstGreatGrandchildThirdHolder = createAdvancement(firstGreatGrandchildSecondHolder, "first_great_grandchild_third_holder", -1.0f, 0.0f);
+                            Advancement firstGreatGrandchild = createAdvancement(firstGreatGrandchildThirdHolder, "first_great_grandchild", 0.5f, 1.0f);
                             //second child of first child of first child
-                            Advancement secondGreatGrandchildFirstHolder = createAdvancement(firstGrandchild, "secondGreatGrandchildFirstHolder", -1.5f, 0.0f);
-                            Advancement secondGreatGrandchildSecondHolder = createAdvancement(secondGreatGrandchildFirstHolder, "secondGreatGrandchildSecondHolder", 1.0f, 1.0f);
-                            Advancement secondGreatGrandchild = createAdvancement(secondGreatGrandchildSecondHolder, "secondGreatGrandchild", 0.5f, 1.0f);
+                            Advancement secondGreatGrandchildFirstHolder = createAdvancement(firstGrandchild, "second_great_grandchild_first_holder", -1.5f, 0.0f);
+                            Advancement secondGreatGrandchildSecondHolder = createAdvancement(secondGreatGrandchildFirstHolder, "second_great_grandchild_second_holder", 1.0f, 1.0f);
+                            Advancement secondGreatGrandchild = createAdvancement(secondGreatGrandchildSecondHolder, "second_great_grandchild", 0.5f, 1.0f);
                     //second child of first child
-                    Advancement secondGrandchildFirstHolder = createAdvancement(firstChild, "secondGrandchildFirstHolder", -1.5f,0.0f);
-                    Advancement secondGrandchildSecondHolder = createAdvancement(secondGrandchildFirstHolder, "secondGrandchildSecondHolder", -2.0f,1.0f);
-                    Advancement secondGrandchildThirdHolder = createAdvancement(secondGrandchildSecondHolder, "secondGrandchildThirdHolder", 1.0f,0.0f);
-                    Advancement secondGrandchild = createAdvancement(secondGrandchildThirdHolder, "secondGrandchild", 0.5f,1.0f);
+                    Advancement secondGrandchildFirstHolder = createAdvancement(firstChild, "second_grandchild_first_holder", -1.5f,0.0f);
+                    Advancement secondGrandchildSecondHolder = createAdvancement(secondGrandchildFirstHolder, "second_grandchild_second_holder", -2.0f,1.0f);
+                    Advancement secondGrandchildThirdHolder = createAdvancement(secondGrandchildSecondHolder, "second_grandchild_third_holder", 1.0f,0.0f);
+                    Advancement secondGrandchild = createAdvancement(secondGrandchildThirdHolder, "second_grandchild", 0.5f,1.0f);
                         //family of child of first child
                             //partner of child of first child
-                            Advancement secondGrandchildInLaw = createAdvancement(secondGrandchild, "secondGrandchildInLaw", 2.0f, 0.0f);
+                            Advancement secondGrandchildInLaw = createAdvancement(secondGrandchild, "second_grandchild_in_law", 2.0f, 0.0f);
                             //first child of child of first child
-                            Advancement thirdGreatGrandchildFirstHolder = createAdvancement(secondGrandchild, "thirdGreatGrandchildFirstHolder", 0.5f,0.0f);
-                            Advancement thirdGreatGrandchildSecondHolder = createAdvancement(thirdGreatGrandchildFirstHolder, "thirdGreatGrandchildSecondHolder", 0.0f,1.0f);
-                            Advancement thirdGreatGrandchildThirdHolder = createAdvancement(thirdGreatGrandchildSecondHolder, "thirdGreatGrandchildThirdHolder", -1.0f,0.0f);
-                            Advancement thirdGreatGrandchild = createAdvancement(thirdGreatGrandchildThirdHolder, "thirdGreatGrandchild", 0.5f,1.0f);
+                            Advancement thirdGreatGrandchildFirstHolder = createAdvancement(secondGrandchild, "third_great_grandchild_first_holder", 0.5f,0.0f);
+                            Advancement thirdGreatGrandchildSecondHolder = createAdvancement(thirdGreatGrandchildFirstHolder, "third_great_grandchild_second_holder", 0.0f,1.0f);
+                            Advancement thirdGreatGrandchildThirdHolder = createAdvancement(thirdGreatGrandchildSecondHolder, "third_great_grandchild_third_holder", -1.0f,0.0f);
+                            Advancement thirdGreatGrandchild = createAdvancement(thirdGreatGrandchildThirdHolder, "third_great_grandchild", 0.5f,1.0f);
                             //second child of child of first child
-                            Advancement fourthGreatGrandchildFirstHolder = createAdvancement(secondGrandchild, "fourthGreatGrandchildFirstHolder", 0.5f,0.0f);
-                            Advancement fourthGreatGrandchildSecondHolder = createAdvancement(fourthGreatGrandchildFirstHolder, "fourthGreatGrandchildSecondHolder", 1.0f,1.0f);
-                            Advancement fourthGreatGrandchild = createAdvancement(fourthGreatGrandchildSecondHolder, "fourthGreatGrandchild", 0.5f,1.0f);
+                            Advancement fourthGreatGrandchildFirstHolder = createAdvancement(secondGrandchild, "fourth_great_grandchild_first_holder", 0.5f,0.0f);
+                            Advancement fourthGreatGrandchildSecondHolder = createAdvancement(fourthGreatGrandchildFirstHolder, "fourth_great_grandchild_second_holder", 1.0f,1.0f);
+                            Advancement fourthGreatGrandchild = createAdvancement(fourthGreatGrandchildSecondHolder, "fourth_great_grandchild", 0.5f,1.0f);
             //second child
-            Advancement secondChildFirstHolder = createAdvancement(ego, "secondChildFirstHolder", 0.5f,0.0f);
-            Advancement secondChildSecondHolder = createAdvancement(secondChildFirstHolder, "secondChildSecondHolder", 1.0f,1.0f);
-            Advancement secondChild = createAdvancement(secondChildSecondHolder, "secondChild", 0.5f,1.0f);
+            Advancement secondChildFirstHolder = createAdvancement(ego, "second_child_first_holder", 0.5f,0.0f);
+            Advancement secondChildSecondHolder = createAdvancement(secondChildFirstHolder, "second_child_second_holder", 1.0f,1.0f);
+            Advancement secondChild = createAdvancement(secondChildSecondHolder, "second_child", 0.5f,1.0f);
                 //family of second child
                     //partner of second child
-                    Advancement secondChildInLaw = createAdvancement(secondChild, "secondChildInLaw", 2.0f, 0.0f);
+                    Advancement secondChildInLaw = createAdvancement(secondChild, "second_child_in_law", 2.0f, 0.0f);
                     //first child of second child
-                    Advancement thirdGrandchildFirstHolder = createAdvancement(secondChild, "thirdGrandchildFirstHolder", 0.5f,0.0f);
-                    Advancement thirdGrandchildSecondHolder = createAdvancement(thirdGrandchildFirstHolder, "thirdGrandchildSecondHolder", 2.0f,1.0f);
-                    Advancement thirdGrandchildThirdHolder = createAdvancement(thirdGrandchildSecondHolder, "thirdGrandchildThirdHolder", -1.0f,0.0f);
-                    Advancement thirdGrandchild = createAdvancement(thirdGrandchildThirdHolder, "thirdGrandchild", 0.5f,1.0f);
+                    Advancement thirdGrandchildFirstHolder = createAdvancement(secondChild, "third_grandchild_first_holder", 0.5f,0.0f);
+                    Advancement thirdGrandchildSecondHolder = createAdvancement(thirdGrandchildFirstHolder, "third_grandchild_second_holder", 2.0f,1.0f);
+                    Advancement thirdGrandchildThirdHolder = createAdvancement(thirdGrandchildSecondHolder, "third_grandchild_third_holder", -1.0f,0.0f);
+                    Advancement thirdGrandchild = createAdvancement(thirdGrandchildThirdHolder, "third_grandchild", 0.5f,1.0f);
                         //family of first Child of second Child
                             //partner of first Child of second Child
-                            Advancement thirdGrandchildInLaw = createAdvancement(thirdGrandchild, "thirdGrandchildInLaw", -2.0f, 0.0f);
+                            Advancement thirdGrandchildInLaw = createAdvancement(thirdGrandchild, "third_grandchild_in_law", -2.0f, 0.0f);
                             //first child of first Child of second Child
-                            Advancement fifthGreatGrandchildFirstHolder = createAdvancement(thirdGrandchild, "fifthGreatGrandchildFirstHolder", -1.5f, 0.0f);
-                            Advancement fifthGreatGrandchildSecondHolder = createAdvancement(fifthGreatGrandchildFirstHolder, "fifthGreatGrandchildSecondHolder", 0.0f, 1.0f);
-                            Advancement fifthGreatGrandchildThirdHolder = createAdvancement(fifthGreatGrandchildSecondHolder, "fifthGreatGrandchildThirdHolder", -1.0f, 0.0f);
-                            Advancement fifthGreatGrandchild = createAdvancement(fifthGreatGrandchildThirdHolder, "fifthGreatGrandchild", 0.5f, 1.0f);
+                            Advancement fifthGreatGrandchildFirstHolder = createAdvancement(thirdGrandchild, "fifth_great_grandchild_first_holder", -1.5f, 0.0f);
+                            Advancement fifthGreatGrandchildSecondHolder = createAdvancement(fifthGreatGrandchildFirstHolder, "fifth_great_grandchild_second_holder", 0.0f, 1.0f);
+                            Advancement fifthGreatGrandchildThirdHolder = createAdvancement(fifthGreatGrandchildSecondHolder, "fifth_great_grandchild_third_holder", -1.0f, 0.0f);
+                            Advancement fifthGreatGrandchild = createAdvancement(fifthGreatGrandchildThirdHolder, "fifth_great_grandchild", 0.5f, 1.0f);
                             //second child of first Child of second Child
-                            Advancement sixthGreatGrandchildFirstHolder = createAdvancement(thirdGrandchild, "sixthGreatGrandchildFirstHolder", -1.5f, 0.0f);
-                            Advancement sixthGreatGrandchildSecondHolder = createAdvancement(sixthGreatGrandchildFirstHolder, "sixthGreatGrandchildSecondHolder", 1.0f, 1.0f);
-                            Advancement sixthGreatGrandchild = createAdvancement(sixthGreatGrandchildSecondHolder, "sixthGreatGrandchild", 0.5f, 1.0f);
+                            Advancement sixthGreatGrandchildFirstHolder = createAdvancement(thirdGrandchild, "sixth_great_grandchild_first_holder", -1.5f, 0.0f);
+                            Advancement sixthGreatGrandchildSecondHolder = createAdvancement(sixthGreatGrandchildFirstHolder, "sixth_great_grandchild_second_holder", 1.0f, 1.0f);
+                            Advancement sixthGreatGrandchild = createAdvancement(sixthGreatGrandchildSecondHolder, "sixth_great_grandchild", 0.5f, 1.0f);
                     //second child of second child
-                    Advancement fourthGrandchildFirstHolder = createAdvancement(secondChild, "fourthGrandchildFirstHolder", 0.5f,0.0f);
-                    Advancement fourthGrandchildSecondHolder = createAdvancement(fourthGrandchildFirstHolder, "fourthGrandchildSecondHolder", 0.0f,1.0f);
-                    Advancement fourthGrandchildThirdHolder = createAdvancement(fourthGrandchildSecondHolder, "fourthGrandchildThirdHolder", 3.0f,0.0f);
-                    Advancement fourthGrandchild = createAdvancement(fourthGrandchildThirdHolder, "fourthGrandchild", 0.5f,1.0f);
+                    Advancement fourthGrandchildFirstHolder = createAdvancement(secondChild, "fourth_grandchild_first_holder", 0.5f,0.0f);
+                    Advancement fourthGrandchildSecondHolder = createAdvancement(fourthGrandchildFirstHolder, "fourth_grandchild_second_holder", 0.0f,1.0f);
+                    Advancement fourthGrandchildThirdHolder = createAdvancement(fourthGrandchildSecondHolder, "fourth_grandchild_third_holder", 3.0f,0.0f);
+                    Advancement fourthGrandchild = createAdvancement(fourthGrandchildThirdHolder, "fourth_grandchild", 0.5f,1.0f);
                         //family of second child of second child
                             //partner of second child of second child
-                            Advancement fourthGrandchildInLaw = createAdvancement(fourthGrandchild, "fourthGrandchildInLaw", 2.0f, 0.0f);
+                            Advancement fourthGrandchildInLaw = createAdvancement(fourthGrandchild, "fourth_grandchild_in_law", 2.0f, 0.0f);
                             //first child of second child of second child
-                            Advancement seventhGreatGrandchildFirstHolder = createAdvancement(fourthGrandchild, "seventhGreatGrandchildFirstHolder", 0.5f,0.0f);
-                            Advancement seventhGreatGrandchildSecondHolder = createAdvancement(seventhGreatGrandchildFirstHolder, "seventhGreatGrandchildSecondHolder", 0.0f,1.0f);
-                            Advancement seventhGreatGrandchildThirdHolder = createAdvancement(seventhGreatGrandchildSecondHolder, "seventhGreatGrandchildThirdHolder", -1.0f,0.0f);
-                            Advancement seventhGreatGrandchild = createAdvancement(seventhGreatGrandchildThirdHolder, "seventhGreatGrandchild", 0.5f,1.0f);
+                            Advancement seventhGreatGrandchildFirstHolder = createAdvancement(fourthGrandchild, "seventh_great_grandchild_first_holder", 0.5f,0.0f);
+                            Advancement seventhGreatGrandchildSecondHolder = createAdvancement(seventhGreatGrandchildFirstHolder, "seventh_great_grandchild_second_holder", 0.0f,1.0f);
+                            Advancement seventhGreatGrandchildThirdHolder = createAdvancement(seventhGreatGrandchildSecondHolder, "seventh_great_grandchild_third_holder", -1.0f,0.0f);
+                            Advancement seventhGreatGrandchild = createAdvancement(seventhGreatGrandchildThirdHolder, "seventh_great_grandchild", 0.5f,1.0f);
                             //second child of second child of second child
-                            Advancement eighthGreatGrandchildFirstHolder = createAdvancement(fourthGrandchild, "eighthGreatGrandchildFirstHolder", 0.5f,0.0f);
-                            Advancement eighthGreatGrandchildSecondHolder = createAdvancement(eighthGreatGrandchildFirstHolder, "eighthGreatGrandchildSecondHolder", 1.0f,1.0f);
-                            Advancement eighthGreatGrandchild = createAdvancement(eighthGreatGrandchildSecondHolder, "eighthGreatGrandchild", 0.5f,1.0f);
+                            Advancement eighthGreatGrandchildFirstHolder = createAdvancement(fourthGrandchild, "eighth_great_grandchild_first_holder", 0.5f,0.0f);
+                            Advancement eighthGreatGrandchildSecondHolder = createAdvancement(eighthGreatGrandchildFirstHolder, "eighth_great_grandchild_second_holder", 1.0f,1.0f);
+                            Advancement eighthGreatGrandchild = createAdvancement(eighthGreatGrandchildSecondHolder, "eighth_great_grandchild", 0.5f,1.0f);
 
 
         AdvancementManager manager = new AdvancementManager(new NameKey("manager", uuid));
@@ -563,10 +558,10 @@ public class FamilyTree {
         AdvancementDisplay.AdvancementFrame frame = AdvancementDisplay.AdvancementFrame.GOAL;
         AdvancementVisibility visibility = AdvancementVisibility.ALWAYS;
 
-        if (!(familyList.containsKey(relation.replace("FirstHolder", "")
-                .replace("SecondHolder", "")
-                .replace("ThirdHolder", "")
-                .replace("Holder", "")))) {
+        if (!(familyList.containsKey(relation.replace("first_holder", "")
+                .replace("second_holder", "")
+                .replace("third_holder", "")
+                .replace("holder", "")))) {
             visibility = AdvancementVisibility.HIDDEN;
         }
 
@@ -582,21 +577,16 @@ public class FamilyTree {
             FamilyManager relationFam = new FamilyManager(id, plugin);
             title = relationFam.getName();
 
-                String relationKey = relation.replace("first", "")
-                        .replace("second", "")
-                        .replace("third", "")
-                        .replace("fourth", "")
-                        .replace("fifth", "")
-                        .replace("sixth", "")
-                        .replace("seventh", "")
-                        .replace("eighth", "");
+                String relationKey = relation.replace("first_", "")
+                        .replace("second_", "")
+                        .replace("third_", "")
+                        .replace("fourth_", "")
+                        .replace("fifth_", "")
+                        .replace("sixth_", "")
+                        .replace("seventh__", "")
+                        .replace("eighth_", "");
 
-                if (relationFam.getGender().equalsIgnoreCase("fe")) {
-                    description = plugin.relationshipsFe.get(relationKey).toString();
-                }
-                if (relationFam.getGender().equalsIgnoreCase("ma")) {
-                    description = plugin.relationshipsMa.get(relationKey).toString();
-                }
+                description = plugin.relationships.get(relationFam.getGender()).get(relationKey);
 
                 String skinURL = relationFam.getSkinURL();
                 icon = Main.getSkull(skinURL);
@@ -607,36 +597,14 @@ public class FamilyTree {
             display.setX(x);
             display.setY(y);
 
-            advancement = new Advancement(parent, new NameKey("familyTree", relation), display);
-        } else if (relation.equalsIgnoreCase("ego")) {
-            title = playerFam.getName();
-
-            if (playerFam.getGender().equalsIgnoreCase("fe")) {
-                description = plugin.relationshipsFe.get("ego").toString();
-            }
-            if (playerFam.getGender().equalsIgnoreCase("ma")) {
-                description = plugin.relationshipsMa.get("ego").toString();
-            }
-
-            String skinURL = playerFam.getSkinURL();
-            icon = Main.getSkull(skinURL);
-
-
+            advancement = new Advancement(parent, new NameKey("family_tree", relation), display);
+        } else {
             AdvancementDisplay display = new AdvancementDisplay(icon, title, description, frame, visibility);
             display.setPositionOrigin(parent);
             display.setX(x);
             display.setY(y);
 
-            advancement = new Advancement(parent, new NameKey("familyTree", relation), display);
-        }
-
-        else {
-            AdvancementDisplay display = new AdvancementDisplay(icon, title, description, frame, visibility);
-            display.setPositionOrigin(parent);
-            display.setX(x);
-            display.setY(y);
-
-            advancement = new Advancement(parent, new NameKey("familyTree", relation), display
+            advancement = new Advancement(parent, new NameKey("family_tree", relation), display
                     , AdvancementFlag.SEND_WITH_HIDDEN_BOOLEAN
             );
         }

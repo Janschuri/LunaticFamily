@@ -107,12 +107,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                                     .replace("sixth", "")
                                     .replace("seventh", "")
                                     .replace("eighth", "");
-                            if (relationFam.getGender().equalsIgnoreCase("fe")) {
-                                msg = msg + plugin.relationshipsFe.get(relationKey) + ": " + relationFam.getName() + "\n";
-                            }
-                            if (relationFam.getGender().equalsIgnoreCase("ma")) {
-                                msg = msg + plugin.relationshipsMa.get(relationKey) + ": " + relationFam.getName() + "\n";
-                            }
+                            msg = msg + plugin.relationships.get(relationFam.getGender()).get(relationKey) + ": " + relationFam.getName() + "\n";
                         }
                     }
                     sender.sendMessage(msg);
@@ -138,12 +133,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                                         .replace("sixth", "")
                                         .replace("seventh", "")
                                         .replace("eighth", "");
-                                if (relationFam.getGender().equalsIgnoreCase("fe")) {
-                                    msg = msg + plugin.relationshipsFe.get(relationKey) + ": " + relationFam.getName() + "\n";
-                                }
-                                if (relationFam.getGender().equalsIgnoreCase("ma")) {
-                                    msg = msg + plugin.relationshipsMa.get(relationKey) + ": " + relationFam.getName() + "\n";
-                                }
+                                msg = msg + plugin.relationships.get(relationFam.getGender()).get(relationKey) + ": " + relationFam.getName() + "\n";
                             }
                         }
                         sender.sendMessage(msg);

@@ -34,9 +34,7 @@ import java.util.*;
 import java.util.logging.Level;
 
 //TODO hook into Vault
-//TODO hook into Minepacks
 //TODO split money after divorce
-//TODO /family fake <name>
 //TODO partner is online
 //TODO marry date notification
 public final class Main extends JavaPlugin {
@@ -54,8 +52,8 @@ public final class Main extends JavaPlugin {
     public Map<String, Map> aliases = new HashMap<>();
     public List<String> familyList;
     public List<String> backgrounds;
-    public Map relationshipsFe = new HashMap<>();
-    public Map relationshipsMa = new HashMap<>();
+
+    public Map<String, Map<String, String>> relationships = new HashMap<>();
 
     public List<String> familyCommands = new ArrayList<>();
     public List<String> familySubcommands = new ArrayList<>();
@@ -240,42 +238,33 @@ public final class Main extends JavaPlugin {
         backgrounds = Objects.requireNonNull(config.getStringList("backgrounds"));
 
         //family relationships
+        ConfigurationSection familyRelationships = lang.getConfigurationSection("family_relationships");
+        Set<String> genders = familyRelationships.getKeys(false);
+        Bukkit.getLogger().info(String.valueOf(genders));
 
-        relationshipsFe.put("ego", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.egoFe")));
-        relationshipsFe.put("partner", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.wife")));
-        relationshipsFe.put("Child", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.daughter")));
-        relationshipsFe.put("Parent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.mother")));
-        relationshipsFe.put("sibling", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.sister")));
-        relationshipsFe.put("Grandparent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.grandmother")));
-        relationshipsFe.put("GreatGrandparent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.great_grandmother")));
-        relationshipsFe.put("Grandchild", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.granddaughter")));
-        relationshipsFe.put("GreatGrandchild", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.great_granddaughter")));
-        relationshipsFe.put("AuntOrUncle", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.aunt")));
-        relationshipsFe.put("NieceOrNephew", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.niece")));
-        relationshipsFe.put("Cousin", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.cousin_fe")));
-        relationshipsFe.put("GreatAuntOrUncle", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.great_aunt")));
-        relationshipsFe.put("ParentInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.mother_in_law")));
-        relationshipsFe.put("SiblingInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.sister_in_law")));
-        relationshipsFe.put("ChildInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.daughter_in_law")));
-        relationshipsFe.put("GrandchildInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.granddaughter_in_law")));
+        for (String gender : genders) {
+            Map<String, String> map = new HashMap<>();
+            map.put("ego", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".ego")));
+            map.put("partner", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".partner")));
+            map.put("child", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".child")));
+            map.put("parent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".parent")));
+            map.put("sibling", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".sibling")));
+            map.put("grandparent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".grandparent")));
+            map.put("great_grandparent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".great_grandparent")));
+            map.put("grandchild", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".grandchild")));
+            map.put("great_grandchild", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".great_grandchild")));
+            map.put("aunt_or_uncle", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".aunt_or_uncle")));
+            map.put("niece_or_nephew", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".niece_or_nephew")));
+            map.put("cousin", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".cousin")));
+            map.put("great_aunt_or_uncle", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".great_aunt_or_uncle")));
+            map.put("parent_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".parent_in_law")));
+            map.put("sibling_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".sibling_in_law")));
+            map.put("child_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".child_in_law")));
+            map.put("grandchild_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".grandchild_in_law")));
+            relationships.put(gender, map);
+        }
 
-        relationshipsMa.put("ego", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.egoMa")));
-        relationshipsMa.put("partner", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.husband")));
-        relationshipsMa.put("Child", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.son")));
-        relationshipsMa.put("Parent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.father")));
-        relationshipsMa.put("sibling", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.brother")));
-        relationshipsMa.put("Grandparent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.grandfather")));
-        relationshipsMa.put("GreatGrandparent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.great_grandfather")));
-        relationshipsMa.put("Grandchild", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.granddaughter")));
-        relationshipsMa.put("GreatGrandchild", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.great_grandson")));
-        relationshipsMa.put("AuntOrUncle", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.uncle")));
-        relationshipsMa.put("NieceOrNephew", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.nephew")));
-        relationshipsMa.put("Cousin", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.cousin_ma")));
-        relationshipsMa.put("GreatAuntOrUncle", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.great_uncle")));
-        relationshipsMa.put("ParentInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.father_in_law")));
-        relationshipsMa.put("SiblingInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.brother_in_law")));
-        relationshipsMa.put("ChildInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.son_in_law")));
-        relationshipsMa.put("GrandchildInLaw", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships.grandson_in_law")));
+        Bukkit.getLogger().info(String.valueOf(relationships.get("ma").get("parent")));
     }
 
     @Override

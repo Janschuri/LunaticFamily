@@ -1,85 +1,4 @@
 prefix: "&9[Familienplugin]&r "
-aliases:
-  family:
-    base_command:
-      - family
-    tree:
-      - tree
-    background:
-      - background
-    list:
-      - list
-    reload:
-      - reload
-  gender:
-    base_command:
-      - gender
-    fe:
-      - fe
-      - feminine
-    ma:
-      - ma
-      - masculine
-    set:
-      - set
-  marry:
-    base_command:
-      - marry
-    propose:
-      - propose
-    accept:
-      - accept
-    deny:
-      - deny
-    divorce:
-      - divorce
-    list:
-      - list
-    kiss:
-      - kiss
-    gift:
-      - gift
-    backpack:
-      - backpack
-      - bp
-    set:
-      - set
-    unset:
-      - unset
-  adopt:
-    base_command:
-      - adopt
-    propose:
-      - propose
-    accept:
-      - accept
-    deny:
-      - deny
-    kickout:
-      - kickout
-    moveout:
-      - moveout
-    list:
-      - list
-    set:
-      - set
-    unset:
-      - unset
-  sibling:
-    base_command:
-      - sibling
-    propose:
-      - propose
-    accept:
-      - accept
-    deny:
-      - deny
-    kickout:
-      - unsibling
-    set:
-      - set
-    unset:
-      - unset
 messages:
   #general messages
   wrong_usage: "Falsche Verwendung dieses Befehls!"
@@ -90,6 +9,12 @@ messages:
   player_offline: "%player% ist offline."
   no_permission: "Du hast keine Berechtigung, diesen Befehl zu verwenden!"
   internal_error: "Interner Fehler. Bitte kontaktiere einen Admin."
+  yes: "Yes"
+  no: "No"
+  accept: "Accept"
+  decline: "Decline"
+  confirm: "Confirm"
+  cancel: "Cancel"
   #family command
   family_list: "Deine Familie:"
   family_others_list: "%player%'s Familie:"
@@ -133,6 +58,7 @@ messages:
   marry_divorce_no_partner: "Du bist nicht verheiratet! Wenn du jemanden heiraten möchtest, benutze bitte /family marry propose <Name>"
   marry_divorce_divorced: "Du hast dich geschieden geschieden!"
   marry_divorce_confirm: "Bitte bestätige, dass du dich scheiden lassen möchtest!"
+  marry_divorce_cancel: "Du hast die Scheidung abgebrochen!"
   marry_kiss_no_partner: "Du bist nicht verheiratet! Wenn du jemanden heiraten möchtest, benutze bitte /family marry propose <Name>"
   marry_gift_no_partner: "Du bist nicht verheiratet! Wenn du jemanden heiraten möchtest, benutze bitte /family marry propose <Name>"
   marry_gift_empty_Hand: "Du musst ein Item in der Hand halten."
@@ -176,7 +102,7 @@ messages:
   adopt_kickout_not_your_child: "%player% ist nicht dein Kind."
   adopt_kickout_no_child: "Du hast kein Kind."
   adopt_list: "Deine Kinder: "
-  adopt_list_no_child: "Deine Kinder: "
+  adopt_list_no_child: "Du hast keine Kinder!"
   #sibling command
   sibling_propose_has_sibling: "Du hast schon ein Geschwisterkind."
   sibling_propose_is_adopted: "Du bist adoptiert. Deine Eltern können dir ein Geschwisterkind adoptieren"
@@ -215,7 +141,7 @@ messages:
   #admin family commands
   admin_reload: "Die Konfiguration wurde neu geladen."
   #admin sibling commands
-  admin_sibling_added: "Geschwister wurden erfolgreich hinzugefügt!"
+  admin_sibling_added: "Die Geschwister %player1% and %player2% wurden erfolgreich hinzugefügt!"
   admin_sibling_is_adopted: "%player% is adoptiert. Setze die Adoption durch die Eltern, um %player% zum Geschwisterkind zu machen."
   admin_sibling_set_both_adopted: "%player1% und %player2% sind adoptiert. Setze die Adoption durch die Eltern oder verheirate die Eltern, um %player1% und %player2% zu Geschwistern zu machen."
   admin_sibling_unset_no_sibling: "%player% hat kein Geschwisterkind."
@@ -233,37 +159,120 @@ messages:
   admin_adopt_unset: "Du hast die Adoption von %child% durch %parent1% und %parent2% aufgelöst."
   admin_adopt_unset_by_single: "Du hast die Adoption von %child% durch %parent% aufgelöst."
 family_relationships:
-  egoFe: "&6du"
-  egoMa: "&6du"
-  wife: "&3Ehefrau"
-  husband: "&3Ehemann"
-  sister: "&3Schwester"
-  brother: "&3Bruder"
-  daughter: "&3Tochter"
-  son: "&3Sohn"
-  mother: "&3Mutter"
-  father: "&3Vater"
-  granddaughter: "&3Enkeltochter"
-  grandson: "&3Enkelsohn"
-  grandmother: "&3Großmutter"
-  grandfather: "&3Großvater"
-  great_grandmother: "&3Urgroßmutter"
-  great_grandfather: "&3Urgroßvater"
-  great_aunt: "&3Großtante"
-  great_uncle: "&3Großonkel"
-  great_granddaughter: "Urenkeltochter"
-  great_grandson: "Urenkelsohn"
-  aunt: "&3Tante"
-  uncle: "&3Onkel"
-  cousin_fe: "&3Cousine"
-  cousin_ma: "&3Cousin"
-  niece: "&3Nichte"
-  nephew: "&3Neffe"
-  sister_in_law: "&3Schwägerin"
-  brother_in_law: "&3Schwager"
-  mother_in_law: "&3Schwiegermutter"
-  father_in_law: "&3Schwiegervater"
-  daughter_in_law: "&3Schwiegertochter"
-  son_in_law: "&3Schwiegersohn"
-  granddaughter_in_law: "&3Schwiegerenkeltochter"
-  grandson_in_law: "&3Schwiegerenkelsohn"
+  fe:
+    ego: "&6du"
+    partner: "&3Ehefrau"
+    sibling: "&3Schwester"
+    child: "&3Tochter"
+    parent: "&3Mutter"
+    grandchild: "&3Enkeltochter"
+    grandparent: "&3Großmutter"
+    great_grandparent: "&3Urgroßmutter"
+    great_aunt_or_uncle: "&3Großtante"
+    great_grandchild: "Urenkeltochter"
+    aunt_or_uncle: "&3Tante"
+    cousin: "&3Cousine"
+    niece_or_nephew: "&3Nichte"
+    sibling_in_law: "&3Schwägerin"
+    parent_in_law: "&3Schwiegermutter"
+    child_in_law: "&3Schwiegertochter"
+    grandchild_in_law: "&3Schwiegerenkeltochter"
+  ma:
+    ego: "&6du"
+    partner: "&3Ehemann"
+    sibling: "&3Bruder"
+    child: "&3Sohn"
+    parent: "&3Vater"
+    grandchild: "&3Enkelsohn"
+    grandparent: "&3Großvater"
+    great_grandparent: "&3Urgroßvater"
+    great_aunt_or_uncle: "&3Großonkel"
+    great_grandchild: "Urenkelsohn"
+    aunt_or_uncle: "&3Onkel"
+    cousin: "&3Cousin"
+    niece_or_nephew: "&3Neffe"
+    sibling_in_law: "&3Schwager"
+    parent_in_law: "&3Schwiegervater"
+    child_in_law: "&3Schwiegersohn"
+    grandchild_in_law: "&3Schwiegerenkelsohn"
+aliases:
+  family:
+    base_command:
+      - familie
+    tree:
+      - stammbaum
+    background:
+      - hintergrund
+    list:
+      - liste
+    reload:
+      - reload
+  gender:
+    base_command:
+      - geschlecht
+    fe:
+      - w
+      - weiblich
+    ma:
+      - m
+      - männlich
+    set:
+      - set
+  marry:
+    base_command:
+      - ehe
+    propose:
+      - antrag
+    accept:
+      - akzeptieren
+    deny:
+      - ablehnen
+    divorce:
+      - scheidung
+    list:
+      - liste
+    kiss:
+      - kuss
+    gift:
+      - geschenk
+    backpack:
+      - rucksack
+      - bp
+    set:
+      - set
+    unset:
+      - unset
+  adopt:
+    base_command:
+      - adoptieren
+    propose:
+      - antrag
+    accept:
+      - akzeptieren
+    deny:
+      - ablehnen
+    kickout:
+      - rausschmeißen
+    moveout:
+      - ausziehen
+    list:
+      - liste
+    set:
+      - set
+    unset:
+      - unset
+  sibling:
+    base_command:
+      - geschwister
+    propose:
+      - antrag
+    accept:
+      - akzeptieren
+    deny:
+      - ablehnen
+    unsibling:
+      - ungeschwistern
+    set:
+      - set
+    unset:
+      - unset

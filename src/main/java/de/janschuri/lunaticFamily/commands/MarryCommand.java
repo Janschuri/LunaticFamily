@@ -89,12 +89,12 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         }
                         TextComponent confirm = new TextComponent(ChatColor.GREEN + " \u2713");
                         confirm.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry set " + args[1] + " " + args[2] + " force"));
-                        confirm.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + " \u2713").create()));
+                        confirm.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + plugin.messages.get("confirm")).create()));
 
 
                         TextComponent deny = new TextComponent(ChatColor.RED + " \u274C");
                         deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry set deny"));
-                        deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + " \u274C").create()));
+                        deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + plugin.messages.get("cancel")).create()));
 
                         TextComponent prefix = new TextComponent(plugin.prefix);
                         TextComponent msg = new TextComponent(plugin.messages.get("admin_marry_set_confirm"));
@@ -195,9 +195,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 no.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry deny"));
                                 no.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]").create()));
 
-                                TextComponent space = new TextComponent(ChatColor.WHITE + "---");
-
-                                partnerPlayer.sendMessage(yes, space, no);
+                                partnerPlayer.sendMessage(yes, no);
 
 
                                 plugin.marryRequests.put(partnerUUID, playerUUID);
@@ -255,6 +253,19 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("marry_priest_too_many_children").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()).replace("%amount%", Integer.toString(amountDiff)));
                                 } else {
                                     player.chat(plugin.messages.get("marry_priest_request").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
+
+                                    TextComponent yes = new TextComponent(ChatColor.GREEN + "[" + plugin.messages.get("marry_yes") + "]");
+                                    yes.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry accept"));
+                                    yes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "[" + plugin.messages.get("marry_yes") + "]").create()));
+
+                                    TextComponent no = new TextComponent(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]");
+                                    no.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry deny"));
+                                    no.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + "[" + plugin.messages.get("marry_no") + "]").create()));
+
+
+                                    Player player1 = Bukkit.getPlayer(player1Name);
+                                    player1.sendMessage(yes, no);
+
                                     plugin.marryPriestRequests.put(player1UUID, player2UUID);
                                     plugin.marryPriest.put(player1UUID, playerUUID);
                                 }
@@ -363,18 +374,33 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                     //player subcommand "divorce"
                     else if (args[0].equalsIgnoreCase("divorce") || plugin.getAliases("marry", "divorce").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
-                        boolean confirm = false;
+                        boolean confirmBoo = false;
 
                         if (args.length > 1) {
                             if (args[1].equalsIgnoreCase("confirm")) {
-                                confirm = true;
+                                confirmBoo = true;
                             }
                         }
 
                         if (!playerFam.isMarried()) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("marry_divorce_no_partner"));
-                        } else if (!confirm) {
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("marry_divorce_confirm"));
+                        } else if (args.length > 1 && args[1].equalsIgnoreCase("cancel")) {
+                            sender.sendMessage(plugin.prefix + plugin.messages.get("marry_divorce_cancel"));
+                        } else if (!confirmBoo) {
+
+                            TextComponent confirm = new TextComponent(ChatColor.GREEN + " \u2713");
+                            confirm.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry divorce confirm"));
+                            confirm.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + plugin.messages.get("confirm")).create()));
+
+
+                            TextComponent cancel = new TextComponent(ChatColor.RED + " \u274C");
+                            cancel.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/marry divorce cancel"));
+                            cancel.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + plugin.messages.get("cancel")).create()));
+
+                            TextComponent prefix = new TextComponent(plugin.prefix);
+                            TextComponent msg = new TextComponent(plugin.messages.get("marry_divorce_confirm"));
+
+                            sender.sendMessage(prefix, msg, confirm, cancel);
                         } else {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("marry_divorce_divorced"));
                             if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) != null) {

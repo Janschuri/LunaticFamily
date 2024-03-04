@@ -67,7 +67,7 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
                     } else if (player2Fam.isAdopted()) {
                         sender.sendMessage(plugin.prefix + plugin.messages.get("admin_sibling_is_adopted").replace("%player%", player2Fam.getName()));
                     } else {
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("admin_sibling_added"));
+                        sender.sendMessage(plugin.prefix + plugin.messages.get("admin_sibling_added").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
                         player1Fam.addSibling(player2Fam.getID());
                     }
                 }
