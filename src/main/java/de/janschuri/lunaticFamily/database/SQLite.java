@@ -25,39 +25,35 @@ public class SQLite extends Database{
             "`uuid` varchar(36) NOT NULL," +
             "`name` varchar(16) NULL," +
             "`skinURL` varchar(127)," +
-            "`firstParent` INT DEFAULT 0," +
-            "`secondParent` INT DEFAULT 0," +
-            "`firstChild` INT DEFAULT 0," +
-            "`secondChild` INT DEFAULT 0," +
             "`gender` varchar(2) NULL," +
             "`background` varchar(127) NULL" +
             ")";
 
     public String SQLiteCreateMarriagesTable = "CREATE TABLE IF NOT EXISTS marriages (" +
             "`id` INTEGER PRIMARY KEY," +
-            "`player1ID` INT DEFAULT 0," +
-            "`player2ID` INT DEFAULT 0," +
+            "`player1ID` INT," +
+            "`player2ID` INT," +
             "`date` DATETIME DEFAULT CURRENT_TIMESTAMP," +
-            "FOREIGN KEY (`player1ID`) REFERENCES playerData(`id`)," +
-            "FOREIGN KEY (`player2ID`) REFERENCES playerData(`id`)" +
+            "FOREIGN KEY (`player1ID`) REFERENCES playerData(`id`) ON DELETE CASCADE," +
+            "FOREIGN KEY (`player2ID`) REFERENCES playerData(`id`) ON DELETE CASCADE" +
             ")";
 
     public String SQLiteCreateAdoptionsTable = "CREATE TABLE IF NOT EXISTS adoptions (" +
             "`id` INTEGER PRIMARY KEY," +
-            "`parentID` INT DEFAULT 0," +
-            "`childID` INT DEFAULT 0," +
+            "`parentID` INT," +
+            "`childID` INT," +
             "`date` DATETIME DEFAULT CURRENT_TIMESTAMP," +
-            "FOREIGN KEY (`player1ID`) REFERENCES playerData(`id`)," +
-            "FOREIGN KEY (`player2ID`) REFERENCES playerData(`id`)" +
+            "FOREIGN KEY (`parentID`) REFERENCES playerData(`id`) ON DELETE CASCADE," +
+            "FOREIGN KEY (`childID`) REFERENCES playerData(`id`) ON DELETE CASCADE" +
             ")";
 
     public String SQLiteCreateSiblinghoodsTable = "CREATE TABLE IF NOT EXISTS siblinghoods (" +
             "`id` INTEGER PRIMARY KEY," +
-            "`player1ID` INT DEFAULT 0," +
-            "`player2ID` INT DEFAULT 0," +
+            "`player1ID` INT," +
+            "`player2ID` INT," +
             "`date` DATETIME DEFAULT CURRENT_TIMESTAMP," +
-            "FOREIGN KEY (`player1ID`) REFERENCES playerData(`id`)," +
-            "FOREIGN KEY (`player2ID`) REFERENCES playerData(`id`)" +
+            "FOREIGN KEY (`player1ID`) REFERENCES playerData(`id`) ON DELETE CASCADE," +
+            "FOREIGN KEY (`player2ID`) REFERENCES playerData(`id`) ON DELETE CASCADE" +
             ")";
 
     public Connection getSQLConnection() {

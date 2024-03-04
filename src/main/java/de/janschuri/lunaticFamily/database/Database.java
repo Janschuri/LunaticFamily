@@ -295,119 +295,6 @@ public abstract class Database {
         }
         return marryList;
     }
-
-    public int getFirstParent(int id) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
-
-            rs = ps.executeQuery();
-            while(rs.next()){
-                if(rs.getInt("id") == id){
-                    return rs.getInt("firstParent");
-                }
-            }
-        } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
-        } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
-            }
-        }
-        return 0;
-    }
-    public int getSecondParent(int id) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
-
-            rs = ps.executeQuery();
-            while(rs.next()){
-                if(rs.getInt("id") == id){
-                    return rs.getInt("secondParent");
-                }
-            }
-        } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
-        } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
-            }
-        }
-        return 0;
-    }
-    public int getFirstChild(int id) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
-
-            rs = ps.executeQuery();
-            while(rs.next()){
-                if(rs.getInt("id") == id){
-                    return rs.getInt("firstChild");
-                }
-            }
-        } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
-        } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
-            }
-        }
-        return 0;
-    }
-    public int getSecondChild(int id) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id = '"+id+"';");
-
-            rs = ps.executeQuery();
-            while(rs.next()){
-                if(rs.getInt("id") == id){
-                    return rs.getInt("secondChild");
-                }
-            }
-        } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
-        } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
-            }
-        }
-        return 0;
-    }
     public String getGender(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -466,19 +353,90 @@ public abstract class Database {
         return null;
     }
 
+    public List<Integer> getParents(int playerID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Integer> parentsList = new ArrayList<>();
+
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT parentID FROM " + adoptions + " WHERE childID = ?");
+            ps.setInt(1, playerID);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int parentID = rs.getInt("parentID");
+                parentsList.add(parentID);
+            }
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+
+        return parentsList;
+    }
+
+    public List<Integer> getChilds(int parentID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Integer> childsList = new ArrayList<>();
+
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT childID FROM " + adoptions + " WHERE parentID = ?");
+            ps.setInt(1, parentID);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int childID = rs.getInt("childID");
+                childsList.add(childID);
+            }
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+
+        return childsList;
+    }
+
+
+
+
     // Now we need methods to save things to the database
-    public void savePlayerData(int id, String uuid, String name, String skinURL, String gender, String background) {
+    public void updatePlayerData(int id, String uuid, String name, String skinURL, String gender, String background) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("REPLACE INTO " + playerData + " (id,uuid,name,skinURL,gender,background) VALUES(?,?,?,?,?,?)");
-            ps.setInt(1, id);
-            ps.setString(2, uuid);
-            ps.setString(3, name);
-            ps.setString(4, skinURL);
-            ps.setString(5, gender);
-            ps.setString(6, background);
+            ps = conn.prepareStatement("UPDATE `" + playerData + "` SET uuid=?, name=?, skinURL=?, gender=?, background=? WHERE id=?");
+            ps.setString(1, uuid);
+            ps.setString(2, name);
+            ps.setString(3, skinURL);
+            ps.setString(4, gender);
+            ps.setString(5, background);
+            ps.setInt(6, id);
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {
@@ -493,20 +451,20 @@ public abstract class Database {
                 plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
             }
         }
-        return;
     }
+
 
     public void savePlayerData(String uuid, String name, String skinURL, String gender, String background) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("REPLACE INTO " + playerData + " (uuid,name,skinURL,gender,background) VALUES(?,?,?,?,?)");
+            ps = conn.prepareStatement("INSERT INTO `" + playerData + "` (uuid,name,skinURL,gender,background) VALUES(?,?,?,?,?)");
             ps.setString(1, uuid);
             ps.setString(2, name);
             ps.setString(3, skinURL);
-            ps.setString(5, gender);
-            ps.setString(6, background);
+            ps.setString(4, gender);
+            ps.setString(5, background);
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {
@@ -521,7 +479,6 @@ public abstract class Database {
                 plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
             }
         }
-        return;
     }
 
     public void saveMarriage(int player1ID, int player2ID) {
@@ -529,7 +486,7 @@ public abstract class Database {
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("REPLACE INTO " + marriages + " (player1ID, player2ID) VALUES(?,?)");
+            ps = conn.prepareStatement("REPLACE INTO `" + marriages + "` (player1ID, player2ID) VALUES(?,?)");
             ps.setInt(1, player1ID);
             ps.setInt(2, player2ID);
             ps.executeUpdate();
@@ -546,7 +503,6 @@ public abstract class Database {
                 plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
             }
         }
-        return;
     }
 
     public void deleteMarriage(int playerID) {
@@ -554,7 +510,7 @@ public abstract class Database {
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("DELETE FROM " + marriages + " WHERE player1ID = ? OR player2iD = ?");
+            ps = conn.prepareStatement("DELETE FROM `" + marriages + "` WHERE player1ID = ? OR player2iD = ?");
             ps.setInt(1, playerID);
             ps.setInt(2, playerID);
             ps.executeUpdate();
@@ -577,7 +533,7 @@ public abstract class Database {
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("REPLACE INTO " + siblinghoods + " (player1ID, player2ID) VALUES(?,?)");
+            ps = conn.prepareStatement("REPLACE INTO `" + siblinghoods + "` (player1ID, player2ID) VALUES(?,?)");
             ps.setInt(1, player1ID);
             ps.setInt(2, player2ID);
             ps.executeUpdate();
@@ -602,7 +558,7 @@ public abstract class Database {
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("DELETE FROM " + siblinghoods + " WHERE player1ID = ? OR player2iD = ?");
+            ps = conn.prepareStatement("DELETE FROM `" + siblinghoods + "` WHERE player1ID = ? OR player2iD = ?");
             ps.setInt(1, playerID);
             ps.setInt(2, playerID);
             ps.executeUpdate();
@@ -624,7 +580,7 @@ public abstract class Database {
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("REPLACE INTO " + adoptions + " (parentID, childID) VALUES(?,?)");
+            ps = conn.prepareStatement("REPLACE INTO `" + adoptions + "` (parentID, childID) VALUES(?,?)");
             ps.setInt(1, parentID);
             ps.setInt(2, childID);
             ps.executeUpdate();
@@ -644,14 +600,14 @@ public abstract class Database {
         return;
     }
 
-    public void deleteAdoption(int playerID) {
+    public void deleteAdoption(int parentID, int childID) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("DELETE FROM " + siblinghoods + " WHERE parentID = ? OR childID = ?");
-            ps.setInt(1, playerID);
-            ps.setInt(2, playerID);
+            ps = conn.prepareStatement("DELETE FROM `" + adoptions + "` WHERE parentID = ? AND childID = ?");
+            ps.setInt(1, parentID);
+            ps.setInt(2, childID);
             ps.executeUpdate();
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);

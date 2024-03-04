@@ -65,33 +65,35 @@ public class MySQL extends Database {
             "`uuid` varchar(36) NOT NULL," +
             "`name` varchar(16) NULL," +
             "`skinURL` varchar(127)," +
-            "`firstParent` INT DEFAULT 0," +
-            "`secondParent` INT DEFAULT 0," +
-            "`firstChild` INT DEFAULT 0," +
-            "`secondChild` INT DEFAULT 0," +
             "`gender` varchar(2) NULL," +
             "`background` varchar(127) NULL" +
             ") AUTO_INCREMENT=1;";
 
     String MySQLCreateMarriagesTable = "CREATE TABLE IF NOT EXISTS marriages (" +
             "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-            "`player1ID` INT DEFAULT 0," +
-            "`player2ID` INT DEFAULT 0," +
-            "`date` DATETIME DEFAULT CURRENT_TIMESTAMP" +
+            "`player1ID` INT," +
+            "`player2ID` INT," +
+            "`date` DATETIME DEFAULT CURRENT_TIMESTAMP," +
+            "FOREIGN KEY (`player1ID`) REFERENCES playerData(`id`) ON DELETE CASCADE," +
+            "FOREIGN KEY (`player2ID`) REFERENCES playerData(`id`) ON DELETE CASCADE" +
             ") AUTO_INCREMENT=1;";
 
     String MySQLCreateAdoptionsTable = "CREATE TABLE IF NOT EXISTS adoptions (" +
             "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-            "`parentID` INT DEFAULT 0," +
-            "`childID` INT DEFAULT 0," +
-            "`date` DATETIME DEFAULT CURRENT_TIMESTAMP" +
+            "`parentID` INT," +
+            "`childID` INT," +
+            "`date` DATETIME DEFAULT CURRENT_TIMESTAMP," +
+            "FOREIGN KEY (`parentID`) REFERENCES playerData(`id`) ON DELETE CASCADE," +
+            "FOREIGN KEY (`childID`) REFERENCES playerData(`id`) ON DELETE CASCADE" +
             ") AUTO_INCREMENT=1;";
 
     String MySQLCreateSiblinghoodsTable = "CREATE TABLE IF NOT EXISTS siblinghoods (" +
             "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-            "`player1ID` INT DEFAULT 0," +
-            "`player2ID` INT DEFAULT 0," +
-            "`date` DATETIME DEFAULT CURRENT_TIMESTAMP" +
+            "`player1ID` INT," +
+            "`player2ID` INT," +
+            "`date` DATETIME DEFAULT CURRENT_TIMESTAMP," +
+            "FOREIGN KEY (`player1ID`) REFERENCES playerData(`id`) ON DELETE CASCADE," +
+            "FOREIGN KEY (`player2ID`) REFERENCES playerData(`id`) ON DELETE CASCADE" +
             ") AUTO_INCREMENT=1;";
 }
 

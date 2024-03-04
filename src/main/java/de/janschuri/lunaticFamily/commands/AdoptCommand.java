@@ -71,20 +71,20 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_set_has_sibling_limit").replace("%player1%", childFam.getName()).replace("%player2%", firstParentFam.getName()));
                         } else {
                             if (childFam.hasSibling()) {
-                                if (firstParentFam.getFirstChild() != null) {
-                                    firstParentFam.unadopt(firstParentFam.getFirstChild().getID());
+                                if (firstParentFam.getChildren().get(0) != null) {
+                                    firstParentFam.unadopt(firstParentFam.getChildren().get(0).getID());
                                 }
-                                if (firstParentFam.getSecondChild() != null) {
-                                    firstParentFam.unadopt(firstParentFam.getSecondChild().getID());
+                                if (firstParentFam.getChildren().get(1) != null) {
+                                    firstParentFam.unadopt(firstParentFam.getChildren().get(1).getID());
                                 }
 
                                 if (firstParentFam.isMarried()) {
                                     FamilyManager partnerFam = firstParentFam.getPartner();
-                                    if (partnerFam.getFirstChild() != null) {
-                                        partnerFam.unadopt(partnerFam.getFirstChild().getID());
+                                    if (partnerFam.getChildren().get(0) != null) {
+                                        partnerFam.unadopt(partnerFam.getChildren().get(0).getID());
                                     }
-                                    if (partnerFam.getSecondChild() != null) {
-                                        partnerFam.unadopt(partnerFam.getSecondChild().getID());
+                                    if (partnerFam.getChildren().get(1) != null) {
+                                        partnerFam.unadopt(partnerFam.getChildren().get(1).getID());
                                     }
                                 }
                             }
@@ -117,7 +117,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                         if (!childFam.isAdopted()) {
                             sender.sendMessage(plugin.prefix + plugin.messages.get("admin_adopt_unset_not_adopted").replace("%player%", childFam.getName()));
                         } else {
-                            FamilyManager firstParentFam = childFam.getFirstParent();
+                            FamilyManager firstParentFam = childFam.getParents().get(0);
 
                             if (firstParentFam.isMarried()) {
                                 FamilyManager secondParentFam = firstParentFam.getPartner();
@@ -169,7 +169,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("marry_propose_family_request").replace("%player%", childFam.getName()));
                                 } else if (plugin.adoptRequests.containsKey(child)) {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_open_request").replace("%player%", childFam.getName()));
-                                } else if (childFam.getFirstParent() != null) {
+                                } else if (childFam.getParents().get(0) != null) {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_propose_already_adopted").replace("%player%", childFam.getName()));
                                 } else if (childFam.hasSibling() && !confirm){
                                     TextComponent yes = new TextComponent(ChatColor.GREEN + " \u2713");
@@ -243,15 +243,15 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                 }
                             }
                         } else if (args[0].equalsIgnoreCase("list") || plugin.getAliases("adopt", "list").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-                            if (playerFam.getFirstChild() != null || playerFam.getSecondChild() != null) {
+                            if (playerFam.getChildren().get(0) != null || playerFam.getChildren().get(1) != null) {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_list_no_child"));
                             } else {
                                     String msg = plugin.prefix + plugin.messages.get("adopt_list") + "\n";
-                                    if (playerFam.getFirstChild() != null) {
-                                        msg = msg + playerFam.getFirstChild().getName() + "\n";
+                                    if (playerFam.getChildren().get(0) != null) {
+                                        msg = msg + playerFam.getChildren().get(0).getName() + "\n";
                                     }
-                                    if (playerFam.getSecondChild() != null) {
-                                        msg = msg + playerFam.getSecondChild().getName() + "\n";
+                                    if (playerFam.getChildren().get(1) != null) {
+                                        msg = msg + playerFam.getChildren().get(1).getName() + "\n";
                                     }
                                     sender.sendMessage(msg);
                             }
@@ -279,7 +279,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                             } else if (!confirm) {
                                 sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_moveout_confirm"));
                             } else {
-                                FamilyManager firstParentFam = playerFam.getFirstParent();
+                                FamilyManager firstParentFam = playerFam.getParents().get(0);
 
                                 if (playerFam.hasSibling()) {
                                     FamilyManager siblingFam = playerFam.getSibling();
@@ -304,7 +304,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 
                             }
                         } else if (args[0].equalsIgnoreCase("kickout") || plugin.getAliases("adopt", "kickout").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-                            if (playerFam.getFirstChild() != null || playerFam.getSecondChild() != null) {
+                            if (playerFam.getChildren().get(0) != null || playerFam.getChildren().get(1) != null) {
                                 if (args.length == 1) {
                                     sender.sendMessage(plugin.prefix + plugin.messages.get("adopt_kickout_specify_child"));
                                 } else {
