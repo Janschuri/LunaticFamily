@@ -16,24 +16,48 @@ public class SQLite extends Database{
     String dbname;
     public SQLite(Main instance){
         super(instance);
-        dbname = plugin.getConfig().getString("SQLite.Filename", "playerData");
+        dbname = plugin.getConfig().getString("SQLite.Filename", "lunaticfamily");
     }
 
-    public String SQLiteCreateTokensTable = "CREATE TABLE IF NOT EXISTS playerData (" +
+
+    public String SQLiteCreatePlayerDataTable = "CREATE TABLE IF NOT EXISTS playerData (" +
             "`id` INTEGER PRIMARY KEY," +
             "`uuid` varchar(36) NOT NULL," +
             "`name` varchar(16) NULL," +
             "`skinURL` varchar(127)," +
-            "`partner` INT DEFAULT 0," +
-            "`marryDate` DATETIME NULL," +
-            "`sibling` INT DEFAULT 0," +
             "`firstParent` INT DEFAULT 0," +
             "`secondParent` INT DEFAULT 0," +
             "`firstChild` INT DEFAULT 0," +
             "`secondChild` INT DEFAULT 0," +
             "`gender` varchar(2) NULL," +
-            "`background` varchar(127) NULL," +
-            "`fake` INT DEFAULT 0" + // Removed comma here
+            "`background` varchar(127) NULL" +
+            ")";
+
+    public String SQLiteCreateMarriagesTable = "CREATE TABLE IF NOT EXISTS marriages (" +
+            "`id` INTEGER PRIMARY KEY," +
+            "`player1ID` INT DEFAULT 0," +
+            "`player2ID` INT DEFAULT 0," +
+            "`date` DATETIME DEFAULT CURRENT_TIMESTAMP," +
+            "FOREIGN KEY (`player1ID`) REFERENCES playerData(`id`)," +
+            "FOREIGN KEY (`player2ID`) REFERENCES playerData(`id`)" +
+            ")";
+
+    public String SQLiteCreateAdoptionsTable = "CREATE TABLE IF NOT EXISTS adoptions (" +
+            "`id` INTEGER PRIMARY KEY," +
+            "`parentID` INT DEFAULT 0," +
+            "`childID` INT DEFAULT 0," +
+            "`date` DATETIME DEFAULT CURRENT_TIMESTAMP," +
+            "FOREIGN KEY (`player1ID`) REFERENCES playerData(`id`)," +
+            "FOREIGN KEY (`player2ID`) REFERENCES playerData(`id`)" +
+            ")";
+
+    public String SQLiteCreateSiblinghoodsTable = "CREATE TABLE IF NOT EXISTS siblinghoods (" +
+            "`id` INTEGER PRIMARY KEY," +
+            "`player1ID` INT DEFAULT 0," +
+            "`player2ID` INT DEFAULT 0," +
+            "`date` DATETIME DEFAULT CURRENT_TIMESTAMP," +
+            "FOREIGN KEY (`player1ID`) REFERENCES playerData(`id`)," +
+            "FOREIGN KEY (`player2ID`) REFERENCES playerData(`id`)" +
             ")";
 
     public Connection getSQLConnection() {
@@ -64,7 +88,10 @@ public class SQLite extends Database{
         connection = getSQLConnection();
         try {
             Statement s = connection.createStatement();
-            s.executeUpdate(SQLiteCreateTokensTable);
+            s.executeUpdate(SQLiteCreatePlayerDataTable);
+            s.executeUpdate(SQLiteCreateMarriagesTable);
+            s.executeUpdate(SQLiteCreateAdoptionsTable);
+            s.executeUpdate(SQLiteCreateSiblinghoodsTable);
             s.close();
         } catch (SQLException e) {
             e.printStackTrace();

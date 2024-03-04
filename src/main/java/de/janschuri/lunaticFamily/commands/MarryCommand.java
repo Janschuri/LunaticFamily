@@ -3,7 +3,6 @@ package de.janschuri.lunaticFamily.commands;
 import de.janschuri.lunaticFamily.Main;
 import de.janschuri.lunaticFamily.utils.FamilyManager;
 import de.janschuri.lunaticFamily.utils.Minepacks;
-import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -11,7 +10,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -487,7 +485,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             FamilyManager player1Fam = new FamilyManager(e, plugin);
                             FamilyManager player2Fam = new FamilyManager(player1Fam.getPartner().getID(), plugin);
 
-                            msg = msg + index + ": " + player1Fam.getName() + " \u2764 " + player2Fam.getName() + " (" + playerFam.getMarryDate() + ")" + "\n";
+                            msg = msg + index + ": " + player1Fam.getName() + " \u2764 " + player2Fam.getName() + " (" + playerFam.getMarriageDate() + ")" + "\n";
                             index++;
                         }
                         sender.sendMessage(msg);

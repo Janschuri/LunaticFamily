@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 
 public class FamilyManager {
@@ -148,10 +149,32 @@ public class FamilyManager {
 
     private void savePlayerData() {
         if (id == 0) {
-            Main.getDatabase().saveData(uuid, name, skinURL, partner, marryDate, sibling, firstParent, secondParent, firstChild, secondChild, gender, background, fake);
+            Main.getDatabase().savePlayerData(uuid, name, skinURL, gender, background);
         } else {
-            Main.getDatabase().saveData(id, uuid, name, skinURL, partner, marryDate, sibling, firstParent, secondParent, firstChild, secondChild, gender, background, fake);
+            Main.getDatabase().savePlayerData(id, uuid, name, skinURL, gender, background);
         }
+    }
+
+    private void saveMarriage(int partnerID) {
+        Main.getDatabase().saveMarriage(this.id, partnerID);
+    }
+
+    private void deleteMarriage() {
+        Main.getDatabase().deleteMarriage(this.id);
+    }
+    private void saveSiblinghood(int siblingID) {
+        Main.getDatabase().saveSiblinghood(this.id, siblingID);
+    }
+
+    private void deleteSiblinghood() {
+        Main.getDatabase().deleteSiblinghood(this.id);
+    }
+    private void saveAdoption(int childID) {
+        Main.getDatabase().saveAdoption(this.id, childID);
+    }
+
+    private void deleteAdoption() {
+        Main.getDatabase().deleteAdoption(this.id);
     }
 
     public String getSkinURL() {
@@ -166,26 +189,17 @@ public class FamilyManager {
         }
     }
 
-    private void setPartner(int partner) {
-        this.partner = partner;
-        savePlayerData();
-    }
-
     public boolean isMarried() {
         return this.partner != 0;
     }
 
-    public String getMarryDate() {
+    public String getMarriageDate() {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         return formatter.format(this.marryDate.toLocalDateTime());
     }
 
-    public void setMarryDate(Timestamp marryDate) {
-        this.marryDate = marryDate;
-        savePlayerData();
-    }
 
     public FamilyManager getSibling() {
         if (this.sibling != 0) {
@@ -195,39 +209,8 @@ public class FamilyManager {
         }
     }
 
-    private void setSibling(int sibling) {
-        this.sibling = sibling;
-        savePlayerData();
-    }
-
     public boolean hasSibling() {
         return this.sibling != 0;
-    }
-
-    public FamilyManager getFirstParent() {
-        if (this.firstParent != 0) {
-            return new FamilyManager(this.firstParent, plugin);
-        } else {
-            return null;
-        }
-    }
-
-    public FamilyManager getSecondParent() {
-        if (this.secondParent != 0) {
-            return new FamilyManager(this.secondParent, plugin);
-        } else {
-            return null;
-        }
-    }
-
-    private void setFirstParent(int firstParent) {
-        this.firstParent = firstParent;
-        savePlayerData();
-    }
-
-    private void setSecondParent(int secondParent) {
-        this.secondParent = secondParent;
-        savePlayerData();
     }
 
     public boolean isAdopted() {
@@ -339,17 +322,13 @@ public class FamilyManager {
         }
 
 
-        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-
         playerFam.setFirstChild(firstChildID);
         playerFam.setSecondChild(secondChildID);
-        playerFam.setPartner(partnerID);
-        playerFam.setMarryDate(currentTimestamp);
 
         partnerFam.setFirstChild(firstChildID);
         partnerFam.setSecondChild(secondChildID);
-        partnerFam.setPartner(playerID);
-        partnerFam.setMarryDate(currentTimestamp);
+
+        playerFam.saveMarriage(partnerID);
 
         if (playerFam.getFirstChild() != null) {
             FamilyManager childFam = new FamilyManager(playerFam.getFirstChild().getID(), plugin);
@@ -357,7 +336,7 @@ public class FamilyManager {
             childFam.setSecondParent(partnerID);
             if (playerFam.getSecondChild() != null) {
                 if(playerFam.getSecondChild().getID() != childFam.getID()) {
-                    childFam.setSibling(playerFam.getSecondChild().getID());
+                    childFam.saveSiblinghood(playerFam.getSecondChild().getID());
                 }
             }
         }
@@ -367,7 +346,7 @@ public class FamilyManager {
             childFam.setSecondParent(partnerID);
             if (playerFam.getFirstChild() != null) {
                 if(playerFam.getFirstChild().getID() != childFam.getID()) {
-                    childFam.setSibling(playerFam.getFirstChild().getID());
+                    childFam.saveSiblinghood(playerFam.getFirstChild().getID());
                 }
             }
         }
@@ -384,7 +363,7 @@ public class FamilyManager {
             if (plugin.allowSingleAdopt) {
                 childFam.setFirstParent(partnerFam.getID());
             } else {
-                childFam.setSibling(0);
+                childFam.deleteSiblinghood();
             }
         }
 
@@ -395,19 +374,14 @@ public class FamilyManager {
             if (plugin.allowSingleAdopt) {
                 childFam.setFirstParent(partnerFam.getID());
             } else {
-                childFam.setSibling(0);
+                childFam.deleteSiblinghood();
             }
         }
 
-
-        playerFam.setPartner(0);
-        playerFam.setMarryDate(null);
         playerFam.setFirstChild(0);
         playerFam.setSecondChild(0);
 
-
-        partnerFam.setPartner(0);
-        partnerFam.setMarryDate(null);
+        playerFam.deleteMarriage();
 
         if (!plugin.allowSingleAdopt) {
             partnerFam.setFirstChild(0);
@@ -450,15 +424,11 @@ public class FamilyManager {
         } else {
             if (playerFam.getFirstChild() != null) {
                 playerFam.setSecondChild(childID);
-                FamilyManager siblingFam = playerFam.getFirstChild();
-                siblingFam.setSibling(childID);
-                childFam.setSibling(siblingFam.getID());
+                childFam.saveSiblinghood(playerFam.getFirstChild().getID());
             } else {
                 playerFam.setFirstChild(childID);
                 if (playerFam.getSecondChild() != null) {
-                    FamilyManager siblingFam = playerFam.getSecondChild();
-                    siblingFam.setSibling(childID);
-                    childFam.setSibling(siblingFam.getID());
+                    childFam.saveSiblinghood(playerFam.getSecondChild().getID());
                 }
             }
         }
@@ -468,10 +438,10 @@ public class FamilyManager {
         FamilyManager playerFam = this;
         int playerID = playerFam.getID();
         int firstChildID = childID;
-        FamilyManager firstChildFam = new FamilyManager(firstChildID, plugin);
+        FamilyManager childFam = new FamilyManager(firstChildID, plugin);
 
-        firstChildFam.setFirstParent(0);
-        firstChildFam.setSecondParent(0);
+        childFam.setFirstParent(0);
+        childFam.setSecondParent(0);
 
         if (playerFam.isMarried()) {
             FamilyManager partnerFam = playerFam.getPartner();
@@ -486,41 +456,27 @@ public class FamilyManager {
         if (playerFam.getFirstChild() != null) {
             if (playerFam.getFirstChild().getID() == childID) {
                 playerFam.setFirstChild(0);
-                if (playerFam.getSecondChild() != null) {
-                    FamilyManager secondChildFam = playerFam.getSecondChild();
-                    secondChildFam.setSibling(0);
-                }
             }
         }
         if (playerFam.getSecondChild() != null) {
             if (playerFam.getSecondChild().getID() == childID) {
                 playerFam.setSecondChild(0);
-                if (playerFam.getFirstChild() != null) {
-                    FamilyManager secondChildFam = playerFam.getFirstChild();
-                    secondChildFam.setSibling(0);
-
-                }
             }
         }
 
-        firstChildFam.setSibling(0);
+        childFam.deleteSiblinghood();
 
     }
 
-    public void addSibling(int sibling) {
-        FamilyManager player1Fam = this;
-        FamilyManager siblingFam = new FamilyManager(sibling, plugin);
-
-        player1Fam.setSibling(siblingFam.getID());
-        siblingFam.setSibling(player1Fam.getID());
+    public void addSibling(int siblingID) {
+        FamilyManager playerFam = this;
+        playerFam.saveSiblinghood(siblingID);
     }
 
     public void removeSibling() {
         FamilyManager player1Fam = this;
-        FamilyManager siblingFam = player1Fam.getSibling();
 
-        player1Fam.setSibling(0);
-        siblingFam.setSibling(0);
+        player1Fam.deleteSiblinghood();
     }
 
     public  boolean isFamilyMember (int id){
