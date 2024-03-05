@@ -34,9 +34,7 @@ import java.util.*;
 import java.util.logging.Level;
 
 //TODO hook into Vault
-//TODO split money after divorce
-//TODO partner is online
-//TODO marry date notification
+
 public final class Main extends JavaPlugin {
     private static Database db;
     private static FileConfiguration config;
