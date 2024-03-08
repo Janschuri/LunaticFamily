@@ -9,9 +9,26 @@ Database:
   SQLite:
     Filename:
 default_gender: "fe"
+command_withdraws:
+  marry_proposing_player: 10.0
+  marry_proposed_player: 10.0
+  marry_priest: 10.0
+  marry_priest_player: 10.0
+  marry_divorce_leaving_player: 10.0
+  marry_divorce_left_player: 10.0
+  adopt_parent: 10.0
+  adopt_child: 10.0
+  adopt_kickout_parent: 10.0
+  adopt_kickout_child: 10.0
+  adopt_moveout_parent: 10.0
+  adopt_moveout_child: 10.0
+  sibling_proposing_player: 10.0
+  sibling_proposed_player: 10.0
+  sibling_unsibling_leaving_player: 10.0
+  sibling_unsibling_left_player: 10.0
 default_background: "moss_block"
 backgrounds:
-  - "mossblock"
+  - "moss_block"
   - "oak_planks"
   - "red_wool"
   - "pink_wool"

@@ -3,6 +3,7 @@ package de.janschuri.lunaticFamily;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
 import de.janschuri.lunaticFamily.commands.*;
+import de.janschuri.lunaticFamily.utils.Vault;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
@@ -34,9 +35,6 @@ import java.util.*;
 import java.util.logging.Level;
 
 //TODO hook into Vault
-//TODO split money after divorce
-//TODO partner is online
-//TODO marry date notification
 public final class Main extends JavaPlugin {
     private static Database db;
     private static FileConfiguration config;
@@ -50,6 +48,7 @@ public final class Main extends JavaPlugin {
     public Map<String, String> messages = new HashMap<>();
 
     public Map<String, Map> aliases = new HashMap<>();
+    public Map<String, Double> commandWithdraws = new HashMap<>();
     public List<String> familyList;
     public List<String> backgrounds;
 
@@ -87,6 +86,8 @@ public final class Main extends JavaPlugin {
         loadConfig(this);
 
         isCrazyAdvancementAPILoaded();
+
+        Vault vault = new Vault(this);
 
         if (config.getBoolean("Database.MySQL.enabled")) {
             db = new MySQL(this);
@@ -228,10 +229,20 @@ public final class Main extends JavaPlugin {
         ConfigurationSection messagesSection = lang.getConfigurationSection("messages");
         if (messagesSection != null) {
             for (String key : messagesSection.getKeys(false)) {
-                messages.put(key, ChatColor.translateAlternateColorCodes('&', messagesSection.getString(key)));
+                messages.put(key, ChatColor.translateAlternateColorCodes('&', messagesSection.getString(key, key)));
             }
         } else {
             getLogger().warning("Could not find 'messages' section in lang.yml");
+        }
+
+        //command withdraws
+        ConfigurationSection withdrawsSection = config.getConfigurationSection("command_withdraws");
+        if (withdrawsSection != null) {
+            for (String key : withdrawsSection.getKeys(false)) {
+                commandWithdraws.put(key, withdrawsSection.getDouble(key, 0.0));
+            }
+        } else {
+            getLogger().warning("Could not find 'command_withdraw' section in config.yml");
         }
 
         familyList = Objects.requireNonNull(config.getStringList("family_list"));
@@ -240,31 +251,35 @@ public final class Main extends JavaPlugin {
         //family relationships
         ConfigurationSection familyRelationships = lang.getConfigurationSection("family_relationships");
         Set<String> genders = familyRelationships.getKeys(false);
-        Bukkit.getLogger().info(String.valueOf(genders));
 
-        for (String gender : genders) {
-            Map<String, String> map = new HashMap<>();
-            map.put("ego", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".ego")));
-            map.put("partner", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".partner")));
-            map.put("child", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".child")));
-            map.put("parent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".parent")));
-            map.put("sibling", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".sibling")));
-            map.put("grandparent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".grandparent")));
-            map.put("great_grandparent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".great_grandparent")));
-            map.put("grandchild", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".grandchild")));
-            map.put("great_grandchild", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".great_grandchild")));
-            map.put("aunt_or_uncle", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".aunt_or_uncle")));
-            map.put("niece_or_nephew", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".niece_or_nephew")));
-            map.put("cousin", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".cousin")));
-            map.put("great_aunt_or_uncle", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".great_aunt_or_uncle")));
-            map.put("parent_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".parent_in_law")));
-            map.put("sibling_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".sibling_in_law")));
-            map.put("child_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".child_in_law")));
-            map.put("grandchild_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".grandchild_in_law")));
-            relationships.put(gender, map);
-        }
+            for (String gender : genders) {
+                Map<String, String> map = new HashMap<>();
 
-        Bukkit.getLogger().info(String.valueOf(relationships.get("ma").get("parent")));
+                ConfigurationSection relations = lang.getConfigurationSection("family_relationships." + gender);
+
+                for (String key : relations.getKeys(false)) {
+                    map.put(key, ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + "." + key, key)));
+                }
+
+//                map.put("ego", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".ego")));
+//                map.put("partner", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".partner")));
+//                map.put("child", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".child")));
+//                map.put("parent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".parent")));
+//                map.put("sibling", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".sibling")));
+//                map.put("grandparent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".grandparent")));
+//                map.put("great_grandparent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".great_grandparent")));
+//                map.put("grandchild", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".grandchild")));
+//                map.put("great_grandchild", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".great_grandchild")));
+//                map.put("aunt_or_uncle", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".aunt_or_uncle")));
+//                map.put("niece_or_nephew", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".niece_or_nephew")));
+//                map.put("cousin", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".cousin")));
+//                map.put("great_aunt_or_uncle", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".great_aunt_or_uncle")));
+//                map.put("parent_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".parent_in_law")));
+//                map.put("sibling_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".sibling_in_law")));
+//                map.put("child_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".child_in_law")));
+//                map.put("grandchild_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".grandchild_in_law")));
+                relationships.put(gender, map);
+}
     }
 
     @Override
@@ -274,7 +289,6 @@ public final class Main extends JavaPlugin {
 
     public static Database getDatabase() {
         return Main.db;
-
     }
 
     public static ItemStack getSkull(String url) {

@@ -4,6 +4,8 @@ import com.google.common.collect.BiMap;
 import de.janschuri.lunaticFamily.utils.FamilyManager;
 import de.janschuri.lunaticFamily.Main;
 import de.janschuri.lunaticFamily.utils.FamilyTree;
+import de.janschuri.lunaticFamily.utils.Vault;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -82,6 +84,8 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("admin_reload"));
                 }
             } else if (args[0].equalsIgnoreCase("list") || plugin.getAliases("family", "list").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+
+
 
                 List<String> list = plugin.familyList;
 
