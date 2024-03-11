@@ -77,7 +77,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
 
                 siblingCommand.onCommand(sender, pluginCommand, stringLabel, arrayArgs);
             } else if (args[0].equalsIgnoreCase("reload") || plugin.getAliases("family", "reload").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-                if (!sender.hasPermission("lunaticFamily.admin.adopt")) {
+                if (!sender.hasPermission("lunaticFamily.admin.reload")) {
                     sender.sendMessage(plugin.prefix + plugin.messages.get("no_permission"));
                 } else {
                     plugin.loadConfig(plugin);
@@ -103,14 +103,14 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                         if (familyList.containsKey(e)) {
                             int relationID = (int) familyList.get(e);
                             FamilyManager relationFam = new FamilyManager(relationID, plugin);
-                            String relationKey = e.replace("first", "")
-                                    .replace("second", "")
-                                    .replace("third", "")
-                                    .replace("fourth", "")
-                                    .replace("fifth", "")
-                                    .replace("sixth", "")
-                                    .replace("seventh", "")
-                                    .replace("eighth", "");
+                            String relationKey = e.replace("first_", "")
+                                    .replace("second_", "")
+                                    .replace("third_", "")
+                                    .replace("fourth_", "")
+                                    .replace("fifth_", "")
+                                    .replace("sixth_", "")
+                                    .replace("seventh_", "")
+                                    .replace("eighth_", "");
                             msg = msg + plugin.relationships.get(relationFam.getGender()).get(relationKey) + ": " + relationFam.getName() + "\n";
                         }
                     }
@@ -129,14 +129,14 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                             if (familyList.containsKey(e)) {
                                 int relationID = (int) familyList.get(e);
                                 FamilyManager relationFam = new FamilyManager(relationID, plugin);
-                                String relationKey = e.replace("first", "")
-                                        .replace("second", "")
-                                        .replace("third", "")
-                                        .replace("fourth", "")
-                                        .replace("fifth", "")
-                                        .replace("sixth", "")
-                                        .replace("seventh", "")
-                                        .replace("eighth", "");
+                                String relationKey = e.replace("first_", "")
+                                        .replace("second_", "")
+                                        .replace("third_", "")
+                                        .replace("fourth_", "")
+                                        .replace("fifth_", "")
+                                        .replace("sixth_", "")
+                                        .replace("seventh_", "")
+                                        .replace("eighth_", "");
                                 msg = msg + plugin.relationships.get(relationFam.getGender()).get(relationKey) + ": " + relationFam.getName() + "\n";
                             }
                         }

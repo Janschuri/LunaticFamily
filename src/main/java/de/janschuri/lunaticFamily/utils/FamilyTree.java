@@ -558,10 +558,10 @@ public class FamilyTree {
         AdvancementDisplay.AdvancementFrame frame = AdvancementDisplay.AdvancementFrame.GOAL;
         AdvancementVisibility visibility = AdvancementVisibility.ALWAYS;
 
-        if (!(familyList.containsKey(relation.replace("first_holder", "")
-                .replace("second_holder", "")
-                .replace("third_holder", "")
-                .replace("holder", "")))) {
+        if (!(familyList.containsKey(relation.replace("_first_holder", "")
+                .replace("_second_holder", "")
+                .replace("_third_holder", "")
+                .replace("_holder", "")))) {
             visibility = AdvancementVisibility.HIDDEN;
         }
 
@@ -573,6 +573,7 @@ public class FamilyTree {
         Advancement advancement;
 
         if (familyList.containsKey(relation)) {
+            Bukkit.getLogger().info("1"+relation);
             int id = (int) familyList.get(relation);
             FamilyManager relationFam = new FamilyManager(id, plugin);
             title = relationFam.getName();
@@ -585,6 +586,8 @@ public class FamilyTree {
                         .replace("sixth_", "")
                         .replace("seventh__", "")
                         .replace("eighth_", "");
+
+                Bukkit.getLogger().info("2"+relationKey);
 
                 description = plugin.relationships.get(relationFam.getGender()).get(relationKey);
 

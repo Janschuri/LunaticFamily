@@ -259,8 +259,13 @@ public final class Main extends JavaPlugin {
                 ConfigurationSection relations = lang.getConfigurationSection("family_relationships." + gender);
 
                 for (String key : relations.getKeys(false)) {
-                    map.put(key, ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + "." + key, key)));
+
+
+                    map.put(key, ChatColor.translateAlternateColorCodes('&', relations.getString(key)));
                 }
+
+                Bukkit.getLogger().info(map.toString());
+                Bukkit.getLogger().info(map.get("parent"));
 
 //                map.put("ego", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".ego")));
 //                map.put("partner", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".partner")));

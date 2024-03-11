@@ -358,19 +358,19 @@ public class FamilyManager {
 
             if (partnerFam.getSibling() != null) {
                 int secondSiblingInLaw = partnerFam.getSibling().getID();
-                familyList.put("secondSiblingInLaw", secondSiblingInLaw);
+                familyList.put("second_sibling_in_law", secondSiblingInLaw);
                 FamilyManager secondSiblingInLawFam = new FamilyManager(secondSiblingInLaw, plugin);
 
             }
 
             if (partnerFam.getParents().size() > 0) {
                 int firstParentInLaw = partnerFam.getParents().get(0).getID();
-                familyList.put("firstParentInLaw", firstParentInLaw);
+                familyList.put("first_parent_in_law", firstParentInLaw);
             }
 
             if (partnerFam.getParents().size() > 1) {
                 int secondParentInLaw = partnerFam.getParents().get(1).getID();
-                familyList.put("secondParentInLaw", secondParentInLaw);
+                familyList.put("second_parent_in_law", secondParentInLaw);
             }
         }
 
@@ -381,225 +381,225 @@ public class FamilyManager {
 
             if (siblingFam.getPartner() != null) {
                 int firstSiblingInLaw = siblingFam.getPartner().getID();
-                familyList.put("firstSiblingInLaw", firstSiblingInLaw);
+                familyList.put("first_sibling_in_law", firstSiblingInLaw);
             }
 
             if (siblingFam.getChildren().size() > 0) {
                 int firstNieceOrNephew = siblingFam.getChildren().get(0).getID();
-                familyList.put("firstNieceOrNephew", firstNieceOrNephew);
+                familyList.put("first_niece_or_nephew", firstNieceOrNephew);
             }
 
             if (siblingFam.getChildren().size() > 1) {
                 int secondNieceOrNephew = siblingFam.getChildren().get(1).getID();
-                familyList.put("secondNieceOrNephew", secondNieceOrNephew);
+                familyList.put("second_niece_or_nephew", secondNieceOrNephew);
             }
         }
 
         if (this.getParents().size() > 0) {
             int firstParent = this.getParents().get(0).getID();
-            familyList.put("firstParent", firstParent);
+            familyList.put("first_parent", firstParent);
             FamilyManager firstParentFam = new FamilyManager(firstParent, plugin);
             if (firstParentFam.getSibling() != null) {
                 int secondAuntOrUncle = firstParentFam.getSibling().getID();
-                familyList.put("secondAuntOrUncle", secondAuntOrUncle);
+                familyList.put("second_aunt_or_uncle", secondAuntOrUncle);
                 FamilyManager secondAuntOrUncleFam = new FamilyManager(secondAuntOrUncle, plugin);
                 if (secondAuntOrUncleFam.getPartner() != null) {
                     int firstAuntOrUncle = secondAuntOrUncleFam.getPartner().getID();
-                    familyList.put("firstAuntOrUncle", firstAuntOrUncle);
+                    familyList.put("first_aunt_or_uncle", firstAuntOrUncle);
                 }
                 if (secondAuntOrUncleFam.getChildren().size() > 0) {
                     int firstCousin = secondAuntOrUncleFam.getChildren().get(0).getID();
-                    familyList.put("firstCousin", firstCousin);
+                    familyList.put("first_cousin", firstCousin);
                 }
                 if (secondAuntOrUncleFam.getChildren().size() > 1) {
                     int secondCousin = secondAuntOrUncleFam.getChildren().get(1).getID();
-                    familyList.put("secondCousin", secondCousin);
+                    familyList.put("second_cousin", secondCousin);
                 }
             }
             if (firstParentFam.getParents().size() > 0) {
                 int firstGrandparent = firstParentFam.getParents().get(0).getID();
-                familyList.put("firstGrandparent", firstGrandparent);
+                familyList.put("first_grandparent", firstGrandparent);
                 FamilyManager firstGrandparentFam = new FamilyManager(firstGrandparent, plugin);
 
                 if (firstGrandparentFam.getSibling() != null) {
                     int firstGreatAuntOrUncle = firstGrandparentFam.getSibling().getID();
-                    familyList.put("firstGreatAuntOrUncle", firstGreatAuntOrUncle);
+                    familyList.put("first_great_aunt_or_uncle", firstGreatAuntOrUncle);
                 }
                 if (firstGrandparentFam.getParents().size() > 0) {
                     int firstGreatGrandparent = firstGrandparentFam.getParents().get(0).getID();
-                    familyList.put("firstGreatGrandparent", firstGreatGrandparent);
+                    familyList.put("first_great_grandparent", firstGreatGrandparent);
                 }
                 if (firstGrandparentFam.getParents().size() > 1) {
                     int secondGreatGrandparent = firstGrandparentFam.getParents().get(1).getID();
-                    familyList.put("secondGreatGrandparent", secondGreatGrandparent);
+                    familyList.put("second_great_grandparent", secondGreatGrandparent);
                 }
             }
             if (firstParentFam.getParents().size() > 1) {
                 int secondGrandparent = firstParentFam.getParents().get(1).getID();
-                familyList.put("secondGrandparent", secondGrandparent);
+                familyList.put("second_grandparent", secondGrandparent);
                 FamilyManager secondGrandparentFam = new FamilyManager(secondGrandparent, plugin);
 
                 if (secondGrandparentFam.getSibling() != null) {
                     int secondGreatAuntOrUncle = secondGrandparentFam.getSibling().getID();
-                    familyList.put("secondGreatAuntOrUncle", secondGreatAuntOrUncle);
+                    familyList.put("second_great_aunt_or_uncle", secondGreatAuntOrUncle);
                 }
                 if (secondGrandparentFam.getParents().size() > 0) {
                     int thirdGreatGrandparent = secondGrandparentFam.getParents().get(0).getID();
-                    familyList.put("thirdGreatGrandparent", thirdGreatGrandparent);
+                    familyList.put("third_great_grandparent", thirdGreatGrandparent);
                 }
                 if (secondGrandparentFam.getParents().size() > 1) {
                     int fourthGreatGrandparent = secondGrandparentFam.getParents().get(1).getID();
-                    familyList.put("fourthGreatGrandparent", fourthGreatGrandparent);
+                    familyList.put("fourth_great_grandparent", fourthGreatGrandparent);
                 }
             }
         }
 
         if (this.getParents().size() > 1) {
             int secondParent = this.getParents().get(1).getID();
-            familyList.put("secondParent", secondParent);
+            familyList.put("second_parent", secondParent);
             FamilyManager secondParentFam = new FamilyManager(secondParent, plugin);
 
             if (secondParentFam.getSibling() != null) {
                 int thirdAuntOrUncle = secondParentFam.getSibling().getID();
-                familyList.put("thirdAuntOrUncle", thirdAuntOrUncle);
+                familyList.put("third_aunt_or_uncle", thirdAuntOrUncle);
                 FamilyManager thirdAuntOrUncleFam = new FamilyManager(thirdAuntOrUncle, plugin);
                 if (thirdAuntOrUncleFam.getPartner() != null) {
                     int fourthAuntOrUncle = thirdAuntOrUncleFam.getPartner().getID();
-                    familyList.put("fourthAuntOrUncle", fourthAuntOrUncle);
+                    familyList.put("fourth_aunt_or_uncle", fourthAuntOrUncle);
                 }
                 if (thirdAuntOrUncleFam.getChildren().size() > 0) {
                     int thirdCousin = thirdAuntOrUncleFam.getChildren().get(0).getID();
-                    familyList.put("thirdCousin", thirdCousin);
+                    familyList.put("third_cousin", thirdCousin);
                 }
                 if (thirdAuntOrUncleFam.getChildren().size() > 1) {
                     int fourthCousin = thirdAuntOrUncleFam.getChildren().get(1).getID();
-                    familyList.put("fourthCousin", fourthCousin);
+                    familyList.put("fourth_cousin", fourthCousin);
                 }
             }
             if (secondParentFam.getParents().size() > 0) {
                 int thirdGrandparent = secondParentFam.getParents().get(0).getID();
-                familyList.put("thirdGrandparent", thirdGrandparent);
+                familyList.put("third_grandparent", thirdGrandparent);
                 FamilyManager thirdGrandparentFam = new FamilyManager(thirdGrandparent, plugin);
 
                 if (thirdGrandparentFam.getSibling() != null) {
                     int thirdGreatAuntOrUncle = thirdGrandparentFam.getSibling().getID();
-                    familyList.put("thirdGreatAuntOrUncle", thirdGreatAuntOrUncle);
+                    familyList.put("third_great_aunt_or_uncle", thirdGreatAuntOrUncle);
                 }
                 if (thirdGrandparentFam.getParents().size() > 0) {
                     int fifthGreatGrandparent = thirdGrandparentFam.getParents().get(0).getID();
-                    familyList.put("fifthGreatGrandparent", fifthGreatGrandparent);
+                    familyList.put("fifth_great_grandparent", fifthGreatGrandparent);
                 }
                 if (thirdGrandparentFam.getParents().size() > 1) {
                     int sixthGreatGrandparent = thirdGrandparentFam.getParents().get(1).getID();
-                    familyList.put("sixthGreatGrandparent", sixthGreatGrandparent);
+                    familyList.put("sixth_great_grandparent", sixthGreatGrandparent);
                 }
             }
             if (secondParentFam.getParents().size() > 1) {
                 int fourthGrandparent = secondParentFam.getParents().get(1).getID();
-                familyList.put("fourthGrandparent", fourthGrandparent);
+                familyList.put("fourth_grandparent", fourthGrandparent);
                 FamilyManager fourthGrandparentFam = new FamilyManager(fourthGrandparent, plugin);
 
                 if (fourthGrandparentFam.getSibling() != null) {
                     int fourthGreatAuntOrUncle = fourthGrandparentFam.getSibling().getID();
-                    familyList.put("fourthGreatAuntOrUncle", fourthGreatAuntOrUncle);
+                    familyList.put("fourth_great_aunt_or_uncle", fourthGreatAuntOrUncle);
                 }
                 if (fourthGrandparentFam.getParents().size() > 0) {
                     int seventhGreatGrandparent = fourthGrandparentFam.getParents().get(0).getID();
-                    familyList.put("seventhGreatGrandparent", seventhGreatGrandparent);
+                    familyList.put("seventh_great_grandparent", seventhGreatGrandparent);
                 }
                 if (fourthGrandparentFam.getParents().size() > 1) {
                     int eighthGreatGrandparent = fourthGrandparentFam.getParents().get(1).getID();
-                    familyList.put("eighthGreatGrandparent", eighthGreatGrandparent);
+                    familyList.put("eighth_great_grandparent", eighthGreatGrandparent);
                 }
             }
         }
 
         if (this.getChildren().size() > 0) {
             int firstChild = this.getChildren().get(0).getID();
-            familyList.put("firstChild", firstChild);
+            familyList.put("first_child", firstChild);
             FamilyManager firstChildFam = new FamilyManager(firstChild, plugin);
 
             if (firstChildFam.getPartner() != null) {
                 int firstChildInLaw = firstChildFam.getPartner().getID();
-                familyList.put("firstChildInLaw", firstChildInLaw);
+                familyList.put("first_child_in_law", firstChildInLaw);
             }
             if (firstChildFam.getChildren().size() > 0) {
                 int firstGrandchild = firstChildFam.getChildren().get(0).getID();
-                familyList.put("firstGrandchild", firstGrandchild);
+                familyList.put("first_grandchild", firstGrandchild);
                 FamilyManager firstGrandchildFam = new FamilyManager(firstGrandchild, plugin);
                 if (firstGrandchildFam.getPartner() != null) {
                     int firstGrandchildInLaw = firstGrandchildFam.getPartner().getID();
-                    familyList.put("firstGrandchildInLaw", firstGrandchildInLaw);
+                    familyList.put("first_grandchild_in_law", firstGrandchildInLaw);
                 }
                 if (firstGrandchildFam.getChildren().size() > 0) {
                     int firstGreatGrandchild = firstGrandchildFam.getChildren().get(0).getID();
-                    familyList.put("firstGreatGrandchild", firstGreatGrandchild);
+                    familyList.put("first_great_grandchild", firstGreatGrandchild);
                 }
                 if (firstGrandchildFam.getChildren().size() > 1) {
                     int secondGreatGrandchild = firstGrandchildFam.getChildren().get(1).getID();
-                    familyList.put("secondGreatGrandchild", secondGreatGrandchild);
+                    familyList.put("second_great_grandchild", secondGreatGrandchild);
                 }
             }
             if (firstChildFam.getChildren().size() > 1) {
                 int secondGrandchild = firstChildFam.getChildren().get(1).getID();
-                familyList.put("secondGrandchild", secondGrandchild);
+                familyList.put("second_grandchild", secondGrandchild);
                 FamilyManager secondGrandchildFam = new FamilyManager(secondGrandchild, plugin);
                 if (secondGrandchildFam.getPartner() != null) {
                     int secondGrandchildInLaw = secondGrandchildFam.getPartner().getID();
-                    familyList.put("secondGrandchildInLaw", secondGrandchildInLaw);
+                    familyList.put("second_grandchild_in_law", secondGrandchildInLaw);
                 }
                 if (secondGrandchildFam.getChildren().size() > 0) {
                     int thirdGreatGrandchild = secondGrandchildFam.getChildren().get(0).getID();
-                    familyList.put("thirdGreatGrandchild", thirdGreatGrandchild);
+                    familyList.put("third_great_grandchild", thirdGreatGrandchild);
                 }
                 if (secondGrandchildFam.getChildren().size() > 1) {
                     int fourthGreatGrandchild = secondGrandchildFam.getChildren().get(1).getID();
-                    familyList.put("fourthGreatGrandchild", fourthGreatGrandchild);
+                    familyList.put("fourth_great_grandchild", fourthGreatGrandchild);
                 }
             }
         }
 
         if (this.getChildren().size() > 1) {
             int secondChild = this.getChildren().get(1).getID();
-            familyList.put("secondChild", secondChild);
+            familyList.put("second_child", secondChild);
             FamilyManager secondChildFam = new FamilyManager(secondChild, plugin);
 
             if (secondChildFam.getPartner() != null) {
                 int secondChildInLaw = secondChildFam.getPartner().getID();
-                familyList.put("secondChildInLaw", secondChildInLaw);
+                familyList.put("second_child_in_law", secondChildInLaw);
             }
             if (secondChildFam.getChildren().size() > 0) {
                 int thirdGrandchild = secondChildFam.getChildren().get(0).getID();
-                familyList.put("thirdGrandchild", thirdGrandchild);
+                familyList.put("third_grandchild", thirdGrandchild);
                 FamilyManager thirdGrandchildFam = new FamilyManager(thirdGrandchild, plugin);
                 if (thirdGrandchildFam.getPartner() != null) {
                     int thirdGrandchildInLaw = thirdGrandchildFam.getPartner().getID();
-                    familyList.put("thirdGrandchildInLaw", thirdGrandchildInLaw);
+                    familyList.put("third_grandchild_in_law", thirdGrandchildInLaw);
                 }
                 if (thirdGrandchildFam.getChildren().size() > 0) {
                     int fifthGreatGrandchild = thirdGrandchildFam.getChildren().get(0).getID();
-                    familyList.put("fifthGreatGrandchild", fifthGreatGrandchild);
+                    familyList.put("fifth_great_grandchild", fifthGreatGrandchild);
                 }
                 if (thirdGrandchildFam.getChildren().size() > 1) {
                     int sixthGreatGrandchild = thirdGrandchildFam.getChildren().get(1).getID();
-                    familyList.put("sixthGreatGrandchild", sixthGreatGrandchild);
+                    familyList.put("sixth_great_grandchild", sixthGreatGrandchild);
                 }
             }
             if (secondChildFam.getChildren().size() > 1) {
                 int fourthGrandchild = secondChildFam.getChildren().get(1).getID();
-                familyList.put("fourthGrandchild", fourthGrandchild);
+                familyList.put("fourth_grandchild", fourthGrandchild);
                 FamilyManager fourthGrandchildFam = new FamilyManager(fourthGrandchild, plugin);
                 if (fourthGrandchildFam.getPartner() != null) {
                     int fourthGrandchildInLaw = fourthGrandchildFam.getPartner().getID();
-                    familyList.put("fourthGrandchildInLaw", fourthGrandchildInLaw);
+                    familyList.put("fourth_grandchild_in_law", fourthGrandchildInLaw);
                 }
                 if (fourthGrandchildFam.getChildren().size() > 0) {
                     int seventhGreatGrandchild = fourthGrandchildFam.getChildren().get(0).getID();
-                    familyList.put("seventhGreatGrandchild", seventhGreatGrandchild);
+                    familyList.put("seventh_great_grandchild", seventhGreatGrandchild);
                 }
                 if (fourthGrandchildFam.getChildren().size() > 1) {
                     int eighthGreatGrandchild = fourthGrandchildFam.getChildren().get(1).getID();
-                    familyList.put("eighthGreatGrandchild", eighthGreatGrandchild);
+                    familyList.put("eighth_great_grandchild", eighthGreatGrandchild);
                 }
             }
         }
