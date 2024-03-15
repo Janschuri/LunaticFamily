@@ -35,7 +35,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 
-//TODO hook into Vault
 
 public final class Main extends JavaPlugin {
     private static Database db;
@@ -46,7 +45,10 @@ public final class Main extends JavaPlugin {
     public static String defaultGender;
     public static String defaultBackground;
     public static boolean allowSingleAdopt;
-
+    public static boolean enabledCrazyAdvancementAPI;
+    public static boolean enabledVault;
+    public static boolean enabledMinepacks;
+    public static boolean marryBackpackOffline;
     private static Map<String, String> messages = new HashMap<>();
     private static Map<String, String> genderLang = new HashMap<>();
     private static final Map<String, Map<String, List<String>>> aliases = new HashMap<>();
@@ -55,7 +57,7 @@ public final class Main extends JavaPlugin {
     public static List<String> backgrounds;
     public static List<String> genders = new ArrayList<>();
 
-    public static Map<String, Map<String, String>> relationships = new HashMap<>();
+    private static Map<String, Map<String, String>> relationships = new HashMap<>();
 
     public static List<String> familyCommands = new ArrayList<>();
     public static List<String> familySubcommands = new ArrayList<>();
@@ -88,7 +90,7 @@ public final class Main extends JavaPlugin {
 
         loadConfig(this);
 
-        isCrazyAdvancementAPILoaded();
+        checkSoftDepends();
 
         new Vault();
 
@@ -97,9 +99,7 @@ public final class Main extends JavaPlugin {
             if (db.getSQLConnection() == null) {
                 Bukkit.getLogger().log(Level.SEVERE, "Error initializing MySQL database");
                 Bukkit.getLogger().info("Falling back to SQLite due to initialization error");
-
                 db = new SQLite(this);
-
             }
         }
         else {
@@ -159,9 +159,8 @@ public final class Main extends JavaPlugin {
         }
 
         lang = YamlConfiguration.loadConfiguration(langfile);
-
         allowSingleAdopt = config.getBoolean("allow_single_adopt");
-
+        marryBackpackOffline = config.getBoolean("backpack_offline_access");
         defaultBackground = "textures/block/" + config.getString("default_background") + ".png";
         defaultGender = config.getString("default_gender");
         prefix = ChatColor.translateAlternateColorCodes('&', lang.getString("prefix"));
@@ -186,11 +185,13 @@ public final class Main extends JavaPlugin {
         familySubcommands.addAll(getAliases("family", "tree"));
         familySubcommands.addAll(getAliases("family", "list"));
         familySubcommands.addAll(getAliases("family", "background"));
+        familySubcommands.addAll(getAliases("family", "help"));
         familyAdminSubcommands.addAll(getAliases("family", "reload"));
 
         genderCommands = getAliases("gender");
         genderSubcommands.addAll(getAliases("gender", "info"));
         genderSubcommands.addAll(getAliases("gender", "set"));
+        genderSubcommands.addAll(getAliases("gender", "help"));
 
         marryCommands = getAliases("marry");
         marrySubcommands.addAll(getAliases("marry", "propose"));
@@ -201,6 +202,7 @@ public final class Main extends JavaPlugin {
         marrySubcommands.addAll(getAliases("marry", "kiss"));
         marrySubcommands.addAll(getAliases("marry", "gift"));
         marrySubcommands.addAll(getAliases("marry", "backpack"));
+        marrySubcommands.addAll(getAliases("marry", "help"));
         marryAdminSubcommands.addAll(getAliases("marry", "set"));
         marryAdminSubcommands.addAll(getAliases("marry", "unset"));
 
@@ -211,6 +213,7 @@ public final class Main extends JavaPlugin {
         adoptSubcommands.addAll(getAliases("adopt", "kickout"));
         adoptSubcommands.addAll(getAliases("adopt", "moveout"));
         adoptSubcommands.addAll(getAliases("adopt", "list"));
+        adoptSubcommands.addAll(getAliases("adopt", "help"));
         adoptAdminSubcommands.addAll(getAliases("adopt", "set"));
         adoptAdminSubcommands.addAll(getAliases("adopt", "unset"));
 
@@ -219,6 +222,7 @@ public final class Main extends JavaPlugin {
         siblingSubcommands.addAll(getAliases("sibling", "accept"));
         siblingSubcommands.addAll(getAliases("sibling", "deny"));
         siblingSubcommands.addAll(getAliases("sibling", "unsibling"));
+        siblingSubcommands.addAll(getAliases("sibling", "help"));
         siblingAdminSubcommands.addAll(getAliases("sibling", "set"));
         siblingAdminSubcommands.addAll(getAliases("sibling", "unset"));
 
@@ -276,9 +280,6 @@ public final class Main extends JavaPlugin {
                     map.put(key, ChatColor.translateAlternateColorCodes('&', relations.getString(key)));
                 }
 
-                Bukkit.getLogger().info(map.toString());
-                Bukkit.getLogger().info(map.get("parent"));
-
                 relationships.put(gender, map);
 }
     }
@@ -310,22 +311,15 @@ public final class Main extends JavaPlugin {
     }
 
     private void addMissingProperties(File file, String filePath) {
-        Bukkit.getLogger().info("test");
         YamlConfiguration langConfig = YamlConfiguration.loadConfiguration(file);
         YamlConfiguration defaultLangConfig = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), filePath)); // or "DE.yml" for German
 
-        Bukkit.getLogger().info(String.valueOf(file.getName()));
-
-        // Check each default property
         for (String key : defaultLangConfig.getKeys(true)) {
-            // If the property is missing in the loaded language file, add it with default value
             if (!langConfig.contains(key)) {
                 langConfig.set(key, defaultLangConfig.get(key));
-                Bukkit.getLogger().info(key);
             }
         }
 
-        // Save the modified language file
         try {
             langConfig.save(file);
         } catch (IOException e) {
@@ -368,6 +362,25 @@ public final class Main extends JavaPlugin {
         return list;
     }
 
+    public static String getRelation(String relation, String gender) {
+        if (genders.contains(gender)) {
+            Map<String, String> relations = relationships.get(gender);
+            if (relations.get(relation) != null) {
+                return relations.get(relation);
+            } else {
+                return "undefined";
+            }
+        } else {
+            gender = genders.get(0);
+            Map<String, String> relations = relationships.get(gender);
+            if (relations.get(relation) != null) {
+                return relations.get(relation);
+            } else {
+                return "undefined";
+            }
+        }
+    }
+
     private static PlayerProfile getProfile(String url) {
         PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID());
         PlayerTextures textures = profile.getTextures();
@@ -382,38 +395,29 @@ public final class Main extends JavaPlugin {
         return profile;
     }
 
-    // Method to spawn particles
     public static void spawnParticles(Location location, Particle particle) {
         World world = location.getWorld();
 
         Random random = new Random();
 
-        // Define the range for random offsets
         double range = 2.0;
 
-        // Spawn particles in a cloud-like pattern around the player
-        for (int i = 0; i < 10; i++) { // Adjust the number of particles as needed
-            // Generate random offsets
+        for (int i = 0; i < 10; i++) {
             double offsetX = (random.nextDouble() - 0.5) * range * 2;
             double offsetY = (random.nextDouble() - 0.5) * range * 2;
             double offsetZ = (random.nextDouble() - 0.5) * range * 2;
 
-            // Adjust particle location
             Location particleLocation = location.clone().add(offsetX, offsetY, offsetZ);
 
-            // Spawn particles
             world.spawnParticle(particle, particleLocation, 1);
         }
     }
     public static Location getPositionBetweenLocations(Location loc1, Location loc2) {
-        // Get the vectors of the two locations
         Vector vec1 = new Vector(loc1.getX(), loc1.getY(), loc1.getZ());
         Vector vec2 = new Vector(loc2.getX(), loc2.getY(), loc2.getZ());
 
-        // Calculate the midpoint vector
         Vector midpoint = vec1.clone().add(vec2).multiply(0.5);
 
-        // Convert the midpoint vector to a location
         Location position = new Location(loc1.getWorld(), midpoint.getX(), midpoint.getY(), midpoint.getZ());
 
         return position;
@@ -434,27 +438,36 @@ public final class Main extends JavaPlugin {
 
 
 
-    // Method to check if a player is within a certain range of blocks from a location
     public static boolean isInRange(Location firstLocation, Location secondLocation, double range) {
 
-        // Calculate the distance between player's location and target location
         double distance = firstLocation.distance(secondLocation);
 
-        // Check if the distance is within the range
         return distance <= range;
     }
 
-    public static boolean isCrazyAdvancementAPILoaded(){
-        Boolean isLoaded = false;
+    public static void checkSoftDepends(){
         try {
             Class.forName("eu.endercentral.crazy_advancements.CrazyAdvancementsAPI");
-            Bukkit.getLogger().info("CrazyAdvancementAPI loaded.");
-            isLoaded = true;
+            enabledCrazyAdvancementAPI = true;
         } catch(ClassNotFoundException e) {
             Bukkit.getLogger().warning("Could not find CrazyAdvancementsAPI.");
         }
 
-        return isLoaded;
+        try {
+            Class.forName("net.milkbowl.vault.economy.Economy");
+            enabledVault = true;
+        } catch(ClassNotFoundException e) {
+            Bukkit.getLogger().warning("Could not find Vault.");
+        }
+
+        try {
+            Class.forName("at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin");
+            enabledMinepacks = true;
+        } catch(ClassNotFoundException e) {
+            Bukkit.getLogger().warning("Could not find Minepacks.");
+        }
+
+
     }
 
     public static boolean playerExists(String name) {
@@ -492,12 +505,12 @@ public final class Main extends JavaPlugin {
     }
 
     public static TextComponent createClickableMessage(String message, String confirmHoverText, String confirmCommand, String cancelHoverText, String cancelCommand) {
-        TextComponent confirm = new TextComponent(ChatColor.GREEN + "✓");
+        TextComponent confirm = new TextComponent(ChatColor.GREEN + "" + ChatColor.BOLD +" ✓");
         confirm.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, confirmCommand));
         confirm.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(confirmHoverText).create()));
 
 
-        TextComponent cancel = new TextComponent(ChatColor.RED +  "❌");
+        TextComponent cancel = new TextComponent(ChatColor.RED +  " ❌");
         cancel.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, cancelCommand));
         cancel.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(cancelHoverText).create()));
 

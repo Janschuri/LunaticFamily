@@ -36,7 +36,7 @@ backgrounds:
   - "gold_block"
 allow_single_adopt: true
 language: "DE"
-
+marry_backpack_offline_access: true
 family_list:
   - partner
   - sibling

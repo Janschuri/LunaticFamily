@@ -11,7 +11,7 @@ messages:
   player_too_far_away: "%player% ist zu weit entfernt."
   player_offline: "%player% ist offline."
   no_permission: "Du hast keine Berechtigung, diesen Befehl zu verwenden!"
-  internal_error: "Interner Fehler. Bitte kontaktiere einen Admin."
+  disabled_feature: "Dieses Feature ist deaktiviert."
   take_payment_confirm: "Möchtest du die kompletten Kosten übernehmen?"
   yes: "Ja"
   no: "Nein"
@@ -19,6 +19,32 @@ messages:
   deny: "Ablehnen"
   confirm: "Bestätigen"
   cancel: "Abbrechen"
+  #help messages:
+  gender_help: "Gender-Help"
+  gender_set_help: "&6/gender set&r - Wähle dein Geschlecht."
+  gender_info_help: "&6/gender info&r - Sehe welches Geschlecht du hast."
+  marry_help: "Marry-Help"
+  marry_propose_help: "&6/marry propose <Spielername>&r - Mache einem Spieler einen Heiratsantrag."
+  marry_priest_help: "&6/marry priest <Spielername> <Spielername>&r - Verheirate zwei Spieler."
+  marry_divorce_help: "&6/marry divorce&r - Lass dich scheiden."
+  marry_kiss_help: "&6/marry kiss&r - Küsse deinen Partner."
+  marry_gift_help: "&6/marry gift&r - Schenke deinem Partner das Item in deiner Hand."
+  marry_list_help: "&6/marry list (Seite)&r - Lass dir eine Liste alles verheiraten Paare anzeigen."
+  adopt_help: "Adopt-Help"
+  adopt_propose_help: "&6/adopt propose <Spielername>&r - Stelle einem Spieler eine Adoptionsanfrage."
+  adopt_kickout_help: "&6/adopt kickout <Spielername>&r - Werfe dein Kind aus der Familie."
+  adopt_moveout_help: "&6/adopt moveout&r - Ziehe von Zuhause aus und verlasse deine Eltern."
+  family_help: "Family-Help"
+  family_list_help: "&6/family list (playername)&r - Lass dir eine Liste all deiner Familienmitglieder zeigen."
+  family_tree_help: "&6/family tree&r - Lade deine Familienstammbaum neu."
+  family_background_help: "&6/family background&r - Ändere den Hintergrund deines Familienstammbaums."
+  family_adopt_help: "&6/adopt help&r - Lass dir die Hilfeseite von /adopt anzeigen."
+  family_marry_help: "&6/marry help&r - Lass dir die Hilfeseite von /marry anzeigen."
+  family_gender_help: "&6/gender help&r - Lass dir die Hilfeseite von /gender anzeigen."
+  family_sibling_help: "&6/sibling help&r - Lass dir die Hilfeseite von /sibling anzeigen."
+  sibling_help: "Sibling-Help"
+  sibling_propose_help: "&6/sibling propose <Spielername>&r - Stelle einem Spieler eine Geschwisterschaftsanfrage."
+  sibling_unsibling_help: "&6/sibling unsibling&r - Löse deine Geschwisterschaft auf."
   #family command
   family_list: "Deine Familie:"
   family_others_list: "%player%'s Familie:"
@@ -60,16 +86,18 @@ messages:
   marry_deny_no_request: "Du hast keine Heiratsanfrage."
   marry_deny_denied: "Entschuldigung, %player% möchte dich nicht heiraten."
   marry_deny_cancel: "Die Hochzeit wurde abgebrochen."
-  marry_divorce_no_partner: "Du bist nicht verheiratet! Wenn du jemanden heiraten möchtest, benutze bitte /family marry propose <Name>"
+  marry_divorce_no_partner: "Du bist nicht verheiratet!"
   marry_divorce_divorced: "Du hast dich geschieden!"
   marry_divorce_confirm: "Bitte bestätige, dass du dich scheiden lassen möchtest!"
   marry_divorce_cancel: "Du hast die Scheidung abgebrochen!"
-  marry_kiss_no_partner: "Du bist nicht verheiratet! Wenn du jemanden heiraten möchtest, benutze bitte /family marry propose <Name>"
-  marry_gift_no_partner: "Du bist nicht verheiratet! Wenn du jemanden heiraten möchtest, benutze bitte /family marry propose <Name>"
+  marry_kiss_no_partner: "Du bist nicht verheiratet!"
+  marry_gift_no_partner: "Du bist nicht verheiratet!"
   marry_gift_empty_Hand: "Du musst ein Item in der Hand halten."
   marry_gift_partner_full_inv: "Dein Partner hat kein Platz im Inventar."
   marry_gift_sent: "Du hast deinem Partner %item% geschenkt."
   marry_gift_got: "Dein Partner hat dir %item% geschenkt."
+  marry_backpack_open: "Du hast den Rucksack deines Partners geöffnet."
+  marry_backpack_no_partner: "Du bist nicht verheiratet!"
   marry_list: "Alle Ehepaare auf diesem Server: "
   marry_list_no_number: "%input% ist keine ganze Zahl!"
   #adopt command
@@ -94,6 +122,7 @@ messages:
   adopt_accept_parent_limit: "%player% kann kein weiteres Kind adoptieren. %player% hat bereits das Limit von zwei Kindern erreicht."
   adopt_accept_no_request: "Du hast keine Adoptionsanfrage."
   adopt_deny: "Entschuldigung, %player% möchte nicht von dir adoptiert werden."
+  adopt_denied: "Du hast die Adoptionsanfrage von %player% abgelehnt."
   adopt_deny_no_request: "Du hast keine Adoptionsanfrage."
   adopt_moveout: "Du bist ausgezogen. Du bist nicht mehr adoptiert."
   adopt_moveout_confirm: "Bitte bestätige, dass du ausziehen möchtest!"
@@ -120,7 +149,7 @@ messages:
   sibling_propose_sibling_is_adopted: "%player% ist bereits adoptiert. Seine Eltern können dich adoptiern, damit du das Geschwisterkind wirst."
   sibling_propose_open_request: "%player% hat schon eine offenen Geschwisterkindanfrage."
   sibling_propose_request: "%player% möchte dich zum Geschwisterkind haben. Bist du einverstanden?"
-  sibling_propose_request_sent: "Du hast %player% die Geschwister angeboten."
+  sibling_propose_request_sent: "Du hast %player% die Geschwisterschaft angeboten."
   sibling_propose_request_expired: "Die Geschwisteranfrage von %player% ist abgelaufen."
   sibling_propose_request_sent_expired: "Die Geschwisteranfrage an %player% ist abgelaufen."
   sibling_accept_no_request: "Du hast keine Geschwisteranfrage."
@@ -132,6 +161,7 @@ messages:
   sibling_unsibling_confirm: "Bitte bestätige, dass du dein Geschwisterkind abstechen möchtest."
   sibling_unsibling_cancel: "Du hast dein Geschwisterkind doch nicht abgestochen."
   sibling_unsibling_complete: "Du hast dein Geschwisterkind abgestochen."
+  sibling_unsiblinged_complete: "Du wurdest von deinem Geschwisterkind abgestochen."
   #admin commands
   #admin gender commands
   admin_gender_changed: "Du hast das Geschlecht von %player% zu %gender% geändert."
@@ -209,41 +239,41 @@ family_relationships:
 aliases:
   family:
     base_command:
-      - familie
+      - family
     tree:
-      - stammbaum
+      - tree
     background:
-      - hintergrund
+      - background
     list:
-      - liste
+      - list
     reload:
       - reload
   gender:
     base_command:
-      - geschlecht
+      - gender
     set:
       - set
     info:
       - info
   marry:
     base_command:
-      - ehe
+      - marry
     propose:
-      - antrag
+      - propose
     accept:
-      - akzeptieren
+      - accept
     deny:
-      - ablehnen
+      - deny
     divorce:
-      - scheidung
+      - divorce
     list:
-      - liste
+      - list
     kiss:
-      - kuss
+      - kiss
     gift:
-      - geschenk
+      - gift
     backpack:
-      - rucksack
+      - backpack
       - bp
     set:
       - set
@@ -251,34 +281,34 @@ aliases:
       - unset
   adopt:
     base_command:
-      - adoptieren
+      - adopt
     propose:
-      - antrag
+      - propose
     accept:
-      - akzeptieren
+      - accept
     deny:
-      - ablehnen
+      - deny
     kickout:
-      - rausschmeißen
+      - kickout
     moveout:
-      - ausziehen
+      - moveout
     list:
-      - liste
+      - list
     set:
       - set
     unset:
       - unset
   sibling:
     base_command:
-      - geschwister
+      - sibling
     propose:
-      - antrag
+      - propose
     accept:
-      - akzeptieren
+      - accept
     deny:
-      - ablehnen
+      - deny
     unsibling:
-      - ungeschwistern
+      - unsibling
     set:
       - set
     unset:

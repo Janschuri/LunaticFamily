@@ -31,18 +31,17 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
 
         if (args.length == 0) {
-            if (sender instanceof Player) {
-                Player player = (Player) sender;
-                String uuid = player.getUniqueId().toString();
-                FamilyManager playerFam = new FamilyManager(uuid);
-                if (playerFam.getPartner() != null) {
+            if (!sender.hasPermission("lunaticFamily." + label)) {
+                sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
+            } else {
+                String[] subcommandsHelp = {"propose", "priest", "list", "divorce", "kiss", "gift"};
 
-                    FamilyManager partnerFam = playerFam.getPartner();
-                    sender.sendMessage(Main.prefix + Main.getMessage("marry_already_married").replace("%player%", partnerFam.getName()));
+                String msg = Main.prefix + " " + Main.getMessage(label + "_help") + "\n";
 
-                } else {
-                    sender.sendMessage(Main.prefix + Main.getMessage("marry_no_partner"));
+                for (String subcommand : subcommandsHelp) {
+                    msg = msg + Main.prefix + " " + Main.getMessage(label + "_" + subcommand + "_help") + "\n";
                 }
+                sender.sendMessage(msg);
             }
         } else {
             //admin subcommand "set"
@@ -463,7 +462,6 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             }
                         }
                     } else if (args[0].equalsIgnoreCase("gift") || Main.getAliases("marry", "gift").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-
                         if (!playerFam.isMarried()) {
                             sender.sendMessage(Main.prefix + Main.getMessage("marry_gift_no_partner"));
                         } else if (!player.hasPermission("lunaticFamily.marry.gift")) {
@@ -518,14 +516,15 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                         }
                     } else if (args[0].equalsIgnoreCase("backpack") || Main.getAliases("marry", "backpack").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-
-                        if (!playerFam.isMarried()) {
+                        if(!Main.enabledMinepacks) {
+                            sender.sendMessage(Main.getMessage("disabled_feature"));
+                        } else if (!playerFam.isMarried()) {
                             sender.sendMessage(Main.prefix + Main.getMessage("marry_backpack_no_partner"));
-                        } else if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) == null) {
+                        } else if (!Main.marryBackpackOffline && Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) == null) {
                             sender.sendMessage(Main.prefix + Main.getMessage("player_offline").replace("%player%", playerFam.getPartner().getName()));
                         } else {
-                            Player partnerPlayer = playerFam.getPartner().getPlayer();
-                            
+                            OfflinePlayer partnerPlayer = playerFam.getPartner().getOfflinePlayer();
+                            sender.sendMessage(Main.prefix + Main.getMessage("marry_backpack_open"));
                             Minepacks.getMinepacks().openBackpack(player, partnerPlayer, true);
                         }
                     } else if (args[0].equalsIgnoreCase("list") || Main.getAliases("marry", "list").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
@@ -550,9 +549,16 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         }
                         sender.sendMessage(msg);
 
-                    }
-                    //subcommand does not exist
-                    else {
+                    } else if (args[0].equalsIgnoreCase("help") || Main.getAliases(label, "help").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                        String[] subcommandsHelp = {"propose", "priest", "list", "divorce", "kiss", "gift"};
+
+                        String msg = Main.prefix + " " + Main.getMessage(label + "_help") + "\n";
+
+                        for (String subcommand : subcommandsHelp) {
+                            msg = msg + Main.prefix + " " + Main.getMessage(label + "_" + subcommand + "_help") + "\n";
+                        }
+                        sender.sendMessage(msg);
+                    } else {
                         sender.sendMessage(Main.prefix + Main.getMessage("wrong_usage"));
                     }
                 }

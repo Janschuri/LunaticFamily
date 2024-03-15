@@ -25,7 +25,18 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if (args.length == 0) {
+            if (!sender.hasPermission("lunaticFamily." + label)) {
+                sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
+            } else {
+                String[] subcommandsHelp = {"propose", "kickout", "moveout"};
 
+                String msg = Main.prefix + " " + Main.getMessage(label + "_help") + "\n";
+
+                for (String subcommand : subcommandsHelp) {
+                    msg = msg + Main.prefix + " " + Main.getMessage(label + "_" + subcommand + "_help") + "\n";
+                }
+                sender.sendMessage(msg);
+            }
         } else {
 
                 if (args[0].equalsIgnoreCase("set") || Main.getAliases("adopt", "set").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
@@ -156,7 +167,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                     sender.sendMessage(Main.prefix + Main.getMessage("marry_propose_family_request").replace("%player%", childFam.getName()));
                                 } else if (Main.adoptRequests.containsKey(child)) {
                                     sender.sendMessage(Main.prefix + Main.getMessage("adopt_propose_open_request").replace("%player%", childFam.getName()));
-                                } else if (childFam.getParents().get(0) != null) {
+                                } else if (childFam.getParents() == null) {
                                     sender.sendMessage(Main.prefix + Main.getMessage("adopt_propose_already_adopted").replace("%player%", childFam.getName()));
                                 } else if (childFam.hasSibling() && !confirm){
                                     sender.sendMessage(Main.createClickableMessage(
@@ -257,7 +268,8 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                 String parent = Main.adoptRequests.get(playerUUID);
                                 FamilyManager parentFam = new FamilyManager(parent);
                                 parentFam.sendMessage(Main.prefix + Main.getMessage("adopt_deny").replace("%player%", playerFam.getName()));
-                                Main.marryRequests.remove(playerUUID);
+                                sender.sendMessage(Main.prefix + Main.getMessage("adopt_denied").replace("%player%", parentFam.getName()));
+                                Main.adoptRequests.remove(playerUUID);
                             }
                         } else if (args[0].equalsIgnoreCase("moveout") || Main.getAliases("adopt", "moveout").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
@@ -349,7 +361,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                         firstParentFam.withdrawPlayer("adopt_moveout_parent");
 
                                     }
-                                    playerFam.withdrawPlayer("moveout_child");
+                                    playerFam.withdrawPlayer("adopt_moveout_child");
                                 }
 
                                 firstParentFam.unadopt(playerFam.getID());
@@ -383,11 +395,11 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 
                                         if (!confirm) {
                                             sender.sendMessage(Main.createClickableMessage(
-                                                    Main.getMessage("adopt_kickout_confirm"),
+                                                    Main.getMessage("adopt_kickout_confirm").replace("%player%", Main.getName(args[1])),
                                                     Main.getMessage("confirm"),
-                                                    "/adopt kickout confirm",
+                                                    "/adopt kickout " + args[1] + " confirm",
                                                     Main.getMessage("cancel"),
-                                                    "/adopt kickout cancel"));
+                                                    "/adopt kickout " + args[1] + " cancel"));
                                         } else if (cancel) {
                                             sender.sendMessage(Main.prefix + Main.getMessage("adopt_kickout_cancel"));
                                         } else if (!force && playerFam.isMarried() && !playerFam.hasEnoughMoney("adopt_kickout_parent", 0.5)) {
@@ -420,7 +432,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                                 FamilyManager siblingFam = childFam.getSibling();
                                                 siblingFam.sendMessage(Main.prefix + Main.getMessage("adopt_kickout_sibling").replace("%player%", playerFam.getName()));
                                             }
-                                            childFam.sendMessage(Main.prefix + Main.getMessage("adopt_kickout_child"));
+                                            childFam.sendMessage(Main.prefix + Main.getMessage("adopt_kickout_child").replace("%player%", playerFam.getName()));
 
                                             if (force) {
                                                 playerFam.withdrawPlayer("adopt_kickout_parent", "adopt_kickout_child");
@@ -445,6 +457,15 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                             } else {
                                 sender.sendMessage(Main.prefix + Main.getMessage("adopt_kickout_no_child"));
                             }
+                        } else if (args[0].equalsIgnoreCase("help") || Main.getAliases(label, "help").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                            String[] subcommandsHelp = {"propose", "kickout", "moveout"};
+
+                            String msg = Main.prefix + " " + Main.getMessage(label + "_help") + "\n";
+
+                            for (String subcommand : subcommandsHelp) {
+                                msg = msg + Main.prefix + " " + Main.getMessage(label + "_" + subcommand + "_help") + "\n";
+                            }
+                            sender.sendMessage(msg);
                         } else {
                             sender.sendMessage(Main.prefix + Main.getMessage("wrong_usage"));
                         }

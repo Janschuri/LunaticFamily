@@ -30,7 +30,18 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (args.length == 0) {
+            if (!sender.hasPermission("lunaticFamily." + label)) {
+                sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
+            } else {
+                String[] subcommandsHelp = {"propose", "unsibling"};
 
+                String msg = Main.prefix + " " + Main.getMessage(label + "_help") + "\n";
+
+                for (String subcommand : subcommandsHelp) {
+                    msg = msg + Main.prefix + " " + Main.getMessage(label + "_" + subcommand + "_help") + "\n";
+                }
+                sender.sendMessage(msg);
+            }
         } else{
 
             if (args[0].equalsIgnoreCase("set") || Main.getAliases("sibling", "set").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
@@ -149,7 +160,7 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
                                         public void run() {
                                             if (Main.siblingRequests.containsKey(siblingUUID)) {
                                                 Main.siblingRequests.remove(siblingUUID);
-                                                siblingPlayer.sendMessage(Main.prefix + Main.getMessage("sinling_propose_request_expired").replace("%player%", playerFam.getName()));
+                                                siblingPlayer.sendMessage(Main.prefix + Main.getMessage("sibling_propose_request_expired").replace("%player%", playerFam.getName()));
 
                                                 sender.sendMessage(Main.prefix + Main.getMessage("sibling_propose_request_sent_expired").replace("%player%", siblingFam.getName()));
                                             }
@@ -159,10 +170,10 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
                             }
 
                         } else if (args[0].equalsIgnoreCase("accept") || Main.getAliases("sibling", "accept").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-                            if (!Main.marryRequests.containsKey(playerUUID)) {
+                            if (!Main.siblingRequests.containsKey(playerUUID)) {
                                 sender.sendMessage(Main.prefix + Main.getMessage("sibling_accept_no_request"));
                             } else {
-                                    String siblingUUID = Main.marryRequests.get(playerUUID);
+                                    String siblingUUID = Main.siblingRequests.get(playerUUID);
                                     FamilyManager siblingFam = new FamilyManager(siblingUUID);
 
                                     if (playerFam.getChildrenAmount() + siblingFam.getChildrenAmount() > 2) {
@@ -176,7 +187,7 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
                                         sender.sendMessage(Main.prefix + Main.getMessage("player_not_enough_money").replace("%player%", siblingFam.getName()));
                                     } else {
 
-                                        sender.sendMessage(Main.prefix + Main.getMessage("propose_accept_complete").replace("%player%", siblingFam.getName()));
+                                        sender.sendMessage(Main.prefix + Main.getMessage("sibling_accept_complete").replace("%player%", siblingFam.getName()));
                                         Bukkit.getPlayer(UUID.fromString(siblingUUID)).sendMessage(Main.prefix + Main.getMessage("sibling_accept_complete").replace("%player%", playerFam.getName()));
 
                                         Main.siblingRequests.remove(playerUUID);
@@ -220,7 +231,12 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
                             if (!playerFam.hasSibling()) {
                                 sender.sendMessage(Main.prefix + Main.getMessage("sibling_unsibling_no_sibling"));
                             } else if (!confirm) {
-                                sender.sendMessage(Main.prefix + Main.getMessage("sibling_unsibling_confirm"));
+                                sender.sendMessage(Main.createClickableMessage(
+                                        Main.getMessage("sibling_unsibling_confirm"),
+                                        Main.getMessage("confirm"),
+                                        "/sibling unsibling confirm",
+                                        Main.getMessage("cancel"),
+                                        "/sibling unsibling cancel"));
                             } else if (cancel) {
                                 sender.sendMessage(Main.prefix + Main.getMessage("sibling_unsibling_cancel"));
                             } else if (playerFam.isAdopted()) {
@@ -237,7 +253,7 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
                                         "/sibling unsibling cancel"));
                             } else {
                                 sender.sendMessage(Main.prefix + Main.getMessage("sibling_unsibling_complete"));
-                                    playerFam.getSibling().sendMessage(Main.prefix + Main.getMessage("sibling_unsibling_complete"));
+                                    playerFam.getSibling().sendMessage(Main.prefix + Main.getMessage("sibling_unsiblinged_complete"));
 
                                     if(force) {
                                         playerFam.withdrawPlayer("sibling_unsibling_leaving_player");
@@ -248,6 +264,15 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
                                     }
                                 playerFam.removeSibling();
                             }
+                        } else if (args[0].equalsIgnoreCase("help") || Main.getAliases(label, "help").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                            String[] subcommandsHelp = {"propose", "unsibling"};
+
+                            String msg = Main.prefix + " " + Main.getMessage(label + "_help") + "\n";
+
+                            for (String subcommand : subcommandsHelp) {
+                                msg = msg + Main.prefix + " " + Main.getMessage(label + "_" + subcommand + "_help") + "\n";
+                            }
+                            sender.sendMessage(msg);
                         } else {
                             sender.sendMessage(Main.prefix + Main.getMessage("wrong_usage"));
                         }

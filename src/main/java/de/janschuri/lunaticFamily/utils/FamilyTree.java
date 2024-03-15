@@ -33,7 +33,7 @@ public class FamilyTree {
         AdvancementDisplay.AdvancementFrame frame = AdvancementDisplay.AdvancementFrame.CHALLENGE;
         AdvancementVisibility visibility = AdvancementVisibility.ALWAYS;
 
-        description = Main.relationships.get(playerFam.getGender()).get("ego");
+        description = Main.getRelation("ego", playerFam.getGender());
 
         String skinURL = playerFam.getSkinURL();
         ItemStack icon = Main.getSkull(skinURL);
@@ -570,7 +570,6 @@ public class FamilyTree {
         Advancement advancement;
 
         if (familyList.containsKey(relation)) {
-            Bukkit.getLogger().info("1"+relation);
             int id = (int) familyList.get(relation);
             FamilyManager relationFam = new FamilyManager(id);
             title = relationFam.getName();
@@ -584,9 +583,8 @@ public class FamilyTree {
                         .replace("seventh__", "")
                         .replace("eighth_", "");
 
-                Bukkit.getLogger().info("2"+relationKey);
 
-                description = Main.relationships.get(relationFam.getGender()).get(relationKey);
+                description = Main.getRelation(relationKey, relationFam.getGender());
 
                 String skinURL = relationFam.getSkinURL();
                 icon = Main.getSkull(skinURL);

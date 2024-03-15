@@ -4,6 +4,10 @@ import com.google.common.collect.BiMap;
 import de.janschuri.lunaticFamily.utils.FamilyManager;
 import de.janschuri.lunaticFamily.Main;
 import de.janschuri.lunaticFamily.utils.FamilyTree;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -25,14 +29,34 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if (args.length == 0) {
+            if (!sender.hasPermission("lunaticFamily." + label)) {
+                sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
+            } else {
+                String[] subcommandsHelp = {"list", "tree", "background"};
 
+                TextComponent msg = new TextComponent(Main.getMessage(label + "_help") + "\n");
+
+                for (String subcommand : subcommandsHelp) {
+                    msg.addExtra(Main.prefix + " " + Main.getMessage(label + "_" + subcommand + "_help") + "\n");
+                }
+
+                String[] commandsHelp = {"adopt", "marry", "gender", "sibling"};
+
+                for (String commandHelp : commandsHelp) {
+                    TextComponent text = new TextComponent(Main.prefix + " " + Main.getMessage(label + "_" + commandHelp + "_help") + "\n");
+                    text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,  "/" + commandHelp + " help"));
+                    text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Main.getMessage(commandHelp + "_help")).create()));
+                    msg.addExtra(text);
+                }
+
+                sender.sendMessage(msg);
+            }
         } else {
             if (args[0].equalsIgnoreCase("gender") || Main.getAliases("gender").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                 GenderCommand genderCommand = new GenderCommand();
                 String stringLabel = "gender";
                 PluginCommand pluginCommand = plugin.getCommand(stringLabel);
                 String[] arrayArgs = new String[args.length - 1];
-
                 System.arraycopy(args, 1, arrayArgs, 0, args.length - 1);
                 assert pluginCommand != null;
                 genderCommand.onCommand(sender, pluginCommand, stringLabel, arrayArgs);
@@ -42,7 +66,6 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 String stringLabel = "adopt";
                 PluginCommand pluginCommand = plugin.getCommand(stringLabel);
                 String[] arrayArgs = new String[args.length - 1];
-
                 System.arraycopy(args, 1, arrayArgs, 0, args.length - 1);
                 assert pluginCommand != null;
                 adoptCommand.onCommand(sender, pluginCommand, stringLabel, arrayArgs);
@@ -51,7 +74,6 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 String stringLabel = "marry";
                 PluginCommand pluginCommand = plugin.getCommand(stringLabel);
                 String[] arrayArgs = new String[args.length - 1];
-
                 System.arraycopy(args, 1, arrayArgs, 0, args.length - 1);
                 assert pluginCommand != null;
                 marryCommand.onCommand(sender, pluginCommand, stringLabel, arrayArgs);
@@ -60,7 +82,6 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 String stringLabel = "sibling";
                 PluginCommand pluginCommand = plugin.getCommand(stringLabel);
                 String[] arrayArgs = new String[args.length - 1];
-
                 System.arraycopy(args, 1, arrayArgs, 0, args.length - 1);
                 assert pluginCommand != null;
                 siblingCommand.onCommand(sender, pluginCommand, stringLabel, arrayArgs);
@@ -99,7 +120,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                                     .replace("sixth_", "")
                                     .replace("seventh_", "")
                                     .replace("eighth_", "");
-                            msg = msg + Main.relationships.get(relationFam.getGender()).get(relationKey) + ": " + relationFam.getName() + "\n";
+                            msg = msg + Main.getRelation(relationKey, relationFam.getGender()) + ": " + relationFam.getName() + "\n";
                         }
                     }
                     sender.sendMessage(msg);
@@ -125,7 +146,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                                         .replace("sixth_", "")
                                         .replace("seventh_", "")
                                         .replace("eighth_", "");
-                                msg = msg + Main.relationships.get(relationFam.getGender()).get(relationKey) + ": " + relationFam.getName() + "\n";
+                                msg = msg + Main.getRelation(relationKey, relationFam.getGender()) + ": " + relationFam.getName() + "\n";
                             }
                         }
                         sender.sendMessage(msg);
@@ -142,11 +163,11 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                     if (args[0].equalsIgnoreCase("tree") || Main.getAliases("family", "tree").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                         if (!player.hasPermission("lunaticFamily.tree")) {
                             sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
-                        } else if (Main.isCrazyAdvancementAPILoaded()) {
+                        } else if (!Main.enabledCrazyAdvancementAPI) {
+                            sender.sendMessage(Main.getMessage("disabled_feature"));
+                        } else {
                             new FamilyTree(playerFam.getID());
                             sender.sendMessage(Main.getMessage("tree_loaded"));
-                        } else {
-                            sender.sendMessage(Main.getMessage("internal_error"));
                         }
                     } else if (args[0].equalsIgnoreCase("background") || Main.getAliases("family", "background").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                         if (!player.hasPermission("lunaticFamily.background")) {
@@ -157,6 +178,13 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                         } else {
                             sender.sendMessage(Main.prefix + Main.getMessage("wrong_usage"));
                         }
+                    } else if (args[0].equalsIgnoreCase("help") || Main.getAliases(label, "help").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                        String[] subcommandsHelp = {"list", "tree", "background"};
+                        String msg = Main.getMessage(label + "_help") + "\n";
+                        for (String subcommand : subcommandsHelp) {
+                            msg = msg + Main.getMessage(label + "_" + subcommand + "_help") + "\n";
+                        }
+                        sender.sendMessage(msg);
                     } else {
                         sender.sendMessage(Main.prefix + Main.getMessage("wrong_usage"));
                     }
