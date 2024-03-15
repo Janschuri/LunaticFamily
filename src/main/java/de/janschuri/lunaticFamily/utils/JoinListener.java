@@ -22,7 +22,7 @@ public class JoinListener implements Listener {
             public void run() {
                 Player player = event.getPlayer();
                 String uuid = player.getUniqueId().toString();
-                FamilyManager playerFam = new FamilyManager(uuid, plugin);
+                FamilyManager playerFam = new FamilyManager(uuid);
 
 
             }
@@ -32,9 +32,9 @@ public class JoinListener implements Listener {
             public void run() {
                 Player player = event.getPlayer();
                 String uuid = player.getUniqueId().toString();
-                FamilyManager familyManager = new FamilyManager(uuid, plugin);
-                FamilyTree familyTree = new FamilyTree(familyManager.getID(), plugin);
-                player.sendMessage(plugin.messages.get("tree_loaded"));
+                FamilyManager familyManager = new FamilyManager(uuid);
+                FamilyTree familyTree = new FamilyTree(familyManager.getID());
+                player.sendMessage(Main.getMessage("tree_loaded"));
 
             }
         }.runTaskLater(plugin, 100L);

@@ -4,6 +4,10 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
 import de.janschuri.lunaticFamily.commands.*;
 import de.janschuri.lunaticFamily.utils.Vault;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
@@ -40,44 +44,44 @@ public final class Main extends JavaPlugin {
     private static Database db;
     private static FileConfiguration config;
     private static FileConfiguration lang;
-    public String language;
-    public String prefix;
-    public String defaultGender;
-    public String defaultBackground;
-    public boolean allowSingleAdopt;
+    public static String language;
+    public static String prefix;
+    public static String defaultGender;
+    public static String defaultBackground;
+    public static boolean allowSingleAdopt;
 
-    public Map<String, String> messages = new HashMap<>();
+    private static Map<String, String> messages = new HashMap<>();
 
-    public Map<String, Map> aliases = new HashMap<>();
-    public Map<String, Double> commandWithdraws = new HashMap<>();
-    public List<String> familyList;
-    public List<String> backgrounds;
+    private static final Map<String, Map<String, List<String>>> aliases = new HashMap<>();
+    public static Map<String, Double> commandWithdraws = new HashMap<>();
+    public static List<String> familyList;
+    public static List<String> backgrounds;
 
-    public Map<String, Map<String, String>> relationships = new HashMap<>();
+    public static Map<String, Map<String, String>> relationships = new HashMap<>();
 
-    public List<String> familyCommands = new ArrayList<>();
-    public List<String> familySubcommands = new ArrayList<>();
-    public List<String> genderCommands = new ArrayList<>();
-    public List<String> genderSubcommands = new ArrayList<>();
-    public List<String> genderAdminSubcommands = new ArrayList<>();
-    public List<String> familyAdminSubcommands = new ArrayList<>();
-    public List<String> adoptCommands = new ArrayList<>();
-    public List<String> adoptSubcommands = new ArrayList<>();
-    public List<String> adoptAdminSubcommands = new ArrayList<>();
-    public List<String> marryCommands = new ArrayList<>();
-    public List<String> marrySubcommands = new ArrayList<>();
-    public List<String> marryPriestSubcommands = new ArrayList<>();
-    public List<String> marryAdminSubcommands = new ArrayList<>();
-    public List<String> siblingCommands = new ArrayList<>();
-    public List<String> siblingSubcommands = new ArrayList<>();
-    public List<String> siblingAdminSubcommands = new ArrayList<>();
+    public static List<String> familyCommands = new ArrayList<>();
+    public static List<String> familySubcommands = new ArrayList<>();
+    public static List<String> genderCommands = new ArrayList<>();
+    public static List<String> genderSubcommands = new ArrayList<>();
+    public static List<String> genderAdminSubcommands = new ArrayList<>();
+    public static List<String> familyAdminSubcommands = new ArrayList<>();
+    public static List<String> adoptCommands = new ArrayList<>();
+    public static List<String> adoptSubcommands = new ArrayList<>();
+    public static List<String> adoptAdminSubcommands = new ArrayList<>();
+    public static List<String> marryCommands = new ArrayList<>();
+    public static List<String> marrySubcommands = new ArrayList<>();
+    public static List<String> marryPriestSubcommands = new ArrayList<>();
+    public static List<String> marryAdminSubcommands = new ArrayList<>();
+    public static List<String> siblingCommands = new ArrayList<>();
+    public static List<String> siblingSubcommands = new ArrayList<>();
+    public static List<String> siblingAdminSubcommands = new ArrayList<>();
 
 
-    public BiMap<String, String> marryRequests = HashBiMap.create();
-    public BiMap<String, String> marryPriestRequests = HashBiMap.create();
-    public BiMap<String, String> marryPriest = HashBiMap.create();
-    public BiMap<String, String> adoptRequests = HashBiMap.create();
-    public BiMap<String, String> siblingRequests = HashBiMap.create();
+    public static BiMap<String, String> marryRequests = HashBiMap.create();
+    public static BiMap<String, String> marryPriestRequests = HashBiMap.create();
+    public static BiMap<String, String> marryPriest = HashBiMap.create();
+    public static BiMap<String, String> adoptRequests = HashBiMap.create();
+    public static BiMap<String, String> siblingRequests = HashBiMap.create();
 
     @Override
     public void onEnable() {
@@ -88,7 +92,7 @@ public final class Main extends JavaPlugin {
 
         isCrazyAdvancementAPILoaded();
 
-        Vault vault = new Vault(this);
+        new Vault();
 
         if (config.getBoolean("Database.MySQL.enabled")) {
             db = new MySQL(this);
@@ -107,7 +111,7 @@ public final class Main extends JavaPlugin {
         db.load();
 
         getServer().getPluginManager().registerEvents(new JoinListener(this), this);
-        getServer().getPluginManager().registerEvents(new QuitListener(this), this);
+        getServer().getPluginManager().registerEvents(new QuitListener(), this);
 
         getCommand("family").setExecutor(new FamilyCommand(this));
         getCommand("family").setTabCompleter(new FamilyCommand(this));
@@ -115,8 +119,8 @@ public final class Main extends JavaPlugin {
         getCommand("adopt").setExecutor(new AdoptCommand(this));
         getCommand("adopt").setTabCompleter(new AdoptCommand(this));
 
-        getCommand("gender").setExecutor(new GenderCommand(this));
-        getCommand("gender").setTabCompleter(new GenderCommand(this));
+        getCommand("gender").setExecutor(new GenderCommand());
+        getCommand("gender").setTabCompleter(new GenderCommand());
 
         getCommand("marry").setExecutor(new MarryCommand(this));
         getCommand("marry").setTabCompleter(new MarryCommand(this));
@@ -267,23 +271,6 @@ public final class Main extends JavaPlugin {
                 Bukkit.getLogger().info(map.toString());
                 Bukkit.getLogger().info(map.get("parent"));
 
-//                map.put("ego", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".ego")));
-//                map.put("partner", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".partner")));
-//                map.put("child", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".child")));
-//                map.put("parent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".parent")));
-//                map.put("sibling", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".sibling")));
-//                map.put("grandparent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".grandparent")));
-//                map.put("great_grandparent", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".great_grandparent")));
-//                map.put("grandchild", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".grandchild")));
-//                map.put("great_grandchild", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".great_grandchild")));
-//                map.put("aunt_or_uncle", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".aunt_or_uncle")));
-//                map.put("niece_or_nephew", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".niece_or_nephew")));
-//                map.put("cousin", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".cousin")));
-//                map.put("great_aunt_or_uncle", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".great_aunt_or_uncle")));
-//                map.put("parent_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".parent_in_law")));
-//                map.put("sibling_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".sibling_in_law")));
-//                map.put("child_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".child_in_law")));
-//                map.put("grandchild_in_law", ChatColor.translateAlternateColorCodes('&', lang.getString("family_relationships." + gender + ".grandchild_in_law")));
                 relationships.put(gender, map);
 }
     }
@@ -297,6 +284,15 @@ public final class Main extends JavaPlugin {
         return Main.db;
     }
 
+    public static String getMessage(String key) {
+
+        if (messages.containsKey(key)) {
+            return messages.get(key);
+        } else {
+            return "Message '" + key + "' not found!";
+        }
+    }
+
     public static ItemStack getSkull(String url) {
 
         PlayerProfile pProfile = getProfile(url);
@@ -308,8 +304,8 @@ public final class Main extends JavaPlugin {
         return head;
     }
 
-    public List<String> getAliases(String command, String subcommand) {
-        Map<String, List<String>> commandAliases = this.aliases.getOrDefault(command, new HashMap<>());
+    public static List<String> getAliases(String command, String subcommand) {
+        Map<String, List<String>> commandAliases = Main.aliases.getOrDefault(command, new HashMap<>());
 
         List<String> list = commandAliases.getOrDefault(subcommand, new ArrayList<>());
         if (list.isEmpty()) {
@@ -322,8 +318,8 @@ public final class Main extends JavaPlugin {
         return list;
     }
 
-    public List<String> getAliases(String command) {
-        Map<String, List<String>> commandAliases = this.aliases.getOrDefault(command, new HashMap<>());
+    public static List<String> getAliases(String command) {
+        Map<String, List<String>> commandAliases = Main.aliases.getOrDefault(command, new HashMap<>());
 
         List<String> list = commandAliases.getOrDefault("base_command", new ArrayList<>());
         if (list.isEmpty()) {
@@ -453,5 +449,34 @@ public final class Main extends JavaPlugin {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    public static TextComponent createClickableMessage(String message, String confirmHoverText, String confirmCommand, String cancelHoverText, String cancelCommand) {
+        TextComponent confirm = new TextComponent(ChatColor.GREEN + "✓");
+        confirm.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, confirmCommand));
+        confirm.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(confirmHoverText).create()));
+
+
+        TextComponent cancel = new TextComponent(ChatColor.RED +  "❌");
+        cancel.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, cancelCommand));
+        cancel.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(cancelHoverText).create()));
+
+        TextComponent prefix = new TextComponent(Main.prefix);
+        TextComponent msg = new TextComponent(message);
+
+
+        return new TextComponent(prefix, msg, confirm, cancel);
+    }
+
+    public static String getName(String name) {
+        if (Bukkit.getOfflinePlayer(name).getName() != null) {
+            return Bukkit.getOfflinePlayer(name).getName();
+        } else {
+            return name;
+        }
+    }
+
+    public static String getUUID(String name) {
+        return Bukkit.getOfflinePlayer(name).getUniqueId().toString();
     }
 }

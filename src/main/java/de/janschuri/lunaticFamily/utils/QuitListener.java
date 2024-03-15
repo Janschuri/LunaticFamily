@@ -1,57 +1,52 @@
 package de.janschuri.lunaticFamily.utils;
 
 import de.janschuri.lunaticFamily.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.UUID;
-
 public class QuitListener implements Listener {
-
-    private final Main plugin;
-
-    public QuitListener(Main plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler
     public void onPlayerJoin(PlayerQuitEvent event) {
 
         Player player = event.getPlayer();
         String uuid = player.getUniqueId().toString();
-        FamilyManager playerFam = new FamilyManager(uuid, plugin);
+        FamilyManager playerFam = new FamilyManager(uuid);
 
-        if (plugin.marryRequests.containsValue(uuid) || plugin.marryRequests.containsKey(uuid) || plugin.marryPriest.containsKey(uuid)) {
+        if (Main.marryRequests.containsValue(uuid) || Main.marryRequests.containsKey(uuid) || Main.marryPriest.containsKey(uuid)) {
 
-            if (plugin.marryPriest.containsKey(uuid)) {
+            if (Main.marryPriest.containsKey(uuid)) {
 
-                String priest = plugin.marryPriest.get(uuid);
-                Bukkit.getPlayer(UUID.fromString(priest)).chat(plugin.messages.get("player_quit").replace("%player%", playerFam.getName()) + " " + plugin.messages.get("marry_cancel"));
+                String priestUUID = Main.marryPriest.get(uuid);
+                FamilyManager priestFam = new FamilyManager(priestUUID);
+                priestFam.chat(Main.getMessage("player_quit").replace("%player%", playerFam.getName()) + " " + Main.getMessage("marry_cancel"));
             } else {
-                String partner = plugin.marryRequests.get(uuid);
-                Bukkit.getPlayer(UUID.fromString(partner)).sendMessage(plugin.messages.get("player_quit").replace("%player%", playerFam.getName()) + " " + plugin.messages.get("marry_cancel"));
+                String partnerUUID = Main.marryRequests.get(uuid);
+                FamilyManager partnerFam = new FamilyManager(partnerUUID);
+                partnerFam.sendMessage(Main.getMessage("player_quit").replace("%player%", playerFam.getName()) + " " + Main.getMessage("marry_cancel"));
             }
 
-            plugin.marryRequests.remove(uuid);
-            plugin.marryRequests.inverse().remove(uuid);
-            plugin.marryPriestRequests.remove(uuid);
-            plugin.marryPriestRequests.inverse().remove(uuid);
-            plugin.marryPriest.remove(uuid);
-            plugin.marryPriest.inverse().remove(uuid);
+            Main.marryRequests.remove(uuid);
+            Main.marryRequests.inverse().remove(uuid);
+            Main.marryPriestRequests.remove(uuid);
+            Main.marryPriestRequests.inverse().remove(uuid);
+            Main.marryPriest.remove(uuid);
+            Main.marryPriest.inverse().remove(uuid);
         }
 
-        if (plugin.adoptRequests.containsKey(uuid)) {
-            String firstParent = plugin.adoptRequests.get(uuid);
-            Bukkit.getPlayer(UUID.fromString(firstParent)).sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", playerFam.getName()) + plugin.messages.get("adopt_cancel"));
-            plugin.adoptRequests.remove(uuid);
+        if (Main.adoptRequests.containsKey(uuid)) {
+            String firstParentUUID = Main.adoptRequests.get(uuid);
+            FamilyManager firstParentFam = new FamilyManager(firstParentUUID);
+            firstParentFam.sendMessage(Main.prefix + Main.getMessage("player_offline").replace("%player%", playerFam.getName()) + Main.getMessage("adopt_cancel"));
+            Main.adoptRequests.remove(uuid);
         }
-        if (plugin.adoptRequests.containsValue(uuid)) {
-            String child = plugin.adoptRequests.inverse().get(uuid);
-            Bukkit.getPlayer(UUID.fromString(child)).sendMessage(plugin.prefix + plugin.messages.get("player_offline").replace("%player%", playerFam.getName()) + plugin.messages.get("adoptCancel"));
-            plugin.adoptRequests.inverse().remove(uuid);
+        if (Main.adoptRequests.containsValue(uuid)) {
+            String childUUID = Main.adoptRequests.inverse().get(uuid);
+            FamilyManager childFam = new FamilyManager(childUUID);
+            childFam.sendMessage(Main.prefix + Main.getMessage("player_offline").replace("%player%", playerFam.getName()) + Main.getMessage("adoptCancel"));
+            Main.adoptRequests.inverse().remove(uuid);
         }
 
 

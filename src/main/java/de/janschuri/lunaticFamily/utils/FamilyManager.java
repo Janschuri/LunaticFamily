@@ -3,7 +3,10 @@ package de.janschuri.lunaticFamily.utils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticFamily.Main;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
@@ -14,24 +17,22 @@ import java.util.UUID;
 public class FamilyManager {
 
 
-    private final Main plugin;
-    private int id;
+    private final int id;
     private final String uuid;
-    private String name;
+    private final String name;
     private final String skinURL;
-    private int partner;
-    private Timestamp marryDate;
-    private int sibling;
+    private final int partner;
+    private final Timestamp marryDate;
+    private final int sibling;
 
-    private List<Integer> parents;
-    private List<Integer> children;
+    private final List<Integer> parents;
+    private final List<Integer> children;
     private String gender;
     private String background;
     private final BiMap<String, Integer> familyList = HashBiMap.create();
 
-    public FamilyManager(int id, Main plugin) {
+    public FamilyManager(int id) {
 
-        this.plugin = plugin;
         this.id = id;
 
         uuid = Main.getDatabase().getUUID(id);
@@ -59,13 +60,13 @@ public class FamilyManager {
 
 
         if (Main.getDatabase().getGender(id) == null) {
-            gender = plugin.defaultGender;
+            gender = Main.defaultGender;
         } else {
             gender = Main.getDatabase().getGender(id);
         }
 
         if (Main.getDatabase().getBackground(uuid) == null) {
-            background = plugin.defaultBackground;
+            background = Main.defaultBackground;
         } else {
             background = Main.getDatabase().getBackground(uuid);
         }
@@ -75,9 +76,8 @@ public class FamilyManager {
 
     }
 
-    public FamilyManager(String uuid, Main plugin) {
+    public FamilyManager(String uuid) {
 
-        this.plugin = plugin;
         this.uuid = uuid;
 
         if(Main.getDatabase().getID(uuid) != 0) {
@@ -110,13 +110,13 @@ public class FamilyManager {
 
 
         if (Main.getDatabase().getGender(id) == null) {
-            gender = plugin.defaultGender;
+            gender = Main.defaultGender;
         } else {
             gender = Main.getDatabase().getGender(id);
         }
 
         if (Main.getDatabase().getBackground(uuid) == null) {
-            background = plugin.defaultBackground;
+            background = Main.defaultBackground;
         } else {
             background = Main.getDatabase().getBackground(uuid);
         }
@@ -178,7 +178,7 @@ public class FamilyManager {
 
     public FamilyManager getPartner() {
         if (this.partner != 0) {
-            return new FamilyManager(this.partner, plugin);
+            return new FamilyManager(this.partner);
         } else {
             return null;
         }
@@ -198,7 +198,7 @@ public class FamilyManager {
 
     public FamilyManager getSibling() {
         if (this.sibling != 0) {
-            return new FamilyManager(this.sibling, plugin);
+            return new FamilyManager(this.sibling);
         } else {
             return null;
         }
@@ -213,14 +213,14 @@ public class FamilyManager {
     }
 
     public boolean isChildOf (int parentID) {
-        return !children.isEmpty();
+        return parents.contains(parentID);
     }
 
     public List<FamilyManager> getParents() {
         List<FamilyManager> list = new ArrayList<>();
 
         for (int parent : this.parents) {
-            list.add(new FamilyManager(parent, plugin));
+            list.add(new FamilyManager(parent));
         }
 
         return list;
@@ -230,7 +230,7 @@ public class FamilyManager {
         List<FamilyManager> list = new ArrayList<>();
         
         for (int child : this.children) {
-            list.add(new FamilyManager(child, plugin));
+            list.add(new FamilyManager(child));
         }
 
         return list;
@@ -258,9 +258,94 @@ public class FamilyManager {
         return children.size();
     }
 
+    public OfflinePlayer getOfflinePlayer (){
+        return Bukkit.getOfflinePlayer(UUID.fromString(this.uuid));
+    }
+
+    public Player getPlayer (){
+        if (Bukkit.getPlayer(UUID.fromString(uuid)) != null) {
+            return Bukkit.getPlayer(UUID.fromString(this.uuid));
+        } else {
+            return null;
+        }
+    }
+
+    public boolean isOnline (){
+        return Bukkit.getPlayer(UUID.fromString(uuid)) != null;
+    }
+
+    public void withdrawPlayer (String... withdrawKeys) {
+        OfflinePlayer player = this.getOfflinePlayer();
+
+        double amount = 0.0;
+        for (String key : withdrawKeys) {
+            if (Main.commandWithdraws.containsKey(key)) {
+                amount += Main.commandWithdraws.get(key);
+            }
+        }
+
+        Vault.getEconomy().withdrawPlayer(player, amount);
+        if (player.getPlayer() != null) {
+            player.getPlayer().sendMessage(Main.prefix + Main.getMessage("withdraw").replace("%amount%", amount+""));
+        }
+    }
+
+    public void withdrawPlayer (String withdrawKey, double factor) {
+        OfflinePlayer player = this.getOfflinePlayer();
+        Vault.getEconomy().withdrawPlayer(player, Main.commandWithdraws.get(withdrawKey));
+        if (player.getPlayer() != null) {
+            double value = Main.commandWithdraws.get(withdrawKey)*factor;
+            player.getPlayer().sendMessage(Main.prefix + Main.getMessage("withdraw").replace("%amount%", value+""));
+        }
+    }
+
+    public boolean hasEnoughMoney(String... withdrawKeys) {
+        OfflinePlayer player = this.getOfflinePlayer();
+        double amount = 0.0;
+        for (String key : withdrawKeys) {
+            if (Main.commandWithdraws.containsKey(key)) {
+                amount += Main.commandWithdraws.get(key);
+            }
+        }
+        return (amount < Vault.getEconomy().getBalance(player));
+    }
+
+    public boolean hasEnoughMoney(String withdrawKey, double factor) {
+        OfflinePlayer player = this.getOfflinePlayer();
+        return (Main.commandWithdraws.get(withdrawKey)*factor < Vault.getEconomy().getBalance(player));
+    }
+
+    public boolean sendMessage(String message) {
+        if (this.getPlayer() != null) {
+            this.getPlayer().sendMessage(message);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean sendMessage(TextComponent message) {
+        if (this.getPlayer() != null) {
+            this.getPlayer().sendMessage(message);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean chat(String message) {
+        if (this.getPlayer() != null) {
+            this.getPlayer().chat(message);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
     public void marry(int partnerID) {
         FamilyManager playerFam = this;
-        FamilyManager partnerFam = new FamilyManager(partnerID, plugin);
+        FamilyManager partnerFam = new FamilyManager(partnerID);
         List<FamilyManager> playerChildren = playerFam.getChildren();
         List<FamilyManager> partnerChildren = partnerFam.getChildren();
 
@@ -292,7 +377,7 @@ public class FamilyManager {
 
         playerFam.deleteMarriage();
 
-        if (!plugin.allowSingleAdopt) {
+        if (!Main.allowSingleAdopt) {
             for (FamilyManager child : playerChildren) {
                 partnerFam.deleteAdoption(child.getID());
             }
@@ -302,7 +387,7 @@ public class FamilyManager {
 
     public void adopt(int childID) {
         FamilyManager playerFam = this;
-        FamilyManager childFam = new FamilyManager(childID, plugin);
+        FamilyManager childFam = new FamilyManager(childID);
         playerFam.saveAdoption(childID);
 
         if (playerFam.isMarried()) {
@@ -321,7 +406,7 @@ public class FamilyManager {
 
     public void unadopt(int childID) {
         FamilyManager playerFam = this;
-        FamilyManager childFam = new FamilyManager(childID, plugin);
+        FamilyManager childFam = new FamilyManager(childID);
         playerFam.deleteAdoption(childID);
 
         if (playerFam.isMarried()) {
@@ -354,12 +439,12 @@ public class FamilyManager {
         if (this.getPartner() != null) {
             int partner = this.getPartner().getID();
             familyList.put("partner", partner);
-            FamilyManager partnerFam = new FamilyManager(partner, plugin);
+            FamilyManager partnerFam = new FamilyManager(partner);
 
             if (partnerFam.getSibling() != null) {
                 int secondSiblingInLaw = partnerFam.getSibling().getID();
                 familyList.put("second_sibling_in_law", secondSiblingInLaw);
-                FamilyManager secondSiblingInLawFam = new FamilyManager(secondSiblingInLaw, plugin);
+                FamilyManager secondSiblingInLawFam = new FamilyManager(secondSiblingInLaw);
 
             }
 
@@ -377,7 +462,7 @@ public class FamilyManager {
         if (this.getSibling() != null) {
             int sibling = this.getSibling().getID();
             familyList.put("sibling", sibling);
-            FamilyManager siblingFam = new FamilyManager(sibling, plugin);
+            FamilyManager siblingFam = new FamilyManager(sibling);
 
             if (siblingFam.getPartner() != null) {
                 int firstSiblingInLaw = siblingFam.getPartner().getID();
@@ -398,11 +483,11 @@ public class FamilyManager {
         if (this.getParents().size() > 0) {
             int firstParent = this.getParents().get(0).getID();
             familyList.put("first_parent", firstParent);
-            FamilyManager firstParentFam = new FamilyManager(firstParent, plugin);
+            FamilyManager firstParentFam = new FamilyManager(firstParent);
             if (firstParentFam.getSibling() != null) {
                 int secondAuntOrUncle = firstParentFam.getSibling().getID();
                 familyList.put("second_aunt_or_uncle", secondAuntOrUncle);
-                FamilyManager secondAuntOrUncleFam = new FamilyManager(secondAuntOrUncle, plugin);
+                FamilyManager secondAuntOrUncleFam = new FamilyManager(secondAuntOrUncle);
                 if (secondAuntOrUncleFam.getPartner() != null) {
                     int firstAuntOrUncle = secondAuntOrUncleFam.getPartner().getID();
                     familyList.put("first_aunt_or_uncle", firstAuntOrUncle);
@@ -419,7 +504,7 @@ public class FamilyManager {
             if (firstParentFam.getParents().size() > 0) {
                 int firstGrandparent = firstParentFam.getParents().get(0).getID();
                 familyList.put("first_grandparent", firstGrandparent);
-                FamilyManager firstGrandparentFam = new FamilyManager(firstGrandparent, plugin);
+                FamilyManager firstGrandparentFam = new FamilyManager(firstGrandparent);
 
                 if (firstGrandparentFam.getSibling() != null) {
                     int firstGreatAuntOrUncle = firstGrandparentFam.getSibling().getID();
@@ -437,7 +522,7 @@ public class FamilyManager {
             if (firstParentFam.getParents().size() > 1) {
                 int secondGrandparent = firstParentFam.getParents().get(1).getID();
                 familyList.put("second_grandparent", secondGrandparent);
-                FamilyManager secondGrandparentFam = new FamilyManager(secondGrandparent, plugin);
+                FamilyManager secondGrandparentFam = new FamilyManager(secondGrandparent);
 
                 if (secondGrandparentFam.getSibling() != null) {
                     int secondGreatAuntOrUncle = secondGrandparentFam.getSibling().getID();
@@ -457,12 +542,12 @@ public class FamilyManager {
         if (this.getParents().size() > 1) {
             int secondParent = this.getParents().get(1).getID();
             familyList.put("second_parent", secondParent);
-            FamilyManager secondParentFam = new FamilyManager(secondParent, plugin);
+            FamilyManager secondParentFam = new FamilyManager(secondParent);
 
             if (secondParentFam.getSibling() != null) {
                 int thirdAuntOrUncle = secondParentFam.getSibling().getID();
                 familyList.put("third_aunt_or_uncle", thirdAuntOrUncle);
-                FamilyManager thirdAuntOrUncleFam = new FamilyManager(thirdAuntOrUncle, plugin);
+                FamilyManager thirdAuntOrUncleFam = new FamilyManager(thirdAuntOrUncle);
                 if (thirdAuntOrUncleFam.getPartner() != null) {
                     int fourthAuntOrUncle = thirdAuntOrUncleFam.getPartner().getID();
                     familyList.put("fourth_aunt_or_uncle", fourthAuntOrUncle);
@@ -479,7 +564,7 @@ public class FamilyManager {
             if (secondParentFam.getParents().size() > 0) {
                 int thirdGrandparent = secondParentFam.getParents().get(0).getID();
                 familyList.put("third_grandparent", thirdGrandparent);
-                FamilyManager thirdGrandparentFam = new FamilyManager(thirdGrandparent, plugin);
+                FamilyManager thirdGrandparentFam = new FamilyManager(thirdGrandparent);
 
                 if (thirdGrandparentFam.getSibling() != null) {
                     int thirdGreatAuntOrUncle = thirdGrandparentFam.getSibling().getID();
@@ -497,7 +582,7 @@ public class FamilyManager {
             if (secondParentFam.getParents().size() > 1) {
                 int fourthGrandparent = secondParentFam.getParents().get(1).getID();
                 familyList.put("fourth_grandparent", fourthGrandparent);
-                FamilyManager fourthGrandparentFam = new FamilyManager(fourthGrandparent, plugin);
+                FamilyManager fourthGrandparentFam = new FamilyManager(fourthGrandparent);
 
                 if (fourthGrandparentFam.getSibling() != null) {
                     int fourthGreatAuntOrUncle = fourthGrandparentFam.getSibling().getID();
@@ -517,7 +602,7 @@ public class FamilyManager {
         if (this.getChildren().size() > 0) {
             int firstChild = this.getChildren().get(0).getID();
             familyList.put("first_child", firstChild);
-            FamilyManager firstChildFam = new FamilyManager(firstChild, plugin);
+            FamilyManager firstChildFam = new FamilyManager(firstChild);
 
             if (firstChildFam.getPartner() != null) {
                 int firstChildInLaw = firstChildFam.getPartner().getID();
@@ -526,7 +611,7 @@ public class FamilyManager {
             if (firstChildFam.getChildren().size() > 0) {
                 int firstGrandchild = firstChildFam.getChildren().get(0).getID();
                 familyList.put("first_grandchild", firstGrandchild);
-                FamilyManager firstGrandchildFam = new FamilyManager(firstGrandchild, plugin);
+                FamilyManager firstGrandchildFam = new FamilyManager(firstGrandchild);
                 if (firstGrandchildFam.getPartner() != null) {
                     int firstGrandchildInLaw = firstGrandchildFam.getPartner().getID();
                     familyList.put("first_grandchild_in_law", firstGrandchildInLaw);
@@ -543,7 +628,7 @@ public class FamilyManager {
             if (firstChildFam.getChildren().size() > 1) {
                 int secondGrandchild = firstChildFam.getChildren().get(1).getID();
                 familyList.put("second_grandchild", secondGrandchild);
-                FamilyManager secondGrandchildFam = new FamilyManager(secondGrandchild, plugin);
+                FamilyManager secondGrandchildFam = new FamilyManager(secondGrandchild);
                 if (secondGrandchildFam.getPartner() != null) {
                     int secondGrandchildInLaw = secondGrandchildFam.getPartner().getID();
                     familyList.put("second_grandchild_in_law", secondGrandchildInLaw);
@@ -562,7 +647,7 @@ public class FamilyManager {
         if (this.getChildren().size() > 1) {
             int secondChild = this.getChildren().get(1).getID();
             familyList.put("second_child", secondChild);
-            FamilyManager secondChildFam = new FamilyManager(secondChild, plugin);
+            FamilyManager secondChildFam = new FamilyManager(secondChild);
 
             if (secondChildFam.getPartner() != null) {
                 int secondChildInLaw = secondChildFam.getPartner().getID();
@@ -571,7 +656,7 @@ public class FamilyManager {
             if (secondChildFam.getChildren().size() > 0) {
                 int thirdGrandchild = secondChildFam.getChildren().get(0).getID();
                 familyList.put("third_grandchild", thirdGrandchild);
-                FamilyManager thirdGrandchildFam = new FamilyManager(thirdGrandchild, plugin);
+                FamilyManager thirdGrandchildFam = new FamilyManager(thirdGrandchild);
                 if (thirdGrandchildFam.getPartner() != null) {
                     int thirdGrandchildInLaw = thirdGrandchildFam.getPartner().getID();
                     familyList.put("third_grandchild_in_law", thirdGrandchildInLaw);
@@ -588,7 +673,7 @@ public class FamilyManager {
             if (secondChildFam.getChildren().size() > 1) {
                 int fourthGrandchild = secondChildFam.getChildren().get(1).getID();
                 familyList.put("fourth_grandchild", fourthGrandchild);
-                FamilyManager fourthGrandchildFam = new FamilyManager(fourthGrandchild, plugin);
+                FamilyManager fourthGrandchildFam = new FamilyManager(fourthGrandchild);
                 if (fourthGrandchildFam.getPartner() != null) {
                     int fourthGrandchildInLaw = fourthGrandchildFam.getPartner().getID();
                     familyList.put("fourth_grandchild_in_law", fourthGrandchildInLaw);

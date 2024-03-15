@@ -17,15 +17,12 @@ import java.util.UUID;
 
 public class FamilyTree {
 
-    private final Main plugin;
-    private final FamilyManager playerFam;
 
-    private final BiMap familyList;
+    private final BiMap<String, Integer> familyList;
 
-    public FamilyTree(int id, Main plugin) {
-        this.plugin = plugin;
+    public FamilyTree(int id) {
 
-        this.playerFam = new FamilyManager(id, plugin);
+        FamilyManager playerFam = new FamilyManager(id);
         this.familyList = playerFam.getFamilyList();
 
         String uuid = playerFam.getUUID();
@@ -36,7 +33,7 @@ public class FamilyTree {
         AdvancementDisplay.AdvancementFrame frame = AdvancementDisplay.AdvancementFrame.CHALLENGE;
         AdvancementVisibility visibility = AdvancementVisibility.ALWAYS;
 
-        description = plugin.relationships.get(playerFam.getGender()).get("ego");
+        description = Main.relationships.get(playerFam.getGender()).get("ego");
 
         String skinURL = playerFam.getSkinURL();
         ItemStack icon = Main.getSkull(skinURL);
@@ -575,7 +572,7 @@ public class FamilyTree {
         if (familyList.containsKey(relation)) {
             Bukkit.getLogger().info("1"+relation);
             int id = (int) familyList.get(relation);
-            FamilyManager relationFam = new FamilyManager(id, plugin);
+            FamilyManager relationFam = new FamilyManager(id);
             title = relationFam.getName();
 
                 String relationKey = relation.replace("first_", "")
@@ -589,7 +586,7 @@ public class FamilyTree {
 
                 Bukkit.getLogger().info("2"+relationKey);
 
-                description = plugin.relationships.get(relationFam.getGender()).get(relationKey);
+                description = Main.relationships.get(relationFam.getGender()).get(relationKey);
 
                 String skinURL = relationFam.getSkinURL();
                 icon = Main.getSkull(skinURL);

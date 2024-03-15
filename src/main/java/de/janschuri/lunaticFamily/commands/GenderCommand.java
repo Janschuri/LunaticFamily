@@ -8,101 +8,95 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class GenderCommand implements CommandExecutor, TabCompleter {
 
-    private final Main plugin;
-
-    public GenderCommand(Main plugin) {
-        this.plugin = plugin;
-    }
-
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if (args.length == 0) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(plugin.prefix + plugin.messages.get("no_console_command"));
+                sender.sendMessage(Main.prefix + Main.getMessage("no_console_command"));
             } else {
                 Player player = (Player) sender;
                 String uuid = player.getUniqueId().toString();
-                FamilyManager playerFam = new FamilyManager(uuid, plugin);
+                FamilyManager playerFam = new FamilyManager(uuid);
 
                 if (playerFam.getGender().equalsIgnoreCase("fe")) {
-                    player.sendMessage(plugin.prefix + plugin.messages.get("gender_fe"));
+                    player.sendMessage(Main.prefix + Main.getMessage("gender_fe"));
                 } else if (playerFam.getGender().equalsIgnoreCase("ma")) {
-                    player.sendMessage(plugin.prefix + plugin.messages.get("gender_ma"));
+                    player.sendMessage(Main.prefix + Main.getMessage("gender_ma"));
                 }
             }
         } else {
             if (args.length == 1) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(plugin.prefix + plugin.messages.get("no_console_command"));
+                    sender.sendMessage(Main.prefix + Main.getMessage("no_console_command"));
                 } else {
                     Player player = (Player) sender;
                     String uuid = player.getUniqueId().toString();
-                    FamilyManager playerFam = new FamilyManager(uuid, plugin);
-                    if (args[0].equalsIgnoreCase("fe") || plugin.getAliases("gender", "fe").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                    FamilyManager playerFam = new FamilyManager(uuid);
+                    if (args[0].equalsIgnoreCase("fe") || Main.getAliases("gender", "fe").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                         if (playerFam.getGender().equalsIgnoreCase("fe")) {
-                            player.sendMessage(plugin.prefix + plugin.messages.get("gender_already_fe"));
+                            player.sendMessage(Main.prefix + Main.getMessage("gender_already_fe"));
                         } else {
                             playerFam.setGender("fe");
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("gender_changed_fe"));
+                            sender.sendMessage(Main.prefix + Main.getMessage("gender_changed_fe"));
                         }
-                    } else if (args[0].equalsIgnoreCase("ma") || plugin.getAliases("gender", "ma").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                    } else if (args[0].equalsIgnoreCase("ma") || Main.getAliases("gender", "ma").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                         if (playerFam.getGender().equalsIgnoreCase("ma")) {
-                            player.sendMessage(plugin.prefix + plugin.messages.get("gender_already_ma"));
+                            player.sendMessage(Main.prefix + Main.getMessage("gender_already_ma"));
                         } else {
                             playerFam.setGender("ma");
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("gender_changed_ma"));
+                            sender.sendMessage(Main.prefix + Main.getMessage("gender_changed_ma"));
                         }
                     } else {
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                        sender.sendMessage(Main.prefix + Main.getMessage("wrong_usage"));
                     }
                 }
             } else if (args.length > 2 && sender.hasPermission("lunaticFamily.admin.gender")) {
 
-                if (args[0].equalsIgnoreCase("set") || plugin.getAliases("gender", "set").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                if (args[0].equalsIgnoreCase("set") || Main.getAliases("gender", "set").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                     String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
-                    FamilyManager player1Fam = new FamilyManager(player1, plugin);
+                    FamilyManager player1Fam = new FamilyManager(player1);
 
-                    if (args[2].equalsIgnoreCase("fe") || plugin.getAliases("gender", "fe").stream().anyMatch(element -> args[2].equalsIgnoreCase(element))) {
+                    if (args[2].equalsIgnoreCase("fe") || Main.getAliases("gender", "fe").stream().anyMatch(element -> args[2].equalsIgnoreCase(element))) {
                         if (player1Fam.getGender().equalsIgnoreCase("fe")) {
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_gender_already_fe").replace("%player%", player1Fam.getName()));
+                            sender.sendMessage(Main.prefix + Main.getMessage("admin_gender_already_fe").replace("%player%", player1Fam.getName()));
                         } else {
                             player1Fam.setGender("fe");
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_gender_changed_fe").replace("%player%", player1Fam.getName()));
+                            sender.sendMessage(Main.prefix + Main.getMessage("admin_gender_changed_fe").replace("%player%", player1Fam.getName()));
                         }
-                    } else if (args[2].equalsIgnoreCase("ma") || plugin.getAliases("gender", "ma").stream().anyMatch(element -> args[2].equalsIgnoreCase(element))) {
+                    } else if (args[2].equalsIgnoreCase("ma") || Main.getAliases("gender", "ma").stream().anyMatch(element -> args[2].equalsIgnoreCase(element))) {
                         if (player1Fam.getGender().equalsIgnoreCase("ma")) {
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_gender_already_ma").replace("%player%", player1Fam.getName()));
+                            sender.sendMessage(Main.prefix + Main.getMessage("admin_gender_already_ma").replace("%player%", player1Fam.getName()));
                         } else {
                             player1Fam.setGender("ma");
-                            sender.sendMessage(plugin.prefix + plugin.messages.get("admin_gender_changed_ma").replace("%player%", player1Fam.getName()));
+                            sender.sendMessage(Main.prefix + Main.getMessage("admin_gender_changed_ma").replace("%player%", player1Fam.getName()));
                         }
                     } else {
-                        sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                        sender.sendMessage(Main.prefix + Main.getMessage("wrong_usage"));
                     }
                 } else {
-                    sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                    sender.sendMessage(Main.prefix + Main.getMessage("wrong_usage"));
                 }
             } else {
-                sender.sendMessage(plugin.prefix + plugin.messages.get("wrong_usage"));
+                sender.sendMessage(Main.prefix + Main.getMessage("wrong_usage"));
             }
         }
         return true;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String commandLabel, String[] args) {
 
-        List<String> genderSubcommands = plugin.genderSubcommands;
-        List<String> genderAdminSubcommands = plugin.genderAdminSubcommands;
+        List<String> genderSubcommands = Main.genderSubcommands;
+        List<String> genderAdminSubcommands = Main.genderAdminSubcommands;
         List<String> list = new ArrayList<>();
         if (sender instanceof Player) {
             Player player = (Player) sender;
