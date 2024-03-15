@@ -28,6 +28,7 @@ messages:
   marry_kiss_help: "&6/marry kiss&r - Kiss your partner."
   marry_gift_help: "&6/marry gift&r - Gift the item in your hand to your partner."
   marry_list_help: "&6/marry list (page)&r - List all married couples."
+  marry_backpack_help: "&6/marry backpack&r - Access your partner's backpack."
   adopt_propose_help: "&6/adopt propose <playername>&r - Propose adoption to a player."
   adopt_kickout_help: "&6/adopt kickout <playername>&r - Kick your child out of the family."
   adopt_moveout_help: "&6/adopt moveout&r - Move out from home and leave your parents."

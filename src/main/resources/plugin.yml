@@ -19,9 +19,9 @@ permissions:
     description: Use /marry Command.
   lunaticFamily.sibling:
     description: Use /marry Command.
-  lunaticFamily.tree:
+  lunaticFamily.family.tree:
     description: Use /family tree.
-  lunaticFamily.background:
+  lunaticFamily.family.background:
     description: Use /family background.
   lunaticFamily.marry.priest:
     description: Use /marry priest Command.

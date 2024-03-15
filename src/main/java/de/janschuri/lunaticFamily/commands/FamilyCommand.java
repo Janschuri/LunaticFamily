@@ -32,7 +32,13 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
             if (!sender.hasPermission("lunaticFamily." + label)) {
                 sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
             } else {
-                String[] subcommandsHelp = {"list", "tree", "background"};
+                List<String> subcommandsHelp = new ArrayList<>();
+                if (sender.hasPermission("lunaticFamily.family.tree")) {
+                    subcommandsHelp.add("tree");
+                }
+                if (sender.hasPermission("lunaticFamily.family.background")) {
+                    subcommandsHelp.add("background");
+                }
 
                 TextComponent msg = new TextComponent(Main.getMessage(label + "_help") + "\n");
 
@@ -40,11 +46,23 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                     msg.addExtra(Main.prefix + " " + Main.getMessage(label + "_" + subcommand + "_help") + "\n");
                 }
 
-                String[] commandsHelp = {"adopt", "marry", "gender", "sibling"};
+                List<String> commandsHelp = new ArrayList<>();
+                if (sender.hasPermission("lunaticFamily.adopt")) {
+                    commandsHelp.add("adopt");
+                }
+                if (sender.hasPermission("lunaticFamily.marry")) {
+                    commandsHelp.add("marry");
+                }
+                if (sender.hasPermission("lunaticFamily.gender")) {
+                    commandsHelp.add("gender");
+                }
+                if (sender.hasPermission("lunaticFamily.sibling")) {
+                    commandsHelp.add("sibling");
+                }
 
                 for (String commandHelp : commandsHelp) {
                     TextComponent text = new TextComponent(Main.prefix + " " + Main.getMessage(label + "_" + commandHelp + "_help") + "\n");
-                    text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,  "/" + commandHelp + " help"));
+                    text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + commandHelp + " help"));
                     text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Main.getMessage(commandHelp + "_help")).create()));
                     msg.addExtra(text);
                 }
@@ -161,7 +179,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 String uuid = player.getUniqueId().toString();
                 FamilyManager playerFam = new FamilyManager(uuid);
                     if (args[0].equalsIgnoreCase("tree") || Main.getAliases("family", "tree").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-                        if (!player.hasPermission("lunaticFamily.tree")) {
+                        if (!player.hasPermission("lunaticFamily.family.tree")) {
                             sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
                         } else if (!Main.enabledCrazyAdvancementAPI) {
                             sender.sendMessage(Main.getMessage("disabled_feature"));
@@ -170,7 +188,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                             sender.sendMessage(Main.getMessage("tree_loaded"));
                         }
                     } else if (args[0].equalsIgnoreCase("background") || Main.getAliases("family", "background").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-                        if (!player.hasPermission("lunaticFamily.background")) {
+                        if (!player.hasPermission("lunaticFamily.family.background")) {
                             sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
                         } else if (args.length == 2) {
                             playerFam.setBackground(args[1]);
@@ -179,12 +197,16 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                             sender.sendMessage(Main.prefix + Main.getMessage("wrong_usage"));
                         }
                     } else if (args[0].equalsIgnoreCase("help") || Main.getAliases(label, "help").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-                        String[] subcommandsHelp = {"list", "tree", "background"};
-                        String msg = Main.getMessage(label + "_help") + "\n";
-                        for (String subcommand : subcommandsHelp) {
-                            msg = msg + Main.getMessage(label + "_" + subcommand + "_help") + "\n";
+                        if (!player.hasPermission("lunaticFamily.family.tree")) {
+                            sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
+                        } else {
+                            String[] subcommandsHelp = {"list", "tree", "background"};
+                            String msg = Main.getMessage(label + "_help") + "\n";
+                            for (String subcommand : subcommandsHelp) {
+                                msg = msg + Main.getMessage(label + "_" + subcommand + "_help") + "\n";
+                            }
+                            sender.sendMessage(msg);
                         }
-                        sender.sendMessage(msg);
                     } else {
                         sender.sendMessage(Main.prefix + Main.getMessage("wrong_usage"));
                     }

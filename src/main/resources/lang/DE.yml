@@ -30,6 +30,7 @@ messages:
   marry_kiss_help: "&6/marry kiss&r - Küsse deinen Partner."
   marry_gift_help: "&6/marry gift&r - Schenke deinem Partner das Item in deiner Hand."
   marry_list_help: "&6/marry list (Seite)&r - Lass dir eine Liste alles verheiraten Paare anzeigen."
+  marry_backpack_help: "&6/marry backpack&r - Greife auf den Backpack deines Partners zu."
   adopt_help: "Adopt-Help"
   adopt_propose_help: "&6/adopt propose <Spielername>&r - Stelle einem Spieler eine Adoptionsanfrage."
   adopt_kickout_help: "&6/adopt kickout <Spielername>&r - Werfe dein Kind aus der Familie."

@@ -49,7 +49,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                         }
                     }
 
-                    if (!sender.hasPermission("lunaticFamily.admin.adopt")) {
+                    if (!sender.hasPermission("lunaticFamily.admin.adopt.set")) {
                         sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
                     } else if (args.length < 3) {
                         sender.sendMessage(Main.prefix + Main.getMessage("wrong_usage"));
@@ -92,7 +92,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                     }
                 } else if (args[0].equalsIgnoreCase("unset") || Main.getAliases("adopt", "unset").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
-                    if (!sender.hasPermission("lunaticFamily.admin.adopt")) {
+                    if (!sender.hasPermission("lunaticFamily.admin.adopt.unset")) {
                         sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
                     } else if (args.length < 2) {
                         sender.sendMessage(Main.prefix + Main.getMessage("wrong_usage"));

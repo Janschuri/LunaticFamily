@@ -34,7 +34,24 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
             if (!sender.hasPermission("lunaticFamily." + label)) {
                 sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
             } else {
-                String[] subcommandsHelp = {"propose", "priest", "list", "divorce", "kiss", "gift"};
+
+                List<String> subcommandsHelp = new ArrayList<>();
+                subcommandsHelp.add("propose");
+                subcommandsHelp.add("list");
+                subcommandsHelp.add("divorce");
+
+                if (sender.hasPermission("lunaticFamily.marry.priest")) {
+                    subcommandsHelp.add("priest");
+                }
+                if (sender.hasPermission("lunaticFamily.marry.kiss")) {
+                    subcommandsHelp.add("kiss");
+                }
+                if (sender.hasPermission("lunaticFamily.marry.gift")) {
+                    subcommandsHelp.add("gift");
+                }
+                if (sender.hasPermission("lunaticFamily.marry.backpack")) {
+                    subcommandsHelp.add("backpack");
+                }
 
                 String msg = Main.prefix + " " + Main.getMessage(label + "_help") + "\n";
 
@@ -516,7 +533,9 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                         }
                     } else if (args[0].equalsIgnoreCase("backpack") || Main.getAliases("marry", "backpack").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-                        if(!Main.enabledMinepacks) {
+                        if (!player.hasPermission("lunaticFamily.marry.backpack")) {
+                            sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
+                        } else if(!Main.enabledMinepacks) {
                             sender.sendMessage(Main.getMessage("disabled_feature"));
                         } else if (!playerFam.isMarried()) {
                             sender.sendMessage(Main.prefix + Main.getMessage("marry_backpack_no_partner"));

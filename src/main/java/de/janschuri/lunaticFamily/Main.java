@@ -160,7 +160,7 @@ public final class Main extends JavaPlugin {
 
         lang = YamlConfiguration.loadConfiguration(langfile);
         allowSingleAdopt = config.getBoolean("allow_single_adopt");
-        marryBackpackOffline = config.getBoolean("backpack_offline_access");
+        marryBackpackOffline = config.getBoolean("marry_backpack_offline_access");
         defaultBackground = "textures/block/" + config.getString("default_background") + ".png";
         defaultGender = config.getString("default_gender");
         prefix = ChatColor.translateAlternateColorCodes('&', lang.getString("prefix"));

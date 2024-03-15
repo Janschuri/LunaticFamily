@@ -25,15 +25,18 @@ public class GenderCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if (args.length == 0) {
+            if (!sender.hasPermission("lunaticFamily." + label)) {
+                sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
+            } else {
+                String[] subcommandsHelp = {"set", "info"};
 
-            String[] subcommandsHelp = {"set", "info"};
+                String msg = Main.prefix + " " + Main.getMessage(label + "_help") + "\n";
 
-            String msg = Main.prefix + " " + Main.getMessage(label + "_help") + "\n";
-
-            for (String subcommand : subcommandsHelp) {
-                msg = msg + Main.prefix + " " + Main.getMessage(label + "_" + subcommand + "_help") + "\n";
+                for (String subcommand : subcommandsHelp) {
+                    msg = msg + Main.prefix + " " + Main.getMessage(label + "_" + subcommand + "_help") + "\n";
+                }
+                sender.sendMessage(msg);
             }
-            sender.sendMessage(msg);
         } else {
             if (args[0].equalsIgnoreCase("set") || Main.getAliases("gender", "set").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                 if (args.length == 1) {
