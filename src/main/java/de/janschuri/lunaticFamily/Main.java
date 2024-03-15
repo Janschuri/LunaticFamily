@@ -1,7 +1,5 @@
 package de.janschuri.lunaticFamily;
 
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
 import de.janschuri.lunaticFamily.commands.*;
 import de.janschuri.lunaticFamily.utils.Vault;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -10,8 +8,6 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.profile.PlayerProfile;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -32,6 +28,7 @@ import org.bukkit.profile.PlayerTextures;
 import org.bukkit.util.Vector;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -134,34 +131,35 @@ public final class Main extends JavaPlugin {
     public void loadConfig(Plugin plugin) {
 
         File cfgfile = new File(plugin.getDataFolder().getAbsolutePath() + "/config.yml");
+        plugin.saveResource("defaultConfig.yml", false);
+
+        if (!cfgfile.exists()) {
+            plugin.saveResource("/config.yml", false);
+            addMissingProperties(cfgfile, "defaultConfig.yml");
+        } else {
+            addMissingProperties(cfgfile, "defaultConfig.yml");
+        }
+
         config = YamlConfiguration.loadConfiguration(cfgfile);
 
-        File langfileEN = new File(plugin.getDataFolder().getAbsolutePath() + "/langEN.yml");
-        File langfileDE = new File(plugin.getDataFolder().getAbsolutePath() + "/langDE.yml");
 
-
-        if (!langfileEN.exists()) {
-            langfileEN.getParentFile().mkdirs();
-            plugin.saveResource("langEN.yml", false);
-        }
-
-        if (!langfileDE.exists()) {
-            langfileDE.getParentFile().mkdirs();
-            plugin.saveResource("langDE.yml", false);
-        }
+        plugin.saveResource("lang/EN.yml", false);
+        plugin.saveResource("lang/DE.yml", false);
 
         language = config.getString("language");
+
+        File langfile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang.yml");
+
+        if (!langfile.exists()) {
+            plugin.saveResource("lang.yml", false);
+            addMissingProperties(langfile, "/lang/" + language + ".yml");
+        } else {
+            addMissingProperties(langfile, "/lang/" + language + ".yml");
+        }
+
+        lang = YamlConfiguration.loadConfiguration(langfile);
+
         allowSingleAdopt = config.getBoolean("allow_single_adopt");
-
-        if (language.equalsIgnoreCase("EN"))
-        {
-            lang = YamlConfiguration.loadConfiguration(langfileEN);
-        }
-
-        if (language.equalsIgnoreCase("DE"))
-        {
-            lang = YamlConfiguration.loadConfiguration(langfileDE);
-        }
 
         defaultBackground = "textures/block/" + config.getString("default_background") + ".png";
         defaultGender = config.getString("default_gender");
@@ -290,6 +288,29 @@ public final class Main extends JavaPlugin {
             return messages.get(key);
         } else {
             return "Message '" + key + "' not found!";
+        }
+    }
+    private void addMissingProperties(File file, String filePath) {
+        Bukkit.getLogger().info("test");
+        YamlConfiguration langConfig = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration defaultLangConfig = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), filePath)); // or "DE.yml" for German
+
+        Bukkit.getLogger().info(String.valueOf(file.getName()));
+
+        // Check each default property
+        for (String key : defaultLangConfig.getKeys(true)) {
+            // If the property is missing in the loaded language file, add it with default value
+            if (!langConfig.contains(key)) {
+                langConfig.set(key, defaultLangConfig.get(key));
+                Bukkit.getLogger().info(key);
+            }
+        }
+
+        // Save the modified language file
+        try {
+            langConfig.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
