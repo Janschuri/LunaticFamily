@@ -25,12 +25,13 @@ messages:
   family_background_set: "Hintergrund wurde neu gesetzt."
   tree_loaded: "Dein Familienstammbaum wurde neu geladen."
   #gender command
-  gender_changed_fe: "Du hast dein Geschlecht zu weiblich geändert."
-  gender_changed_ma: "Du hast dein Geschlecht zu männlich geändert."
-  gender_already_fe: "Dein Geschlecht ist bereits weiblich."
-  gender_already_ma: "Dein Geschlecht ist bereits männlich."
-  gender_fe: "Dein Geschlecht ist weiblich."
-  gender_ma: "Dein Geschlecht ist männlich."
+  gender_set: "Wähle dein Geschlecht: "
+  gender_set_hover: "Setze dein Geschlecht auf %gender%."
+  gender_changed: "Du hast dein Geschlecht zu %gender% geändert."
+  gender_already: "Dein Geschlecht ist bereits %gender%."
+  gender_not_exist: "Dieses Geschlecht existiert nicht."
+  gender_info: "Dein Geschlecht ist %gender%."
+  gender_info_others: "%player%'s Geschlecht ist %gender%."
   #marry command
   marry_yes: "Ja, ich will!"
   marry_no: "Nein, ich will nicht."
@@ -133,10 +134,8 @@ messages:
   sibling_unsibling_complete: "Du hast dein Geschwisterkind abgestochen."
   #admin commands
   #admin gender commands
-  admin_gender_changed_fe: "Du hast das Geschlecht von %player% zu weiblich geändert."
-  admin_gender_changed_ma: "Du hast das Geschlecht von %player% zu männlich geändert."
-  admin_gender_already_fe: "Das Geschlecht von %player% ist bereits weiblich."
-  admin_gender_already_ma: "Das Geschlecht von %player% ist bereits männlich."
+  admin_gender_changed: "Du hast das Geschlecht von %player% zu %gender% geändert."
+  admin_gender_already: "Das Geschlecht von %player% ist bereits %gender%."
   #admin marry commands
   admin_marry_divorced: "Du hast die Ehe von %player1% und %player2% geschieden."
   admin_marry_set_same_player: "Du kannst niemanden mit sich selbst verheiraten!"
@@ -167,6 +166,9 @@ messages:
   admin_adopt_unset_not_adopted: "%player% ist nicht adoptiert."
   admin_adopt_unset: "Du hast die Adoption von %child% durch %parent1% und %parent2% aufgelöst."
   admin_adopt_unset_by_single: "Du hast die Adoption von %child% durch %parent% aufgelöst."
+genders:
+  fe: "weiblich"
+  ma: "männlich"
 family_relationships:
   fe:
     ego: "&6du"
@@ -219,14 +221,10 @@ aliases:
   gender:
     base_command:
       - geschlecht
-    fe:
-      - w
-      - weiblich
-    ma:
-      - m
-      - männlich
     set:
       - set
+    info:
+      - info
   marry:
     base_command:
       - ehe

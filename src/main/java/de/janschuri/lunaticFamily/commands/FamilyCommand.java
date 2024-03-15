@@ -140,15 +140,18 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 String uuid = player.getUniqueId().toString();
                 FamilyManager playerFam = new FamilyManager(uuid);
                     if (args[0].equalsIgnoreCase("tree") || Main.getAliases("family", "tree").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-
-                        if (Main.isCrazyAdvancementAPILoaded()) {
+                        if (!player.hasPermission("lunaticFamily.tree")) {
+                            sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
+                        } else if (Main.isCrazyAdvancementAPILoaded()) {
                             new FamilyTree(playerFam.getID());
                             sender.sendMessage(Main.getMessage("tree_loaded"));
                         } else {
                             sender.sendMessage(Main.getMessage("internal_error"));
                         }
                     } else if (args[0].equalsIgnoreCase("background") || Main.getAliases("family", "background").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-                        if (args.length == 2) {
+                        if (!player.hasPermission("lunaticFamily.background")) {
+                            sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
+                        } else if (args.length == 2) {
                             playerFam.setBackground(args[1]);
                             sender.sendMessage(Main.prefix + Main.getMessage("family_background_set"));
                         } else {

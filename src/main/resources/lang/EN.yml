@@ -25,12 +25,13 @@ messages:
   family_background_set: "Background has been reset."
   tree_loaded: "Your family tree has been reloaded."
   #gender command
-  gender_changed_fe: "You have changed your gender to female."
-  gender_changed_ma: "You have changed your gender to male."
-  gender_already_fe: "Your gender is already female."
-  gender_already_ma: "Your gender is already male."
-  gender_fe: "Your gender is female."
-  gender_ma: "Your gender is male."
+  gender_set: "Choose your gender: "
+  gender_set_hover: "Set your gender to %gender%."
+  gender_changed: "You have changed your gender to %gender%."
+  gender_already: "Your gender is already %gender%."
+  gender_not_exist: "This gender does not exist."
+  gender_info: "Your gender is %gender%."
+  gender_info_others: "%player%'s gender is %gender%."
   #marry command
   marry_yes: "Yes, i do!"
   marry_no: "No, i don't want to."
@@ -133,10 +134,8 @@ messages:
   sibling_unsibling_complete: "You have unsiblinged your sibling."
   #admin commands
   #admin gender commands
-  admin_gender_changed_fe: "You have changed %player%'s gender to female."
-  admin_gender_changed_ma: "You have changed %player%'s gender to male."
-  admin_gender_already_fe: "%player%'s gender is already female."
-  admin_gender_already_ma: "%player%'s gender is already male."
+  admin_gender_changed: "You have changed %player%'s gender to %gender%."
+  admin_gender_already: "%player%'s gender is already %gender%."
   #admin marry commands
   admin_marry_divorced: "You have divorced the marriage between %player1% and %player2%."
   admin_marry_set_same_player: "You cannot marry someone to themselves!"
@@ -167,6 +166,9 @@ messages:
   admin_adopt_unset_not_adopted: "%player% is not adopted."
   admin_adopt_unset: "You have dissolved the adoption of %child% by %parent1% and %parent2%."
   admin_adopt_unset_by_single: "You have dissolved the adoption of %child% by %parent%."
+genders:
+  fe: "feminine"
+  ma: "masculine"
 family_relationships:
   egoFe: "&6you"
   egoMa: "&6you"
@@ -217,14 +219,10 @@ aliases:
   gender:
     base_command:
       - gender
-    fe:
-      - fe
-      - feminine
-    ma:
-      - ma
-      - masculine
     set:
       - set
+    info:
+      - info
   marry:
     base_command:
       - marry

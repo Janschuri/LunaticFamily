@@ -48,11 +48,12 @@ public final class Main extends JavaPlugin {
     public static boolean allowSingleAdopt;
 
     private static Map<String, String> messages = new HashMap<>();
-
+    private static Map<String, String> genderLang = new HashMap<>();
     private static final Map<String, Map<String, List<String>>> aliases = new HashMap<>();
     public static Map<String, Double> commandWithdraws = new HashMap<>();
     public static List<String> familyList;
     public static List<String> backgrounds;
+    public static List<String> genders = new ArrayList<>();
 
     public static Map<String, Map<String, String>> relationships = new HashMap<>();
 
@@ -131,7 +132,7 @@ public final class Main extends JavaPlugin {
     public void loadConfig(Plugin plugin) {
 
         File cfgfile = new File(plugin.getDataFolder().getAbsolutePath() + "/config.yml");
-        plugin.saveResource("defaultConfig.yml", false);
+        plugin.saveResource("defaultConfig.yml", true);
 
         if (!cfgfile.exists()) {
             plugin.saveResource("/config.yml", false);
@@ -143,8 +144,8 @@ public final class Main extends JavaPlugin {
         config = YamlConfiguration.loadConfiguration(cfgfile);
 
 
-        plugin.saveResource("lang/EN.yml", false);
-        plugin.saveResource("lang/DE.yml", false);
+        plugin.saveResource("lang/EN.yml", true);
+        plugin.saveResource("lang/DE.yml", true);
 
         language = config.getString("language");
 
@@ -188,9 +189,8 @@ public final class Main extends JavaPlugin {
         familyAdminSubcommands.addAll(getAliases("family", "reload"));
 
         genderCommands = getAliases("gender");
-        genderSubcommands.addAll(getAliases("gender", "fe"));
-        genderSubcommands.addAll(getAliases("gender", "ma"));
-        genderAdminSubcommands.addAll(getAliases("gender", "set"));
+        genderSubcommands.addAll(getAliases("gender", "info"));
+        genderSubcommands.addAll(getAliases("gender", "set"));
 
         marryCommands = getAliases("marry");
         marrySubcommands.addAll(getAliases("marry", "propose"));
@@ -248,12 +248,22 @@ public final class Main extends JavaPlugin {
             getLogger().warning("Could not find 'command_withdraw' section in config.yml");
         }
 
+        //genders
+        ConfigurationSection gendersSection = lang.getConfigurationSection("genders");
+        if (gendersSection != null) {
+            for (String key : gendersSection.getKeys(false)) {
+                genderLang.put(key, ChatColor.translateAlternateColorCodes('&', gendersSection.getString(key, key)));
+            }
+        } else {
+            getLogger().warning("Could not find 'genders' section in lang.yml");
+        }
+
         familyList = Objects.requireNonNull(config.getStringList("family_list"));
         backgrounds = Objects.requireNonNull(config.getStringList("backgrounds"));
 
         //family relationships
         ConfigurationSection familyRelationships = lang.getConfigurationSection("family_relationships");
-        Set<String> genders = familyRelationships.getKeys(false);
+        genders = new ArrayList<>(familyRelationships.getKeys(false));
 
             for (String gender : genders) {
                 Map<String, String> map = new HashMap<>();
@@ -284,12 +294,21 @@ public final class Main extends JavaPlugin {
 
     public static String getMessage(String key) {
 
-        if (messages.containsKey(key)) {
+        if (messages.containsKey(key.toLowerCase())) {
             return messages.get(key);
         } else {
-            return "Message '" + key + "' not found!";
+            return "Message '" + key.toLowerCase() + "' not found!";
         }
     }
+    public static String getGenderLang(String key) {
+
+        if (genderLang.containsKey(key)) {
+            return genderLang.get(key.toLowerCase());
+        } else {
+            return "undefined";
+        }
+    }
+
     private void addMissingProperties(File file, String filePath) {
         Bukkit.getLogger().info("test");
         YamlConfiguration langConfig = YamlConfiguration.loadConfiguration(file);

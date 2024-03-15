@@ -17,18 +17,26 @@ permissions:
     description: Use /adopt Command.
   lunaticFamily.marry:
     description: Use /marry Command.
+  lunaticFamily.sibling:
+    description: Use /marry Command.
+  lunaticFamily.tree:
+    description: Use /family tree.
+  lunaticFamily.background:
+    description: Use /family background.
   lunaticFamily.marry.priest:
     description: Use /marry priest Command.
   lunaticFamily.family.list:
     description: List own family.
   lunaticFamily.family.list.others:
     description: List others family.
-  lunaticFamily.admin.marry:
-    description: Set and unset Marriage by command.
-  lunaticFamily.admin.reload:
-    description: Reload Plugin Config.
   lunaticFamily.admin.adopt:
-    description: Set and unset Adoption by command.
+    description: Set and unset adoption by command.
+  lunaticFamily.admin.marry:
+    description: Set and unset marriage by command.
+  lunaticFamily.admin.sibling:
+      description: Set and unset siblinghood by command.
+lunaticFamily.admin.gender:
+      description: Set genders of players by command.
 api-version: 1.20
 softdepend:
   - CrazyAdvancementAPI
