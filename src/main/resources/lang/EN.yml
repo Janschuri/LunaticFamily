@@ -75,6 +75,8 @@ messages:
   marry_priest_self_request: "You cannot marry yourself!"
   marry_priest_open_request: "%player% already has an open proposal."
   marry_priest_complete: "You are married! You may now kiss!"
+  marry_priest_request_expired_priest: "The wedding between %player1% and %player2% has been canceled."
+  marry_priest_request_expired_player: "Your wedding with %player% has been canceled."
   marry_accept_open_request_partner: "You must wait for your future partner's response!"
   marry_accept_no_request: "You have no marriage proposal."
   marry_accept_too_many_children: "%player1% and %player2% have more than 2 children together. %player1% and %player2% must remove %amount% children before they can marry."
@@ -252,6 +254,8 @@ aliases:
     base_command:
       - marry
     propose:
+      - propose
+    priest:
       - propose
     accept:
       - accept

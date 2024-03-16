@@ -23,6 +23,7 @@ public class FamilyManager {
     private final String skinURL;
     private final int partner;
     private final Timestamp marryDate;
+    private final int priest;
     private final int sibling;
 
     private final List<Integer> parents;
@@ -39,6 +40,7 @@ public class FamilyManager {
 
         partner = Main.getDatabase().getPartner(id);
         marryDate = Main.getDatabase().getMarryDate(id);
+        priest = Main.getDatabase().getPriest(id);
         sibling = Main.getDatabase().getSibling(id);
         parents = Main.getDatabase().getParents(id);
         children = Main.getDatabase().getChilds(id);
@@ -89,6 +91,7 @@ public class FamilyManager {
 
         partner = Main.getDatabase().getPartner(id);
         marryDate = Main.getDatabase().getMarryDate(id);
+        priest = Main.getDatabase().getPriest(id);
         sibling = Main.getDatabase().getSibling(id);
         parents = Main.getDatabase().getParents(id);
         children = Main.getDatabase().getChilds(id);
@@ -153,6 +156,9 @@ public class FamilyManager {
     private void saveMarriage(int partnerID) {
         Main.getDatabase().saveMarriage(this.id, partnerID);
     }
+    private void saveMarriage(int partnerID, int priest) {
+        Main.getDatabase().saveMarriage(this.id, partnerID, priest);
+    }
 
     private void deleteMarriage() {
         Main.getDatabase().deleteMarriage(this.id);
@@ -194,7 +200,13 @@ public class FamilyManager {
 
         return formatter.format(this.marryDate.toLocalDateTime());
     }
-
+    public FamilyManager getPriest() {
+        if (this.priest != 0) {
+            return new FamilyManager(this.priest);
+        } else {
+            return null;
+        }
+    }
 
     public FamilyManager getSibling() {
         if (this.sibling != 0) {
@@ -275,44 +287,63 @@ public class FamilyManager {
     }
 
     public void withdrawPlayer (String... withdrawKeys) {
-        OfflinePlayer player = this.getOfflinePlayer();
+        if(Main.enabledVault) {
+            OfflinePlayer player = this.getOfflinePlayer();
 
-        double amount = 0.0;
-        for (String key : withdrawKeys) {
-            if (Main.commandWithdraws.containsKey(key)) {
-                amount += Main.commandWithdraws.get(key);
+            double amount = 0.0;
+            for (String key : withdrawKeys) {
+                if (Main.commandWithdraws.containsKey(key)) {
+                    amount += Main.commandWithdraws.get(key);
+                }
             }
-        }
-
-        Vault.getEconomy().withdrawPlayer(player, amount);
-        if (player.getPlayer() != null) {
-            player.getPlayer().sendMessage(Main.prefix + Main.getMessage("withdraw").replace("%amount%", amount+""));
+            if (amount > 0) {
+                Vault.getEconomy().withdrawPlayer(player, amount);
+                if (player.getPlayer() != null) {
+                    player.getPlayer().sendMessage(Main.prefix + Main.getMessage("withdraw").replace("%amount%", amount + ""));
+                }
+            }
         }
     }
 
     public void withdrawPlayer (String withdrawKey, double factor) {
-        OfflinePlayer player = this.getOfflinePlayer();
-        Vault.getEconomy().withdrawPlayer(player, Main.commandWithdraws.get(withdrawKey));
-        if (player.getPlayer() != null) {
-            double value = Main.commandWithdraws.get(withdrawKey)*factor;
-            player.getPlayer().sendMessage(Main.prefix + Main.getMessage("withdraw").replace("%amount%", value+""));
+        if(Main.enabledVault) {
+            OfflinePlayer player = this.getOfflinePlayer();
+
+            double amount = 0.0;
+            amount += Main.commandWithdraws.get(withdrawKey) * factor;
+
+
+            if (amount > 0) {
+                Vault.getEconomy().withdrawPlayer(player, amount);
+                if (player.getPlayer() != null) {
+                    player.getPlayer().sendMessage(Main.prefix + Main.getMessage("withdraw").replace("%amount%", amount + ""));
+                }
+            }
         }
     }
 
     public boolean hasEnoughMoney(String... withdrawKeys) {
-        OfflinePlayer player = this.getOfflinePlayer();
-        double amount = 0.0;
-        for (String key : withdrawKeys) {
-            if (Main.commandWithdraws.containsKey(key)) {
-                amount += Main.commandWithdraws.get(key);
+        if(Main.enabledVault) {
+            OfflinePlayer player = this.getOfflinePlayer();
+            double amount = 0.0;
+            for (String key : withdrawKeys) {
+                if (Main.commandWithdraws.containsKey(key)) {
+                    amount += Main.commandWithdraws.get(key);
+                }
             }
+            return (amount < Vault.getEconomy().getBalance(player));
+        } else {
+            return true;
         }
-        return (amount < Vault.getEconomy().getBalance(player));
     }
 
     public boolean hasEnoughMoney(String withdrawKey, double factor) {
-        OfflinePlayer player = this.getOfflinePlayer();
-        return (Main.commandWithdraws.get(withdrawKey)*factor < Vault.getEconomy().getBalance(player));
+        if(Main.enabledVault) {
+            OfflinePlayer player = this.getOfflinePlayer();
+            return (Main.commandWithdraws.get(withdrawKey) * factor < Vault.getEconomy().getBalance(player));
+        } else {
+            return true;
+        }
     }
 
     public boolean sendMessage(String message) {
@@ -362,6 +393,29 @@ public class FamilyManager {
         }
 
         playerFam.saveMarriage(partnerID);
+
+
+    }
+
+    public void marry(int partnerID, int priest) {
+        FamilyManager playerFam = this;
+        FamilyManager partnerFam = new FamilyManager(partnerID);
+        List<FamilyManager> playerChildren = playerFam.getChildren();
+        List<FamilyManager> partnerChildren = partnerFam.getChildren();
+
+        for (FamilyManager child : playerChildren) {
+            partnerFam.saveAdoption(child.getID());
+        }
+        for (FamilyManager child : partnerChildren) {
+            playerFam.saveAdoption(child.getID());
+        }
+
+        if (playerChildren.size() == 1 && partnerChildren.size() == 1) {
+            FamilyManager childFam = playerChildren.get(0);
+            childFam.saveSiblinghood(partnerChildren.get(0).getID());
+        }
+
+        playerFam.saveMarriage(partnerID, priest);
 
 
     }

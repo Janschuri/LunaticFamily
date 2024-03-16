@@ -9,6 +9,7 @@ Database:
   SQLite:
     Filename:
 default_gender: "fe"
+use_vault: true
 command_withdraws:
   marry_proposing_player: 10.0
   marry_proposed_player: 10.0
@@ -34,9 +35,12 @@ backgrounds:
   - "pink_wool"
   - "diamond_block"
   - "gold_block"
+  - ""
 allow_single_adopt: true
 language: "DE"
+use_minepacks: true
 marry_backpack_offline_access: true
+use_crazy_advancement_api: true
 family_list:
   - partner
   - sibling

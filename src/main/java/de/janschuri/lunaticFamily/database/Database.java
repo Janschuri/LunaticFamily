@@ -269,7 +269,7 @@ public abstract class Database {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            conn = getSQLConnection(); // Assuming getSQLConnection() returns a valid Connection object
+            conn = getSQLConnection();
             int offset = (page - 1) * pageSize;
             ps = conn.prepareStatement("SELECT player1ID FROM " + marriages + " LIMIT ? OFFSET ?;");
             ps.setInt(1, pageSize);
@@ -294,6 +294,41 @@ public abstract class Database {
             }
         }
         return marryList;
+    }
+
+    public int getPriest(int playerID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT player1ID, player2ID, priest FROM " + marriages + " WHERE player1ID = ? OR player2ID = ?");
+            ps.setInt(1, playerID);
+            ps.setInt(2, playerID);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                int player1 = rs.getInt("player1ID");
+                int player2 = rs.getInt("player2ID");
+                int priest = rs.getInt("priest");
+                if(player1 == playerID || player2 == playerID) {
+                    return priest;
+                }
+            }
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+        return 0;
     }
     public String getGender(int id) {
         Connection conn = null;
@@ -489,6 +524,31 @@ public abstract class Database {
             ps = conn.prepareStatement("REPLACE INTO `" + marriages + "` (player1ID, player2ID) VALUES(?,?)");
             ps.setInt(1, player1ID);
             ps.setInt(2, player2ID);
+            ps.executeUpdate();
+            return;
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+    }
+
+    public void saveMarriage(int player1ID, int player2ID, int priest) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("REPLACE INTO `" + marriages + "` (player1ID, player2ID, priest) VALUES(?,?,?)");
+            ps.setInt(1, player1ID);
+            ps.setInt(2, player2ID);
+            ps.setInt(3, priest);
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {

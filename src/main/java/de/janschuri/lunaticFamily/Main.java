@@ -203,6 +203,7 @@ public final class Main extends JavaPlugin {
         marrySubcommands.addAll(getAliases("marry", "gift"));
         marrySubcommands.addAll(getAliases("marry", "backpack"));
         marrySubcommands.addAll(getAliases("marry", "help"));
+        marryPriestSubcommands.addAll(getAliases("marry", "priest"));
         marryAdminSubcommands.addAll(getAliases("marry", "set"));
         marryAdminSubcommands.addAll(getAliases("marry", "unset"));
 
@@ -451,6 +452,7 @@ public final class Main extends JavaPlugin {
             enabledCrazyAdvancementAPI = true;
         } catch(ClassNotFoundException e) {
             Bukkit.getLogger().warning("Could not find CrazyAdvancementsAPI.");
+            enabledVault = false;
         }
 
         try {
@@ -458,6 +460,7 @@ public final class Main extends JavaPlugin {
             enabledVault = true;
         } catch(ClassNotFoundException e) {
             Bukkit.getLogger().warning("Could not find Vault.");
+            enabledVault = false;
         }
 
         try {
@@ -465,6 +468,7 @@ public final class Main extends JavaPlugin {
             enabledMinepacks = true;
         } catch(ClassNotFoundException e) {
             Bukkit.getLogger().warning("Could not find Minepacks.");
+            enabledMinepacks = false;
         }
 
 

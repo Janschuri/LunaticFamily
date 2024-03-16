@@ -33,9 +33,11 @@ public class SQLite extends Database{
             "`id` INTEGER PRIMARY KEY," +
             "`player1ID` INT," +
             "`player2ID` INT," +
+            "`priest` INT NULL," +
             "`date` DATETIME DEFAULT CURRENT_TIMESTAMP," +
             "FOREIGN KEY (`player1ID`) REFERENCES playerData(`id`) ON DELETE CASCADE," +
-            "FOREIGN KEY (`player2ID`) REFERENCES playerData(`id`) ON DELETE CASCADE" +
+            "FOREIGN KEY (`player2ID`) REFERENCES playerData(`id`) ON DELETE CASCADE," +
+            "FOREIGN KEY (`priest`) REFERENCES playerData(`id`) ON DELETE SET NULL" +
             ")";
 
     public String SQLiteCreateAdoptionsTable = "CREATE TABLE IF NOT EXISTS adoptions (" +

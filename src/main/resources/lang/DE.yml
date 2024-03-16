@@ -79,6 +79,8 @@ messages:
   marry_priest_self_request: "Du kannst dich nicht selbst verheiraten!"
   marry_priest_open_request: "%player% hat bereits einen offenen Antrag."
   marry_priest_complete: "Ihr seid verheiratet! Ihr dürft euch jetzt küssen!"
+  marry_priest_request_expired_priest: "Die Hochzeit von %player1% und %player2% wurde abgebrochen."
+  marry_priest_request_expired_player: "Deine Hochzeit mit %player% wurde abgebrochen."
   marry_accept_open_request_partner: "Du musst auf die Antwort deines zukünftigen Partners warten!"
   marry_accept_no_request: "Du hast keine Heiratsanfrage."
   marry_accept_too_many_children: "%player1% und %player2% haben zusammen mehr als 2 Kinder. %player1% und %player2% müssen erst %amount% Kinder entfernen, damit sie verheiratet werden können."
@@ -260,6 +262,8 @@ aliases:
     base_command:
       - marry
     propose:
+      - propose
+    priest:
       - propose
     accept:
       - accept

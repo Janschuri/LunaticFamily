@@ -73,9 +73,11 @@ public class MySQL extends Database {
             "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
             "`player1ID` INT," +
             "`player2ID` INT," +
+            "`priest` INT NULL," +
             "`date` DATETIME DEFAULT CURRENT_TIMESTAMP," +
             "FOREIGN KEY (`player1ID`) REFERENCES playerData(`id`) ON DELETE CASCADE," +
-            "FOREIGN KEY (`player2ID`) REFERENCES playerData(`id`) ON DELETE CASCADE" +
+            "FOREIGN KEY (`player2ID`) REFERENCES playerData(`id`) ON DELETE CASCADE," +
+            "FOREIGN KEY (`priest`) REFERENCES playerData(`id`) ON DELETE SET NULL" +
             ") AUTO_INCREMENT=1;";
 
     String MySQLCreateAdoptionsTable = "CREATE TABLE IF NOT EXISTS adoptions (" +

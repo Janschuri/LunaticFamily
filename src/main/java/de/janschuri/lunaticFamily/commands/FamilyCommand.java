@@ -182,7 +182,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                         if (!player.hasPermission("lunaticFamily.family.tree")) {
                             sender.sendMessage(Main.prefix + Main.getMessage("no_permission"));
                         } else if (!Main.enabledCrazyAdvancementAPI) {
-                            sender.sendMessage(Main.getMessage("disabled_feature"));
+                            sender.sendMessage(Main.prefix + Main.getMessage("disabled_feature"));
                         } else {
                             new FamilyTree(playerFam.getID());
                             sender.sendMessage(Main.getMessage("tree_loaded"));
