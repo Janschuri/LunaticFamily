@@ -1,6 +1,6 @@
 name: Family
 version: '${project.version}'
-main: de.janschuri.lunaticFamily.Main
+main: de.janschuri.lunaticFamily.LunaticFamily
 commands:
   family:
     description: Get information about your family.

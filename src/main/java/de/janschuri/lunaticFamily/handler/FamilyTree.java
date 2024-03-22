@@ -1,7 +1,7 @@
-package de.janschuri.lunaticFamily.utils;
+package de.janschuri.lunaticFamily.handler;
 
 import com.google.common.collect.BiMap;
-import de.janschuri.lunaticFamily.Main;
+import de.janschuri.lunaticFamily.LunaticFamily;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
 import eu.endercentral.crazy_advancements.advancement.AdvancementDisplay;
@@ -22,7 +22,7 @@ public class FamilyTree {
 
     public FamilyTree(int id) {
 
-        FamilyManager playerFam = new FamilyManager(id);
+        FamilyPlayer playerFam = new FamilyPlayer(id);
         this.familyList = playerFam.getFamilyList();
 
         String uuid = playerFam.getUUID();
@@ -33,10 +33,10 @@ public class FamilyTree {
         AdvancementDisplay.AdvancementFrame frame = AdvancementDisplay.AdvancementFrame.CHALLENGE;
         AdvancementVisibility visibility = AdvancementVisibility.ALWAYS;
 
-        description = Main.getRelation("ego", playerFam.getGender());
+        description = LunaticFamily.getRelation("ego", playerFam.getGender());
 
         String skinURL = playerFam.getSkinURL();
-        ItemStack icon = Main.getSkull(skinURL);
+        ItemStack icon = LunaticFamily.getSkull(skinURL);
         String background = playerFam.getBackground();
 
 
@@ -571,7 +571,7 @@ public class FamilyTree {
 
         if (familyList.containsKey(relation)) {
             int id = (int) familyList.get(relation);
-            FamilyManager relationFam = new FamilyManager(id);
+            FamilyPlayer relationFam = new FamilyPlayer(id);
             title = relationFam.getName();
 
                 String relationKey = relation.replace("first_", "")
@@ -584,10 +584,10 @@ public class FamilyTree {
                         .replace("eighth_", "");
 
 
-                description = Main.getRelation(relationKey, relationFam.getGender());
+                description = LunaticFamily.getRelation(relationKey, relationFam.getGender());
 
                 String skinURL = relationFam.getSkinURL();
-                icon = Main.getSkull(skinURL);
+                icon = LunaticFamily.getSkull(skinURL);
 
 
             AdvancementDisplay display = new AdvancementDisplay(icon, title, description, frame, visibility);

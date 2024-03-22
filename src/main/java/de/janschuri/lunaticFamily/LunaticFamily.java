@@ -1,7 +1,7 @@
 package de.janschuri.lunaticFamily;
 
 import de.janschuri.lunaticFamily.commands.*;
-import de.janschuri.lunaticFamily.utils.Vault;
+import de.janschuri.lunaticFamily.utils.external.Vault;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -14,8 +14,8 @@ import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.database.MySQL;
 import de.janschuri.lunaticFamily.database.SQLite;
-import de.janschuri.lunaticFamily.utils.JoinListener;
-import de.janschuri.lunaticFamily.utils.QuitListener;
+import de.janschuri.lunaticFamily.listener.JoinListener;
+import de.janschuri.lunaticFamily.listener.QuitListener;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -36,7 +36,7 @@ import java.util.*;
 import java.util.logging.Level;
 
 
-public final class Main extends JavaPlugin {
+public final class LunaticFamily extends JavaPlugin {
     private static Database db;
     private static FileConfiguration config;
     private static FileConfiguration lang;
@@ -101,8 +101,7 @@ public final class Main extends JavaPlugin {
                 Bukkit.getLogger().info("Falling back to SQLite due to initialization error");
                 db = new SQLite(this);
             }
-        }
-        else {
+        } else {
             db = new SQLite(this);
         }
 
@@ -270,19 +269,19 @@ public final class Main extends JavaPlugin {
         ConfigurationSection familyRelationships = lang.getConfigurationSection("family_relationships");
         genders = new ArrayList<>(familyRelationships.getKeys(false));
 
-            for (String gender : genders) {
-                Map<String, String> map = new HashMap<>();
+        for (String gender : genders) {
+            Map<String, String> map = new HashMap<>();
 
-                ConfigurationSection relations = lang.getConfigurationSection("family_relationships." + gender);
+            ConfigurationSection relations = lang.getConfigurationSection("family_relationships." + gender);
 
-                for (String key : relations.getKeys(false)) {
+            for (String key : relations.getKeys(false)) {
 
 
-                    map.put(key, ChatColor.translateAlternateColorCodes('&', relations.getString(key)));
-                }
+                map.put(key, ChatColor.translateAlternateColorCodes('&', relations.getString(key)));
+            }
 
-                relationships.put(gender, map);
-}
+            relationships.put(gender, map);
+        }
     }
 
     @Override
@@ -291,7 +290,7 @@ public final class Main extends JavaPlugin {
     }
 
     public static Database getDatabase() {
-        return Main.db;
+        return LunaticFamily.db;
     }
 
     public static String getMessage(String key) {
@@ -302,6 +301,7 @@ public final class Main extends JavaPlugin {
             return "Message '" + key.toLowerCase() + "' not found!";
         }
     }
+
     public static String getGenderLang(String key) {
 
         if (genderLang.containsKey(key)) {
@@ -340,7 +340,7 @@ public final class Main extends JavaPlugin {
     }
 
     public static List<String> getAliases(String command, String subcommand) {
-        Map<String, List<String>> commandAliases = Main.aliases.getOrDefault(command, new HashMap<>());
+        Map<String, List<String>> commandAliases = LunaticFamily.aliases.getOrDefault(command, new HashMap<>());
 
         List<String> list = commandAliases.getOrDefault(subcommand, new ArrayList<>());
         if (list.isEmpty()) {
@@ -354,7 +354,7 @@ public final class Main extends JavaPlugin {
     }
 
     public static List<String> getAliases(String command) {
-        Map<String, List<String>> commandAliases = Main.aliases.getOrDefault(command, new HashMap<>());
+        Map<String, List<String>> commandAliases = LunaticFamily.aliases.getOrDefault(command, new HashMap<>());
 
         List<String> list = commandAliases.getOrDefault("base_command", new ArrayList<>());
         if (list.isEmpty()) {
@@ -413,6 +413,7 @@ public final class Main extends JavaPlugin {
             world.spawnParticle(particle, particleLocation, 1);
         }
     }
+
     public static Location getPositionBetweenLocations(Location loc1, Location loc2) {
         Vector vec1 = new Vector(loc1.getX(), loc1.getY(), loc1.getZ());
         Vector vec2 = new Vector(loc2.getX(), loc2.getY(), loc2.getZ());
@@ -424,19 +425,18 @@ public final class Main extends JavaPlugin {
         return position;
     }
 
-    public static String getKey(Material material){
-        if(material.isBlock()){
+    public static String getKey(Material material) {
+        if (material.isBlock()) {
             String id = material.getKey().getKey();
 
-            return "block.minecraft."+id;
-        } else if(material.isItem()){
+            return "block.minecraft." + id;
+        } else if (material.isItem()) {
             String id = material.getKey().getKey();
 
-            return "item.minecraft."+id;
+            return "item.minecraft." + id;
         }
         return "block.minecraft.dirt";
     }
-
 
 
     public static boolean isInRange(Location firstLocation, Location secondLocation, double range) {
@@ -446,11 +446,11 @@ public final class Main extends JavaPlugin {
         return distance <= range;
     }
 
-    public static void checkSoftDepends(){
+    public static void checkSoftDepends() {
         try {
             Class.forName("eu.endercentral.crazy_advancements.CrazyAdvancementsAPI");
             enabledCrazyAdvancementAPI = true;
-        } catch(ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             Bukkit.getLogger().warning("Could not find CrazyAdvancementsAPI.");
             enabledVault = false;
         }
@@ -458,7 +458,7 @@ public final class Main extends JavaPlugin {
         try {
             Class.forName("net.milkbowl.vault.economy.Economy");
             enabledVault = true;
-        } catch(ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             Bukkit.getLogger().warning("Could not find Vault.");
             enabledVault = false;
         }
@@ -466,7 +466,7 @@ public final class Main extends JavaPlugin {
         try {
             Class.forName("at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin");
             enabledMinepacks = true;
-        } catch(ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             Bukkit.getLogger().warning("Could not find Minepacks.");
             enabledMinepacks = false;
         }
@@ -475,8 +475,8 @@ public final class Main extends JavaPlugin {
     }
 
     public static boolean playerExists(String name) {
-        for(OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-            if(player.getName().equals(name)) return true;
+        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
+            if (player.getName().equals(name)) return true;
         }
 
         String uuid = Bukkit.getOfflinePlayer(name).getUniqueId().toString();
@@ -487,7 +487,7 @@ public final class Main extends JavaPlugin {
         return false;
     }
 
-    private void registerCommand (String command) {
+    private void registerCommand(String command) {
 
         PluginCommand cmd = getCommand(command);
 
@@ -509,16 +509,16 @@ public final class Main extends JavaPlugin {
     }
 
     public static TextComponent createClickableMessage(String message, String confirmHoverText, String confirmCommand, String cancelHoverText, String cancelCommand) {
-        TextComponent confirm = new TextComponent(ChatColor.GREEN + "" + ChatColor.BOLD +" ✓");
+        TextComponent confirm = new TextComponent(ChatColor.GREEN + "" + ChatColor.BOLD + " ✓");
         confirm.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, confirmCommand));
         confirm.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(confirmHoverText).create()));
 
 
-        TextComponent cancel = new TextComponent(ChatColor.RED +  " ❌");
+        TextComponent cancel = new TextComponent(ChatColor.RED + " ❌");
         cancel.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, cancelCommand));
         cancel.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(cancelHoverText).create()));
 
-        TextComponent prefix = new TextComponent(Main.prefix);
+        TextComponent prefix = new TextComponent(LunaticFamily.prefix);
         TextComponent msg = new TextComponent(message);
 
 

@@ -1,6 +1,6 @@
 package de.janschuri.lunaticFamily.database;
 
-import de.janschuri.lunaticFamily.Main;
+import de.janschuri.lunaticFamily.LunaticFamily;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,14 +9,14 @@ import java.util.logging.Level;
 
 
 public abstract class Database {
-    Main plugin;
+    LunaticFamily plugin;
     Connection connection;
     public String playerData = "playerData";
     public String marriages = "marriages";
     public String adoptions = "adoptions";
     public String siblinghoods = "siblinghoods";
 
-    public Database(Main instance){
+    public Database(LunaticFamily instance) {
         plugin = instance;
     }
 
@@ -24,24 +24,24 @@ public abstract class Database {
 
     public abstract void load();
 
-    public void initialize(){
+    public void initialize() {
         connection = getSQLConnection();
-        try{
+        try {
             PreparedStatement psPlayerData = connection.prepareStatement("SELECT * FROM " + playerData);
             ResultSet rsPlayerData = psPlayerData.executeQuery();
-            close(psPlayerData,rsPlayerData);
+            close(psPlayerData, rsPlayerData);
 
             PreparedStatement psMarriages = connection.prepareStatement("SELECT * FROM " + marriages);
             ResultSet rsMarriages = psMarriages.executeQuery();
-            close(psMarriages,rsMarriages);
+            close(psMarriages, rsMarriages);
 
             PreparedStatement psAdoptions = connection.prepareStatement("SELECT * FROM " + adoptions);
             ResultSet rsAdoptions = psAdoptions.executeQuery();
-            close(psAdoptions,rsAdoptions);
+            close(psAdoptions, rsAdoptions);
 
             PreparedStatement psSiblinghoods = connection.prepareStatement("SELECT * FROM " + siblinghoods);
             ResultSet rsSiblinghoods = psSiblinghoods.executeQuery();
-            close(psSiblinghoods,rsSiblinghoods);
+            close(psSiblinghoods, rsSiblinghoods);
 
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, "Unable to retreive connection", ex);
@@ -54,11 +54,11 @@ public abstract class Database {
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE uuid = '"+uuid+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE uuid = '" + uuid + "';");
 
             rs = ps.executeQuery();
-            while(rs.next()){
-                if(rs.getString("uuid").equals(uuid)){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
+            while (rs.next()) {
+                if (rs.getString("uuid").equals(uuid)) { // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
                     return rs.getInt("id"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
                 }
             }
@@ -76,17 +76,18 @@ public abstract class Database {
         }
         return 0;
     }
+
     public String getUUID(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE id = '"+id+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE id = '" + id + "';");
 
             rs = ps.executeQuery();
-            while(rs.next()){
-                if(rs.getInt("id") == id){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
+            while (rs.next()) {
+                if (rs.getInt("id") == id) { // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
                     return rs.getString("uuid"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
                 }
             }
@@ -104,17 +105,18 @@ public abstract class Database {
         }
         return null;
     }
+
     public String getName(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE id = '"+id+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE id = '" + id + "';");
 
             rs = ps.executeQuery();
-            while(rs.next()){
-                if(rs.getInt("id") == id){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
+            while (rs.next()) {
+                if (rs.getInt("id") == id) { // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
                     return rs.getString("name"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
                 }
             }
@@ -132,17 +134,18 @@ public abstract class Database {
         }
         return null;
     }
+
     public String getSkinURL(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE id = '"+id+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE id = '" + id + "';");
 
             rs = ps.executeQuery();
-            while(rs.next()){
-                if(rs.getInt("id") == id){ // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
+            while (rs.next()) {
+                if (rs.getInt("id") == id) { // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
                     return rs.getString("skinURL"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
                 }
             }
@@ -160,6 +163,7 @@ public abstract class Database {
         }
         return null;
     }
+
     public int getPartner(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -171,10 +175,10 @@ public abstract class Database {
             ps.setInt(2, id);
 
             rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 int player1 = rs.getInt("player1ID");
                 int player2 = rs.getInt("player2ID");
-                if(player1 == id) {
+                if (player1 == id) {
                     return player2;
                 } else if (player2 == id) {
                     return player1;
@@ -206,11 +210,11 @@ public abstract class Database {
             ps.setInt(2, id);
 
             rs = ps.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 int player1 = rs.getInt("player1ID");
                 int player2 = rs.getInt("player2ID");
                 Timestamp date = rs.getTimestamp("date");
-                if(player1 == id || player2 == id) {
+                if (player1 == id || player2 == id) {
                     return date;
                 }
             }
@@ -240,10 +244,10 @@ public abstract class Database {
             ps.setInt(2, id);
 
             rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 int player1 = rs.getInt("player1ID");
                 int player2 = rs.getInt("player2ID");
-                if(player1 == id) {
+                if (player1 == id) {
                     return player2;
                 } else if (player2 == id) {
                     return player1;
@@ -263,6 +267,7 @@ public abstract class Database {
         }
         return 0;
     }
+
     public List<Integer> getMarryList(int page, int pageSize) {
         List<Integer> marryList = new ArrayList<>();
         Connection conn = null;
@@ -306,11 +311,11 @@ public abstract class Database {
             ps.setInt(1, playerID);
             ps.setInt(2, playerID);
             rs = ps.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 int player1 = rs.getInt("player1ID");
                 int player2 = rs.getInt("player2ID");
                 int priest = rs.getInt("priest");
-                if(player1 == playerID || player2 == playerID) {
+                if (player1 == playerID || player2 == playerID) {
                     return priest;
                 }
             }
@@ -330,17 +335,18 @@ public abstract class Database {
         }
         return 0;
     }
+
     public String getGender(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE id = '"+id+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE id = '" + id + "';");
 
             rs = ps.executeQuery();
-            while(rs.next()){
-                if(rs.getInt("id") == id){
+            while (rs.next()) {
+                if (rs.getInt("id") == id) {
                     return rs.getString("gender");
                 }
             }
@@ -365,11 +371,11 @@ public abstract class Database {
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE uuid = '"+uuid+"';");
+            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE uuid = '" + uuid + "';");
 
             rs = ps.executeQuery();
-            while(rs.next()){
-                if(rs.getString("uuid").equals(uuid)){
+            while (rs.next()) {
+                if (rs.getString("uuid").equals(uuid)) {
                     return rs.getString("background");
                 }
             }
@@ -455,8 +461,6 @@ public abstract class Database {
 
         return childsList;
     }
-
-
 
 
     // Now we need methods to save things to the database
@@ -635,6 +639,7 @@ public abstract class Database {
             }
         }
     }
+
     public void saveAdoption(int parentID, int childID) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -684,9 +689,7 @@ public abstract class Database {
     }
 
 
-
-
-    public void close(PreparedStatement ps,ResultSet rs){
+    public void close(PreparedStatement ps, ResultSet rs) {
         try {
             if (ps != null)
                 ps.close();

@@ -1,6 +1,6 @@
 package de.janschuri.lunaticFamily.database;
 
-import de.janschuri.lunaticFamily.Main;
+import de.janschuri.lunaticFamily.LunaticFamily;
 
 import java.sql.*;
 import java.util.logging.Level;
@@ -9,7 +9,7 @@ public class MySQL extends Database {
     String host, database, username, password;
     int port;
 
-    public MySQL(Main instance) {
+    public MySQL(LunaticFamily instance) {
         super(instance);
         host = plugin.getConfig().getString("Database.MySQL.Host", "localhost");
         port = plugin.getConfig().getInt("Database.MySQL.Port", 3306);

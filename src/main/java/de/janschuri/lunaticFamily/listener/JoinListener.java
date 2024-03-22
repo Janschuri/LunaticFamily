@@ -1,6 +1,8 @@
-package de.janschuri.lunaticFamily.utils;
+package de.janschuri.lunaticFamily.listener;
 
-import de.janschuri.lunaticFamily.Main;
+import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import de.janschuri.lunaticFamily.handler.FamilyTree;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,9 +11,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class JoinListener implements Listener {
 
-    private final Main plugin;
+    private final LunaticFamily plugin;
 
-    public JoinListener(Main plugin) {
+    public JoinListener(LunaticFamily plugin) {
         this.plugin = plugin;
     }
 
@@ -22,7 +24,7 @@ public class JoinListener implements Listener {
             public void run() {
                 Player player = event.getPlayer();
                 String uuid = player.getUniqueId().toString();
-                FamilyManager playerFam = new FamilyManager(uuid);
+                FamilyPlayer playerFam = new FamilyPlayer(uuid);
 
 
             }
@@ -32,9 +34,9 @@ public class JoinListener implements Listener {
             public void run() {
                 Player player = event.getPlayer();
                 String uuid = player.getUniqueId().toString();
-                FamilyManager familyManager = new FamilyManager(uuid);
-                FamilyTree familyTree = new FamilyTree(familyManager.getID());
-                player.sendMessage(Main.getMessage("tree_loaded"));
+                FamilyPlayer familyPlayer = new FamilyPlayer(uuid);
+                FamilyTree familyTree = new FamilyTree(familyPlayer.getID());
+                player.sendMessage(LunaticFamily.getMessage("tree_loaded"));
 
             }
         }.runTaskLater(plugin, 100L);
