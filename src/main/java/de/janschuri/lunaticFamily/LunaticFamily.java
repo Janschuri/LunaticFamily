@@ -83,8 +83,16 @@ public final class LunaticFamily extends JavaPlugin {
     public static BiMap<String, String> adoptRequests = HashBiMap.create();
     public static BiMap<String, String> siblingRequests = HashBiMap.create();
 
+    private static LunaticFamily instance;
+
+    public static LunaticFamily getInstance() {
+        return instance;
+    }
+
     @Override
     public void onEnable() {
+
+        instance = this;
 
         saveDefaultConfig();
 

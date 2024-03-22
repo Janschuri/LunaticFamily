@@ -29,12 +29,12 @@ public class GenderCommand implements CommandExecutor, TabCompleter {
             } else {
                 String[] subcommandsHelp = {"set", "info"};
 
-                String msg = LunaticFamily.prefix + " " + LunaticFamily.getMessage(label + "_help") + "\n";
+                StringBuilder msg = new StringBuilder(LunaticFamily.prefix + " " + LunaticFamily.getMessage(label + "_help") + "\n");
 
                 for (String subcommand : subcommandsHelp) {
-                    msg = msg + LunaticFamily.prefix + " " + LunaticFamily.getMessage(label + "_" + subcommand + "_help") + "\n";
+                    msg.append(LunaticFamily.prefix).append(" ").append(LunaticFamily.getMessage(label + "_" + subcommand + "_help")).append("\n");
                 }
-                sender.sendMessage(msg);
+                sender.sendMessage(msg.toString());
             }
         } else {
             if (args[0].equalsIgnoreCase("set") || LunaticFamily.getAliases("gender", "set").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
@@ -160,6 +160,18 @@ public class GenderCommand implements CommandExecutor, TabCompleter {
         }
         // return null at the end.
         return null;
+    }
+
+    private boolean hasPermissionAdminGender(CommandSender sender) {
+        return sender.hasPermission("lunaticFamily.admin.gender");
+    }
+
+    private boolean hasPermissionGender(CommandSender sender, String... args) {
+        final StringBuilder permission = new StringBuilder("lunaticFamily.gender");
+        for(final String arg : args) {
+            permission.append(".").append(arg);
+        }
+        return sender.hasPermission(permission.toString());
     }
 
 }
