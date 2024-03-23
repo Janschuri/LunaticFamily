@@ -85,7 +85,8 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_exist").replace("%player%", args[2]));
                 } else if (args[1].equalsIgnoreCase(args[2])) {
                     sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_marry_set_same_player"));
-                } else {
+                }
+                else {
 
                     String player1UUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
                     String player2UUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
@@ -120,7 +121,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                 } else if (args.length < 2) {
                     sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("wrong_usage"));
                 } else if (!LunaticFamily.playerExists(args[1])) {
-                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_exist").replace("%player%", args[1]));
+                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_exist").replace("%player%", args[1]));
                 } else {
                     String player1UUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
                     FamilyPlayer player1Fam = new FamilyPlayer(player1UUID);
@@ -510,6 +511,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 ItemMeta itemMeta = item.getItemMeta();
 
 
+
                                 String[] msgPlayer = LunaticFamily.getMessage("marry_gift_sent").split("%item%");
                                 String[] msgPartner = LunaticFamily.getMessage("marry_gift_got").split("%item%");
 
@@ -536,13 +538,14 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                                 }
 
 
+
                             }
 
                         }
                     } else if (args[0].equalsIgnoreCase("backpack") || LunaticFamily.getAliases("marry", "backpack").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                         if (!player.hasPermission("lunaticFamily.marry.backpack")) {
                             sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_permission"));
-                        } else if (!LunaticFamily.enabledMinepacks) {
+                        } else if(!LunaticFamily.enabledMinepacks) {
                             sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("disabled_feature"));
                         } else if (!playerFam.isMarried()) {
                             sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("marry_backpack_no_partner"));
@@ -565,7 +568,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                         List<Integer> marryList = LunaticFamily.getDatabase().getMarryList(page, 10);
                         TextComponent msg = new TextComponent(LunaticFamily.prefix + LunaticFamily.getMessage("marry_list") + "\n");
-                        int index = 1 + (10 * (page - 1));
+                        int index = 1 + (10*(page-1));
                         for (Integer e : marryList) {
                             FamilyPlayer player1Fam = new FamilyPlayer(e);
                             FamilyPlayer player2Fam = new FamilyPlayer(player1Fam.getPartner().getID());

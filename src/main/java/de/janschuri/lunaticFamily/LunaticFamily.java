@@ -38,7 +38,8 @@ import java.util.logging.Level;
 
 public final class LunaticFamily extends JavaPlugin {
     private static Database db;
-    private static FileConfiguration config;
+    public static FileConfiguration config;
+    public static boolean isDebug;
     private static FileConfiguration lang;
     public static String language;
     public static String prefix;
@@ -166,6 +167,7 @@ public final class LunaticFamily extends JavaPlugin {
         }
 
         lang = YamlConfiguration.loadConfiguration(langfile);
+        allowSingleAdopt = config.getBoolean("is_debug");
         allowSingleAdopt = config.getBoolean("allow_single_adopt");
         marryBackpackOffline = config.getBoolean("marry_backpack_offline_access");
         defaultBackground = "textures/block/" + config.getString("default_background") + ".png";

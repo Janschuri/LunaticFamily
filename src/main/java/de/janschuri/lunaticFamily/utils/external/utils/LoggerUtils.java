@@ -25,7 +25,7 @@ public class LoggerUtils {
     }
 
     public static void debugLog(String msg) {
-        if(config.isDebug()){
+        if(LunaticFamily.isDebug){
             Bukkit.getLogger().info("[" + plugin.getName() + "] " + msg);
         }
     }

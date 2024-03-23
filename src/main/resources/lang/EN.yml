@@ -97,6 +97,8 @@ messages:
   marry_gift_got: "Your partner has gifted you %item%."
   marry_list: "All married couples on this server: "
   marry_list_no_number: "%input% is not a whole number!"
+  marry_list_emoji: "&4❤"
+  marry_list_pairs: "&6%index%: &b%player1% %emoji% &b%player2%"
   #adopt command
   adopt_propose_limit: "You cannot adopt another child. You have already reached the limit of two children."
   adopt_propose_open_request: "%player% already has an open adoption request."

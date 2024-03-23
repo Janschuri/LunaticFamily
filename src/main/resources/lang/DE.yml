@@ -103,6 +103,8 @@ messages:
   marry_backpack_no_partner: "Du bist nicht verheiratet!"
   marry_list: "Alle Ehepaare auf diesem Server: "
   marry_list_no_number: "%input% ist keine ganze Zahl!"
+  marry_list_emoji: "&4❤"
+  marry_list_pairs: "&6%index%: &b%player1% %emoji% &b%player2%"
   #adopt command
   adopt_propose_limit: "Du kannst kein weiteres Kind adoptieren. Du hast bereits das Limit von zwei Kindern erreicht."
   adopt_propose_open_request: "%player% hat schon eine offene Adoptionsanfrage."
