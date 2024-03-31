@@ -462,7 +462,7 @@ public final class LunaticFamily extends JavaPlugin {
             enabledCrazyAdvancementAPI = true;
         } catch (ClassNotFoundException e) {
             Bukkit.getLogger().warning("Could not find CrazyAdvancementsAPI.");
-            enabledVault = false;
+            enabledCrazyAdvancementAPI = false;
         }
 
         try {
