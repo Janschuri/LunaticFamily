@@ -1,7 +1,9 @@
 package de.janschuri.lunaticFamily.commands;
 
+import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import de.janschuri.lunaticFamily.utils.Utils;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -25,96 +27,97 @@ public class GenderCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 0) {
             if (!sender.hasPermission("lunaticFamily." + label)) {
-                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_permission"));
+                sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
             } else {
                 String[] subcommandsHelp = {"set", "info"};
 
-                StringBuilder msg = new StringBuilder(LunaticFamily.prefix + " " + LunaticFamily.getMessage(label + "_help") + "\n");
+                StringBuilder msg = new StringBuilder(Language.prefix + " " + Language.getMessage(label + "_help") + "\n");
 
                 for (String subcommand : subcommandsHelp) {
-                    msg.append(LunaticFamily.prefix).append(" ").append(LunaticFamily.getMessage(label + "_" + subcommand + "_help")).append("\n");
+                    msg.append(Language.prefix).append(" ").append(Language.getMessage(label + "_" + subcommand + "_help")).append("\n");
                 }
                 sender.sendMessage(msg.toString());
             }
         } else {
-            if (args[0].equalsIgnoreCase("set") || LunaticFamily.getAliases("gender", "set").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+            final String subcommand = args[0];
+            if (checkIsSubcommand("set", subcommand)) {
                 if (args.length == 1) {
-                    TextComponent msg = new TextComponent(LunaticFamily.prefix + LunaticFamily.getMessage("gender_set") + "\n");
+                    TextComponent msg = new TextComponent(Language.prefix + Language.getMessage("gender_set") + "\n");
 
-                    for (String gender : LunaticFamily.genders) {
-                        TextComponent text = new TextComponent(LunaticFamily.prefix + " - " + LunaticFamily.getGenderLang(gender) + "\n");
+                    for (String gender : Language.genders) {
+                        TextComponent text = new TextComponent(Language.prefix + " - " + Language.getGenderLang(gender) + "\n");
                         text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/gender set " + gender));
-                        text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(LunaticFamily.getMessage("gender_set_hover").replace("%gender%", LunaticFamily.getGenderLang(gender))).create()));
+                        text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Language.getMessage("gender_set_hover").replace("%gender%", Language.getGenderLang(gender))).create()));
                         msg.addExtra(text);
                     }
                     sender.sendMessage(msg);
 
                 } else if (args.length == 2) {
                     if (!(sender instanceof Player)) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_console_command"));
+                        sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
                     } else {
                         Player player = (Player) sender;
                         String uuid = player.getUniqueId().toString();
                         FamilyPlayer playerFam = new FamilyPlayer(uuid);
 
-                        if (!LunaticFamily.genders.contains(args[1].toLowerCase())) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("gender_not_exist"));
+                        if (!Language.genders.contains(args[1].toLowerCase())) {
+                            sender.sendMessage(Language.prefix + Language.getMessage("gender_not_exist"));
                         } else if (playerFam.getGender().equalsIgnoreCase(args[1])) {
-                            player.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("gender_already").replace("%gender%", LunaticFamily.getGenderLang(args[1])));
+                            player.sendMessage(Language.prefix + Language.getMessage("gender_already").replace("%gender%", Language.getGenderLang(args[1])));
                         } else {
                             playerFam.setGender(args[1].toLowerCase());
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("gender_changed").replace("%gender%", LunaticFamily.getGenderLang(args[1])));
+                            sender.sendMessage(Language.prefix + Language.getMessage("gender_changed").replace("%gender%", Language.getGenderLang(args[1])));
                         }
                     }
                 } else {
                     if (!sender.hasPermission("lunaticFamily.admin.gender")) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_permission"));
-                    } else if (!LunaticFamily.playerExists(args[1])) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_exist").replace("%player%", args[1]));
+                        sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
+                    } else if (!Utils.playerExists(args[1])) {
+                        sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[1]));
                     } else {
                         String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
                         FamilyPlayer player1Fam = new FamilyPlayer(player1);
 
-                        if (!LunaticFamily.genders.contains(args[2].toLowerCase())) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("gender_not_exist"));
+                        if (!Language.genders.contains(args[2].toLowerCase())) {
+                            sender.sendMessage(Language.prefix + Language.getMessage("gender_not_exist"));
                         } else if (player1Fam.getGender().equalsIgnoreCase(args[2])) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_gender_already").replace("%player%", LunaticFamily.getName(args[1])).replace("%gender%", LunaticFamily.getGenderLang(args[2])));
+                            sender.sendMessage(Language.prefix + Language.getMessage("admin_gender_already").replace("%player%", Utils.getName(args[1])).replace("%gender%", Language.getGenderLang(args[2])));
                         } else {
                             player1Fam.setGender(args[2].toLowerCase());
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_gender_changed").replace("%player%", LunaticFamily.getName(args[1])).replace("%gender%", LunaticFamily.getGenderLang(args[2])));
+                            sender.sendMessage(Language.prefix + Language.getMessage("admin_gender_changed").replace("%player%", Utils.getName(args[1])).replace("%gender%", Language.getGenderLang(args[2])));
                         }
                     }
                 }
-            } else if (args[0].equalsIgnoreCase("info") || LunaticFamily.getAliases("gender", "info").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+            } else if (checkIsSubcommand("info", subcommand)) {
                 if (args.length == 1) {
                     if (!(sender instanceof Player)) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_console_command"));
+                        sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
                     } else {
                         Player player = (Player) sender;
                         String playerUUID = player.getUniqueId().toString();
                         FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("gender_info").replace("%gender%", LunaticFamily.getGenderLang(playerFam.getGender())));
+                        sender.sendMessage(Language.prefix + Language.getMessage("gender_info").replace("%gender%", Language.getGenderLang(playerFam.getGender())));
                     }
                 } else {
                     if (!sender.hasPermission("lunaticFamily.admin.gender") && !sender.hasPermission("lunaticFamily.gender.info.others")) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_permission"));
-                    } else if (!LunaticFamily.playerExists(args[1])) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_exist").replace("%player%", args[1]));
+                        sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
+                    } else if (!Utils.playerExists(args[1])) {
+                        sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[1]));
                     } else {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("gender_info_others").replace("%player%", LunaticFamily.getName(args[1])).replace("%gender%", LunaticFamily.getGenderLang(args[1])));
+                        sender.sendMessage(Language.prefix + Language.getMessage("gender_info_others").replace("%player%", Utils.getName(args[1])).replace("%gender%", Language.getGenderLang(args[1])));
                     }
                 }
-            } else if (args[0].equalsIgnoreCase("help") || LunaticFamily.getAliases(label, "help").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+            } else if (checkIsSubcommand("help", subcommand)) {
                 String[] subcommandsHelp = {"set", "info"};
 
-                String msg = LunaticFamily.getMessage(label + "_help") + "\n";
+                String msg = Language.getMessage(label + "_help") + "\n";
 
-                for (String subcommand : subcommandsHelp) {
-                    msg = msg + LunaticFamily.getMessage(label + "_" + subcommand + "_help") + "\n";
+                for (String sc : subcommandsHelp) {
+                    msg = msg + Language.getMessage(label + "_" + sc + "_help") + "\n";
                 }
                 sender.sendMessage(msg);
             } else {
-                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("wrong_usage"));
+                sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
             }
         }
         return true;
@@ -123,8 +126,8 @@ public class GenderCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String commandLabel, String[] args) {
 
-        List<String> genderSubcommands = LunaticFamily.genderSubcommands;
-        List<String> genderAdminSubcommands = LunaticFamily.genderAdminSubcommands;
+        List<String> genderSubcommands = Language.genderSubcommandsAliases;
+        List<String> genderAdminSubcommands = Language.genderAdminSubcommandsAliases;
         List<String> list = new ArrayList<>();
         if (sender instanceof Player) {
             Player player = (Player) sender;
@@ -158,7 +161,6 @@ public class GenderCommand implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        // return null at the end.
         return null;
     }
 
@@ -174,4 +176,7 @@ public class GenderCommand implements CommandExecutor, TabCompleter {
         return sender.hasPermission(permission.toString());
     }
 
+    private boolean checkIsSubcommand(final String subcommand, final String arg) {
+        return subcommand.equalsIgnoreCase(arg) || Language.getAliases("gender", subcommand).stream().anyMatch(element -> arg.equalsIgnoreCase(element));
+    }
 }

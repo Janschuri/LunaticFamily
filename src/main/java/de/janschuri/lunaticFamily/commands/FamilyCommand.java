@@ -1,9 +1,12 @@
 package de.janschuri.lunaticFamily.commands;
 
 import com.google.common.collect.BiMap;
+import de.janschuri.lunaticFamily.config.Config;
+import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.handler.FamilyTree;
+import de.janschuri.lunaticFamily.utils.Utils;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -30,7 +33,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 0) {
             if (!sender.hasPermission("lunaticFamily." + label)) {
-                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_permission"));
+                sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
             } else {
                 List<String> subcommandsHelp = new ArrayList<>();
                 if (sender.hasPermission("lunaticFamily.family.tree")) {
@@ -40,10 +43,10 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                     subcommandsHelp.add("background");
                 }
 
-                TextComponent msg = new TextComponent(LunaticFamily.getMessage(label + "_help") + "\n");
+                TextComponent msg = new TextComponent(Language.getMessage(label + "_help") + "\n");
 
                 for (String subcommand : subcommandsHelp) {
-                    msg.addExtra(LunaticFamily.prefix + " " + LunaticFamily.getMessage(label + "_" + subcommand + "_help") + "\n");
+                    msg.addExtra(Language.prefix + " " + Language.getMessage(label + "_" + subcommand + "_help") + "\n");
                 }
 
                 List<String> commandsHelp = new ArrayList<>();
@@ -61,16 +64,17 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 }
 
                 for (String commandHelp : commandsHelp) {
-                    TextComponent text = new TextComponent(LunaticFamily.prefix + " " + LunaticFamily.getMessage(label + "_" + commandHelp + "_help") + "\n");
+                    TextComponent text = new TextComponent(Language.prefix + " " + Language.getMessage(label + "_" + commandHelp + "_help") + "\n");
                     text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + commandHelp + " help"));
-                    text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(LunaticFamily.getMessage(commandHelp + "_help")).create()));
+                    text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Language.getMessage(commandHelp + "_help")).create()));
                     msg.addExtra(text);
                 }
 
                 sender.sendMessage(msg);
             }
         } else {
-            if (args[0].equalsIgnoreCase("gender") || LunaticFamily.getAliases("gender").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+            final String subcommand = args[0];
+            if (checkIsSubcommand("gender", subcommand)) {
                 GenderCommand genderCommand = new GenderCommand();
                 String stringLabel = "gender";
                 PluginCommand pluginCommand = plugin.getCommand(stringLabel);
@@ -79,7 +83,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 assert pluginCommand != null;
                 genderCommand.onCommand(sender, pluginCommand, stringLabel, arrayArgs);
 
-            } else if (args[0].equalsIgnoreCase("adopt") || LunaticFamily.getAliases("adopt").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+            } else if (checkIsSubcommand("adopt", subcommand)) {
                 AdoptCommand adoptCommand = new AdoptCommand(plugin);
                 String stringLabel = "adopt";
                 PluginCommand pluginCommand = plugin.getCommand(stringLabel);
@@ -87,7 +91,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 System.arraycopy(args, 1, arrayArgs, 0, args.length - 1);
                 assert pluginCommand != null;
                 adoptCommand.onCommand(sender, pluginCommand, stringLabel, arrayArgs);
-            } else if (args[0].equalsIgnoreCase("marry") || LunaticFamily.getAliases("marry").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+            } else if (checkIsSubcommand("marry", subcommand)) {
                 MarryCommand marryCommand = new MarryCommand(plugin);
                 String stringLabel = "marry";
                 PluginCommand pluginCommand = plugin.getCommand(stringLabel);
@@ -95,7 +99,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 System.arraycopy(args, 1, arrayArgs, 0, args.length - 1);
                 assert pluginCommand != null;
                 marryCommand.onCommand(sender, pluginCommand, stringLabel, arrayArgs);
-            } else if (args[0].equalsIgnoreCase("sibling") || LunaticFamily.getAliases("sibling").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+            } else if (checkIsSubcommand("sibling", subcommand)) {
                 SiblingCommand siblingCommand = new SiblingCommand(plugin);
                 String stringLabel = "sibling";
                 PluginCommand pluginCommand = plugin.getCommand(stringLabel);
@@ -103,27 +107,27 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 System.arraycopy(args, 1, arrayArgs, 0, args.length - 1);
                 assert pluginCommand != null;
                 siblingCommand.onCommand(sender, pluginCommand, stringLabel, arrayArgs);
-            } else if (args[0].equalsIgnoreCase("reload") || LunaticFamily.getAliases("family", "reload").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+            } else if (checkIsSubcommand("reload", subcommand)) {
                 if (!sender.hasPermission("lunaticFamily.admin.reload")) {
-                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_permission"));
+                    sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
                 } else {
                     plugin.loadConfig(plugin);
-                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_reload"));
+                    sender.sendMessage(Language.prefix + Language.getMessage("admin_reload"));
                 }
-            } else if (args[0].equalsIgnoreCase("list") || LunaticFamily.getAliases("family", "list").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+            } else if (checkIsSubcommand("list", subcommand)) {
 
 
-                List<String> list = LunaticFamily.familyList;
+                List<String> list = Config.familyList;
 
                 if (!(sender instanceof Player) && args.length < 2) {
-                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_console_command"));
+                    sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
                 } else if (args.length == 1) {
                     Player player = (Player) sender;
                     String uuid = player.getUniqueId().toString();
                     FamilyPlayer playerFam = new FamilyPlayer(uuid);
 
                     BiMap<String, Integer> familyList = playerFam.getFamilyList();
-                    String msg = LunaticFamily.prefix + LunaticFamily.getMessage("family_list") + "\n";
+                    String msg = Language.prefix + Language.getMessage("family_list") + "\n";
 
                     for (String e : list) {
                         if (familyList.containsKey(e)) {
@@ -137,20 +141,20 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                                     .replace("sixth_", "")
                                     .replace("seventh_", "")
                                     .replace("eighth_", "");
-                            msg = msg + LunaticFamily.getRelation(relationKey, relationFam.getGender()) + ": " + relationFam.getName() + "\n";
+                            msg = msg + Language.getRelation(relationKey, relationFam.getGender()) + ": " + relationFam.getName() + "\n";
                         }
                     }
                     sender.sendMessage(msg);
                 } else {
                     if (!sender.hasPermission("lunaticFamily.family.listothers")) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_permission"));
-                    } else if (!LunaticFamily.playerExists(args[1])) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_exist").replace("%player%", args[1]));
+                        sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
+                    } else if (!Utils.playerExists(args[1])) {
+                        sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[1]));
                     } else {
                         String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
                         FamilyPlayer player1Fam = new FamilyPlayer(player1);
                         BiMap<String, Integer> familyList = player1Fam.getFamilyList();
-                        String msg = LunaticFamily.prefix + LunaticFamily.getMessage("family_others_list").replace("%player%", player1Fam.getName()) + "\n";
+                        String msg = Language.prefix + Language.getMessage("family_others_list").replace("%player%", player1Fam.getName()) + "\n";
                         for (String e : list) {
                             if (familyList.containsKey(e)) {
                                 int relationID = familyList.get(e);
@@ -163,7 +167,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                                         .replace("sixth_", "")
                                         .replace("seventh_", "")
                                         .replace("eighth_", "");
-                                msg = msg + LunaticFamily.getRelation(relationKey, relationFam.getGender()) + ": " + relationFam.getName() + "\n";
+                                msg = msg + Language.getRelation(relationKey, relationFam.getGender()) + ": " + relationFam.getName() + "\n";
                             }
                         }
                         sender.sendMessage(msg);
@@ -171,42 +175,42 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 }
 
             } else if (!(sender instanceof Player)) {
-                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_console_command"));
+                sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
             } else {
                 Player player = (Player) sender;
                 String uuid = player.getUniqueId().toString();
                 FamilyPlayer playerFam = new FamilyPlayer(uuid);
-                if (args[0].equalsIgnoreCase("tree") || LunaticFamily.getAliases("family", "tree").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                if (checkIsSubcommand("tree", subcommand)) {
                     if (!player.hasPermission("lunaticFamily.family.tree")) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_permission"));
-                    } else if (!LunaticFamily.enabledCrazyAdvancementAPI) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("disabled_feature"));
+                        sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
+                    } else if (!Config.enabledCrazyAdvancementAPI) {
+                        sender.sendMessage(Language.prefix + Language.getMessage("disabled_feature"));
                     } else {
                         new FamilyTree(playerFam.getID());
-                        sender.sendMessage(LunaticFamily.getMessage("tree_loaded"));
+                        sender.sendMessage(Language.getMessage("tree_loaded"));
                     }
-                } else if (args[0].equalsIgnoreCase("background") || LunaticFamily.getAliases("family", "background").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                } else if (checkIsSubcommand("background", subcommand)) {
                     if (!player.hasPermission("lunaticFamily.family.background")) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_permission"));
+                        sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
                     } else if (args.length == 2) {
                         playerFam.setBackground(args[1]);
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("family_background_set"));
+                        sender.sendMessage(Language.prefix + Language.getMessage("family_background_set"));
                     } else {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("wrong_usage"));
+                        sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
                     }
-                } else if (args[0].equalsIgnoreCase("help") || LunaticFamily.getAliases(label, "help").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                } else if (checkIsSubcommand("help", subcommand)) {
                     if (!player.hasPermission("lunaticFamily.family.tree")) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_permission"));
+                        sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
                     } else {
-                        String[] subcommandsHelp = {"list", "tree", "background"};
-                        String msg = LunaticFamily.getMessage(label + "_help") + "\n";
-                        for (String subcommand : subcommandsHelp) {
-                            msg = msg + LunaticFamily.getMessage(label + "_" + subcommand + "_help") + "\n";
+                        String[] subcommands = {"list", "tree", "background"};
+                        String msg = Language.getMessage(label + "_help") + "\n";
+                        for (String sc : subcommands) {
+                            msg = msg + Language.getMessage(label + "_" + sc + "_help") + "\n";
                         }
                         sender.sendMessage(msg);
                     }
                 } else {
-                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("wrong_usage"));
+                    sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
                 }
             }
         }
@@ -216,22 +220,21 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String commandLabel, String[] args) {
 
-        List<String> familySubcommands = LunaticFamily.familySubcommands;
-        List<String> reloadCommands = LunaticFamily.familyAdminSubcommands;
-        List<String> backgrounds = LunaticFamily.backgrounds;
-        List<String> adoptCommands = LunaticFamily.adoptCommands;
-        List<String> adoptSubcommands = LunaticFamily.adoptSubcommands;
-        List<String> adoptAdminSubcommands = LunaticFamily.adoptAdminSubcommands;
-        List<String> genderCommands = LunaticFamily.genderCommands;
-        List<String> genderSubcommands = LunaticFamily.genderSubcommands;
-        List<String> genderAdminSubcommands = LunaticFamily.genderAdminSubcommands;
-        List<String> marryCommands = LunaticFamily.marryCommands;
-        List<String> marrySubcommands = LunaticFamily.marrySubcommands;
-        List<String> marryPriestSubcommands = LunaticFamily.marryPriestSubcommands;
-        List<String> marryAdminSubcommands = LunaticFamily.marryAdminSubcommands;
-        List<String> siblingCommands = LunaticFamily.siblingCommands;
-        List<String> siblingSubcommands = LunaticFamily.siblingSubcommands;
-        List<String> siblingAdminSubcommands = LunaticFamily.siblingAdminSubcommands;
+        List<String> familySubcommands = Language.familySubcommandsAliases;
+        List<String> reloadCommands = Language.familyAdminSubcommandsAliases;
+        List<String> backgrounds = Config.backgrounds;
+        List<String> adoptCommands = Language.adoptCommandsAliases;
+        List<String> adoptSubcommands = Language.adoptSubcommandsAliases;
+        List<String> adoptAdminSubcommands = Language.adoptAdminSubcommandsAliases;
+        List<String> genderCommands = Language.genderCommandsAliases;
+        List<String> genderSubcommands = Language.genderSubcommandsAliases;
+        List<String> genderAdminSubcommands = Language.genderAdminSubcommandsAliases;
+        List<String> marryCommands = Language.marryCommandsAliases;
+        List<String> marrySubcommands = Language.marrySubcommandsAliases;
+        List<String> marryAdminSubcommands = Language.marryAdminSubcommandsAliases;
+        List<String> siblingCommands = Language.siblingCommandsAliases;
+        List<String> siblingSubcommands = Language.siblingSubcommandsAliases;
+        List<String> siblingAdminSubcommands = Language.siblingAdminSubcommandsAliases;
 
         List<String> list = new ArrayList<>();
         if (sender instanceof Player) {
@@ -299,137 +302,134 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                     }
                     Collections.sort(list);
                     return list;
-                } else if (args[0].equalsIgnoreCase("background") || LunaticFamily.getAliases("background").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-                    if (args.length < 3) {
-                        if (args[1].equalsIgnoreCase("")) {
-                            list.addAll(backgrounds);
-                        } else {
-                            for (String s : backgrounds) {
-                                if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
-                                    list.add(s);
-                                }
-                            }
-                        }
-                    }
-                    Collections.sort(list);
-                    return list;
-                } else if (args[0].equalsIgnoreCase("adopt") || LunaticFamily.getAliases("adopt").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-                    if (player.hasPermission("lunaticFamily.adopt") && args.length < 3) {
-
-
-                        if (args[1].equalsIgnoreCase("")) {
-                            list.addAll(adoptSubcommands);
-                            if (player.hasPermission("lunaticFamily.admin.adopt")) {
-                                list.addAll(adoptAdminSubcommands);
-                            }
-                        } else {
-
-                            for (String s : adoptSubcommands) {
-                                if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
-                                    list.add(s);
-                                }
-                            }
-                            if (player.hasPermission("lunaticFamily.admin.adopt")) {
-                                for (String s : adoptAdminSubcommands) {
-                                    if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                } else {
+                    final String subcommand = args[0];
+                    if (checkIsSubcommand("background", subcommand)) {
+                        if (args.length < 3) {
+                            if (args[1].equalsIgnoreCase("")) {
+                                list.addAll(backgrounds);
+                            } else {
+                                for (String s : backgrounds) {
+                                    if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
                                         list.add(s);
                                     }
                                 }
                             }
                         }
-                    }
-                    Collections.sort(list);
-                    return list;
-                } else if (args[0].equalsIgnoreCase("gender") || LunaticFamily.getAliases("gender").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-                    if (player.hasPermission("lunaticFamily.gender") && args.length < 3) {
-                        if (args[1].equalsIgnoreCase("")) {
-                            list.addAll(genderSubcommands);
-                            if (player.hasPermission("lunaticFamily.admin.gender")) {
-                                list.addAll(genderAdminSubcommands);
-                            }
-                        } else {
+                        Collections.sort(list);
+                        return list;
+                    } else if (checkIsSubcommand("adopt", subcommand)) {
+                        if (player.hasPermission("lunaticFamily.adopt") && args.length < 3) {
 
-                            for (String s : genderSubcommands) {
-                                if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
-                                    list.add(s);
+
+                            if (args[1].equalsIgnoreCase("")) {
+                                list.addAll(adoptSubcommands);
+                                if (player.hasPermission("lunaticFamily.admin.adopt")) {
+                                    list.addAll(adoptAdminSubcommands);
                                 }
-                            }
-                            if (player.hasPermission("lunaticFamily.admin.gender")) {
-                                for (String s : genderAdminSubcommands) {
-                                    if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                            } else {
+
+                                for (String s : adoptSubcommands) {
+                                    if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
                                         list.add(s);
+                                    }
+                                }
+                                if (player.hasPermission("lunaticFamily.admin.adopt")) {
+                                    for (String s : adoptAdminSubcommands) {
+                                        if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                                            list.add(s);
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    Collections.sort(list);
-                    return list;
-                } else if (args[0].equalsIgnoreCase("marry") || LunaticFamily.getAliases("marry").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-                    if (player.hasPermission("lunaticFamily.marry") && args.length < 3) {
-                        if (args[1].equalsIgnoreCase("")) {
-                            list.addAll(marrySubcommands);
-                            if (player.hasPermission("lunaticFamily.admin.marry")) {
-                                list.addAll(marryAdminSubcommands);
-                            }
-                            if (player.hasPermission("lunaticFamily.marry.priest")) {
-                                list.addAll(marryPriestSubcommands);
-                            }
-                        } else {
-
-                            for (String s : marrySubcommands) {
-                                if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
-                                    list.add(s);
+                        Collections.sort(list);
+                        return list;
+                    } else if (checkIsSubcommand("gender", subcommand)) {
+                        if (player.hasPermission("lunaticFamily.gender") && args.length < 3) {
+                            if (args[1].equalsIgnoreCase("")) {
+                                list.addAll(genderSubcommands);
+                                if (player.hasPermission("lunaticFamily.admin.gender")) {
+                                    list.addAll(genderAdminSubcommands);
                                 }
-                            }
-                            if (player.hasPermission("lunaticFamily.admin.marry")) {
-                                for (String s : marryAdminSubcommands) {
-                                    if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                            } else {
+
+                                for (String s : genderSubcommands) {
+                                    if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
                                         list.add(s);
                                     }
                                 }
-                            }
-                            if (player.hasPermission("lunaticFamily.marry.priest")) {
-                                for (String s : marryPriestSubcommands) {
-                                    if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
-                                        list.add(s);
+                                if (player.hasPermission("lunaticFamily.admin.gender")) {
+                                    for (String s : genderAdminSubcommands) {
+                                        if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                                            list.add(s);
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    Collections.sort(list);
-                    return list;
-                } else if (args[0].equalsIgnoreCase("sibling") || LunaticFamily.getAliases("sibling").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
-                    if (player.hasPermission("lunaticFamily.sibling") && args.length < 3) {
-                        if (args[1].equalsIgnoreCase("")) {
-                            list.addAll(siblingSubcommands);
-                            if (player.hasPermission("lunaticFamily.admin.sibling")) {
-                                list.addAll(siblingAdminSubcommands);
-                            }
-                        } else {
-
-                            for (String s : siblingSubcommands) {
-                                if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
-                                    list.add(s);
+                        Collections.sort(list);
+                        return list;
+                    } else if (checkIsSubcommand("marry", subcommand)) {
+                        if (player.hasPermission("lunaticFamily.marry") && args.length < 3) {
+                            if (args[1].equalsIgnoreCase("")) {
+                                list.addAll(marrySubcommands);
+                                if (player.hasPermission("lunaticFamily.admin.marry")) {
+                                    list.addAll(marryAdminSubcommands);
                                 }
-                            }
-                            if (player.hasPermission("lunaticFamily.admin.sibling")) {
-                                for (String s : siblingAdminSubcommands) {
-                                    if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                            } else {
+
+                                for (String s : marrySubcommands) {
+                                    if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
                                         list.add(s);
+                                    }
+                                }
+                                if (player.hasPermission("lunaticFamily.admin.marry")) {
+                                    for (String s : marryAdminSubcommands) {
+                                        if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                                            list.add(s);
+                                        }
                                     }
                                 }
                             }
                         }
+                        Collections.sort(list);
+                        return list;
+                    } else if (checkIsSubcommand("sibling", subcommand)) {
+                        if (player.hasPermission("lunaticFamily.sibling") && args.length < 3) {
+                            if (args[1].equalsIgnoreCase("")) {
+                                list.addAll(siblingSubcommands);
+                                if (player.hasPermission("lunaticFamily.admin.sibling")) {
+                                    list.addAll(siblingAdminSubcommands);
+                                }
+                            } else {
+
+                                for (String s : siblingSubcommands) {
+                                    if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
+                                        list.add(s);
+                                    }
+                                }
+                                if (player.hasPermission("lunaticFamily.admin.sibling")) {
+                                    for (String s : siblingAdminSubcommands) {
+                                        if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                                            list.add(s);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Collections.sort(list);
+                        return list;
                     }
-                    Collections.sort(list);
-                    return list;
                 }
             }
         }
         // return null at the end.
         return null;
+    }
+
+    private boolean checkIsSubcommand(final String subcommand, final String arg) {
+        return subcommand.equalsIgnoreCase(arg) || Language.getAliases("family", subcommand).stream().anyMatch(element -> arg.equalsIgnoreCase(element));
     }
 }
 

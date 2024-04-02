@@ -1,7 +1,10 @@
 package de.janschuri.lunaticFamily.commands;
 
+import de.janschuri.lunaticFamily.config.Config;
+import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,14 +29,14 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 0) {
             if (!sender.hasPermission("lunaticFamily." + label)) {
-                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_permission"));
+                sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
             } else {
                 final String[] subcommandsHelp = {"propose", "kickout", "moveout"};
 
-                StringBuilder msg = new StringBuilder(LunaticFamily.prefix + " " + LunaticFamily.getMessage(label + "_help") + "\n");
+                StringBuilder msg = new StringBuilder(Language.prefix + " " + Language.getMessage(label + "_help") + "\n");
 
                 for (String subcommand : subcommandsHelp) {
-                    msg.append(LunaticFamily.prefix).append(" ").append(LunaticFamily.getMessage(label + "_" + subcommand + "_help")).append("\n");
+                    msg.append(Language.prefix).append(" ").append(Language.getMessage(label + "_" + subcommand + "_help")).append("\n");
                 }
                 sender.sendMessage(msg.toString());
             }
@@ -50,15 +53,15 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                 }
 
                 if (!sender.hasPermission("lunaticFamily.admin.adopt.set")) {
-                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_permission"));
+                    sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
                 } else if (args.length < 3) {
-                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("wrong_usage"));
-                } else if (!LunaticFamily.playerExists(args[1]) && !force) {
-                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_exist").replace("%player%", args[1]));
-                } else if (!LunaticFamily.playerExists(args[2]) && !force) {
-                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_exist").replace("%player%", args[2]));
+                    sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
+                } else if (!Utils.playerExists(args[1]) && !force) {
+                    sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[1]));
+                } else if (!Utils.playerExists(args[2]) && !force) {
+                    sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[2]));
                 } else if (args[1].equalsIgnoreCase(args[2])) {
-                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_adopt_set_same_player"));
+                    sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_set_same_player"));
                 } else {
 
                     String firstParentUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
@@ -66,23 +69,23 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                     String childUUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
                     FamilyPlayer childFam = new FamilyPlayer(childUUID);
 
-                    if (!firstParentFam.isMarried() && !LunaticFamily.allowSingleAdopt) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_adopt_set_no_single_adopt").replace("%player%", firstParentFam.getName()));
+                    if (!firstParentFam.isMarried() && !Config.allowSingleAdopt) {
+                        sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_set_no_single_adopt").replace("%player%", firstParentFam.getName()));
                     } else if (childFam.isAdopted()) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_adopt_set_already_adopted").replace("%child%", childFam.getName()));
+                        sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_set_already_adopted").replace("%child%", childFam.getName()));
                     } else if (firstParentFam.getChildrenAmount() > 1) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_adopt_limit").replace("%player%", firstParentFam.getName()));
+                        sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_limit").replace("%player%", firstParentFam.getName()));
                     } else if (childFam.hasSibling()) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_adopt_set_has_sibling").replace("%player%", childFam.getName()));
+                        sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_set_has_sibling").replace("%player%", childFam.getName()));
                     } else if (childFam.hasSibling() && firstParentFam.getChildrenAmount() > 0) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_adopt_set_has_sibling_limit").replace("%player1%", childFam.getName()).replace("%player2%", firstParentFam.getName()));
+                        sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_set_has_sibling_limit").replace("%player1%", childFam.getName()).replace("%player2%", firstParentFam.getName()));
                     } else {
 
                         if (!firstParentFam.isMarried()) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_adopt_set_by_single").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
+                            sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_set_by_single").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
                         } else {
                             FamilyPlayer secondParentFam = firstParentFam.getPartner();
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_adopt_set").replace("%child%", childFam.getName()).replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()));
+                            sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_set").replace("%child%", childFam.getName()).replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()));
                         }
 
                         LunaticFamily.adoptRequests.remove(childUUID);
@@ -93,42 +96,42 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
             } else if (checkIsSubcommand("unset", subcommand)) {
 
                 if (!sender.hasPermission("lunaticFamily.admin.adopt.unset")) {
-                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_permission"));
+                    sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
                 } else if (args.length < 2) {
-                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("wrong_usage"));
-                } else if (!LunaticFamily.playerExists(args[1])) {
-                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_exist").replace("%player%", LunaticFamily.getName(args[1])));
+                    sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
+                } else if (!Utils.playerExists(args[1])) {
+                    sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", Utils.getName(args[1])));
                 } else {
 
                     String childUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
                     FamilyPlayer childFam = new FamilyPlayer(childUUID);
 
                     if (!childFam.isAdopted()) {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_adopt_unset_not_adopted").replace("%player%", childFam.getName()));
+                        sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_unset_not_adopted").replace("%player%", childFam.getName()));
                     } else {
                         FamilyPlayer firstParentFam = childFam.getParents().get(0);
 
                         if (firstParentFam.isMarried()) {
                             FamilyPlayer secondParentFam = firstParentFam.getPartner();
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_adopt_unset").replace("%child%", childFam.getName()).replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()));
+                            sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_unset").replace("%child%", childFam.getName()).replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()));
                         } else {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("admin_adopt_unset_by_single").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
+                            sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_unset_by_single").replace("%child%", childFam.getName()).replace("%parent%", firstParentFam.getName()));
                         }
                         firstParentFam.unadopt(childFam.getID());
                     }
                 }
 
             } else if (!(sender instanceof Player)) {
-                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_console_command"));
+                sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
             } else {
                 Player player = (Player) sender;
                 if (!player.hasPermission("lunaticFamily.adopt")) {
-                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("no_permission"));
+                    sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
                 } else {
                     String playerUUID = player.getUniqueId().toString();
                     FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
-                    if (args[0].equalsIgnoreCase("propose") || LunaticFamily.getAliases("adopt", "propose").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                    if (args[0].equalsIgnoreCase("propose") || Language.getAliases("adopt", "propose").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
                         boolean confirm = false;
                         boolean cancel = false;
@@ -144,71 +147,71 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 
 
                         if (args.length < 2) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("wrong_usage"));
+                            sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
                         } else if (cancel) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_propose_cancel").replace("%player%", args[2]));
-                        } else if (!playerFam.isMarried() && !LunaticFamily.allowSingleAdopt) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_propose_no_single_adopt"));
+                            sender.sendMessage(Language.prefix + Language.getMessage("adopt_propose_cancel").replace("%player%", args[2]));
+                        } else if (!playerFam.isMarried() && !Config.allowSingleAdopt) {
+                            sender.sendMessage(Language.prefix + Language.getMessage("adopt_propose_no_single_adopt"));
                         } else if (playerFam.getChildrenAmount() > 1) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_propose_limit"));
-                        } else if (!LunaticFamily.playerExists(args[1])) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_exist").replace("%player%", args[1]));
+                            sender.sendMessage(Language.prefix + Language.getMessage("adopt_propose_limit"));
+                        } else if (!Utils.playerExists(args[1])) {
+                            sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[1]));
                         } else if (Bukkit.getPlayer(args[1]) == null) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_offline").replace("%player%", args[1]));
+                            sender.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", args[1]));
                         } else if (!playerFam.hasEnoughMoney("adopt_parent")) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("not_enough_money"));
+                            sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
                         } else {
-                            String child = LunaticFamily.getUUID(args[1]);
-                            FamilyPlayer childFam = new FamilyPlayer(child);
+                            String childUUID = Utils.getUUID(args[1]);
+                            FamilyPlayer childFam = new FamilyPlayer(childUUID);
 
                             if (args[1].equalsIgnoreCase(player.getName())) {
-                                player.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_propose_self_request"));
+                                player.sendMessage(Language.prefix + Language.getMessage("adopt_propose_self_request"));
                             } else if (playerFam.isFamilyMember(childFam.getID())) {
-                                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("marry_propose_family_request").replace("%player%", childFam.getName()));
-                            } else if (LunaticFamily.adoptRequests.containsKey(child)) {
-                                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_propose_open_request").replace("%player%", childFam.getName()));
+                                sender.sendMessage(Language.prefix + Language.getMessage("marry_propose_family_request").replace("%player%", childFam.getName()));
+                            } else if (LunaticFamily.adoptRequests.containsKey(childUUID)) {
+                                sender.sendMessage(Language.prefix + Language.getMessage("adopt_propose_open_request").replace("%player%", childFam.getName()));
                             } else if (childFam.getParents() == null) {
-                                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_propose_already_adopted").replace("%player%", childFam.getName()));
+                                sender.sendMessage(Language.prefix + Language.getMessage("adopt_propose_already_adopted").replace("%player%", childFam.getName()));
                             } else if (childFam.hasSibling() && !confirm) {
-                                sender.sendMessage(LunaticFamily.createClickableMessage(
-                                        LunaticFamily.getMessage("adopt_propose_has_sibling").replace("%player1%", childFam.getName()).replace("%player2%", childFam.getSibling().getName()),
-                                        LunaticFamily.getMessage("confirm"),
-                                        "/adopt propose " + LunaticFamily.getName(args[1]) + " confirm",
-                                        LunaticFamily.getMessage("cancel"),
-                                        "/adopt propose " + LunaticFamily.getName(args[1]) + " cancel"));
+                                sender.sendMessage(Utils.createClickableMessage(
+                                        Language.getMessage("adopt_propose_has_sibling").replace("%player1%", childFam.getName()).replace("%player2%", childFam.getSibling().getName()),
+                                        Language.getMessage("confirm"),
+                                        "/adopt propose " + Utils.getName(args[1]) + " confirm",
+                                        Language.getMessage("cancel"),
+                                        "/adopt propose " + Utils.getName(args[1]) + " cancel"));
 
                             } else if (childFam.hasSibling() && playerFam.getChildrenAmount() > 0) {
-                                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_propose_has_sibling_limit").replace("%player1%", childFam.getName()).replace("%player2%", childFam.getSibling().getName()));
+                                sender.sendMessage(Language.prefix + Language.getMessage("adopt_propose_has_sibling_limit").replace("%player1%", childFam.getName()).replace("%player2%", childFam.getSibling().getName()));
                             } else {
                                 if (playerFam.isMarried()) {
-                                    childFam.sendMessage(LunaticFamily.createClickableMessage(
-                                            LunaticFamily.getMessage("adopt_propose_request").replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName()),
-                                            LunaticFamily.getMessage("accept"),
+                                    childFam.sendMessage(Utils.createClickableMessage(
+                                            Language.getMessage("adopt_propose_request").replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName()),
+                                            Language.getMessage("accept"),
                                             "/adopt accept",
-                                            LunaticFamily.getMessage("deny"),
+                                            Language.getMessage("deny"),
                                             "/adopt deny"));
                                 } else {
-                                    childFam.sendMessage(LunaticFamily.createClickableMessage(
-                                            LunaticFamily.getMessage("adopt_propose_request_by_single").replace("%player%", playerFam.getName()),
-                                            LunaticFamily.getMessage("accept"),
+                                    childFam.sendMessage(Utils.createClickableMessage(
+                                            Language.getMessage("adopt_propose_request_by_single").replace("%player%", playerFam.getName()),
+                                            Language.getMessage("accept"),
                                             "/adopt accept",
-                                            LunaticFamily.getMessage("deny"),
+                                            Language.getMessage("deny"),
                                             "/adopt deny"));
                                 }
-                                LunaticFamily.adoptRequests.put(child, playerUUID);
-                                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_propose_request_sent").replace("%player%", childFam.getName()));
+                                LunaticFamily.adoptRequests.put(childUUID, playerUUID);
+                                sender.sendMessage(Language.prefix + Language.getMessage("adopt_propose_request_sent").replace("%player%", childFam.getName()));
 
                                 new BukkitRunnable() {
                                     public void run() {
-                                        if (LunaticFamily.adoptRequests.containsKey(child)) {
-                                            LunaticFamily.adoptRequests.remove(child);
+                                        if (LunaticFamily.adoptRequests.containsKey(childUUID)) {
+                                            LunaticFamily.adoptRequests.remove(childUUID);
                                             if (playerFam.isMarried()) {
                                                 FamilyPlayer partnerFam = playerFam.getPartner();
-                                                childFam.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_propose_request_expired").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));
+                                                childFam.sendMessage(Language.prefix + Language.getMessage("adopt_propose_request_expired").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));
                                             } else {
-                                                childFam.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_propose_request_by_single_expired").replace("%player%", playerFam.getName()));
+                                                childFam.sendMessage(Language.prefix + Language.getMessage("adopt_propose_request_by_single_expired").replace("%player%", playerFam.getName()));
                                             }
-                                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_request_sent_expired").replace("%player%", childFam.getName()));
+                                            sender.sendMessage(Language.prefix + Language.getMessage("adopt_request_sent_expired").replace("%player%", childFam.getName()));
                                         }
                                     }
                                 }.runTaskLater(plugin, 600L);
@@ -219,40 +222,40 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 
                         //check for request
                         if (!LunaticFamily.adoptRequests.containsKey(playerUUID)) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_accept_no_request"));
+                            sender.sendMessage(Language.prefix + Language.getMessage("adopt_accept_no_request"));
                         } else {
 
                             String parent = LunaticFamily.adoptRequests.get(playerUUID);
                             FamilyPlayer parentFam = new FamilyPlayer(parent);
 
                             if (parentFam.getChildrenAmount() > 1) {
-                                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_accept_parent_limit").replace("%player%", parentFam.getName()));
+                                sender.sendMessage(Language.prefix + Language.getMessage("adopt_accept_parent_limit").replace("%player%", parentFam.getName()));
                             } else if (!playerFam.hasEnoughMoney("adopt_child")) {
-                                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("not_enough_money"));
+                                sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
                             } else if (!parentFam.hasEnoughMoney("adopt_parent")) {
-                                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_enough_money").replace("%player%", parentFam.getName()));
+                                sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", parentFam.getName()));
                             } else {
 
                                 if (parentFam.isMarried()) {
-                                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_accept_got_adopted").replace("%player1%", parentFam.getName()).replace("%player2%", parentFam.getPartner().getName()));
-                                    parentFam.getPartner().sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_accept_adopted").replace("%player%", playerFam.getName()));
+                                    sender.sendMessage(Language.prefix + Language.getMessage("adopt_accept_got_adopted").replace("%player1%", parentFam.getName()).replace("%player2%", parentFam.getPartner().getName()));
+                                    parentFam.getPartner().sendMessage(Language.prefix + Language.getMessage("adopt_accept_adopted").replace("%player%", playerFam.getName()));
                                     parentFam.getPartner().withdrawPlayer("adopt_parent", 0.5);
                                     parentFam.withdrawPlayer("adopt_parent", 0.5);
                                 } else {
-                                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_accept_adopted_by_single").replace("%player%", parentFam.getName()));
+                                    sender.sendMessage(Language.prefix + Language.getMessage("adopt_accept_adopted_by_single").replace("%player%", parentFam.getName()));
                                 }
                                 playerFam.withdrawPlayer("adopt_child");
 
-                                parentFam.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_accept_adopted").replace("%player%", playerFam.getName()));
+                                parentFam.sendMessage(Language.prefix + Language.getMessage("adopt_accept_adopted").replace("%player%", playerFam.getName()));
                                 LunaticFamily.adoptRequests.remove(playerUUID);
                                 parentFam.adopt(playerFam.getID());
                             }
                         }
-                    } else if (args[0].equalsIgnoreCase("list") || LunaticFamily.getAliases("adopt", "list").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                    } else if (args[0].equalsIgnoreCase("list") || Language.getAliases("adopt", "list").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                         if (playerFam.getChildren().get(0) != null || playerFam.getChildren().get(1) != null) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_list_no_child"));
+                            sender.sendMessage(Language.prefix + Language.getMessage("adopt_list_no_child"));
                         } else {
-                            String msg = LunaticFamily.prefix + LunaticFamily.getMessage("adopt_list") + "\n";
+                            String msg = Language.prefix + Language.getMessage("adopt_list") + "\n";
                             if (playerFam.getChildren().get(0) != null) {
                                 msg = msg + playerFam.getChildren().get(0).getName() + "\n";
                             }
@@ -261,17 +264,17 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                             }
                             sender.sendMessage(msg);
                         }
-                    } else if (args[0].equalsIgnoreCase("deny") || LunaticFamily.getAliases("adopt", "deny").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                    } else if (args[0].equalsIgnoreCase("deny") || Language.getAliases("adopt", "deny").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
                         if (!LunaticFamily.adoptRequests.containsKey(playerUUID)) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_deny_no_request"));
+                            sender.sendMessage(Language.prefix + Language.getMessage("adopt_deny_no_request"));
                         } else {
                             String parent = LunaticFamily.adoptRequests.get(playerUUID);
                             FamilyPlayer parentFam = new FamilyPlayer(parent);
-                            parentFam.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_deny").replace("%player%", playerFam.getName()));
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_denied").replace("%player%", parentFam.getName()));
+                            parentFam.sendMessage(Language.prefix + Language.getMessage("adopt_deny").replace("%player%", playerFam.getName()));
+                            sender.sendMessage(Language.prefix + Language.getMessage("adopt_denied").replace("%player%", parentFam.getName()));
                             LunaticFamily.adoptRequests.remove(playerUUID);
                         }
-                    } else if (args[0].equalsIgnoreCase("moveout") || LunaticFamily.getAliases("adopt", "moveout").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
+                    } else if (args[0].equalsIgnoreCase("moveout") || Language.getAliases("adopt", "moveout").stream().anyMatch(element -> args[0].equalsIgnoreCase(element))) {
 
                         boolean confirm = false;
                         boolean cancel = false;
@@ -293,59 +296,59 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 
 
                         if (!playerFam.isAdopted()) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_moveout_no_parents"));
+                            sender.sendMessage(Language.prefix + Language.getMessage("adopt_moveout_no_parents"));
                         } else if (!confirm) {
-                            sender.sendMessage(LunaticFamily.createClickableMessage(
-                                    LunaticFamily.getMessage("adopt_moveout_confirm"),
-                                    LunaticFamily.getMessage("confirm"),
+                            sender.sendMessage(Utils.createClickableMessage(
+                                    Language.getMessage("adopt_moveout_confirm"),
+                                    Language.getMessage("confirm"),
                                     "/adopt moveout confirm",
-                                    LunaticFamily.getMessage("cancel"),
+                                    Language.getMessage("cancel"),
                                     "/adopt moveout cancel"));
                         } else if (cancel) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_moveout_cancel"));
+                            sender.sendMessage(Language.prefix + Language.getMessage("adopt_moveout_cancel"));
                         } else if (!force && !playerFam.hasEnoughMoney("adopt_moveout_child")) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("not_enough_money"));
+                            sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
                         } else if (!force && playerFam.getParents().size() == 2 && !playerFam.getParents().get(0).hasEnoughMoney("adopt_moveout_parent", 0.5)) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(1).getName()));
-                            sender.sendMessage(LunaticFamily.createClickableMessage(
-                                    LunaticFamily.getMessage("take_payment_confirm"),
-                                    LunaticFamily.getMessage("confirm"),
+                            sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(1).getName()));
+                            sender.sendMessage(Utils.createClickableMessage(
+                                    Language.getMessage("take_payment_confirm"),
+                                    Language.getMessage("confirm"),
                                     "/adopt moveout confirm force",
-                                    LunaticFamily.getMessage("cancel"),
+                                    Language.getMessage("cancel"),
                                     "/adopt moveout cancel"));
                         } else if (!force && playerFam.getParents().size() == 1 && !playerFam.getParents().get(0).hasEnoughMoney("adopt_moveout_parent")) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(0).getName()));
-                            sender.sendMessage(LunaticFamily.createClickableMessage(
-                                    LunaticFamily.getMessage("take_payment_confirm"),
-                                    LunaticFamily.getMessage("confirm"),
+                            sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(0).getName()));
+                            sender.sendMessage(Utils.createClickableMessage(
+                                    Language.getMessage("take_payment_confirm"),
+                                    Language.getMessage("confirm"),
                                     "/adopt moveout confirm force",
-                                    LunaticFamily.getMessage("cancel"),
+                                    Language.getMessage("cancel"),
                                     "/adopt moveout cancel"));
                         } else if (!force && playerFam.getParents().size() == 2 && !playerFam.getParents().get(1).hasEnoughMoney("adopt_moveout_parent", 0.5)) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(1).getName()));
-                            sender.sendMessage(LunaticFamily.createClickableMessage(
-                                    LunaticFamily.getMessage("take_payment_confirm"),
-                                    LunaticFamily.getMessage("confirm"),
+                            sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(1).getName()));
+                            sender.sendMessage(Utils.createClickableMessage(
+                                    Language.getMessage("take_payment_confirm"),
+                                    Language.getMessage("confirm"),
                                     "/adopt moveout confirm force",
-                                    LunaticFamily.getMessage("cancel"),
+                                    Language.getMessage("cancel"),
                                     "/adopt moveout cancel"));
                         } else if (force && !playerFam.hasEnoughMoney("adopt_moveout_parent", "adopt_moveout_child")) {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("not_enough_money"));
+                            sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
                         } else {
                             FamilyPlayer firstParentFam = playerFam.getParents().get(0);
 
                             if (playerFam.hasSibling()) {
                                 FamilyPlayer siblingFam = playerFam.getSibling();
-                                siblingFam.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_moveout_sibling"));
+                                siblingFam.sendMessage(Language.prefix + Language.getMessage("adopt_moveout_sibling"));
                             }
 
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_moveout"));
+                            sender.sendMessage(Language.prefix + Language.getMessage("adopt_moveout"));
 
 
-                            firstParentFam.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_moveout_child").replace("%player%", playerFam.getName()));
+                            firstParentFam.sendMessage(Language.prefix + Language.getMessage("adopt_moveout_child").replace("%player%", playerFam.getName()));
                             if (firstParentFam.isMarried()) {
                                 FamilyPlayer secondParentFam = firstParentFam.getPartner();
-                                secondParentFam.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_moveout_child").replace("%player%", playerFam.getName()));
+                                secondParentFam.sendMessage(Language.prefix + Language.getMessage("adopt_moveout_child").replace("%player%", playerFam.getName()));
                             }
 
                             if (force) {
@@ -370,7 +373,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                     } else if (checkIsSubcommand("kickout", subcommand)) {
                         if (playerFam.getChildren().get(0) != null || playerFam.getChildren().get(1) != null) {
                             if (args.length == 1) {
-                                sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_kickout_specify_child"));
+                                sender.sendMessage(Language.prefix + Language.getMessage("adopt_kickout_specify_child"));
                             } else {
                                 String childUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
                                 FamilyPlayer childFam = new FamilyPlayer(childUUID);
@@ -394,45 +397,45 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                     }
 
                                     if (!confirm) {
-                                        sender.sendMessage(LunaticFamily.createClickableMessage(
-                                                LunaticFamily.getMessage("adopt_kickout_confirm").replace("%player%", LunaticFamily.getName(args[1])),
-                                                LunaticFamily.getMessage("confirm"),
+                                        sender.sendMessage(Utils.createClickableMessage(
+                                                Language.getMessage("adopt_kickout_confirm").replace("%player%", Utils.getName(args[1])),
+                                                Language.getMessage("confirm"),
                                                 "/adopt kickout " + args[1] + " confirm",
-                                                LunaticFamily.getMessage("cancel"),
+                                                Language.getMessage("cancel"),
                                                 "/adopt kickout " + args[1] + " cancel"));
                                     } else if (cancel) {
-                                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_kickout_cancel"));
+                                        sender.sendMessage(Language.prefix + Language.getMessage("adopt_kickout_cancel"));
                                     } else if (!force && playerFam.isMarried() && !playerFam.hasEnoughMoney("adopt_kickout_parent", 0.5)) {
-                                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("not_enough_money"));
+                                        sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
                                     } else if (!force && !playerFam.isMarried() && !playerFam.hasEnoughMoney("adopt_kickout_parent")) {
-                                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("not_enough_money"));
+                                        sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
                                     } else if (!childFam.hasEnoughMoney("adopt_kickout_child")) {
-                                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_enough_money").replace("%player%", childFam.getName()));
-                                        sender.sendMessage(LunaticFamily.createClickableMessage(
-                                                LunaticFamily.getMessage("take_payment_confirm"),
-                                                LunaticFamily.getMessage("confirm"),
+                                        sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", childFam.getName()));
+                                        sender.sendMessage(Utils.createClickableMessage(
+                                                Language.getMessage("take_payment_confirm"),
+                                                Language.getMessage("confirm"),
                                                 "/adopt kickout confirm force",
-                                                LunaticFamily.getMessage("cancel"),
+                                                Language.getMessage("cancel"),
                                                 "/adopt kickout confirm force"));
                                     } else if (!force && playerFam.isMarried() && !playerFam.getPartner().hasEnoughMoney("adopt_kickout_parent")) {
-                                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_not_enough_money").replace("%player%", playerFam.getPartner().getName()));
-                                        sender.sendMessage(LunaticFamily.createClickableMessage(
-                                                LunaticFamily.getMessage("take_payment_confirm"),
-                                                LunaticFamily.getMessage("confirm"),
+                                        sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", playerFam.getPartner().getName()));
+                                        sender.sendMessage(Utils.createClickableMessage(
+                                                Language.getMessage("take_payment_confirm"),
+                                                Language.getMessage("confirm"),
                                                 "/adopt kickout confirm force",
-                                                LunaticFamily.getMessage("cancel"),
+                                                Language.getMessage("cancel"),
                                                 "/adopt kickout confirm force"));
                                     } else {
-                                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_kickout").replace("%player%", childFam.getName()));
+                                        sender.sendMessage(Language.prefix + Language.getMessage("adopt_kickout").replace("%player%", childFam.getName()));
                                         if (playerFam.isMarried()) {
-                                            playerFam.getPartner().sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_kickout_partner").replace("%player1%", playerFam.getName()).replace("%player2%", childFam.getName()));
+                                            playerFam.getPartner().sendMessage(Language.prefix + Language.getMessage("adopt_kickout_partner").replace("%player1%", playerFam.getName()).replace("%player2%", childFam.getName()));
                                         }
 
                                         if (childFam.hasSibling()) {
                                             FamilyPlayer siblingFam = childFam.getSibling();
-                                            siblingFam.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_kickout_sibling").replace("%player%", playerFam.getName()));
+                                            siblingFam.sendMessage(Language.prefix + Language.getMessage("adopt_kickout_sibling").replace("%player%", playerFam.getName()));
                                         }
-                                        childFam.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_kickout_child").replace("%player%", playerFam.getName()));
+                                        childFam.sendMessage(Language.prefix + Language.getMessage("adopt_kickout_child").replace("%player%", playerFam.getName()));
 
                                         if (force) {
                                             playerFam.withdrawPlayer("adopt_kickout_parent", "adopt_kickout_child");
@@ -450,23 +453,23 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                                     }
 
                                 } else {
-                                    sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_kickout_not_your_child").replace("%player%", childFam.getName()));
+                                    sender.sendMessage(Language.prefix + Language.getMessage("adopt_kickout_not_your_child").replace("%player%", childFam.getName()));
                                 }
                             }
                         } else {
-                            sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("adopt_kickout_no_child"));
+                            sender.sendMessage(Language.prefix + Language.getMessage("adopt_kickout_no_child"));
                         }
                     } else if (checkIsSubcommand("help", subcommand)) {
                         String[] subcommandsHelp = {"propose", "kickout", "moveout"};
 
-                        StringBuilder msg = new StringBuilder(LunaticFamily.prefix + " " + LunaticFamily.getMessage(label + "_help") + "\n");
+                        StringBuilder msg = new StringBuilder(Language.prefix + " " + Language.getMessage(label + "_help") + "\n");
 
                         for (final String sc : subcommandsHelp) {
-                            msg.append(LunaticFamily.prefix).append(" ").append(LunaticFamily.getMessage(label + "_" + sc + "_help")).append("\n");
+                            msg.append(Language.prefix).append(" ").append(Language.getMessage(label + "_" + sc + "_help")).append("\n");
                         }
                         sender.sendMessage(msg.toString());
                     } else {
-                        sender.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("wrong_usage"));
+                        sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
                     }
                 }
             }
@@ -480,8 +483,8 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String commandLabel, String[] args) {
 
-        List<String> adoptSubcommands = LunaticFamily.adoptSubcommands;
-        List<String> adoptAdminSubcommands = LunaticFamily.adoptAdminSubcommands;
+        List<String> adoptSubcommands = Language.getAliases("adopt", "propose", "accept", "deny", "kickout", "moveout", "list");
+        List<String> adoptAdminSubcommands = Language.getAliases("adopt", "set", "unset");
         List<String> list = new ArrayList<>();
         if (sender instanceof Player) {
             Player player = (Player) sender;
@@ -520,6 +523,6 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
     }
 
     private boolean checkIsSubcommand(final String subcommand, final String arg) {
-        return subcommand.equalsIgnoreCase(arg) || LunaticFamily.getAliases("adopt", subcommand).stream().anyMatch(element -> arg.equalsIgnoreCase(element));
+        return subcommand.equalsIgnoreCase(arg) || Language.getAliases("adopt", subcommand).stream().anyMatch(element -> arg.equalsIgnoreCase(element));
     }
 }

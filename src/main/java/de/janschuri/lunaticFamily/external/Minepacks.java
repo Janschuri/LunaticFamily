@@ -1,4 +1,4 @@
-package de.janschuri.lunaticFamily.utils.external;
+package de.janschuri.lunaticFamily.external;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
 import org.bukkit.Bukkit;

@@ -1,5 +1,6 @@
 package de.janschuri.lunaticFamily.listener;
 
+import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import org.bukkit.entity.Player;
@@ -22,11 +23,11 @@ public class QuitListener implements Listener {
 
                 String priestUUID = LunaticFamily.marryPriest.get(uuid);
                 FamilyPlayer priestFam = new FamilyPlayer(priestUUID);
-                priestFam.chat(LunaticFamily.getMessage("player_quit").replace("%player%", playerFam.getName()) + " " + LunaticFamily.getMessage("marry_cancel"));
+                priestFam.chat(Language.getMessage("player_quit").replace("%player%", playerFam.getName()) + " " + Language.getMessage("marry_cancel"));
             } else {
                 String partnerUUID = LunaticFamily.marryRequests.get(uuid);
                 FamilyPlayer partnerFam = new FamilyPlayer(partnerUUID);
-                partnerFam.sendMessage(LunaticFamily.getMessage("player_quit").replace("%player%", playerFam.getName()) + " " + LunaticFamily.getMessage("marry_cancel"));
+                partnerFam.sendMessage(Language.getMessage("player_quit").replace("%player%", playerFam.getName()) + " " + Language.getMessage("marry_cancel"));
             }
 
             LunaticFamily.marryRequests.remove(uuid);
@@ -40,13 +41,13 @@ public class QuitListener implements Listener {
         if (LunaticFamily.adoptRequests.containsKey(uuid)) {
             String firstParentUUID = LunaticFamily.adoptRequests.get(uuid);
             FamilyPlayer firstParentFam = new FamilyPlayer(firstParentUUID);
-            firstParentFam.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_offline").replace("%player%", playerFam.getName()) + LunaticFamily.getMessage("adopt_cancel"));
+            firstParentFam.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", playerFam.getName()) + Language.getMessage("adopt_cancel"));
             LunaticFamily.adoptRequests.remove(uuid);
         }
         if (LunaticFamily.adoptRequests.containsValue(uuid)) {
             String childUUID = LunaticFamily.adoptRequests.inverse().get(uuid);
             FamilyPlayer childFam = new FamilyPlayer(childUUID);
-            childFam.sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("player_offline").replace("%player%", playerFam.getName()) + LunaticFamily.getMessage("adoptCancel"));
+            childFam.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", playerFam.getName()) + Language.getMessage("adoptCancel"));
             LunaticFamily.adoptRequests.inverse().remove(uuid);
         }
 

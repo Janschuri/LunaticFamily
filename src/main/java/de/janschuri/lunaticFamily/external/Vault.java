@@ -1,4 +1,4 @@
-package de.janschuri.lunaticFamily.utils.external;
+package de.janschuri.lunaticFamily.external;
 
 import net.milkbowl.vault.economy.Economy;
 

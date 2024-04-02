@@ -1,7 +1,8 @@
 package de.janschuri.lunaticFamily.handler;
 
 import com.google.common.collect.BiMap;
-import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.config.Language;
+import de.janschuri.lunaticFamily.utils.Utils;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
 import eu.endercentral.crazy_advancements.advancement.AdvancementDisplay;
@@ -33,10 +34,10 @@ public class FamilyTree {
         AdvancementDisplay.AdvancementFrame frame = AdvancementDisplay.AdvancementFrame.CHALLENGE;
         AdvancementVisibility visibility = AdvancementVisibility.ALWAYS;
 
-        description = LunaticFamily.getRelation("ego", playerFam.getGender());
+        description = Language.getRelation("ego", playerFam.getGender());
 
         String skinURL = playerFam.getSkinURL();
-        ItemStack icon = LunaticFamily.getSkull(skinURL);
+        ItemStack icon = Utils.getSkull(skinURL);
         String background = playerFam.getBackground();
 
 
@@ -584,10 +585,10 @@ public class FamilyTree {
                         .replace("eighth_", "");
 
 
-                description = LunaticFamily.getRelation(relationKey, relationFam.getGender());
+                description = Language.getRelation(relationKey, relationFam.getGender());
 
                 String skinURL = relationFam.getSkinURL();
-                icon = LunaticFamily.getSkull(skinURL);
+                icon = Utils.getSkull(skinURL);
 
 
             AdvancementDisplay display = new AdvancementDisplay(icon, title, description, frame, visibility);

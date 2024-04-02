@@ -2,8 +2,10 @@ package de.janschuri.lunaticFamily.handler;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import de.janschuri.lunaticFamily.config.Config;
+import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.utils.external.Vault;
+import de.janschuri.lunaticFamily.external.Vault;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -63,13 +65,13 @@ public class FamilyPlayer {
 
 
         if (LunaticFamily.getDatabase().getGender(id) == null) {
-            gender = LunaticFamily.defaultGender;
+            gender = Config.defaultGender;
         } else {
             gender = LunaticFamily.getDatabase().getGender(id);
         }
 
         if (LunaticFamily.getDatabase().getBackground(uuid) == null) {
-            background = LunaticFamily.defaultBackground;
+            background = Config.defaultBackground;
         } else {
             background = LunaticFamily.getDatabase().getBackground(uuid);
         }
@@ -114,13 +116,13 @@ public class FamilyPlayer {
 
 
         if (LunaticFamily.getDatabase().getGender(id) == null) {
-            gender = LunaticFamily.defaultGender;
+            gender = Config.defaultGender;
         } else {
             gender = LunaticFamily.getDatabase().getGender(id);
         }
 
         if (LunaticFamily.getDatabase().getBackground(uuid) == null) {
-            background = LunaticFamily.defaultBackground;
+            background = Config.defaultBackground;
         } else {
             background = LunaticFamily.getDatabase().getBackground(uuid);
         }
@@ -292,48 +294,48 @@ public class FamilyPlayer {
     }
 
     public void withdrawPlayer(String... withdrawKeys) {
-        if (LunaticFamily.enabledVault) {
+        if (Config.enabledVault) {
             OfflinePlayer player = this.getOfflinePlayer();
 
             double amount = 0.0;
             for (String key : withdrawKeys) {
-                if (LunaticFamily.commandWithdraws.containsKey(key)) {
-                    amount += LunaticFamily.commandWithdraws.get(key);
+                if (Config.commandWithdraws.containsKey(key)) {
+                    amount += Config.commandWithdraws.get(key);
                 }
             }
             if (amount > 0) {
                 Vault.getEconomy().withdrawPlayer(player, amount);
                 if (player.getPlayer() != null) {
-                    player.getPlayer().sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("withdraw").replace("%amount%", amount + ""));
+                    player.getPlayer().sendMessage(Language.prefix + Language.getMessage("withdraw").replace("%amount%", amount + ""));
                 }
             }
         }
     }
 
     public void withdrawPlayer(String withdrawKey, double factor) {
-        if (LunaticFamily.enabledVault) {
+        if (Config.enabledVault) {
             OfflinePlayer player = this.getOfflinePlayer();
 
             double amount = 0.0;
-            amount += LunaticFamily.commandWithdraws.get(withdrawKey) * factor;
+            amount += Config.commandWithdraws.get(withdrawKey) * factor;
 
 
             if (amount > 0) {
                 Vault.getEconomy().withdrawPlayer(player, amount);
                 if (player.getPlayer() != null) {
-                    player.getPlayer().sendMessage(LunaticFamily.prefix + LunaticFamily.getMessage("withdraw").replace("%amount%", amount + ""));
+                    player.getPlayer().sendMessage(Language.prefix + Language.getMessage("withdraw").replace("%amount%", amount + ""));
                 }
             }
         }
     }
 
     public boolean hasEnoughMoney(String... withdrawKeys) {
-        if (LunaticFamily.enabledVault) {
+        if (Config.enabledVault) {
             OfflinePlayer player = this.getOfflinePlayer();
             double amount = 0.0;
             for (String key : withdrawKeys) {
-                if (LunaticFamily.commandWithdraws.containsKey(key)) {
-                    amount += LunaticFamily.commandWithdraws.get(key);
+                if (Config.commandWithdraws.containsKey(key)) {
+                    amount += Config.commandWithdraws.get(key);
                 }
             }
             return (amount < Vault.getEconomy().getBalance(player));
@@ -343,9 +345,9 @@ public class FamilyPlayer {
     }
 
     public boolean hasEnoughMoney(String withdrawKey, double factor) {
-        if (LunaticFamily.enabledVault) {
+        if (Config.enabledVault) {
             OfflinePlayer player = this.getOfflinePlayer();
-            return (LunaticFamily.commandWithdraws.get(withdrawKey) * factor < Vault.getEconomy().getBalance(player));
+            return (Config.commandWithdraws.get(withdrawKey) * factor < Vault.getEconomy().getBalance(player));
         } else {
             return true;
         }
@@ -436,7 +438,7 @@ public class FamilyPlayer {
 
         playerFam.deleteMarriage();
 
-        if (!LunaticFamily.allowSingleAdopt) {
+        if (!Config.allowSingleAdopt) {
             for (FamilyPlayer child : playerChildren) {
                 partnerFam.deleteAdoption(child.getID());
             }
