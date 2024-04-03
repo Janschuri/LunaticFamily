@@ -31,12 +31,13 @@ public class Language {
     public static List<String> genderCommandsAliases = new ArrayList<>();
     public static List<String> genderSubcommandsAliases = new ArrayList<>();
     public static List<String> genderAdminSubcommandsAliases = new ArrayList<>();
-    public static List<String> familyAdminSubcommandsAliases = new ArrayList<>();
+    public static List<String> familyReloadAliases = new ArrayList<>();
     public static List<String> adoptCommandsAliases = new ArrayList<>();
     public static List<String> adoptSubcommandsAliases = new ArrayList<>();
     public static List<String> adoptAdminSubcommandsAliases = new ArrayList<>();
     public static List<String> marryCommandsAliases = new ArrayList<>();
     public static List<String> marrySubcommandsAliases = new ArrayList<>();
+    public static List<String> marryPriestSubcommandsAliases = new ArrayList<>();
     public static List<String> marryAdminSubcommandsAliases = new ArrayList<>();
     public static List<String> siblingCommandsAliases = new ArrayList<>();
     public static List<String> siblingSubcommandsAliases = new ArrayList<>();
@@ -117,13 +118,14 @@ public class Language {
 
         familyCommandsAliases = getAliases("family");
         familySubcommandsAliases.addAll(getAliases("family", "list", "background", "help"));
-        familyAdminSubcommandsAliases.addAll(getAliases("family", "reload"));
+        familyReloadAliases.addAll(getAliases("family", "reload"));
 
         genderCommandsAliases = getAliases("gender");
         genderSubcommandsAliases.addAll(getAliases("gender", "info", "set", "help"));
 
         marryCommandsAliases = getAliases("marry");
         marrySubcommandsAliases.addAll(getAliases("marry", "propose", "accept", "deny", "divorce", "list", "kiss", "gift", "backpack", "help", "priest"));
+        marryPriestSubcommandsAliases.addAll(getAliases("priest"));
         marryAdminSubcommandsAliases.addAll(getAliases("marry", "set", "unset"));
 
         adoptCommandsAliases = getAliases("adopt");
@@ -195,5 +197,9 @@ public class Language {
             list.add(command);
         }
         return list;
+    }
+
+    public static boolean checkIsSubcommand(final String command, final String subcommand, final String arg) {
+        return subcommand.equalsIgnoreCase(arg) || Language.getAliases(command, subcommand).stream().anyMatch(element -> arg.equalsIgnoreCase(element));
     }
 }

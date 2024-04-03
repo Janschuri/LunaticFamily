@@ -44,6 +44,8 @@ messages:
   #family command
   family_list: "Your family:"
   family_others_list: "%player%'s family:"
+  family_list_help: "Your family:"
+  family_others_list_help: "%player%'s family:"
   family_background_set: "Background has been reset."
   tree_loaded: "Your family tree has been reloaded."
   #gender command
@@ -138,8 +140,6 @@ messages:
   adopt_kickout_not_your_child: "%player% is not your child."
   adopt_kickout_no_child: "You have no child."
   adopt_kickout_cancel: "You haven't kicked out %player% after all."
-  adopt_list: "Your children: "
-  adopt_list_no_child: "You don't have any children!"
   #sibling command
   sibling_propose_has_sibling: "You already have a sibling."
   sibling_propose_is_adopted: "You are adopted. Your parents can adopt a sibling for you."
@@ -289,8 +289,6 @@ aliases:
       - kickout
     moveout:
       - moveout
-    list:
-      - list
     set:
       - set
     unset:

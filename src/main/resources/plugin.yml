@@ -7,7 +7,7 @@ commands:
   marry:
     description: Get married.
   adopt:
-    description: Adopt or get adopted.
+    description: Adopt a child.
   gender:
     description: Change your gender.
   sibling:
@@ -35,6 +35,8 @@ permissions:
       description: Set and unset siblinghood by command.
 lunaticFamily.admin.gender:
       description: Set genders of players by command.
+lunaticFamily.admin.reload:
+  description: Reload config.
 api-version: 1.20
 softdepend:
   - CrazyAdvancementAPI

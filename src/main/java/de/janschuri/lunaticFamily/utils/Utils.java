@@ -9,6 +9,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
@@ -157,5 +158,9 @@ public class Utils {
         textures.setSkin(urlObject);
         profile.setTextures(textures);
         return profile;
+    }
+
+    public static Player getPlayer(String arg) {
+        return Bukkit.getPlayer(arg);
     }
 }

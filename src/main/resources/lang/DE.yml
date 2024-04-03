@@ -36,8 +36,8 @@ messages:
   adopt_kickout_help: "&6/adopt kickout <Spielername>&r - Werfe dein Kind aus der Familie."
   adopt_moveout_help: "&6/adopt moveout&r - Ziehe von Zuhause aus und verlasse deine Eltern."
   family_help: "Family-Help"
-  family_list_help: "&6/family list (playername)&r - Lass dir eine Liste all deiner Familienmitglieder zeigen."
-  family_tree_help: "&6/family tree&r - Lade deine Familienstammbaum neu."
+  family_list_help: "&6/family list&r - Lass dir eine Liste all deiner Familienmitglieder zeigen."
+  family_list_others_help: "&6/family list (playername)&r - Lass dir eine Liste aller Familienmitglieder eines Spielers zeigen."
   family_background_help: "&6/family background&r - Ändere den Hintergrund deines Familienstammbaums."
   family_adopt_help: "&6/adopt help&r - Lass dir die Hilfeseite von /adopt anzeigen."
   family_marry_help: "&6/marry help&r - Lass dir die Hilfeseite von /marry anzeigen."
@@ -50,7 +50,7 @@ messages:
   family_list: "Deine Familie:"
   family_others_list: "%player%'s Familie:"
   family_background_set: "Hintergrund wurde neu gesetzt."
-  tree_loaded: "Dein Familienstammbaum wurde neu geladen."
+  tree_loaded: "Dein Familienstammbaum wurde geladen."
   #gender command
   gender_set: "Wähle dein Geschlecht: "
   gender_set_hover: "Setze dein Geschlecht auf %gender%."
@@ -144,8 +144,6 @@ messages:
   adopt_kickout_not_your_child: "%player% ist nicht dein Kind."
   adopt_kickout_no_child: "Du hast kein Kind."
   adopt_kickout_cancel: "Du hast dein %player% doch nicht rausgeschmissen."
-  adopt_list: "Deine Kinder: "
-  adopt_list_no_child: "Du hast keine Kinder!"
   #sibling command
   sibling_propose_has_sibling: "Du hast schon ein Geschwisterkind."
   sibling_propose_is_adopted: "Du bist adoptiert. Deine Eltern können dir ein Geschwisterkind adoptieren"
@@ -297,8 +295,6 @@ aliases:
       - kickout
     moveout:
       - moveout
-    list:
-      - list
     set:
       - set
     unset:

@@ -1,4 +1,4 @@
-package de.janschuri.lunaticFamily.commands;
+package de.janschuri.lunaticFamily.commands.sibling;
 
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.LunaticFamily;

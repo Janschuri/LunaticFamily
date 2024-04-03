@@ -1,6 +1,10 @@
 package de.janschuri.lunaticFamily;
 
-import de.janschuri.lunaticFamily.commands.*;
+import de.janschuri.lunaticFamily.commands.adopt.AdoptCommand;
+import de.janschuri.lunaticFamily.commands.family.FamilyCommand;
+import de.janschuri.lunaticFamily.commands.gender.GenderCommand;
+import de.janschuri.lunaticFamily.commands.marry.MarryCommand;
+import de.janschuri.lunaticFamily.commands.sibling.SiblingCommand;
 import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.external.Vault;
@@ -16,7 +20,6 @@ import de.janschuri.lunaticFamily.listener.JoinListener;
 import de.janschuri.lunaticFamily.listener.QuitListener;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
@@ -77,8 +80,8 @@ public final class LunaticFamily extends JavaPlugin {
         getCommand("adopt").setExecutor(new AdoptCommand(this));
         getCommand("adopt").setTabCompleter(new AdoptCommand(this));
 
-        getCommand("gender").setExecutor(new GenderCommand());
-        getCommand("gender").setTabCompleter(new GenderCommand());
+        getCommand("gender").setExecutor(new GenderCommand(this));
+        getCommand("gender").setTabCompleter(new GenderCommand(this));
 
         getCommand("marry").setExecutor(new MarryCommand(this));
         getCommand("marry").setTabCompleter(new MarryCommand(this));
