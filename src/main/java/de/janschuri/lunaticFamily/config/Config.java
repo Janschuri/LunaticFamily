@@ -70,7 +70,7 @@ public class Config {
         enabledCrazyAdvancementAPI = config.getBoolean("use_crazy_advancement_api");
         enabledMySQL = config.getBoolean("Database.MySQL.enabled");
 
-        //command withdraws
+
         ConfigurationSection withdrawsSection = config.getConfigurationSection("command_withdraws");
         if (withdrawsSection != null) {
             for (String key : withdrawsSection.getKeys(false)) {

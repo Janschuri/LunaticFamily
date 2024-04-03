@@ -277,7 +277,6 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                             }
                         }
                     }
-                    //player subcommand "accept"
                     else if (checkIsSubcommand("accept", subcommand)) {
 
                         if (!LunaticFamily.marryRequests.containsKey(playerUUID) && !LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
@@ -285,7 +284,6 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                         } else if (LunaticFamily.marryPriestRequests.containsValue(playerUUID)) {
                             sender.sendMessage(Language.prefix + Language.getMessage("marry_accept_open_request_partner"));
                         } else {
-                            //check for request
                             if (LunaticFamily.marryRequests.containsKey(playerUUID)) {
 
                                 String partnerUUID = LunaticFamily.marryRequests.get(playerUUID);
@@ -348,7 +346,6 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
                             }
 
-                            //check for priest request
                             else if (LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
 
                                 String partnerUUID = LunaticFamily.marryPriestRequests.get(playerUUID);

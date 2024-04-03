@@ -1,4 +1,4 @@
-name: Family
+name: LunaticFamily
 version: '${project.version}'
 main: de.janschuri.lunaticFamily.LunaticFamily
 commands:
@@ -19,8 +19,6 @@ permissions:
     description: Use /marry Command.
   lunaticFamily.sibling:
     description: Use /marry Command.
-  lunaticFamily.family.tree:
-    description: Use /family tree.
   lunaticFamily.family.background:
     description: Use /family background.
   lunaticFamily.marry.priest:

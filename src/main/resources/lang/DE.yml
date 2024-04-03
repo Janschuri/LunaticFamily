@@ -245,8 +245,6 @@ aliases:
   family:
     base_command:
       - family
-    tree:
-      - tree
     background:
       - background
     list:

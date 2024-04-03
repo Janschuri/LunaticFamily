@@ -4,6 +4,7 @@ import de.janschuri.lunaticFamily.commands.*;
 import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.external.Vault;
+import de.janschuri.lunaticFamily.handler.FamilyTree;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import com.google.common.collect.BiMap;
@@ -35,6 +36,7 @@ public final class LunaticFamily extends JavaPlugin {
     public static BiMap<String, String> siblingRequests = HashBiMap.create();
 
     private static LunaticFamily instance;
+    private LunaticFamily plugin;
 
     public static LunaticFamily getInstance() {
         return instance;
@@ -87,10 +89,11 @@ public final class LunaticFamily extends JavaPlugin {
 
     }
 
-    public void loadConfig(Plugin plugin) {
+    public void loadConfig(LunaticFamily plugin) {
 
         new Config(this);
         new Language(this);
+        FamilyTree.loadAdvancementMap(plugin);
 
         List<String> commands = Arrays.asList("family", "marry", "sibling", "adopt", "gender");
 

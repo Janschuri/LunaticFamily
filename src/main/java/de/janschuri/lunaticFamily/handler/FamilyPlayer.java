@@ -6,10 +6,12 @@ import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.external.Vault;
+import de.janschuri.lunaticFamily.utils.Utils;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
@@ -494,6 +496,10 @@ public class FamilyPlayer {
 
     public boolean isFamilyMember(int id) {
         return this.getFamilyList().containsValue(id);
+    }
+
+    public ItemStack getSkull() {
+        return Utils.getSkull(this.getSkinURL());
     }
 
     public BiMap<String, Integer> getFamilyList() {

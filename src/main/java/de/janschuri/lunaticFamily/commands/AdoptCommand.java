@@ -220,7 +220,6 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
 
                     } else if (checkIsSubcommand("accept", subcommand)) {
 
-                        //check for request
                         if (!LunaticFamily.adoptRequests.containsKey(playerUUID)) {
                             sender.sendMessage(Language.prefix + Language.getMessage("adopt_accept_no_request"));
                         } else {
@@ -518,7 +517,6 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        // return null at the end.
         return null;
     }
 

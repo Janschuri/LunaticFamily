@@ -36,9 +36,6 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
             } else {
                 List<String> subcommandsHelp = new ArrayList<>();
-                if (sender.hasPermission("lunaticFamily.family.tree")) {
-                    subcommandsHelp.add("tree");
-                }
                 if (sender.hasPermission("lunaticFamily.family.background")) {
                     subcommandsHelp.add("background");
                 }
@@ -180,16 +177,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 Player player = (Player) sender;
                 String uuid = player.getUniqueId().toString();
                 FamilyPlayer playerFam = new FamilyPlayer(uuid);
-                if (checkIsSubcommand("tree", subcommand)) {
-                    if (!player.hasPermission("lunaticFamily.family.tree")) {
-                        sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
-                    } else if (!Config.enabledCrazyAdvancementAPI) {
-                        sender.sendMessage(Language.prefix + Language.getMessage("disabled_feature"));
-                    } else {
-                        new FamilyTree(playerFam.getID());
-                        sender.sendMessage(Language.getMessage("tree_loaded"));
-                    }
-                } else if (checkIsSubcommand("background", subcommand)) {
+                if (checkIsSubcommand("background", subcommand)) {
                     if (!player.hasPermission("lunaticFamily.family.background")) {
                         sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
                     } else if (args.length == 2) {
@@ -199,16 +187,12 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                         sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
                     }
                 } else if (checkIsSubcommand("help", subcommand)) {
-                    if (!player.hasPermission("lunaticFamily.family.tree")) {
-                        sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
-                    } else {
-                        String[] subcommands = {"list", "tree", "background"};
+                        String[] subcommands = {"list", "background"};
                         String msg = Language.getMessage(label + "_help") + "\n";
                         for (String sc : subcommands) {
                             msg = msg + Language.getMessage(label + "_" + sc + "_help") + "\n";
                         }
                         sender.sendMessage(msg);
-                    }
                 } else {
                     sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
                 }
@@ -424,7 +408,6 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        // return null at the end.
         return null;
     }
 

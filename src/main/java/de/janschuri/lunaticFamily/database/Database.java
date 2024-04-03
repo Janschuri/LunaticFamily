@@ -58,8 +58,8 @@ public abstract class Database {
 
             rs = ps.executeQuery();
             while (rs.next()) {
-                if (rs.getString("uuid").equals(uuid)) { // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
-                    return rs.getInt("id"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
+                if (rs.getString("uuid").equals(uuid)) {
+                    return rs.getInt("id");
                 }
             }
         } catch (SQLException ex) {
@@ -87,8 +87,8 @@ public abstract class Database {
 
             rs = ps.executeQuery();
             while (rs.next()) {
-                if (rs.getInt("id") == id) { // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
-                    return rs.getString("uuid"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
+                if (rs.getInt("id") == id) {
+                    return rs.getString("uuid");
                 }
             }
         } catch (SQLException ex) {
@@ -116,8 +116,8 @@ public abstract class Database {
 
             rs = ps.executeQuery();
             while (rs.next()) {
-                if (rs.getInt("id") == id) { // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
-                    return rs.getString("name"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
+                if (rs.getInt("id") == id) {
+                    return rs.getString("name");
                 }
             }
         } catch (SQLException ex) {
@@ -145,8 +145,8 @@ public abstract class Database {
 
             rs = ps.executeQuery();
             while (rs.next()) {
-                if (rs.getInt("id") == id) { // Tell database to search for the player you sent into the method. e.g getTokens(sam) It will look for sam.
-                    return rs.getString("skinURL"); // Return the players ammount of kills. If you wanted to get total (just a random number for an example for you guys) You would change this to total!
+                if (rs.getInt("id") == id) {
+                    return rs.getString("skinURL");
                 }
             }
         } catch (SQLException ex) {
@@ -461,9 +461,6 @@ public abstract class Database {
 
         return childsList;
     }
-
-
-    // Now we need methods to save things to the database
     public void updatePlayerData(int id, String uuid, String name, String skinURL, String gender, String background) {
         Connection conn = null;
         PreparedStatement ps = null;

@@ -1,0 +1,1022 @@
+[
+  {
+    "parent": "ego",
+    "name": "partner",
+    "x": 2.0,
+    "y": 0.0
+  },
+  {
+    "parent": "partner",
+    "name": "second_sibling_in_law_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "second_sibling_in_law_first_holder",
+    "name": "second_sibling_in_law_second_holder",
+    "x": 0.0,
+    "y": -1.0
+  },
+  {
+    "parent": "second_sibling_in_law_second_holder",
+    "name": "second_sibling_in_law_third_holder",
+    "x": 2.0,
+    "y": 0.0
+  },
+  {
+    "parent": "second_sibling_in_law_third_holder",
+    "name": "second_sibling_in_law",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "partner",
+    "name": "first_parent_in_law_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "first_parent_in_law_first_holder",
+    "name": "first_parent_in_law_second_holder",
+    "x": 0.0,
+    "y": -1.0
+  },
+  {
+    "parent": "first_parent_in_law_second_holder",
+    "name": "first_parent_in_law_third_holder",
+    "x": 1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "first_parent_in_law_third_holder",
+    "name": "first_parent_in_law",
+    "x": -0.5,
+    "y": -1.0
+  },
+  {
+    "parent": "partner",
+    "name": "second_parent_in_law_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "second_parent_in_law_first_holder",
+    "name": "second_parent_in_law_second_holder",
+    "x": 0.0,
+    "y": -1.0
+  },
+  {
+    "parent": "second_parent_in_law_second_holder",
+    "name": "second_parent_in_law_third_holder",
+    "x": 1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "second_parent_in_law_third_holder",
+    "name": "second_parent_in_law",
+    "x": 1.5,
+    "y": -1.0
+  },
+  {
+    "parent": "ego",
+    "name": "sibling_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "sibling_first_holder",
+    "name": "sibling_second_holder",
+    "x": -2.0,
+    "y": -1.0
+  },
+  {
+    "parent": "sibling_second_holder",
+    "name": "sibling_third_holder",
+    "x": 0.0,
+    "y": 1.0
+  },
+  {
+    "parent": "sibling_third_holder",
+    "name": "sibling",
+    "x": 0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "sibling",
+    "name": "first_sibling_in_law",
+    "x": -4.0,
+    "y": 0.0
+  },
+  {
+    "parent": "sibling",
+    "name": "first_niece_or_nephew_first_holder",
+    "x": -3.5,
+    "y": 0.0
+  },
+  {
+    "parent": "first_niece_or_nephew_first_holder",
+    "name": "first_niece_or_nephew_second_holder",
+    "x": 0.0,
+    "y": 1.0
+  },
+  {
+    "parent": "first_niece_or_nephew_second_holder",
+    "name": "first_niece_or_nephew_third_holder",
+    "x": -1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "first_niece_or_nephew_third_holder",
+    "name": "first_niece_or_nephew",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "sibling",
+    "name": "second_niece_or_nephew_first_holder",
+    "x": -3.5,
+    "y": 0.0
+  },
+  {
+    "parent": "second_niece_or_nephew_first_holder",
+    "name": "second_niece_or_nephew_second_holder",
+    "x": 1.0,
+    "y": 1.0
+  },
+  {
+    "parent": "second_niece_or_nephew_second_holder",
+    "name": "second_niece_or_nephew",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "ego",
+    "name": "first_parent_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "first_parent_first_holder",
+    "name": "first_parent_second_holder",
+    "x": -1.0,
+    "y": -1.0
+  },
+  {
+    "parent": "first_parent_second_holder",
+    "name": "first_parent",
+    "x": -0.5,
+    "y": -1.0
+  },
+  {
+    "parent": "first_parent",
+    "name": "second_aunt_or_uncle_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "second_aunt_or_uncle_first_holder",
+    "name": "second_aunt_or_uncle_second_holder",
+    "x": -6.0,
+    "y": -1.0
+  },
+  {
+    "parent": "second_aunt_or_uncle_second_holder",
+    "name": "second_aunt_or_uncle_third_holder",
+    "x": 0.0,
+    "y": 1.0
+  },
+  {
+    "parent": "second_aunt_or_uncle_third_holder",
+    "name": "second_aunt_or_uncle",
+    "x": 0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "second_aunt_or_uncle",
+    "name": "first_aunt_or_uncle",
+    "x": -2.0,
+    "y": 0.0
+  },
+  {
+    "parent": "second_aunt_or_uncle",
+    "name": "first_cousin_first_holder",
+    "x": -1.5,
+    "y": 0.0
+  },
+  {
+    "parent": "first_cousin_first_holder",
+    "name": "first_cousin_second_holder",
+    "x": 0.0,
+    "y": 1.0
+  },
+  {
+    "parent": "first_cousin_second_holder",
+    "name": "first_cousin_third_holder",
+    "x": -1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "first_cousin_third_holder",
+    "name": "first_cousin",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "second_aunt_or_uncle",
+    "name": "second_cousin_first_holder",
+    "x": -1.5,
+    "y": 0.0
+  },
+  {
+    "parent": "second_cousin_first_holder",
+    "name": "second_cousin_second_holder",
+    "x": 1.0,
+    "y": 1.0
+  },
+  {
+    "parent": "second_cousin_second_holder",
+    "name": "second_cousin",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "first_parent",
+    "name": "first_grandparent_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "first_grandparent_first_holder",
+    "name": "first_grandparent_second_holder",
+    "x": -3.0,
+    "y": -1.0
+  },
+  {
+    "parent": "first_grandparent_second_holder",
+    "name": "first_grandparent",
+    "x": -0.5,
+    "y": -1.0
+  },
+  {
+    "parent": "first_grandparent",
+    "name": "first_great_aunt_or_uncle_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "first_great_aunt_or_uncle_first_holder",
+    "name": "first_great_aunt_or_uncle_second_holder",
+    "x": -2.0,
+    "y": -1.0
+  },
+  {
+    "parent": "first_great_aunt_or_uncle_second_holder",
+    "name": "first_great_aunt_or_uncle_third_holder",
+    "x": 0.0,
+    "y": 1.0
+  },
+  {
+    "parent": "first_great_aunt_or_uncle_third_holder",
+    "name": "first_great_aunt_or_uncle",
+    "x": 0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "first_grandparent",
+    "name": "first_great_grandparent_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "first_great_grandparent_first_holder",
+    "name": "first_great_grandparent_second_holder",
+    "x": -1.0,
+    "y": -1.0
+  },
+  {
+    "parent": "first_great_grandparent_second_holder",
+    "name": "first_great_grandparent",
+    "x": -0.5,
+    "y": -1.0
+  },
+  {
+    "parent": "first_grandparent",
+    "name": "second_great_grandparent_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "second_great_grandparent_first_holder",
+    "name": "second_great_grandparent_second_holder",
+    "x": -1.0,
+    "y": -1.0
+  },
+  {
+    "parent": "second_great_grandparent_second_holder",
+    "name": "second_great_grandparent",
+    "x": 1.5,
+    "y": -1.0
+  },
+  {
+    "parent": "first_parent",
+    "name": "second_grandparent_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "second_grandparent_first_holder",
+    "name": "second_grandparent_second_holder",
+    "x": -3.0,
+    "y": -1.0
+  },
+  {
+    "parent": "second_grandparent_second_holder",
+    "name": "second_grandparent",
+    "x": 1.5,
+    "y": -1.0
+  },
+  {
+    "parent": "second_grandparent",
+    "name": "second_great_aunt_or_uncle_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "second_great_aunt_or_uncle_first_holder",
+    "name": "second_great_aunt_or_uncle_second_holder",
+    "x": 0.0,
+    "y": -1.0
+  },
+  {
+    "parent": "second_great_aunt_or_uncle_second_holder",
+    "name": "second_great_aunt_or_uncle_third_holder",
+    "x": 2.0,
+    "y": 0.0
+  },
+  {
+    "parent": "second_great_aunt_or_uncle_third_holder",
+    "name": "second_great_aunt_or_uncle",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "second_grandparent",
+    "name": "third_great_grandparent_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "third_great_grandparent_first_holder",
+    "name": "third_great_grandparent_second_holder",
+    "x": 0.0,
+    "y": -1.0
+  },
+  {
+    "parent": "third_great_grandparent_second_holder",
+    "name": "third_great_grandparent_third_holder",
+    "x": 1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "third_great_grandparent_third_holder",
+    "name": "third_great_grandparent",
+    "x": -0.5,
+    "y": -1.0
+  },
+  {
+    "parent": "second_grandparent",
+    "name": "fourth_great_grandparent_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "fourth_great_grandparent_first_holder",
+    "name": "fourth_great_grandparent_second_holder",
+    "x": 0.0,
+    "y": -1.0
+  },
+  {
+    "parent": "fourth_great_grandparent_second_holder",
+    "name": "fourth_great_grandparent_third_holder",
+    "x": 1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "fourth_great_grandparent_third_holder",
+    "name": "fourth_great_grandparent",
+    "x": 1.5,
+    "y": -1.0
+  },
+  {
+    "parent": "ego",
+    "name": "second_parent_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "second_parent_first_holder",
+    "name": "second_parent_second_holder",
+    "x": -1.0,
+    "y": -1.0
+  },
+  {
+    "parent": "second_parent_second_holder",
+    "name": "second_parent",
+    "x": 1.5,
+    "y": -1.0
+  },
+  {
+    "parent": "second_parent",
+    "name": "third_aunt_or_uncle_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "third_aunt_or_uncle_first_holder",
+    "name": "third_aunt_or_uncle_second_holder",
+    "x": 0.0,
+    "y": -1.0
+  },
+  {
+    "parent": "third_aunt_or_uncle_second_holder",
+    "name": "third_aunt_or_uncle_third_holder",
+    "x": 6.0,
+    "y": 0.0
+  },
+  {
+    "parent": "third_aunt_or_uncle_third_holder",
+    "name": "third_aunt_or_uncle",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "third_aunt_or_uncle",
+    "name": "fourth_aunt_or_uncle",
+    "x": 2.0,
+    "y": 0.0
+  },
+  {
+    "parent": "third_aunt_or_uncle",
+    "name": "third_cousin_first_holder",
+    "x": 0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "third_cousin_first_holder",
+    "name": "third_cousin_second_holder",
+    "x": 0.0,
+    "y": 1.0
+  },
+  {
+    "parent": "third_cousin_second_holder",
+    "name": "third_cousin_third_holder",
+    "x": -1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "third_cousin_third_holder",
+    "name": "third_cousin",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "third_aunt_or_uncle",
+    "name": "fourth_cousin_first_holder",
+    "x": 0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "fourth_cousin_first_holder",
+    "name": "fourth_cousin_second_holder",
+    "x": 1.0,
+    "y": 1.0
+  },
+  {
+    "parent": "fourth_cousin_second_holder",
+    "name": "fourth_cousin",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "second_parent",
+    "name": "third_grandparent_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "third_grandparent_first_holder",
+    "name": "third_grandparent_second_holder",
+    "x": 0.0,
+    "y": -1.0
+  },
+  {
+    "parent": "third_grandparent_second_holder",
+    "name": "third_grandparent_third_holder",
+    "x": 3.0,
+    "y": 0.0
+  },
+  {
+    "parent": "third_grandparent_third_holder",
+    "name": "third_grandparent",
+    "x": -0.5,
+    "y": -1.0
+  },
+  {
+    "parent": "third_grandparent",
+    "name": "third_great_aunt_or_uncle_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "third_great_aunt_or_uncle_first_holder",
+    "name": "third_great_aunt_or_uncle_second_holder",
+    "x": -2.0,
+    "y": -1.0
+  },
+  {
+    "parent": "third_great_aunt_or_uncle_second_holder",
+    "name": "third_great_aunt_or_uncle_third_holder",
+    "x": 0.0,
+    "y": 1.0
+  },
+  {
+    "parent": "third_great_aunt_or_uncle_third_holder",
+    "name": "third_great_aunt_or_uncle",
+    "x": 0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "third_grandparent",
+    "name": "fifth_great_grandparent_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "fifth_great_grandparent_first_holder",
+    "name": "fifth_great_grandparent_second_holder",
+    "x": -1.0,
+    "y": -1.0
+  },
+  {
+    "parent": "fifth_great_grandparent_second_holder",
+    "name": "fifth_great_grandparent",
+    "x": -0.5,
+    "y": -1.0
+  },
+  {
+    "parent": "third_grandparent",
+    "name": "sixth_great_grandparent_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "sixth_great_grandparent_first_holder",
+    "name": "sixth_great_grandparent_second_holder",
+    "x": -1.0,
+    "y": -1.0
+  },
+  {
+    "parent": "sixth_great_grandparent_second_holder",
+    "name": "sixth_great_grandparent",
+    "x": 1.5,
+    "y": -1.0
+  },
+  {
+    "parent": "second_parent",
+    "name": "fourth_grandparent_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "fourth_grandparent_first_holder",
+    "name": "fourth_grandparent_second_holder",
+    "x": 0.0,
+    "y": -1.0
+  },
+  {
+    "parent": "fourth_grandparent_second_holder",
+    "name": "fourth_grandparent_third_holder",
+    "x": 3.0,
+    "y": 0.0
+  },
+  {
+    "parent": "fourth_grandparent_third_holder",
+    "name": "fourth_grandparent",
+    "x": 1.5,
+    "y": -1.0
+  },
+  {
+    "parent": "fourth_grandparent",
+    "name": "fourth_great_aunt_or_uncle_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "fourth_great_aunt_or_uncle_first_holder",
+    "name": "fourth_great_aunt_or_uncle_second_holder",
+    "x": 0.0,
+    "y": -1.0
+  },
+  {
+    "parent": "fourth_great_aunt_or_uncle_second_holder",
+    "name": "fourth_great_aunt_or_uncle_third_holder",
+    "x": 2.0,
+    "y": 0.0
+  },
+  {
+    "parent": "fourth_great_aunt_or_uncle_third_holder",
+    "name": "fourth_great_aunt_or_uncle",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "fourth_grandparent",
+    "name": "seventh_great_grandparent_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "seventh_great_grandparent_first_holder",
+    "name": "seventh_great_grandparent_second_holder",
+    "x": 0.0,
+    "y": -1.0
+  },
+  {
+    "parent": "seventh_great_grandparent_second_holder",
+    "name": "seventh_great_grandparent_third_holder",
+    "x": 1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "seventh_great_grandparent_third_holder",
+    "name": "seventh_great_grandparent",
+    "x": -0.5,
+    "y": -1.0
+  },
+  {
+    "parent": "fourth_grandparent",
+    "name": "eighth_great_grandparent_first_holder",
+    "x": -0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "eighth_great_grandparent_first_holder",
+    "name": "eighth_great_grandparent_second_holder",
+    "x": 0.0,
+    "y": -1.0
+  },
+  {
+    "parent": "eighth_great_grandparent_second_holder",
+    "name": "eighth_great_grandparent_third_holder",
+    "x": 1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "eighth_great_grandparent_third_holder",
+    "name": "eighth_great_grandparent",
+    "x": 1.5,
+    "y": -1.0
+  },
+  {
+    "parent": "ego",
+    "name": "first_child_first_holder",
+    "x": 0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "first_child_first_holder",
+    "name": "first_child_second_holder",
+    "x": 0.0,
+    "y": 1.0
+  },
+  {
+    "parent": "first_child_second_holder",
+    "name": "first_child_third_holder",
+    "x": -1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "first_child_third_holder",
+    "name": "first_child",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "first_child",
+    "name": "first_child_in_law",
+    "x": -2.0,
+    "y": 0.0
+  },
+  {
+    "parent": "first_child",
+    "name": "first_grandchild_first_holder",
+    "x": -1.5,
+    "y": 0.0
+  },
+  {
+    "parent": "first_grandchild_first_holder",
+    "name": "first_grandchild_second_holder",
+    "x": 0.0,
+    "y": 1.0
+  },
+  {
+    "parent": "first_grandchild_second_holder",
+    "name": "first_grandchild_third_holder",
+    "x": -3.0,
+    "y": 0.0
+  },
+  {
+    "parent": "first_grandchild_third_holder",
+    "name": "first_grandchild",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "first_grandchild",
+    "name": "first_grandchild_in_law",
+    "x": -2.0,
+    "y": 0.0
+  },
+  {
+    "parent": "first_grandchild",
+    "name": "first_great_grandchild_first_holder",
+    "x": -1.5,
+    "y": 0.0
+  },
+  {
+    "parent": "first_great_grandchild_first_holder",
+    "name": "first_great_grandchild_second_holder",
+    "x": 0.0,
+    "y": 1.0
+  },
+  {
+    "parent": "first_great_grandchild_second_holder",
+    "name": "first_great_grandchild_third_holder",
+    "x": -1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "first_great_grandchild_third_holder",
+    "name": "first_great_grandchild",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "first_grandchild",
+    "name": "second_great_grandchild_first_holder",
+    "x": -1.5,
+    "y": 0.0
+  },
+  {
+    "parent": "second_great_grandchild_first_holder",
+    "name": "second_great_grandchild_second_holder",
+    "x": 1.0,
+    "y": 1.0
+  },
+  {
+    "parent": "second_great_grandchild_second_holder",
+    "name": "second_great_grandchild",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "first_child",
+    "name": "second_grandchild_first_holder",
+    "x": -1.5,
+    "y": 0.0
+  },
+  {
+    "parent": "second_grandchild_first_holder",
+    "name": "second_grandchild_second_holder",
+    "x": -2.0,
+    "y": 1.0
+  },
+  {
+    "parent": "second_grandchild_second_holder",
+    "name": "second_grandchild_third_holder",
+    "x": 1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "second_grandchild_third_holder",
+    "name": "second_grandchild",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "second_grandchild",
+    "name": "second_grandchild_in_law",
+    "x": 2.0,
+    "y": 0.0
+  },
+  {
+    "parent": "second_grandchild",
+    "name": "third_great_grandchild_first_holder",
+    "x": 0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "third_great_grandchild_first_holder",
+    "name": "third_great_grandchild_second_holder",
+    "x": 0.0,
+    "y": 1.0
+  },
+  {
+    "parent": "third_great_grandchild_second_holder",
+    "name": "third_great_grandchild_third_holder",
+    "x": -1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "third_great_grandchild_third_holder",
+    "name": "third_great_grandchild",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "second_grandchild",
+    "name": "fourth_great_grandchild_first_holder",
+    "x": 0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "fourth_great_grandchild_first_holder",
+    "name": "fourth_great_grandchild_second_holder",
+    "x": 1.0,
+    "y": 1.0
+  },
+  {
+    "parent": "fourth_great_grandchild_second_holder",
+    "name": "fourth_great_grandchild",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "ego",
+    "name": "second_child_first_holder",
+    "x": 0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "second_child_first_holder",
+    "name": "second_child_second_holder",
+    "x": 1.0,
+    "y": 1.0
+  },
+  {
+    "parent": "second_child_second_holder",
+    "name": "second_child",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "second_child",
+    "name": "second_child_in_law",
+    "x": 2.0,
+    "y": 0.0
+  },
+  {
+    "parent": "second_child",
+    "name": "third_grandchild_first_holder",
+    "x": 0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "third_grandchild_first_holder",
+    "name": "third_grandchild_second_holder",
+    "x": 2.0,
+    "y": 1.0
+  },
+  {
+    "parent": "third_grandchild_second_holder",
+    "name": "third_grandchild_third_holder",
+    "x": -1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "third_grandchild_third_holder",
+    "name": "third_grandchild",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "third_grandchild",
+    "name": "third_grandchild_in_law",
+    "x": -2.0,
+    "y": 0.0
+  },
+  {
+    "parent": "third_grandchild",
+    "name": "fifth_great_grandchild_first_holder",
+    "x": -1.5,
+    "y": 0.0
+  },
+  {
+    "parent": "fifth_great_grandchild_first_holder",
+    "name": "fifth_great_grandchild_second_holder",
+    "x": 0.0,
+    "y": 1.0
+  },
+  {
+    "parent": "fifth_great_grandchild_second_holder",
+    "name": "fifth_great_grandchild_third_holder",
+    "x": -1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "fifth_great_grandchild_third_holder",
+    "name": "fifth_great_grandchild",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "third_grandchild",
+    "name": "sixth_great_grandchild_first_holder",
+    "x": -1.5,
+    "y": 0.0
+  },
+  {
+    "parent": "sixth_great_grandchild_first_holder",
+    "name": "sixth_great_grandchild_second_holder",
+    "x": 1.0,
+    "y": 1.0
+  },
+  {
+    "parent": "sixth_great_grandchild_second_holder",
+    "name": "sixth_great_grandchild",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "second_child",
+    "name": "fourth_grandchild_first_holder",
+    "x": 0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "fourth_grandchild_first_holder",
+    "name": "fourth_grandchild_second_holder",
+    "x": 0.0,
+    "y": 1.0
+  },
+  {
+    "parent": "fourth_grandchild_second_holder",
+    "name": "fourth_grandchild_third_holder",
+    "x": 3.0,
+    "y": 0.0
+  },
+  {
+    "parent": "fourth_grandchild_third_holder",
+    "name": "fourth_grandchild",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "fourth_grandchild",
+    "name": "fourth_grandchild_in_law",
+    "x": 2.0,
+    "y": 0.0
+  },
+  {
+    "parent": "fourth_grandchild",
+    "name": "seventh_great_grandchild_first_holder",
+    "x": 0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "seventh_great_grandchild_first_holder",
+    "name": "seventh_great_grandchild_second_holder",
+    "x": 0.0,
+    "y": 1.0
+  },
+  {
+    "parent": "seventh_great_grandchild_second_holder",
+    "name": "seventh_great_grandchild_third_holder",
+    "x": -1.0,
+    "y": 0.0
+  },
+  {
+    "parent": "seventh_great_grandchild_third_holder",
+    "name": "seventh_great_grandchild",
+    "x": 0.5,
+    "y": 1.0
+  },
+  {
+    "parent": "fourth_grandchild",
+    "name": "eighth_great_grandchild_first_holder",
+    "x": 0.5,
+    "y": 0.0
+  },
+  {
+    "parent": "eighth_great_grandchild_first_holder",
+    "name": "eighth_great_grandchild_second_holder",
+    "x": 1.0,
+    "y": 1.0
+  },
+  {
+    "parent": "eighth_great_grandchild_second_holder",
+    "name": "eighth_great_grandchild",
+    "x": 0.5,
+    "y": 1.0
+  }
+]

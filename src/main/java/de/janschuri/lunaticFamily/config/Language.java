@@ -64,7 +64,6 @@ public class Language {
 
         prefix = ChatColor.translateAlternateColorCodes('&', lang.getString("prefix", "&8[&6LunaticFamily&8] "));
 
-        //messages
         ConfigurationSection messagesSection = lang.getConfigurationSection("messages");
         if (messagesSection != null) {
             for (String key : messagesSection.getKeys(false)) {
@@ -74,7 +73,6 @@ public class Language {
             Logger.log("Could not find 'messages' section in lang.yml", LoggingSeverity.WARN);
         }
 
-        //genders
         ConfigurationSection gendersSection = lang.getConfigurationSection("genders");
         if (gendersSection != null) {
             for (String key : gendersSection.getKeys(false)) {
@@ -84,7 +82,6 @@ public class Language {
             Logger.log("Could not find 'genders' section in lang.yml", LoggingSeverity.WARN);
         }
 
-        //family relationships
         ConfigurationSection familyRelationships = lang.getConfigurationSection("family_relationships");
         genders = new ArrayList<>(familyRelationships.getKeys(false));
 
@@ -119,7 +116,7 @@ public class Language {
         }
 
         familyCommandsAliases = getAliases("family");
-        familySubcommandsAliases.addAll(getAliases("family", "tree", "list", "background", "help"));
+        familySubcommandsAliases.addAll(getAliases("family", "list", "background", "help"));
         familyAdminSubcommandsAliases.addAll(getAliases("family", "reload"));
 
         genderCommandsAliases = getAliases("gender");

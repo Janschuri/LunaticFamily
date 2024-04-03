@@ -28,7 +28,7 @@ public class Logger {
 
     public static void debugLog(String msg) {
         if(Config.isDebug){
-            Bukkit.getLogger().info(plugin.getName() + "] " + msg);
+            Bukkit.getLogger().info("[" +plugin.getName() + "] " + msg);
         }
     }
     public static void infoLog(String msg) {
