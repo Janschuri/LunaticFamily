@@ -63,7 +63,7 @@ messages:
   family_list: "Deine Familie:"
   family_others_list: "%player%'s Familie:"
   family_background_set: "Hintergrund wurde neu gesetzt."
-  tree_loaded: "Dein Familienstammbaum wurde geladen."
+  family_tree_reloaded: "Dein Familienstammbaum wurde neu geladen."
   #gender command
   gender_set: "Wähle dein Geschlecht: "
   gender_set_hover: "Setze dein Geschlecht auf %gender%."
@@ -260,6 +260,8 @@ aliases:
       - background
     list:
       - list
+    tree:
+      - tree
     reload:
       - reload
   gender:

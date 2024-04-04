@@ -6,6 +6,7 @@ import de.janschuri.lunaticFamily.commands.Subcommand;
 import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import de.janschuri.lunaticFamily.handler.FamilyTree;
 import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -35,6 +36,8 @@ public class FamilyListSubcommand extends Subcommand {
                 Player player = (Player) sender;
                 String uuid = player.getUniqueId().toString();
                 FamilyPlayer playerFam = new FamilyPlayer(uuid);
+
+                new FamilyTree(playerFam.getID());
 
                 BiMap<String, Integer> familyList = playerFam.getFamilyList();
                 StringBuilder msg = new StringBuilder(Language.prefix + Language.getMessage("family_list") + "\n");

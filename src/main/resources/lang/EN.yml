@@ -63,7 +63,7 @@ messages:
   family_others_list: "%player%'s family:"
   family_others_list_help: "%player%'s family:"
   family_background_set: "Background has been reset."
-  tree_loaded: "Your family tree has been reloaded."
+  family_tree_reloaded: "Your family tree has been reloaded."
   #gender command
   gender_set: "Choose your gender: "
   gender_set_hover: "Set your gender to %gender%."
@@ -254,6 +254,8 @@ aliases:
       - family
     background:
       - background
+    tree:
+      - tree
     list:
       - list
     reload:

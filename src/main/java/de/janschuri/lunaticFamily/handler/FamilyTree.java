@@ -4,14 +4,13 @@ import com.google.common.collect.BiMap;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.utils.Logger;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
 import eu.endercentral.crazy_advancements.advancement.AdvancementDisplay;
 import eu.endercentral.crazy_advancements.advancement.AdvancementFlag;
 import eu.endercentral.crazy_advancements.advancement.AdvancementVisibility;
 import eu.endercentral.crazy_advancements.manager.AdvancementManager;
-import org.bukkit.Bukkit;
+import eu.endercentral.crazy_advancements.packet.AdvancementsPacket;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,14 +20,18 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class FamilyTree {
 
 
     private final BiMap<String, Integer> familyList;
-    private static final List<String> advancementKeys = new ArrayList<>();
+    private static final List<String> advancements = new ArrayList<>();
+    private static final List<NameKey> advancementNameKeys = new ArrayList<>();
     private final static Map<String, Advancement> advancementMap= new HashMap<>();
 
     public static void loadAdvancementMap(LunaticFamily plugin) {
@@ -46,14 +49,15 @@ public class FamilyTree {
 
         AdvancementDisplay display = new AdvancementDisplay(icon, title, description, frame, visibility);
         display.setBackgroundTexture(background);
-        display.setX(0.0f);
-        display.setY(-2.0f);
+        display.setX(13.5f);
+        display.setY(7.5f);
 
         Advancement ego = new Advancement(new NameKey("family_tree", "ego"), display);
         advancementMap.put("ego", ego);
-        advancementKeys.add("ego");
+        advancementNameKeys.add(new NameKey("family_tree", "ego"));
+        advancements.add("ego");
 
-        String content = null;
+        String content;
         try {
             content = new String(Files.readAllBytes(Paths.get(plugin.getDataFolder().getAbsolutePath() + "/familyTree.json")));
         } catch (IOException e) {
@@ -61,7 +65,6 @@ public class FamilyTree {
         }
         JSONArray jsonArray = new JSONArray(content);
 
-        List<Map<String, Object>> list = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
@@ -74,8 +77,8 @@ public class FamilyTree {
 
             Advancement advancement = createAdvancement(parent, name, x, y);
             advancementMap.put(name, advancement);
-            advancementKeys.add(name);
-            Logger.debugLog(name);
+            advancements.add(name);
+            advancementNameKeys.add(new NameKey("family_tree", name));
         }
     }
 
@@ -112,11 +115,13 @@ public class FamilyTree {
         String uuid = playerFam.getUUID();
         Player player = playerFam.getPlayer();
 
+        AdvancementsPacket packet = new AdvancementsPacket(player, false, null, advancementNameKeys);
+        packet.send();
 
         AdvancementManager manager = new AdvancementManager(new NameKey("manager", uuid));
         manager.addPlayer(player);
 
-        for (String advancementKey : advancementKeys) {
+        for (String advancementKey : advancements) {
             String relation = advancementKey
                     .replace("_first_holder", "")
                     .replace("_second_holder", "")
@@ -140,7 +145,6 @@ public class FamilyTree {
                 advancement.getDisplay().setDescription(Language.getRelation(relationKey, relationFam.getGender()));
                 advancement.getDisplay().setIcon(relationFam.getSkull());
                 manager.addAdvancement(advancement);
-                Logger.debugLog("manager added: " + advancementKey);
             }
         }
     }

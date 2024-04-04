@@ -26,23 +26,6 @@ public class Language {
 
     private static final Map<String, Map<String, List<String>>> aliases = new HashMap<>();
 
-    public static List<String> familyCommandsAliases = new ArrayList<>();
-    public static List<String> familySubcommandsAliases = new ArrayList<>();
-    public static List<String> genderCommandsAliases = new ArrayList<>();
-    public static List<String> genderSubcommandsAliases = new ArrayList<>();
-    public static List<String> genderAdminSubcommandsAliases = new ArrayList<>();
-    public static List<String> familyReloadAliases = new ArrayList<>();
-    public static List<String> adoptCommandsAliases = new ArrayList<>();
-    public static List<String> adoptSubcommandsAliases = new ArrayList<>();
-    public static List<String> adoptAdminSubcommandsAliases = new ArrayList<>();
-    public static List<String> marryCommandsAliases = new ArrayList<>();
-    public static List<String> marrySubcommandsAliases = new ArrayList<>();
-    public static List<String> marryPriestSubcommandsAliases = new ArrayList<>();
-    public static List<String> marryAdminSubcommandsAliases = new ArrayList<>();
-    public static List<String> siblingCommandsAliases = new ArrayList<>();
-    public static List<String> siblingSubcommandsAliases = new ArrayList<>();
-    public static List<String> siblingAdminSubcommandsAliases = new ArrayList<>();
-
     public Language(LunaticFamily plugin) {
         this.plugin = plugin;
         this.load();
@@ -115,26 +98,6 @@ public class Language {
             }
             aliases.put(command, map);
         }
-
-        familyCommandsAliases = getAliases("family");
-        familySubcommandsAliases.addAll(getAliases("family", "list", "background", "help"));
-        familyReloadAliases.addAll(getAliases("family", "reload"));
-
-        genderCommandsAliases = getAliases("gender");
-        genderSubcommandsAliases.addAll(getAliases("gender", "info", "set", "help"));
-
-        marryCommandsAliases = getAliases("marry");
-        marrySubcommandsAliases.addAll(getAliases("marry", "propose", "accept", "deny", "divorce", "list", "kiss", "gift", "backpack", "help", "priest"));
-        marryPriestSubcommandsAliases.addAll(getAliases("priest"));
-        marryAdminSubcommandsAliases.addAll(getAliases("marry", "set", "unset"));
-
-        adoptCommandsAliases = getAliases("adopt");
-        adoptSubcommandsAliases.addAll(getAliases("adopt", "propose", "accept", "deny", "kickout", "moveout", "list", "help"));
-        adoptAdminSubcommandsAliases.addAll(getAliases("adopt", "set", "unset"));
-
-        siblingCommandsAliases = getAliases("sibling");
-        siblingSubcommandsAliases.addAll(getAliases("sibling", "propose", "accept", "deny", "unsibling", "help"));
-        siblingAdminSubcommandsAliases.addAll(getAliases("sibling", "set", "unset"));
     }
 
     public static String getMessage(String key) {

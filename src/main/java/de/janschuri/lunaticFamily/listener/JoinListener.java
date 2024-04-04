@@ -21,17 +21,6 @@ public class JoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-
-        new BukkitRunnable() {
-            public void run() {
-                Player player = event.getPlayer();
-                String uuid = player.getUniqueId().toString();
-                FamilyPlayer playerFam = new FamilyPlayer(uuid);
-
-
-            }
-        }.runTaskLater(plugin, 10L);
-
         new BukkitRunnable() {
             public void run() {
                 if (Config.enabledCrazyAdvancementAPI) {
@@ -42,7 +31,6 @@ public class JoinListener implements Listener {
                     player.sendMessage(Language.getMessage("tree_loaded"));
                 }
             }
-        }.runTaskLater(plugin, 100L);
-
+        }.runTaskLater(plugin, 5L);
     }
 }

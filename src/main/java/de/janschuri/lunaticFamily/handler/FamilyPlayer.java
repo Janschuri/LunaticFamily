@@ -402,8 +402,8 @@ public class FamilyPlayer {
         }
 
         playerFam.saveMarriage(partnerID);
-
-
+        playerFam.updateFamilyTree();
+        partnerFam.updateFamilyTree();
     }
 
     public void marry(int partnerID, int priest) {
@@ -426,7 +426,8 @@ public class FamilyPlayer {
 
         playerFam.saveMarriage(partnerID, priest);
 
-
+        playerFam.updateFamilyTree();
+        partnerFam.updateFamilyTree();
     }
 
     public void divorce() {
@@ -446,6 +447,8 @@ public class FamilyPlayer {
             }
         }
 
+        playerFam.updateFamilyTree();
+        partnerFam.updateFamilyTree();
     }
 
     public void adopt(int childID) {
@@ -465,6 +468,9 @@ public class FamilyPlayer {
                 partnerFam.saveAdoption(childID);
             }
         }
+
+        playerFam.updateFamilyTree();
+        childFam.updateFamilyTree();
     }
 
     public void unadopt(int childID) {
@@ -481,17 +487,27 @@ public class FamilyPlayer {
             childFam.deleteSiblinghood();
         }
 
+        playerFam.updateFamilyTree();
+        childFam.updateFamilyTree();
     }
 
     public void addSibling(int siblingID) {
         FamilyPlayer playerFam = this;
+        FamilyPlayer siblingFam = new FamilyPlayer(siblingID);
         playerFam.saveSiblinghood(siblingID);
+
+        playerFam.updateFamilyTree();
+        siblingFam.updateFamilyTree();
     }
 
     public void removeSibling() {
-        FamilyPlayer player1Fam = this;
+        FamilyPlayer playerFam = this;
+        FamilyPlayer siblingFam = playerFam.getSibling();
 
-        player1Fam.deleteSiblinghood();
+        playerFam.deleteSiblinghood();
+
+        playerFam.updateFamilyTree();
+        siblingFam.updateFamilyTree();
     }
 
     public boolean isFamilyMember(int id) {
@@ -758,6 +774,12 @@ public class FamilyPlayer {
         }
 
         return familyList;
+    }
+
+    public void updateFamilyTree() {
+        if (this.getPlayer() != null) {
+            new FamilyTree(this.id);
+        }
     }
 
 }

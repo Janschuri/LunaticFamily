@@ -4,6 +4,7 @@ import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.Utils;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
@@ -72,7 +73,7 @@ public class MarryGiftSubcommand extends Subcommand {
                     if (itemMeta.hasDisplayName()) {
                         TextComponent componentItem = new TextComponent(itemMeta.getDisplayName());
 
-                        Bukkit.getLogger().info(itemMeta.getDisplayName());
+                        Logger.infoLog(itemMeta.getDisplayName());
 
                         player.sendMessage(componentPlayer1, componentAmount, componentItem, componentPlayer2);
                         partnerPlayer.sendMessage(componentPartner1, componentAmount, componentItem, componentPartner2);

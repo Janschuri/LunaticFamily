@@ -21,6 +21,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
     private final FamilyHelpSubcommand familyHelpSubcommand = new FamilyHelpSubcommand();
     private final FamilyMarrySubcommand familyMarrySubcommand = new FamilyMarrySubcommand();
     private final FamilyReloadSubcommand familyReloadSubcommand = new FamilyReloadSubcommand();
+    private final FamilyTreeSubcommand familyTreeSubcommand = new FamilyTreeSubcommand();
 
 
     public FamilyCommand(LunaticFamily plugin) {
@@ -48,6 +49,8 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 familyListSubcommand.execute(sender, args, plugin);
             } else if (Language.checkIsSubcommand("family", "background", subcommand)) {
                 familyBackgroundSubcommand.execute(sender, args, plugin);
+            } else if (Language.checkIsSubcommand("family", "tree", subcommand)) {
+                familyTreeSubcommand.execute(sender, args, plugin);
             } else if (Language.checkIsSubcommand("family", "help", subcommand)) {
                 familyHelpSubcommand.execute(sender, args, plugin);
             } else {

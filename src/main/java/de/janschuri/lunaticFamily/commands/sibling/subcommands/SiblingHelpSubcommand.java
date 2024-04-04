@@ -31,7 +31,6 @@ public class SiblingHelpSubcommand extends Subcommand {
         } else if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
-            Logger.debugLog(mainCommand);
             TextComponent msg = new TextComponent(Language.getMessage(mainCommand + "_help") + "\n");
 
             for (Subcommand subcommand : subcommands) {

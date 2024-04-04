@@ -16,6 +16,7 @@ import de.janschuri.lunaticFamily.external.Vault;
 import de.janschuri.lunaticFamily.handler.FamilyTree;
 import de.janschuri.lunaticFamily.listener.JoinListener;
 import de.janschuri.lunaticFamily.listener.QuitListener;
+import de.janschuri.lunaticFamily.utils.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
@@ -24,7 +25,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.logging.Level;
 
 
 public final class LunaticFamily extends JavaPlugin {
@@ -57,13 +57,15 @@ public final class LunaticFamily extends JavaPlugin {
             FamilyTree.loadAdvancementMap(instance);
         }
 
-        new Vault();
+        if (Config.enabledVault) {
+            new Vault();
+        }
 
         if (Config.enabledMySQL) {
             db = new MySQL(this);
             if (db.getSQLConnection() == null) {
-                Bukkit.getLogger().log(Level.SEVERE, "Error initializing MySQL database");
-                Bukkit.getLogger().info("Falling back to SQLite due to initialization error");
+                Logger.errorLog("Error initializing MySQL database");
+                Logger.warnLog("Falling back to SQLite due to initialization error");
                 db = new SQLite(this);
             }
         } else {
@@ -159,7 +161,7 @@ public final class LunaticFamily extends JavaPlugin {
             Class.forName("eu.endercentral.crazy_advancements.CrazyAdvancementsAPI");
         } catch (ClassNotFoundException e) {
             if (Config.enabledCrazyAdvancementAPI) {
-                Bukkit.getLogger().warning("Could not find CrazyAdvancementsAPI.");
+                Logger.warnLog("CrazyAdvancementsAPI is not installed. Disabling CrazyAdvancementsAPI features.");
                 Config.enabledCrazyAdvancementAPI = false;
             }
         }
@@ -168,7 +170,7 @@ public final class LunaticFamily extends JavaPlugin {
             Class.forName("net.milkbowl.vault.economy.Economy");
         } catch (ClassNotFoundException e) {
             if (Config.enabledVault) {
-                Bukkit.getLogger().warning("Could not find Vault.");
+                Logger.warnLog("Vault is not installed. Disabling Vault features.");
                 Config.enabledVault = false;
             }
         }
@@ -177,7 +179,7 @@ public final class LunaticFamily extends JavaPlugin {
             Class.forName("at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin");
         } catch (ClassNotFoundException e) {
             if (Config.enabledMinepacks) {
-                Bukkit.getLogger().warning("Could not find Minepacks.");
+                Logger.warnLog("Minepacks is not installed. Disabling Minepacks features.");
                 Config.enabledMinepacks = false;
             }
         }
