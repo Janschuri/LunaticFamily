@@ -2,6 +2,7 @@ package de.janschuri.lunaticFamily.commands.sibling.subcommands;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.Subcommand;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
@@ -80,6 +81,10 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
                     playerFam.getSibling().withdrawPlayer("sibling_unsibling_left_player");
                 }
                 playerFam.removeSibling();
+
+                for (String command : Config.unsiblingSuccessCommands) {
+                    Utils.sendConsoleCommand(command);
+                }
             }
         }
     }

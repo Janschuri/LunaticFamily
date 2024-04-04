@@ -92,7 +92,6 @@ public final class LunaticFamily extends JavaPlugin {
         getCommand("sibling").setExecutor(new SiblingCommand(this));
         getCommand("sibling").setTabCompleter(new SiblingCommand(this));
 
-
     }
 
     public void loadConfig(LunaticFamily plugin) {

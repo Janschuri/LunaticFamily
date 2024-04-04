@@ -1,18 +1,14 @@
 package de.janschuri.lunaticFamily.config;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.LoggingSeverity;
 import de.janschuri.lunaticFamily.utils.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +27,15 @@ public class Config {
     public static boolean enabledMinepacks;
     public static boolean enabledMySQL;
     public static boolean marryBackpackOffline;
+    public static String dateFormat;
+    public static List<String> marrySuccessCommands;
+    public static List<String> adoptSuccessCommands;
+    public static List<String> siblingSuccessCommands;
+    public static List<String> divorceSuccessCommands;
+    public static List<String> kickoutSuccessCommands;
+    public static List<String> moveoutSuccessCommands;
+    public static List<String> unsiblingSuccessCommands;
+
     public static List<String> familyList;
     public static List<String> backgrounds;
     public static Map<String, Double> commandWithdraws = new HashMap<>();
@@ -54,7 +59,6 @@ public class Config {
 
         config = YamlConfiguration.loadConfiguration(cfgfile);
 
-        allowSingleAdopt = config.getBoolean("is_debug");
         allowSingleAdopt = config.getBoolean("allow_single_adopt");
         marryBackpackOffline = config.getBoolean("marry_backpack_offline_access");
         defaultBackground = "textures/block/" + config.getString("default_background") + ".png";
@@ -62,6 +66,15 @@ public class Config {
         familyList = Objects.requireNonNull(config.getStringList("family_list"));
         backgrounds = Objects.requireNonNull(config.getStringList("backgrounds"));
         language = config.getString("language");
+        dateFormat = config.getString("date_format");
+
+        marrySuccessCommands = config.getStringList("marry_success_commands");
+        adoptSuccessCommands = config.getStringList("adopt_success_commands");
+        siblingSuccessCommands = config.getStringList("sibling_success_commands");
+        divorceSuccessCommands = config.getStringList("marry_divorce_commands");
+        kickoutSuccessCommands = config.getStringList("adopt_kickout_commands");
+        moveoutSuccessCommands = config.getStringList("adopt_moveout_commands");
+        unsiblingSuccessCommands = config.getStringList("sibling_unsibling_commands");
 
         isDebug = config.getBoolean("is_debug");
 

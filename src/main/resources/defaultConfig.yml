@@ -42,7 +42,14 @@ language: "DE"
 use_minepacks: true
 marry_backpack_offline_access: true
 use_crazy_advancement_api: true
-marry_date_format: "yyyy-MM-dd HH:mm:ss"
+date_format: "yyyy-MM-dd HH:mm:ss"
+marry_success_commands: []
+adopt_success_commands: []
+sibling_success_commands: []
+marry_divorce_commands: []
+adopt_kickout_commands: []
+adopt_moveout_commands: []
+sibling_unsibling_commands: []
 family_list:
   - partner
   - sibling

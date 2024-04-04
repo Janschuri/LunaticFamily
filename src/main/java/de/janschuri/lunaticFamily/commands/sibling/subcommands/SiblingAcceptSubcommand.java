@@ -2,8 +2,10 @@ package de.janschuri.lunaticFamily.commands.sibling.subcommands;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.Subcommand;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -52,6 +54,10 @@ public class SiblingAcceptSubcommand extends Subcommand {
                     LunaticFamily.siblingRequests.remove(playerUUID);
                     LunaticFamily.siblingRequests.remove(siblingUUID);
                     playerFam.addSibling(siblingFam.getID());
+
+                    for (String command : Config.siblingSuccessCommands) {
+                        Utils.sendConsoleCommand(command);
+                    }
 
                     playerFam.withdrawPlayer("sibling_proposed_player");
                     siblingFam.withdrawPlayer("sibling_proposing_player");

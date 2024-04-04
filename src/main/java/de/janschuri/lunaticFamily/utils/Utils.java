@@ -2,7 +2,6 @@ package de.janschuri.lunaticFamily.utils;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.database.Database;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -22,8 +21,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 import java.util.UUID;
-
-import static java.lang.Math.sqrt;
 
 public class Utils {
 
@@ -115,6 +112,10 @@ public class Utils {
 
             world.spawnParticle(particle, particleLocation, 1);
         }
+    }
+
+    public static void sendConsoleCommand(String command) {
+        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), command);
     }
 
     public static String getItemKey(Material material) {

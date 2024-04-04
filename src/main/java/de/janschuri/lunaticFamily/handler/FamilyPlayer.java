@@ -2,9 +2,9 @@ package de.janschuri.lunaticFamily.handler;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.external.Vault;
 import de.janschuri.lunaticFamily.utils.Utils;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -204,7 +204,7 @@ public class FamilyPlayer {
 
     public String getMarriageDate() {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Config.dateFormat);
 
         return formatter.format(this.marryDate.toLocalDateTime());
     }
