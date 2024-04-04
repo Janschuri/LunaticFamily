@@ -68,7 +68,6 @@ public class Utils {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), filePath));
 
-        Logger.log("yml " + filePath , LoggingSeverity.DEBUG);
 
         for (String key : defaultConfig.getKeys(true)) {
             if (!config.contains(key)) {

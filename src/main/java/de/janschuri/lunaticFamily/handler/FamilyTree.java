@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -36,7 +37,12 @@ public class FamilyTree {
 
     public static void loadAdvancementMap(LunaticFamily plugin) {
 
-        plugin.saveResource("familyTree.json", false);
+        File json = new File(plugin.getDataFolder().getAbsolutePath() + "/familyTree.json");
+
+        if (!json.exists()) {
+            plugin.saveResource("familyTree.json", false);
+        }
+
 
         String title = "";
         String description = "";
