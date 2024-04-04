@@ -8,16 +8,16 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 
 public class MarryListSubcommand extends Subcommand {
+    private static final String mainCommand = "marry";
+    private static final String name = "list";
     private static final String permission = "lunaticfamily.marry";
-    private static final List<String> aliases = Language.getAliases("marry", "accept");
 
     public MarryListSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
     @Override
     public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {

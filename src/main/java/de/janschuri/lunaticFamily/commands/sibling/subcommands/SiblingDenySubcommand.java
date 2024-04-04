@@ -3,17 +3,20 @@ package de.janschuri.lunaticFamily.commands.sibling.subcommands;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
+import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
+import java.util.UUID;
 
 public class SiblingDenySubcommand extends Subcommand {
+    private static final String mainCommand = "adopt";
+    private static final String name = "deny";
     private static final String permission = "lunaticfamily.sibling";
-    private static final List<String> aliases = Language.getAliases("sibling", "deny");
 
     public SiblingDenySubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
     @Override
     public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
@@ -22,7 +25,20 @@ public class SiblingDenySubcommand extends Subcommand {
         } else if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
+            Player player = (Player) sender;
+            String playerUUID = player.getUniqueId().toString();
+            FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
+            if (!LunaticFamily.siblingRequests.containsKey(playerUUID) && !LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
+                sender.sendMessage(Language.prefix + Language.getMessage("propose_deny_no_request"));
+            } else {
+                if (!LunaticFamily.siblingRequests.containsKey(playerUUID)) {
+
+                }
+                String partnerUUID = LunaticFamily.marryRequests.get(playerUUID);
+                Bukkit.getPlayer(UUID.fromString(partnerUUID)).sendMessage(Language.prefix + Language.getMessage("propose_deny_denied").replace("%player%", playerFam.getName()));
+                LunaticFamily.marryRequests.remove(playerUUID);
+            }
         }
     }
 }

@@ -9,14 +9,12 @@ import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
-import java.util.List;
-
 public class AdoptSetSubcommand extends Subcommand {
-
+    private static final String mainCommand = "adopt";
+    private static final String name = "set";
     private static final String permission = "lunaticfamily.admin.adopt";
-    private static final List<String> aliases = Language.getAliases("adopt", "set");
     public AdoptSetSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
 
     @Override
@@ -32,9 +30,7 @@ public class AdoptSetSubcommand extends Subcommand {
                 }
             }
 
-            if (!sender.hasPermission("lunaticFamily.admin.adopt.set")) {
-                sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
-            } else if (args.length < 3) {
+            if (args.length < 3) {
                 sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
             } else if (!Utils.playerExists(args[1]) && !force) {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[1]));

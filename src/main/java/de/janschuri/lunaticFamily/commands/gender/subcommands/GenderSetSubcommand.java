@@ -13,14 +13,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class GenderSetSubcommand extends Subcommand {
+    private static final String mainCommand = "gender";
+    private static final String name = "set";
     private static final String permission = "lunaticfamily.gender";
-    private static final List<String> aliases = Language.getAliases("gender", "info");
 
     public GenderSetSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
     @Override
     public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {

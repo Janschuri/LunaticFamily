@@ -7,14 +7,13 @@ import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class MarryDenySubcommand extends Subcommand {
+    private static final String mainCommand = "marry";
+    private static final String name = "deny";
     private static final String permission = "lunaticfamily.marry";
-    private static final List<String> aliases = Language.getAliases("marry", "deny");
 
     public MarryDenySubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
     @Override
     public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {

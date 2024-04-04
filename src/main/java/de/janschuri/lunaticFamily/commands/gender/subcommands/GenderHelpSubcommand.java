@@ -3,32 +3,33 @@ package de.janschuri.lunaticFamily.commands.gender.subcommands;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.util.List;
 
 public class GenderHelpSubcommand extends Subcommand {
-
+    private static final String mainCommand = "gender";
+    private static final String name = "help";
     private static final String permission = "lunaticfamily.gender";
-    private static final List<String> aliases = Language.getAliases("gender", "help");
+    private static final Subcommand[] subcommands = {
+            new GenderInfoSubcommand(),
+            new GenderSetSubcommand()
+    };
 
     public GenderHelpSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
     @Override
     public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
-            String[] subcommandsHelp = {"set", "info"};
+            TextComponent msg = new TextComponent(Language.getMessage(mainCommand + "_help") + "\n");
 
-            StringBuilder msg = new StringBuilder(Language.prefix + " " + Language.getMessage("gender_help") + "\n");
-
-            for (String subcommand : subcommandsHelp) {
-                msg.append(Language.prefix).append(" ").append(Language.getMessage("gender_" + subcommand + "_help")).append("\n");
+            for (Subcommand subcommand : subcommands) {
+                msg.addExtra(subcommand.getHelp(sender));
             }
-            sender.sendMessage(msg.toString());
+
+            sender.sendMessage(msg);
         }
     }
 }

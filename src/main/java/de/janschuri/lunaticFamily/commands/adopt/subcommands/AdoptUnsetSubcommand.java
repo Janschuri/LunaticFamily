@@ -8,14 +8,12 @@ import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
-import java.util.List;
-
 public class AdoptUnsetSubcommand extends Subcommand {
-
+    private static final String mainCommand = "adopt";
+    private static final String name = "unset";
     private static final String permission = "lunaticfamily.admin.adopt";
-    private static final List<String> aliases = Language.getAliases("adopt", "unset");
     public AdoptUnsetSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
 
     @Override
@@ -23,9 +21,7 @@ public class AdoptUnsetSubcommand extends Subcommand {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
-            if (!sender.hasPermission("lunaticFamily.admin.adopt.unset")) {
-                sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
-            } else if (args.length < 2) {
+            if (args.length < 2) {
                 sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
             } else if (!Utils.playerExists(args[1])) {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", Utils.getName(args[1])));

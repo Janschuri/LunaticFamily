@@ -14,15 +14,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.List;
 import java.util.UUID;
 
 public class MarryGiftSubcommand extends Subcommand {
+    private static final String mainCommand = "marry";
+    private static final String name = "gift";
     private static final String permission = "lunaticfamily.marry.gift";
-    private static final List<String> aliases = Language.getAliases("marry", "gift");
 
     public MarryGiftSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
     @Override
     public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {

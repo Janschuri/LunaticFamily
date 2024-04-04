@@ -11,15 +11,15 @@ import org.bukkit.Particle;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
 import java.util.UUID;
 
 public class MarryKissSubcommand extends Subcommand {
+    private static final String mainCommand = "marry";
+    private static final String name = "kiss";
     private static final String permission = "lunaticfamily.marry";
-    private static final List<String> aliases = Language.getAliases("marry", "kiss");
 
     public MarryKissSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
     @Override
     public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {

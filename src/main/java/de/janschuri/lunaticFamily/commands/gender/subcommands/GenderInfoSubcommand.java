@@ -8,14 +8,13 @@ import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class GenderInfoSubcommand extends Subcommand {
+    private static final String mainCommand = "gender";
+    private static final String name = "info";
     private static final String permission = "lunaticfamily.gender";
-    private static final List<String> aliases = Language.getAliases("gender", "info");
 
     public GenderInfoSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
     @Override
     public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
@@ -34,9 +33,7 @@ public class GenderInfoSubcommand extends Subcommand {
                     sender.sendMessage(Language.prefix + Language.getMessage("gender_info").replace("%gender%", Language.getGenderLang(playerFam.getGender())));
                 }
             } else {
-                if (!sender.hasPermission("lunaticFamily.admin.gender") && !sender.hasPermission("lunaticFamily.gender.info.others")) {
-                    sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
-                } else if (!Utils.playerExists(args[1])) {
+                if (!Utils.playerExists(args[1])) {
                     sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[1]));
                 } else {
                     sender.sendMessage(Language.prefix + Language.getMessage("gender_info_others").replace("%player%", Utils.getName(args[1])).replace("%gender%", Language.getGenderLang(args[1])));

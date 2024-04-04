@@ -14,29 +14,35 @@ commands:
     description: Get yourself a sibling without having parents.
 permissions:
   lunaticFamily.adopt:
-    description: Use /adopt Command.
+    description: Use /adopt
   lunaticFamily.marry:
-    description: Use /marry Command.
+    description: Use /marry
   lunaticFamily.sibling:
-    description: Use /marry Command.
+    description: Use /marry
+  lunaticFamily.family:
+    description: Use /family
   lunaticFamily.family.background:
-    description: Use /family background.
+    description: Use /family background
   lunaticFamily.marry.priest:
-    description: Use /marry priest Command.
+    description: Use /marry priest
+  lunaticFamily.marry.gift:
+    description: Use /marry gift
+  lunaticFamily.marry.backpack:
+    description: Use /marry backpack
   lunaticFamily.family.list:
-    description: List own family.
+    description: Use /family list
   lunaticFamily.family.list.others:
-    description: List others family.
+    description: Use /family list <player>
   lunaticFamily.admin.adopt:
-    description: Set and unset adoption by command.
+    description: Use adopt admin commands
   lunaticFamily.admin.marry:
-    description: Set and unset marriage by command.
+    description: Use marry admin commands
   lunaticFamily.admin.sibling:
-      description: Set and unset siblinghood by command.
-lunaticFamily.admin.gender:
-      description: Set genders of players by command.
-lunaticFamily.admin.reload:
-  description: Reload config.
+    description: Use sibling admin commands
+  lunaticFamily.admin.gender:
+    description: Use gender admin commands
+  lunaticFamily.admin.reload:
+    description: Use /family reload
 api-version: 1.20
 softdepend:
   - CrazyAdvancementAPI

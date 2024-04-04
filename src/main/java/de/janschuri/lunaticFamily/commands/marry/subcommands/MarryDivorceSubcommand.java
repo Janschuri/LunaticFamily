@@ -8,14 +8,13 @@ import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class MarryDivorceSubcommand extends Subcommand {
+    private static final String mainCommand = "marry";
+    private static final String name = "divorce";
     private static final String permission = "lunaticfamily.marry";
-    private static final List<String> aliases = Language.getAliases("marry", "divorce");
 
     public MarryDivorceSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
     @Override
     public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {

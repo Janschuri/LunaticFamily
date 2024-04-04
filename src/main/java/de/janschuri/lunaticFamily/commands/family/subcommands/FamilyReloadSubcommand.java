@@ -5,14 +5,13 @@ import de.janschuri.lunaticFamily.commands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import org.bukkit.command.CommandSender;
 
-import java.util.List;
-
 public class FamilyReloadSubcommand extends Subcommand {
+    private static final String mainCommand = "family";
+    private static final String name = "reload";
     private static final String permission = "lunaticfamily.admin.reload";
-    private static final List<String> aliases = Language.getAliases("family", "reload");
 
     public FamilyReloadSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
     public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
         if (!sender.hasPermission(permission)) {

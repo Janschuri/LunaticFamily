@@ -1,21 +1,17 @@
 package de.janschuri.lunaticFamily.commands.adopt;
 
-import de.janschuri.lunaticFamily.commands.adopt.subcommands.*;
-import de.janschuri.lunaticFamily.config.Config;
-import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.handler.FamilyPlayer;
-import de.janschuri.lunaticFamily.utils.Utils;
-import org.bukkit.Bukkit;
+import de.janschuri.lunaticFamily.commands.adopt.subcommands.*;
+import de.janschuri.lunaticFamily.config.Language;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdoptCommand implements CommandExecutor, TabCompleter {
 
@@ -45,17 +41,17 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
             } else if (Language.checkIsSubcommand(label, "unset", subcommand)) {
                 adoptUnsetSubcommand.execute(sender, args, plugin);
             } else if (Language.checkIsSubcommand(label, "propose", subcommand)) {
-
+                adoptProposeSubcommand.execute(sender, args, plugin);
             } else if (Language.checkIsSubcommand(label, "accept", subcommand)) {
-
+                adoptAcceptSubcommand.execute(sender, args, plugin);
             } else if (Language.checkIsSubcommand(label, "deny", subcommand)) {
-
+                adoptDenySubcommand.execute(sender, args, plugin);
             } else if (Language.checkIsSubcommand(label, "moveout", subcommand)) {
-
+                adoptMoveoutSubcommand.execute(sender, args, plugin);
             } else if (Language.checkIsSubcommand(label, "kickout", subcommand)) {
-
+                adoptKickoutSubcommand.execute(sender, args, plugin);
             } else if (Language.checkIsSubcommand(label, "help", subcommand)) {
-
+                adoptHelpSubcommand.execute(sender, args, plugin);
             } else {
                 sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
             }

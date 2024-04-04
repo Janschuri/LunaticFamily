@@ -9,14 +9,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class AdoptKickoutSubcommand extends Subcommand {
+    private static final String mainCommand = "adopt";
+    private static final String name = "kickout";
     private static final String permission = "lunaticfamily.adopt";
-    private static final List<String> aliases = Language.getAliases("adopt", "kickout");
 
     public AdoptKickoutSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
 
     @Override

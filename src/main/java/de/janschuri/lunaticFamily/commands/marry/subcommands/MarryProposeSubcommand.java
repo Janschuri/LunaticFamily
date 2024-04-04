@@ -10,14 +10,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.List;
-
 public class MarryProposeSubcommand extends Subcommand {
+    private static final String mainCommand = "marry";
+    private static final String name = "propose";
     private static final String permission = "lunaticfamily.marry";
-    private static final List<String> aliases = Language.getAliases("marry", "propose");
 
     public MarryProposeSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
     @Override
     public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {

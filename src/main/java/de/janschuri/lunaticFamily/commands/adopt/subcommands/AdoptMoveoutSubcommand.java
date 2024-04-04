@@ -8,13 +8,12 @@ import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class AdoptMoveoutSubcommand extends Subcommand {
+    private static final String mainCommand = "adopt";
+    private static final String name = "moveout";
     private static final String permission = "lunaticfamily.adopt";
-    private static final List<String> aliases = Language.getAliases("adopt", "moveout");
     public AdoptMoveoutSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
 
     @Override

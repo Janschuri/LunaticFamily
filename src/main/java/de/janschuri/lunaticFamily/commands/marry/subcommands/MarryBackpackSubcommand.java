@@ -11,15 +11,15 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
 import java.util.UUID;
 
 public class MarryBackpackSubcommand extends Subcommand {
+    private static final String mainCommand = "marry";
+    private static final String name = "backpack";
     private static final String permission = "lunaticfamily.marry.backpack";
-    private static final List<String> aliases = Language.getAliases("marry", "backpack");
 
     public MarryBackpackSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
     @Override
     public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {

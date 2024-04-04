@@ -11,13 +11,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.List;
-
 public class AdoptProposeSubcommand extends Subcommand {
+    private static final String mainCommand = "adopt";
+    private static final String name = "propose";
     private static final String permission = "lunaticfamily.adopt";
-    private static final List<String> aliases = Language.getAliases("adopt", "propose");
     public AdoptProposeSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
 
     @Override

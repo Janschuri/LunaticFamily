@@ -1,5 +1,7 @@
 package de.janschuri.lunaticFamily;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticFamily.commands.adopt.AdoptCommand;
 import de.janschuri.lunaticFamily.commands.family.FamilyCommand;
 import de.janschuri.lunaticFamily.commands.gender.GenderCommand;
@@ -7,18 +9,16 @@ import de.janschuri.lunaticFamily.commands.marry.MarryCommand;
 import de.janschuri.lunaticFamily.commands.sibling.SiblingCommand;
 import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.external.Vault;
-import de.janschuri.lunaticFamily.handler.FamilyTree;
-import org.bukkit.command.CommandMap;
-import org.bukkit.command.PluginCommand;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.database.MySQL;
 import de.janschuri.lunaticFamily.database.SQLite;
+import de.janschuri.lunaticFamily.external.Vault;
+import de.janschuri.lunaticFamily.handler.FamilyTree;
 import de.janschuri.lunaticFamily.listener.JoinListener;
 import de.janschuri.lunaticFamily.listener.QuitListener;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -39,7 +39,6 @@ public final class LunaticFamily extends JavaPlugin {
     public static BiMap<String, String> siblingRequests = HashBiMap.create();
 
     private static LunaticFamily instance;
-    private LunaticFamily plugin;
 
     public static LunaticFamily getInstance() {
         return instance;
@@ -53,8 +52,10 @@ public final class LunaticFamily extends JavaPlugin {
         saveDefaultConfig();
 
         loadConfig(this);
-
         checkSoftDepends();
+        if (Config.enabledCrazyAdvancementAPI) {
+            FamilyTree.loadAdvancementMap(instance);
+        }
 
         new Vault();
 
@@ -96,7 +97,6 @@ public final class LunaticFamily extends JavaPlugin {
 
         new Config(this);
         new Language(this);
-        FamilyTree.loadAdvancementMap(plugin);
 
         List<String> commands = Arrays.asList("family", "marry", "sibling", "adopt", "gender");
 
@@ -157,26 +157,29 @@ public final class LunaticFamily extends JavaPlugin {
     public static void checkSoftDepends() {
         try {
             Class.forName("eu.endercentral.crazy_advancements.CrazyAdvancementsAPI");
-            Config.enabledCrazyAdvancementAPI = true;
         } catch (ClassNotFoundException e) {
-            Bukkit.getLogger().warning("Could not find CrazyAdvancementsAPI.");
-            Config.enabledCrazyAdvancementAPI = false;
+            if (Config.enabledCrazyAdvancementAPI) {
+                Bukkit.getLogger().warning("Could not find CrazyAdvancementsAPI.");
+                Config.enabledCrazyAdvancementAPI = false;
+            }
         }
 
         try {
             Class.forName("net.milkbowl.vault.economy.Economy");
-            Config.enabledVault = true;
         } catch (ClassNotFoundException e) {
-            Bukkit.getLogger().warning("Could not find Vault.");
-            Config.enabledVault = false;
+            if (Config.enabledVault) {
+                Bukkit.getLogger().warning("Could not find Vault.");
+                Config.enabledVault = false;
+            }
         }
 
         try {
             Class.forName("at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin");
-            Config.enabledMinepacks = true;
         } catch (ClassNotFoundException e) {
-            Bukkit.getLogger().warning("Could not find Minepacks.");
-            Config.enabledMinepacks = false;
+            if (Config.enabledMinepacks) {
+                Bukkit.getLogger().warning("Could not find Minepacks.");
+                Config.enabledMinepacks = false;
+            }
         }
 
 

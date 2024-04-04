@@ -3,18 +3,26 @@ package de.janschuri.lunaticFamily.commands.adopt.subcommands;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class AdoptHelpSubcommand extends Subcommand {
-
+    private static final String mainCommand = "adopt";
+    private static final String name = "help";
     private static final String permission = "lunaticfamily.adopt";
-    private static final List<String> aliases = Language.getAliases("adopt", "help");
+    private static final Subcommand[] subcommands = {
+            new AdoptAcceptSubcommand(),
+            new AdoptDenySubcommand(),
+            new AdoptKickoutSubcommand(),
+            new AdoptMoveoutSubcommand(),
+            new AdoptProposeSubcommand(),
+            new AdoptSetSubcommand(),
+            new AdoptUnsetSubcommand()
+    };
 
     public AdoptHelpSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
 
     @Override
@@ -24,14 +32,13 @@ public class AdoptHelpSubcommand extends Subcommand {
         } else if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
-            String[] subcommandsHelp = {"propose", "kickout", "moveout"};
+            TextComponent msg = new TextComponent(Language.getMessage(mainCommand + "_help") + "\n");
 
-            StringBuilder msg = new StringBuilder(Language.prefix + " " + Language.getMessage("adopt_help") + "\n");
-
-            for (final String sc : subcommandsHelp) {
-                msg.append(Language.prefix).append(" ").append(Language.getMessage("adopt_" + sc + "_help")).append("\n");
+            for (Subcommand subcommand : subcommands) {
+                msg.addExtra(subcommand.getHelp(sender));
             }
-            sender.sendMessage(msg.toString());
+
+            sender.sendMessage(msg);
         }
     }
 }

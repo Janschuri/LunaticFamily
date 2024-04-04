@@ -11,15 +11,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.List;
 import java.util.UUID;
 
 public class MarryAcceptSubcommand extends Subcommand {
+    private static final String mainCommand = "marry";
+    private static final String name = "accept";
     private static final String permission = "lunaticfamily.marry";
-    private static final List<String> aliases = Language.getAliases("marry", "accept");
 
     public MarryAcceptSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
     @Override
     public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
@@ -28,14 +28,15 @@ public class MarryAcceptSubcommand extends Subcommand {
         } else if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
+            Player player = (Player) sender;
+            String playerUUID = player.getUniqueId().toString();
+            FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
+
             if (!LunaticFamily.marryRequests.containsKey(playerUUID) && !LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
                 sender.sendMessage(Language.prefix + Language.getMessage("marry_accept_no_request"));
             } else if (LunaticFamily.marryPriestRequests.containsValue(playerUUID)) {
                 sender.sendMessage(Language.prefix + Language.getMessage("marry_accept_open_request_partner"));
             } else {
-                Player player = (Player) sender;
-                String playerUUID = player.getUniqueId().toString();
-                FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
                 if (LunaticFamily.marryRequests.containsKey(playerUUID)) {
 

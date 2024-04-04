@@ -7,14 +7,13 @@ import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class AdoptAcceptSubcommand extends Subcommand{
     private static final String permission = "lunaticfamily.adopt";
-    private static final List<String> aliases = Language.getAliases("adopt", "accept");
+    private static final String mainCommand = "adopt";
+    private static final String name = "accept";
 
     public AdoptAcceptSubcommand() {
-        super(permission, aliases);
+        super(mainCommand, name, permission);
     }
 
     @Override
