@@ -49,12 +49,6 @@ public class Utils {
     }
 
     public static boolean playerExists(String name) {
-        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-            if (player.getName() != null && player.getName().equals(name)) {
-                return true;
-            }
-        }
-
         String uuid = Bukkit.getOfflinePlayer(name).getUniqueId().toString();
 
         if (LunaticFamily.getDatabase().getID(uuid) != 0) {
