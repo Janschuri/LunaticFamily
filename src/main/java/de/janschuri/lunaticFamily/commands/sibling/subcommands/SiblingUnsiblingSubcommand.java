@@ -80,11 +80,13 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
                     playerFam.withdrawPlayer("sibling_unsibling_leaving_player");
                     playerFam.getSibling().withdrawPlayer("sibling_unsibling_left_player");
                 }
-                playerFam.removeSibling();
 
-                for (String command : Config.unsiblingSuccessCommands) {
+                for (String command : Config.successCommands.get("unsibling")) {
+                    command = command.replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getSibling().getName());
                     Utils.sendConsoleCommand(command);
                 }
+
+                playerFam.removeSibling();
             }
         }
     }

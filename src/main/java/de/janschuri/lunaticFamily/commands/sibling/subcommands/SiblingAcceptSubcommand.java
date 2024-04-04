@@ -55,7 +55,8 @@ public class SiblingAcceptSubcommand extends Subcommand {
                     LunaticFamily.siblingRequests.remove(siblingUUID);
                     playerFam.addSibling(siblingFam.getID());
 
-                    for (String command : Config.siblingSuccessCommands) {
+                    for (String command : Config.successCommands.get("sibling")) {
+                        command = command.replace("%player1%", playerFam.getName()).replace("%player2%", siblingFam.getName());
                         Utils.sendConsoleCommand(command);
                     }
 

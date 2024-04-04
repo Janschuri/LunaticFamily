@@ -102,17 +102,23 @@ public class AdoptKickoutSubcommand extends Subcommand {
                                 if (playerFam.isMarried()) {
                                     playerFam.getPartner().withdrawPlayer("adopt_kickout_parent", 0.5);
                                     playerFam.withdrawPlayer("adopt_kickout_parent", 0.5);
+
+                                    for (String command : Config.successCommands.get("kickout")) {
+                                        command = command.replace("%parent1%", playerFam.getName()).replace("%parent2%", playerFam.getPartner().getName()).replace("%child%", childFam.getName());
+                                        Utils.sendConsoleCommand(command);
+                                    }
                                 } else {
                                     playerFam.withdrawPlayer("adopt_kickout_parent");
+
+                                    for (String command : Config.successCommands.get("kickout_single")) {
+                                        command = command.replace("%parent%", playerFam.getName()).replace("%child%", childFam.getName());
+                                        Utils.sendConsoleCommand(command);
+                                    }
                                 }
                                 childFam.withdrawPlayer("adopt_kickout_child");
                             }
 
                             playerFam.unadopt(childFam.getID());
-
-                            for (String command : Config.kickoutSuccessCommands) {
-                                Utils.sendConsoleCommand(command);
-                            }
                         }
 
                     } else {

@@ -52,14 +52,6 @@ public final class LunaticFamily extends JavaPlugin {
         saveDefaultConfig();
 
         loadConfig(this);
-        checkSoftDepends();
-        if (Config.enabledCrazyAdvancementAPI) {
-            FamilyTree.loadAdvancementMap(instance);
-        }
-
-        if (Config.enabledVault) {
-            new Vault();
-        }
 
         if (Config.enabledMySQL) {
             db = new MySQL(this);
@@ -120,6 +112,15 @@ public final class LunaticFamily extends JavaPlugin {
         registerCommand("adopt");
         registerCommand("sibling");
         registerCommand("gender");
+
+        checkSoftDepends();
+        if (Config.enabledCrazyAdvancementAPI) {
+            FamilyTree.loadAdvancementMap(instance);
+        }
+
+        if (Config.enabledVault) {
+            new Vault();
+        }
     }
 
     @Override

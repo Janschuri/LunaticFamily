@@ -79,7 +79,8 @@ public class MarryAcceptSubcommand extends Subcommand {
 
                             playerFam.marry(partnerFam.getID(), priestFam.getID());
 
-                            for (String command : Config.marrySuccessCommands) {
+                            for (String command : Config.successCommands.get("marry_priest")) {
+                                command = command.replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()).replace("%priest%", priestFam.getName());
                                 Utils.sendConsoleCommand(command);
                             }
                         }
@@ -101,7 +102,8 @@ public class MarryAcceptSubcommand extends Subcommand {
 
                             playerFam.marry(partnerFam.getID());
 
-                            for (String command : Config.marrySuccessCommands) {
+                            for (String command : Config.successCommands.get("marry")) {
+                                command = command.replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName());
                                 Utils.sendConsoleCommand(command);
                             }
                         }

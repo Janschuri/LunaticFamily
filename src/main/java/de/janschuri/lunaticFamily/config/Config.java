@@ -28,14 +28,8 @@ public class Config {
     public static boolean enabledMySQL;
     public static boolean marryBackpackOffline;
     public static String dateFormat;
-    public static List<String> marrySuccessCommands;
-    public static List<String> adoptSuccessCommands;
-    public static List<String> siblingSuccessCommands;
-    public static List<String> divorceSuccessCommands;
-    public static List<String> kickoutSuccessCommands;
-    public static List<String> moveoutSuccessCommands;
-    public static List<String> unsiblingSuccessCommands;
-
+    public static double marryKissRange;
+    public static Map<String, List<String>> successCommands = new HashMap<>();
     public static List<String> familyList;
     public static List<String> backgrounds;
     public static Map<String, Double> commandWithdraws = new HashMap<>();
@@ -67,14 +61,16 @@ public class Config {
         backgrounds = Objects.requireNonNull(config.getStringList("backgrounds"));
         language = config.getString("language");
         dateFormat = config.getString("date_format");
+        marryKissRange = config.getDouble("marry_kiss_range");
 
-        marrySuccessCommands = config.getStringList("marry_success_commands");
-        adoptSuccessCommands = config.getStringList("adopt_success_commands");
-        siblingSuccessCommands = config.getStringList("sibling_success_commands");
-        divorceSuccessCommands = config.getStringList("marry_divorce_commands");
-        kickoutSuccessCommands = config.getStringList("adopt_kickout_commands");
-        moveoutSuccessCommands = config.getStringList("adopt_moveout_commands");
-        unsiblingSuccessCommands = config.getStringList("sibling_unsibling_commands");
+        ConfigurationSection successCommandsSection = config.getConfigurationSection("success_commands");
+        if (successCommandsSection != null) {
+            for (String key : successCommandsSection.getKeys(false)) {
+                successCommands.put(key, successCommandsSection.getStringList(key));
+            }
+        } else {
+            Logger.log("Could not find 'success_commands' section in config.yml", LoggingSeverity.WARN);
+        }
 
         isDebug = config.getBoolean("is_debug");
 

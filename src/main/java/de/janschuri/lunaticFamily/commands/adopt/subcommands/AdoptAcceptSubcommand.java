@@ -50,18 +50,23 @@ public class AdoptAcceptSubcommand extends Subcommand{
                         parentFam.getPartner().sendMessage(Language.prefix + Language.getMessage("adopt_accept_adopted").replace("%player%", playerFam.getName()));
                         parentFam.getPartner().withdrawPlayer("adopt_parent", 0.5);
                         parentFam.withdrawPlayer("adopt_parent", 0.5);
+                        for (String command : Config.successCommands.get("adopt")) {
+                            command = command.replace("%parent1%", parentFam.getName()).replace("%parent2%", parentFam.getPartner().getName()).replace("%child%", playerFam.getName());
+
+                            Utils.sendConsoleCommand(command);
+                        }
                     } else {
                         sender.sendMessage(Language.prefix + Language.getMessage("adopt_accept_adopted_by_single").replace("%player%", parentFam.getName()));
+                        for (String command : Config.successCommands.get("adopt_single")) {
+                            command = command.replace("%parent%", parentFam.getName()).replace("%child%", playerFam.getName());
+                            Utils.sendConsoleCommand(command);
+                        }
                     }
                     playerFam.withdrawPlayer("adopt_child");
 
                     parentFam.sendMessage(Language.prefix + Language.getMessage("adopt_accept_adopted").replace("%player%", playerFam.getName()));
                     LunaticFamily.adoptRequests.remove(playerUUID);
                     parentFam.adopt(playerFam.getID());
-
-                    for (String command : Config.adoptSuccessCommands) {
-                        Utils.sendConsoleCommand(command);
-                    }
                 }
             }
         }

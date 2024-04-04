@@ -2,6 +2,7 @@ package de.janschuri.lunaticFamily.commands.marry.subcommands;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.Subcommand;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
@@ -39,7 +40,7 @@ public class MarryKissSubcommand extends Subcommand {
             } else {
                 Player partnerPlayer = Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID()));
 
-                if (!Utils.isInRange(partnerPlayer.getLocation(), player.getLocation(), 3)) {
+                if (!Utils.isInRange(partnerPlayer.getLocation(), player.getLocation(), Config.marryKissRange)) {
                     sender.sendMessage(Language.prefix + Language.getMessage("player_too_far_away").replace("%player%", partnerPlayer.getName()));
                 } else {
                     Location location = Utils.getPositionBetweenLocations(player.getLocation(), partnerPlayer.getLocation());

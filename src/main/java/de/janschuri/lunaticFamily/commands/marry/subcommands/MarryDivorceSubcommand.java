@@ -75,11 +75,12 @@ public class MarryDivorceSubcommand extends Subcommand {
                 playerFam.withdrawPlayer("marry_divorce_leaving_player");
                 playerFam.getPartner().withdrawPlayer("marry_divorce_leaving_player");
 
-                playerFam.divorce();
-
-                for (String command : Config.divorceSuccessCommands) {
+                for (String command : Config.successCommands.get("divorce")) {
+                    command = command.replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName());
                     Utils.sendConsoleCommand(command);
                 }
+
+                playerFam.divorce();
             }
         }
     }

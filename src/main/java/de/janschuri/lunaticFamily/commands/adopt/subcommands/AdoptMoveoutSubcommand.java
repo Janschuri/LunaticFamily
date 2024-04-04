@@ -112,18 +112,23 @@ public class AdoptMoveoutSubcommand extends Subcommand {
                         FamilyPlayer secondParentFam = firstParentFam.getPartner();
                         secondParentFam.withdrawPlayer("adopt_moveout_parent", 0.5);
                         firstParentFam.withdrawPlayer("adopt_moveout_parent", 0.5);
+
+                        for (String command : Config.successCommands.get("moveout")) {
+                            command = command.replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()).replace("%child%", playerFam.getName());
+                            Utils.sendConsoleCommand(command);
+                        }
                     } else {
                         firstParentFam.withdrawPlayer("adopt_moveout_parent");
 
+                        for (String command : Config.successCommands.get("moveout_single")) {
+                            command = command.replace("%parent%", firstParentFam.getName()).replace("%child%", playerFam.getName());
+                            Utils.sendConsoleCommand(command);
+                        }
                     }
                     playerFam.withdrawPlayer("adopt_moveout_child");
                 }
 
                 firstParentFam.unadopt(playerFam.getID());
-
-                for (String command : Config.moveoutSuccessCommands) {
-                    Utils.sendConsoleCommand(command);
-                }
 
             }
         }

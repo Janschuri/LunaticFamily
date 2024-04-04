@@ -55,8 +55,6 @@ public class MarryProposeSubcommand extends Subcommand {
                     sender.sendMessage(Language.prefix + Language.getMessage("marry_propose_open_request").replace("%player%", partnerFam.getName()));
                 } else if (partnerFam.isMarried()) {
                     sender.sendMessage(Language.prefix + Language.getMessage("marry_propose_player_already_married").replace("%player%", partnerFam.getName()));
-                } else if (!Utils.isInRange(player.getLocation(), partnerFam.getPlayer().getLocation(), 5)) {
-                    sender.sendMessage(Language.prefix + Language.getMessage("player_too_far_away").replace("%player%", partnerFam.getName()));
                 } else {
 
                     partnerFam.sendMessage(Utils.createClickableMessage(
