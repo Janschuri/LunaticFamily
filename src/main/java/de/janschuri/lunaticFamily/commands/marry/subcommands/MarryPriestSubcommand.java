@@ -80,9 +80,9 @@ public class MarryPriestSubcommand extends Subcommand {
                             player1.sendMessage(Utils.createClickableMessage(
                                     "",
                                     Language.getMessage("marry_yes"),
-                                    "/marry accept",
+                                    "/lunaticfamily:marry accept",
                                     Language.getMessage("marry_no"),
-                                    "/marry deny"));
+                                    "/lunaticfamily:marry deny"));
 
                             LunaticFamily.marryPriestRequests.put(player1UUID, player2UUID);
                             LunaticFamily.marryPriest.put(player1UUID, playerUUID);

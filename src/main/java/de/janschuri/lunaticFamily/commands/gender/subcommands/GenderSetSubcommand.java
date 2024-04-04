@@ -34,7 +34,7 @@ public class GenderSetSubcommand extends Subcommand {
 
                     for (String gender : Language.genders) {
                         TextComponent text = new TextComponent(Language.prefix + " - " + Language.getGenderLang(gender) + "\n");
-                        text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/gender set " + gender));
+                        text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lunaticfamily:gender set " + gender));
                         text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Language.getMessage("gender_set_hover").replace("%gender%", Language.getGenderLang(gender))).create()));
                         msg.addExtra(text);
                     }

@@ -145,9 +145,9 @@ public class MarryAcceptSubcommand extends Subcommand {
                             partnerFam.sendMessage(Utils.createClickableMessage(
                                     "",
                                     Language.getMessage("marry_yes"),
-                                    "/marry accept",
+                                    "/lunaticfamily:marry accept",
                                     Language.getMessage("marry_no"),
-                                    "/marry deny"));
+                                    "/lunaticfamily:marry deny"));
                         }
                     }
                 }

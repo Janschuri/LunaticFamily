@@ -53,9 +53,9 @@ public class MarryDivorceSubcommand extends Subcommand {
                 sender.sendMessage(Utils.createClickableMessage(
                         Language.getMessage("marry_divorce_confirm"),
                         Language.getMessage("confirm"),
-                        "/marry divorce confirm",
+                        "/lunaticfamily:marry divorce confirm",
                         Language.getMessage("cancel"),
-                        "/marry divorce cancel"));
+                        "/lunaticfamily:marry divorce cancel"));
             } else if (cancel) {
                 sender.sendMessage(Language.prefix + Language.getMessage("marry_divorce_cancel"));
             } else if (!playerFam.hasEnoughMoney("marry_divorce_leaving_player")) {
@@ -65,9 +65,9 @@ public class MarryDivorceSubcommand extends Subcommand {
                 sender.sendMessage(Utils.createClickableMessage(
                         Language.getMessage("take_payment_confirm"),
                         Language.getMessage("confirm"),
-                        "/marry divorce confirm force",
+                        "/lunaticfamily:marry divorce confirm force",
                         Language.getMessage("cancel"),
-                        "/marry divorce cancel"));
+                        "/lunaticfamily:marry divorce cancel"));
             } else {
                 sender.sendMessage(Language.prefix + Language.getMessage("marry_divorce_divorced"));
                 playerFam.getPartner().sendMessage(Language.prefix + Language.getMessage("marry_divorce_divorced"));

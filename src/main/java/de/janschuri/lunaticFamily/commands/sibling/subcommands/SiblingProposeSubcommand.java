@@ -59,9 +59,9 @@ public class SiblingProposeSubcommand extends Subcommand {
                     siblingFam.sendMessage(Utils.createClickableMessage(
                             Language.getMessage("sibling_propose_request").replace("%player%", siblingFam.getName()),
                             Language.getMessage("accept"),
-                            "/sibling accept",
+                            "/lunaticfamily:sibling accept",
                             Language.getMessage("deny"),
-                            "/sibling deny"));
+                            "/lunaticfamily:sibling deny"));
 
                     LunaticFamily.siblingRequests.put(siblingUUID, playerUUID);
 

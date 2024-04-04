@@ -59,9 +59,9 @@ public class AdoptKickoutSubcommand extends Subcommand {
                             sender.sendMessage(Utils.createClickableMessage(
                                     Language.getMessage("adopt_kickout_confirm").replace("%player%", Utils.getName(args[1])),
                                     Language.getMessage("confirm"),
-                                    "/adopt kickout " + args[1] + " confirm",
+                                    "/lunaticfamily:adopt kickout " + args[1] + " confirm",
                                     Language.getMessage("cancel"),
-                                    "/adopt kickout " + args[1] + " cancel"));
+                                    "/lunaticfamily:adopt kickout " + args[1] + " cancel"));
                         } else if (cancel) {
                             sender.sendMessage(Language.prefix + Language.getMessage("adopt_kickout_cancel"));
                         } else if (!force && playerFam.isMarried() && !playerFam.hasEnoughMoney("adopt_kickout_parent", 0.5)) {
@@ -73,17 +73,17 @@ public class AdoptKickoutSubcommand extends Subcommand {
                             sender.sendMessage(Utils.createClickableMessage(
                                     Language.getMessage("take_payment_confirm"),
                                     Language.getMessage("confirm"),
-                                    "/adopt kickout confirm force",
+                                    "/lunaticfamily:adopt kickout confirm force",
                                     Language.getMessage("cancel"),
-                                    "/adopt kickout confirm force"));
+                                    "/lunaticfamily:adopt kickout confirm force"));
                         } else if (!force && playerFam.isMarried() && !playerFam.getPartner().hasEnoughMoney("adopt_kickout_parent")) {
                             sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", playerFam.getPartner().getName()));
                             sender.sendMessage(Utils.createClickableMessage(
                                     Language.getMessage("take_payment_confirm"),
                                     Language.getMessage("confirm"),
-                                    "/adopt kickout confirm force",
+                                    "/lunaticfamily:adopt kickout confirm force",
                                     Language.getMessage("cancel"),
-                                    "/adopt kickout confirm force"));
+                                    "/lunaticfamily:adopt kickout confirm force"));
                         } else {
                             sender.sendMessage(Language.prefix + Language.getMessage("adopt_kickout").replace("%player%", childFam.getName()));
                             if (playerFam.isMarried()) {

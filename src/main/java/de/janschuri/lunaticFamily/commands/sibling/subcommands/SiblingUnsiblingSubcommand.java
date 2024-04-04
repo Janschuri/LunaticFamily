@@ -52,9 +52,9 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
                 sender.sendMessage(Utils.createClickableMessage(
                         Language.getMessage("sibling_unsibling_confirm"),
                         Language.getMessage("confirm"),
-                        "/sibling unsibling confirm",
+                        "/lunaticfamily:sibling unsibling confirm",
                         Language.getMessage("cancel"),
-                        "/sibling unsibling cancel"));
+                        "/lunaticfamily:sibling unsibling cancel"));
             } else if (cancel) {
                 sender.sendMessage(Language.prefix + Language.getMessage("sibling_unsibling_cancel"));
             } else if (playerFam.isAdopted()) {
@@ -66,9 +66,9 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
                 sender.sendMessage(Utils.createClickableMessage(
                         Language.getMessage("take_payment_confirm"),
                         Language.getMessage("confirm"),
-                        "/sibling unsibling confirm force",
+                        "/lunaticfamily:sibling unsibling confirm force",
                         Language.getMessage("cancel"),
-                        "/sibling unsibling cancel"));
+                        "/lunaticfamily:sibling unsibling cancel"));
             } else {
                 sender.sendMessage(Language.prefix + Language.getMessage("sibling_unsibling_complete"));
                 playerFam.getSibling().sendMessage(Language.prefix + Language.getMessage("sibling_unsiblinged_complete"));

@@ -73,9 +73,9 @@ public class AdoptProposeSubcommand extends Subcommand {
                     sender.sendMessage(Utils.createClickableMessage(
                             Language.getMessage("adopt_propose_has_sibling").replace("%player1%", childFam.getName()).replace("%player2%", childFam.getSibling().getName()),
                             Language.getMessage("confirm"),
-                            "/adopt propose " + Utils.getName(args[1]) + " confirm",
+                            "/lunaticfamily:adopt propose " + Utils.getName(args[1]) + " confirm",
                             Language.getMessage("cancel"),
-                            "/adopt propose " + Utils.getName(args[1]) + " cancel"));
+                            "/lunaticfamily:adopt propose " + Utils.getName(args[1]) + " cancel"));
 
                 } else if (childFam.hasSibling() && playerFam.getChildrenAmount() > 0) {
                     sender.sendMessage(Language.prefix + Language.getMessage("adopt_propose_has_sibling_limit").replace("%player1%", childFam.getName()).replace("%player2%", childFam.getSibling().getName()));
@@ -84,16 +84,16 @@ public class AdoptProposeSubcommand extends Subcommand {
                         childFam.sendMessage(Utils.createClickableMessage(
                                 Language.getMessage("adopt_propose_request").replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName()),
                                 Language.getMessage("accept"),
-                                "/adopt accept",
+                                "/lunaticfamily:adopt accept",
                                 Language.getMessage("deny"),
-                                "/adopt deny"));
+                                "/lunaticfamily:adopt deny"));
                     } else {
                         childFam.sendMessage(Utils.createClickableMessage(
                                 Language.getMessage("adopt_propose_request_by_single").replace("%player%", playerFam.getName()),
                                 Language.getMessage("accept"),
-                                "/adopt accept",
+                                "/lunaticfamily:adopt accept",
                                 Language.getMessage("deny"),
-                                "/adopt deny"));
+                                "/lunaticfamily:adopt deny"));
                     }
                     LunaticFamily.adoptRequests.put(childUUID, playerUUID);
                     sender.sendMessage(Language.prefix + Language.getMessage("adopt_propose_request_sent").replace("%player%", childFam.getName()));

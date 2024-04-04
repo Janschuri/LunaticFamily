@@ -60,9 +60,9 @@ public class MarryProposeSubcommand extends Subcommand {
                     partnerFam.sendMessage(Utils.createClickableMessage(
                             Language.getMessage("marry_propose_request").replace("%player1%", partnerFam.getName()).replace("%player2%", playerFam.getName()),
                             Language.getMessage("marry_yes"),
-                            "/marry accept",
+                            "/lunaticfamily:marry accept",
                             Language.getMessage("marry_no"),
-                            "/marry deny"));
+                            "/lunaticfamily:marry deny"));
 
 
                     LunaticFamily.marryRequests.put(partnerUUID, playerUUID);

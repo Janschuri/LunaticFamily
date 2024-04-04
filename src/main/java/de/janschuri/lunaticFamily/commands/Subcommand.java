@@ -93,7 +93,7 @@ public abstract class Subcommand {
         if (sender.hasPermission(permission)) {
             TextComponent text = new net.md_5.bungee.api.chat.TextComponent(Language.getMessage(mainCommand + "_" + name + "_help") + "\n");
             if (subcommands != null) {
-                text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + name + " help"));
+                text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lunaticfamily:" + name + " help"));
                 text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Language.getMessage(name + "_help")).create()));
             }
             return text;
