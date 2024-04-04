@@ -19,6 +19,8 @@ permissions:
     description: Use /marry
   lunaticFamily.sibling:
     description: Use /marry
+  lunaticFamily.gender:
+    description: Use /gender
   lunaticFamily.family:
     description: Use /family
   lunaticFamily.family.background:
