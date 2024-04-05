@@ -1,5 +1,7 @@
 package de.janschuri.lunaticFamily.config;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.LoggingSeverity;
@@ -20,8 +22,9 @@ public class Language {
     public static FileConfiguration lang;
 
     public static String prefix;
+    private static final BiMap<String, String> colorsTranslations = HashBiMap.create();
 
-    private static Map<String, Map<String, String>> relationships = new HashMap<>();
+    private static final Map<String, Map<String, String>> relationships = new HashMap<>();
 
 
     private static final Map<String, Map<String, List<String>>> aliases = new HashMap<>();
@@ -99,6 +102,17 @@ public class Language {
             }
             aliases.put(command, map);
         }
+
+        ConfigurationSection colorsSection = lang.getConfigurationSection("color_translations");
+        if (colorsSection != null) {
+            for (String key : colorsSection.getKeys(false)) {
+                colorsTranslations.put(key.toLowerCase(), ChatColor.translateAlternateColorCodes('&', colorsSection.getString(key, key)));
+            }
+        } else {
+            Logger.log("Could not find 'colors' section in lang.yml", LoggingSeverity.WARN);
+        }
+
+
     }
 
     public static String getMessage(String key) {
@@ -117,6 +131,45 @@ public class Language {
             return "undefined";
         }
     }
+
+    public static String getColorLang(String key) {
+
+        if (colorsTranslations.containsKey(key)) {
+            return colorsTranslations.get(key.toLowerCase());
+        } else {
+            return "undefined";
+        }
+    }
+
+    public static List<String> getColorLangs() {
+        List<String> list = new ArrayList<>();
+        for (String color : Config.colors.keySet()) {
+            Logger.debugLog("Color: " + color);
+            list.add(Language.getColorLang(color));
+        }
+        Logger.debugLog("Colors: " + list.toString());
+        return list;
+    }
+    public static String getColorKeyFromLang(String key) {
+
+        for (String colorLang : colorsTranslations.values()) {
+            if (colorLang.equalsIgnoreCase(key)) {
+                return colorsTranslations.inverse().get(colorLang);
+            }
+        }
+        return "#FFFFFF";
+    }
+
+    public static boolean isColorLang(String key) {
+
+        for (String colorLang : colorsTranslations.values()) {
+            if (colorLang.equalsIgnoreCase(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public static String getRelation(String relation, String gender) {
         if (genders.contains(gender)) {

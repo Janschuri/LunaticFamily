@@ -112,6 +112,8 @@ messages:
   marry_gift_partner_full_inv: "Dein Partner hat kein Platz im Inventar."
   marry_gift_sent: "Du hast deinem Partner %item% geschenkt."
   marry_gift_got: "Dein Partner hat dir %item% geschenkt."
+  marry_heart_no_color: "Du musst eine Farbe angeben."
+  marry_heart_color: "Du hast die Farbe %color% gewählt."
   marry_backpack_open: "Du hast den Rucksack deines Partners geöffnet."
   marry_backpack_no_partner: "Du bist nicht verheiratet!"
   marry_list: "Alle Ehepaare auf diesem Server: "
@@ -252,6 +254,23 @@ family_relationships:
     parent_in_law: "&3Schwiegervater"
     child_in_law: "&3Schwiegersohn"
     grandchild_in_law: "&3Schwiegerenkelsohn"
+color_translations:
+  black: "Schwarz"
+  dark_blue: "Dunkelblau"
+  dark_green: "Dunkelgrün"
+  dark_aqua: "Dunkelaqua"
+  dark_red: "Dunkelrot"
+  dark_purple: "Dunkellila"
+  gold: "Gold"
+  gray: "Grau"
+  dark_gray: "Dunkelgrau"
+  blue: "Blau"
+  green: "Grün"
+  aqua: "Aqua"
+  red: "Rot"
+  light_purple: "Hellila"
+  yellow: "Gelb"
+  white: "Weiß"
 aliases:
   family:
     base_command:

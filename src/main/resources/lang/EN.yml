@@ -112,6 +112,8 @@ messages:
   marry_gift_partner_full_inv: "Your partner has no space in their inventory."
   marry_gift_sent: "You have gifted %item% to your partner."
   marry_gift_got: "Your partner has gifted you %item%."
+  marry_heart_no_color: "You must specify a color."
+  marry_heart_color: "You have chosen the color %color%."
   marry_list: "All married couples on this server: "
   marry_list_no_number: "%input% is not a whole number!"
   marry_list_emoji: "&4❤"
@@ -248,6 +250,23 @@ family_relationships:
   son_in_law: "&3son-in-law"
   granddaughter_in_law: "&3granddaughter-in-law"
   grandson_in_law: "&3grandson-in-law"
+color_translations:
+  black: "Black"
+  dark_blue: "Dark Blue"
+  dark_green: "Dark Green"
+  dark_aqua: "Dark Aqua"
+  dark_red: "Dark Red"
+  dark_purple: "Dark Purple"
+  gold: "Gold"
+  gray: "Gray"
+  dark_gray: "Dark Gray"
+  blue: "Blue"
+  green: "Green"
+  aqua: "Aqua"
+  red: "Red"
+  light_purple: "Light Purple"
+  yellow: "Yellow"
+  white: "White"
 aliases:
   family:
     base_command:

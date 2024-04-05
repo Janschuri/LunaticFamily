@@ -1,25 +1,17 @@
 package de.janschuri.lunaticFamily.commands.marry;
 
-import de.janschuri.lunaticFamily.commands.marry.subcommands.*;
-import de.janschuri.lunaticFamily.config.Config;
-import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.handler.FamilyPlayer;
-import de.janschuri.lunaticFamily.external.Minepacks;
-import de.janschuri.lunaticFamily.utils.Utils;
-import net.md_5.bungee.api.chat.*;
-import org.bukkit.*;
+import de.janschuri.lunaticFamily.commands.marry.subcommands.*;
+import de.janschuri.lunaticFamily.config.Language;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MarryCommand implements CommandExecutor, TabCompleter {
 
@@ -36,6 +28,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
     private final MarryProposeSubcommand marryProposeSubcommand = new MarryProposeSubcommand();
     private final MarrySetSubcommand marrySetSubcommand = new MarrySetSubcommand();
     private final MarryUnsetSubcommand marryUnsetSubcommand = new MarryUnsetSubcommand();
+    private final MarryHeartSubcommand marryHeartSubcommand = new MarryHeartSubcommand();
 
     public MarryCommand(LunaticFamily plugin) {
         this.plugin = plugin;
@@ -69,6 +62,8 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                 marryGiftSubcommand.execute(sender, args, plugin);
             } else if (Language.checkIsSubcommand(label, "backpack", subcommand)) {
                 marryBackpackSubcommand.execute(sender, args, plugin);
+            } else if (Language.checkIsSubcommand(label, "heart", subcommand)) {
+                marryHeartSubcommand.execute(sender, args, plugin);
             } else if (Language.checkIsSubcommand(label, "list", subcommand)) {
                 marryListSubcommand.execute(sender, args, plugin);
             } else if (Language.checkIsSubcommand(label, "help", subcommand)) {
@@ -102,6 +97,7 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
                 list.addAll(marryProposeSubcommand.tabComplete(sender, args));
                 list.addAll(marrySetSubcommand.tabComplete(sender, args));
                 list.addAll(marryUnsetSubcommand.tabComplete(sender, args));
+                list.addAll(marryHeartSubcommand.tabComplete(sender, args));
             }
             return list;
         }

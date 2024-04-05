@@ -36,6 +36,7 @@ public class FamilyBackgroundSubcommand extends Subcommand {
             if (args.length > 1) {
                 playerFam.setBackground(args[1]);
                 sender.sendMessage(Language.prefix + Language.getMessage("family_background_set"));
+                playerFam.updateFamilyTree();
             } else {
                 sender.sendMessage(Language.prefix + Language.getMessage("family_background_help"));
             }

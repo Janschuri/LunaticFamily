@@ -8,6 +8,7 @@ import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.external.Vault;
 import de.janschuri.lunaticFamily.utils.Utils;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -166,6 +167,10 @@ public class FamilyPlayer {
         LunaticFamily.getDatabase().saveMarriage(this.id, partnerID, priest);
     }
 
+    private void saveMarriageHeartColor(String color) {
+        LunaticFamily.getDatabase().saveMarriageHeartColor(this.id, color);
+    }
+
     private void deleteMarriage() {
         LunaticFamily.getDatabase().deleteMarriage(this.id);
     }
@@ -188,6 +193,13 @@ public class FamilyPlayer {
 
     public String getSkinURL() {
         return skinURL;
+    }
+
+    public void setHeartColor(String color) {
+        saveMarriageHeartColor(color);
+    }
+    public TextColor getHeartColor() {
+        return TextColor.fromHexString(LunaticFamily.getDatabase().getMarriageHeartColor(this.id));
     }
 
     public FamilyPlayer getPartner() {

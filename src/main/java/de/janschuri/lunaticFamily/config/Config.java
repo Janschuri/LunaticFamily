@@ -33,6 +33,7 @@ public class Config {
     public static List<String> familyList;
     public static List<String> backgrounds;
     public static Map<String, Double> commandWithdraws = new HashMap<>();
+    public static Map<String, String> colors = new HashMap<>();
 
     public Config(LunaticFamily plugin) {
         this.plugin = plugin;
@@ -89,6 +90,15 @@ public class Config {
             }
         } else {
             Logger.log("Could not find 'command_withdraw' section in config.yml", LoggingSeverity.WARN);
+        }
+
+        ConfigurationSection colorsSection = config.getConfigurationSection("colors");
+        if (colorsSection != null) {
+            for (String key : colorsSection.getKeys(false)) {
+                colors.put(key, colorsSection.getString(key, "#FFFFFF"));
+            }
+        } else {
+            Logger.log("Could not find 'colors' section in config.yml", LoggingSeverity.WARN);
         }
     }
 }

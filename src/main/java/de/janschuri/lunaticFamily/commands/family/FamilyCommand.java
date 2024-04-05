@@ -74,6 +74,7 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
                 list.addAll(familyListSubcommand.tabComplete(sender, args));
                 list.addAll(familyBackgroundSubcommand.tabComplete(sender, args));
                 list.addAll(familyHelpSubcommand.tabComplete(sender, args));
+                list.addAll(familyTreeSubcommand.tabComplete(sender, args));
             }
             return list;
         }

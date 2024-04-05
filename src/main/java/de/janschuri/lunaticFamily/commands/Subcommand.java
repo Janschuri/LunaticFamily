@@ -69,7 +69,7 @@ public abstract class Subcommand {
                     } else {
                         if (params != null) {
                             for (String s : params) {
-                                if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                                if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
                                     list.add(s);
                                 }
                             }

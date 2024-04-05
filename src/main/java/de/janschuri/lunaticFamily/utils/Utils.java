@@ -21,9 +21,16 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
 
+    public static boolean isValidHexCode(String hexCode) {
+        Pattern pattern = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
+        Matcher matcher = pattern.matcher(hexCode);
+        return matcher.matches();
+    }
     public static Component createClickableMessage(String message, String confirmHoverText, String confirmCommand, String cancelHoverText, String cancelCommand) {
 
         return Component.text(Language.prefix + message)
@@ -85,7 +92,7 @@ public class Utils {
                     comments.addAll(defaultComments);
                 }
 
-                comments.addAll(defaultComments);
+                comments.addAll(configComments);
 
                 if (!comments.isEmpty()) {
                     newConfig.setComments(key, comments);

@@ -31,6 +31,12 @@ permissions:
     description: Use /marry gift
   lunaticFamily.marry.backpack:
     description: Use /marry backpack
+  lunaticFamily.marry.heart:
+    description: Use /marry heart
+  lunaticFamily.marry.heart.color.*:
+    description: Use /marry heart <color>
+  lunaticFamily.marry.heart.hex:
+    description: Use /marry heart <hex>
   lunaticFamily.family.list:
     description: Use /family list
   lunaticFamily.family.list.others:

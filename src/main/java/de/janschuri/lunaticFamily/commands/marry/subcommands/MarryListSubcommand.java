@@ -45,8 +45,13 @@ public class MarryListSubcommand extends Subcommand {
                     hoverText = hoverText + " -> " + player1Fam.getPriest().getName();
                 }
 
-                msg = msg.append(Component.text(Language.prefix + " " + index + ": " + player1Fam.getName() + " ❤ " + player2Fam.getName() + "\n"));
-                msg = msg.hoverEvent(HoverEvent.showText(Component.text(hoverText)));
+                msg = msg.append(Component.text(Language.prefix + " " + index + ": " + player1Fam.getName()))
+                        .append(Component.text(" ❤ ")
+                                .hoverEvent(HoverEvent.showText(Component.text(hoverText)))
+                                .color(player1Fam.getHeartColor())
+                        )
+                        .append(Component.text(player2Fam.getName() + "\n"));
+
 
                 index++;
             }

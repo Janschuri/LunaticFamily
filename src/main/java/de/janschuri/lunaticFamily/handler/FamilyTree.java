@@ -150,6 +150,9 @@ public class FamilyTree {
                 advancement.getDisplay().setTitle(relationFam.getName());
                 advancement.getDisplay().setDescription(Language.getRelation(relationKey, relationFam.getGender()));
                 advancement.getDisplay().setIcon(relationFam.getSkull());
+                if (relation.equalsIgnoreCase("ego")) {
+                    advancement.getDisplay().setBackgroundTexture(playerFam.getBackground());
+                }
                 manager.addAdvancement(advancement);
             }
         }

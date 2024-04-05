@@ -394,6 +394,37 @@ public abstract class Database {
         return null;
     }
 
+    public String getMarriageHeartColor(int playerID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM `" + marriages + "` WHERE player1ID = ? OR player2ID = ?");
+            ps.setInt(1, playerID);
+            ps.setInt(2, playerID);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                if (rs.getInt("id") == playerID) {
+                    return rs.getString("heart");
+                }
+            }
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+        return "#FFFFFF";
+    }
+
     public List<Integer> getParents(int playerID) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -552,6 +583,30 @@ public abstract class Database {
             ps.setInt(3, priest);
             ps.executeUpdate();
             return;
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+    }
+
+    public void saveMarriageHeartColor(int playerID, String hexColor) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("UPDATE `" + marriages + "` SET heart = ? WHERE player1ID = ? OR player2ID = ?");
+            ps.setString(1, hexColor);
+            ps.setInt(2, playerID);
+            ps.setInt(3, playerID);
+            ps.executeUpdate();
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
         } finally {
