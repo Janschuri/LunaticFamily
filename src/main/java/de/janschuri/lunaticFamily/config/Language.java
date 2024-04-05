@@ -35,16 +35,17 @@ public class Language {
         plugin.saveResource("lang/EN.yml", true);
         plugin.saveResource("lang/DE.yml", true);
 
-        File langfile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang.yml");
+        File defaultLangFile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang/" + Config.language + ".yml");
+        File langFile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang.yml");
 
-        if (!langfile.exists()) {
+        if (!langFile.exists()) {
             plugin.saveResource("lang.yml", false);
-            Utils.addMissingProperties(langfile, "/lang/" + Config.language + ".yml", plugin);
+            Utils.addMissingProperties(langFile, defaultLangFile);
         } else {
-            Utils.addMissingProperties(langfile, "/lang/" + Config.language + ".yml", plugin);
+            Utils.addMissingProperties(langFile, defaultLangFile);
         }
 
-        lang = YamlConfiguration.loadConfiguration(langfile);
+        lang = YamlConfiguration.loadConfiguration(langFile);
 
         prefix = ChatColor.translateAlternateColorCodes('&', lang.getString("prefix", "&8[&6LunaticFamily&8] "));
 

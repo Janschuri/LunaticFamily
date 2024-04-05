@@ -41,17 +41,19 @@ public class Config {
 
     public void load() {
 
-        File cfgfile = new File(plugin.getDataFolder().getAbsolutePath() + "/config.yml");
+        File defaultConfigFile = new File(plugin.getDataFolder().getAbsolutePath() + "/defaultConfig.yml");
+        File configFile = new File(plugin.getDataFolder().getAbsolutePath() + "/config.yml");
         plugin.saveResource("defaultConfig.yml", true);
 
-        if (!cfgfile.exists()) {
+        if (!configFile.exists()) {
             plugin.saveResource("/config.yml", false);
-            Utils.addMissingProperties(cfgfile, "defaultConfig.yml", plugin);
+            Utils.addMissingProperties(configFile, defaultConfigFile);
         } else {
-            Utils.addMissingProperties(cfgfile, "defaultConfig.yml", plugin);
+            Utils.addMissingProperties(configFile, defaultConfigFile);
         }
 
-        config = YamlConfiguration.loadConfiguration(cfgfile);
+
+        config = YamlConfiguration.loadConfiguration(configFile);
 
         allowSingleAdopt = config.getBoolean("allow_single_adopt");
         marryBackpackOffline = config.getBoolean("marry_backpack_offline_access");

@@ -20,8 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class Utils {
 
@@ -57,19 +56,54 @@ public class Utils {
         return LunaticFamily.getDatabase().getID(uuid) != 0;
     }
 
-    public static void addMissingProperties(File file, String filePath, LunaticFamily plugin) {
+    public static void addMissingProperties(File file, File defaultFile) {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), filePath));
+        YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(defaultFile);
+
+        YamlConfiguration newConfig = new YamlConfiguration();
+
+        Set<String> keys = config.getKeys(true);
 
 
         for (String key : defaultConfig.getKeys(true)) {
             if (!config.contains(key)) {
-                config.set(key, defaultConfig.get(key));
+                newConfig.set(key, defaultConfig.get(key));
+
+                List<String> comments = defaultConfig.getComments(key);
+                if (!comments.isEmpty()) {
+                    newConfig.setComments(key, comments);
+                    Logger.debugLog("Added comments for key: " + key + " " + comments.toString());
+                }
+            } else {
+                newConfig.set(key, config.get(key));
+
+                List<String> defaultComments = defaultConfig.getComments(key);
+                List<String> configComments = config.getComments(key);
+                List<String> comments = new ArrayList<>();
+
+                if (!new HashSet<>(configComments).containsAll(defaultComments)) {
+                    comments.addAll(defaultComments);
+                }
+
+                comments.addAll(defaultComments);
+
+                if (!comments.isEmpty()) {
+                    newConfig.setComments(key, comments);
+                    Logger.debugLog("Added comments for key: " + key + " " + comments.toString());
+                }
+
+                keys.remove(key);
             }
         }
 
+        // Transfer remaining properties without comments
+        for (String key : keys) {
+            newConfig.set(key, config.get(key));
+        }
+
         try {
-            config.save(file);
+            // Save the merged configuration with comments
+            newConfig.save(file);
         } catch (IOException e) {
             Logger.errorLog("Could not save file: " + file.getName());
             e.printStackTrace();
