@@ -428,7 +428,7 @@ public abstract class Database {
         return parentsList;
     }
 
-    public List<Integer> getChilds(int parentID) {
+    public List<Integer> getChildren(int parentID) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -684,6 +684,24 @@ public abstract class Database {
             }
         }
     }
+
+    public void addMissingColumnsTable(String table, Column column) {
+        if (columnExists(table, column.name)) {
+            return;
+        }
+        try {
+            String addColumnSQL = "ALTER TABLE " + table + " ADD COLUMN `" + column.name + "` " + column.type + " NULL";
+
+            Statement stmt = connection.createStatement();
+            stmt.execute(addColumnSQL);
+
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public abstract boolean columnExists(String tableName, String columnName);
 
 
     public void close(PreparedStatement ps, ResultSet rs) {

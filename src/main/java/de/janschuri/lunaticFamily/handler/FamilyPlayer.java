@@ -48,7 +48,7 @@ public class FamilyPlayer {
         priest = LunaticFamily.getDatabase().getPriest(id);
         sibling = LunaticFamily.getDatabase().getSibling(id);
         parents = LunaticFamily.getDatabase().getParents(id);
-        children = LunaticFamily.getDatabase().getChilds(id);
+        children = LunaticFamily.getDatabase().getChildren(id);
 
 
         if (Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName() != null) {
@@ -99,7 +99,7 @@ public class FamilyPlayer {
         priest = LunaticFamily.getDatabase().getPriest(id);
         sibling = LunaticFamily.getDatabase().getSibling(id);
         parents = LunaticFamily.getDatabase().getParents(id);
-        children = LunaticFamily.getDatabase().getChilds(id);
+        children = LunaticFamily.getDatabase().getChildren(id);
 
 
         if (Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName() != null) {
