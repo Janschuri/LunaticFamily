@@ -1,18 +1,16 @@
 package de.janschuri.lunaticFamily.config;
 
+import com.tchristofferson.configupdater.ConfigUpdater;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.LoggingSeverity;
-import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.io.IOException;
+import java.util.*;
 
 public class Config {
     private final LunaticFamily plugin;
@@ -41,17 +39,15 @@ public class Config {
 
     public void load() {
 
-        File cfgfile = new File(plugin.getDataFolder().getAbsolutePath() + "/config.yml");
-        plugin.saveResource("defaultConfig.yml", true);
+        File cfgFile = new File(plugin.getDataFolder().getAbsolutePath() + "/config.yml");
 
-        if (!cfgfile.exists()) {
-            plugin.saveResource("/config.yml", false);
-            Utils.addMissingProperties(cfgfile, "defaultConfig.yml", plugin);
-        } else {
-            Utils.addMissingProperties(cfgfile, "defaultConfig.yml", plugin);
+        try {
+            ConfigUpdater.update(plugin, "config.yml", cfgFile);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        config = YamlConfiguration.loadConfiguration(cfgfile);
+        config = YamlConfiguration.loadConfiguration(cfgFile);
 
         allowSingleAdopt = config.getBoolean("allow_single_adopt");
         marryBackpackOffline = config.getBoolean("marry_backpack_offline_access");

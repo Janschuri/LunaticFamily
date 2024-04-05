@@ -1,15 +1,16 @@
 package de.janschuri.lunaticFamily.config;
 
+import com.tchristofferson.configupdater.ConfigUpdater;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.LoggingSeverity;
-import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class Language {
@@ -35,16 +36,16 @@ public class Language {
         plugin.saveResource("lang/EN.yml", true);
         plugin.saveResource("lang/DE.yml", true);
 
-        File langfile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang.yml");
+        File langFile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang.yml");
+        String path = "/lang/" + Config.language + ".yml";
 
-        if (!langfile.exists()) {
-            plugin.saveResource("lang.yml", false);
-            Utils.addMissingProperties(langfile, "/lang/" + Config.language + ".yml", plugin);
-        } else {
-            Utils.addMissingProperties(langfile, "/lang/" + Config.language + ".yml", plugin);
+        try {
+            ConfigUpdater.update(plugin, path, langFile);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        lang = YamlConfiguration.loadConfiguration(langfile);
+        lang = YamlConfiguration.loadConfiguration(langFile);
 
         prefix = ChatColor.translateAlternateColorCodes('&', lang.getString("prefix", "&8[&6LunaticFamily&8] "));
 

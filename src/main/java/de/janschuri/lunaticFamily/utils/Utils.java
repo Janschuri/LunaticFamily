@@ -9,15 +9,12 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerTextures;
 import org.bukkit.util.Vector;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
@@ -57,24 +54,6 @@ public class Utils {
         return LunaticFamily.getDatabase().getID(uuid) != 0;
     }
 
-    public static void addMissingProperties(File file, String filePath, LunaticFamily plugin) {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), filePath));
-
-
-        for (String key : defaultConfig.getKeys(true)) {
-            if (!config.contains(key)) {
-                config.set(key, defaultConfig.get(key));
-            }
-        }
-
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            Logger.errorLog("Could not save file: " + file.getName());
-            e.printStackTrace();
-        }
-    }
     public static Location getPositionBetweenLocations(Location loc1, Location loc2) {
         Vector vec1 = new Vector(loc1.getX(), loc1.getY(), loc1.getZ());
         Vector vec2 = new Vector(loc2.getX(), loc2.getY(), loc2.getZ());
@@ -111,19 +90,6 @@ public class Utils {
 
     public static void sendConsoleCommand(String command) {
         Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), command);
-    }
-
-    public static String getItemKey(Material material) {
-        if (material.isBlock()) {
-            String id = material.getKey().getKey();
-
-            return "block.minecraft." + id;
-        } else if (material.isItem()) {
-            String id = material.getKey().getKey();
-
-            return "item.minecraft." + id;
-        }
-        return "block.minecraft.dirt";
     }
 
     public static ItemStack getSkull(String url) {
