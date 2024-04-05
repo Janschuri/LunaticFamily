@@ -4,9 +4,8 @@ import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -34,21 +33,20 @@ public class MarryListSubcommand extends Subcommand {
             }
 
             List<Integer> marryList = LunaticFamily.getDatabase().getMarryList(page, 10);
-            TextComponent msg = new TextComponent(Language.prefix + Language.getMessage("marry_list") + "\n");
+            Component msg = Component.text(Language.prefix + Language.getMessage("marry_list") + "\n");
             int index = 1 + (10*(page-1));
             for (Integer e : marryList) {
                 FamilyPlayer player1Fam = new FamilyPlayer(e);
                 FamilyPlayer player2Fam = new FamilyPlayer(player1Fam.getPartner().getID());
 
-                TextComponent text = new TextComponent(Language.prefix + " " + index + ": " + player1Fam.getName() + " ❤ " + player2Fam.getName() + "\n");
 
                 String hoverText = " (" + player1Fam.getMarriageDate() + ")";
                 if (player1Fam.getPriest() != null) {
                     hoverText = hoverText + " -> " + player1Fam.getPriest().getName();
                 }
 
-                text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hoverText).create()));
-                msg.addExtra(text);
+                msg = msg.append(Component.text(Language.prefix + " " + index + ": " + player1Fam.getName() + " ❤ " + player2Fam.getName() + "\n"));
+                msg = msg.hoverEvent(HoverEvent.showText(Component.text(hoverText)));
 
                 index++;
             }

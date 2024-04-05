@@ -2,10 +2,9 @@ package de.janschuri.lunaticFamily.commands;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.Language;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -89,16 +88,20 @@ public abstract class Subcommand {
         return list;
     }
 
-    public TextComponent getHelp(CommandSender sender) {
+    public Component getHelp(CommandSender sender) {
+        Component msg = Component.empty();
         if (sender.hasPermission(permission)) {
-            TextComponent text = new net.md_5.bungee.api.chat.TextComponent(Language.getMessage(mainCommand + "_" + name + "_help") + "\n");
             if (subcommands != null) {
-                text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lunaticfamily:" + name + " help"));
-                text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Language.getMessage(name + "_help")).create()));
+                msg = Component.text(Language.getMessage(mainCommand + "_" + name + "_help") + "\n")
+                        .clickEvent(ClickEvent.runCommand("/lunaticfamily:" + mainCommand + " " + name + " help"))
+                        .hoverEvent(HoverEvent.showText(Component.text(Language.getMessage(name + "_help"))))
+                        .toBuilder().build();
+            } else {
+                msg = Component.text(Language.getMessage(mainCommand + "_" + name + "_help") + "\n");
             }
-            return text;
+            return msg;
         } else {
-            return new TextComponent("");
+          return msg;
         }
     }
     public abstract void execute(CommandSender sender, String[] args, LunaticFamily plugin);

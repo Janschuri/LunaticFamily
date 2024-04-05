@@ -4,10 +4,8 @@ import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
-import de.janschuri.lunaticFamily.utils.Logger;
-import de.janschuri.lunaticFamily.utils.Utils;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.TranslatableComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextReplacementConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -59,33 +57,26 @@ public class MarryGiftSubcommand extends Subcommand {
 
 
 
-                    String[] msgPlayer = Language.getMessage("marry_gift_sent").split("%item%");
-                    String[] msgPartner = Language.getMessage("marry_gift_got").split("%item%");
 
-                    TextComponent componentAmount = new TextComponent(amount + "x ");
 
-                    TextComponent componentPlayer1 = new TextComponent(msgPlayer[0]);
-                    TextComponent componentPlayer2 = new TextComponent(msgPlayer[1]);
+                    Component componentAmount = Component.text(amount + "x ");
+                    Component componentItem = Component.empty();
 
-                    TextComponent componentPartner1 = new TextComponent(msgPartner[0]);
-                    TextComponent componentPartner2 = new TextComponent(msgPartner[1]);
 
                     if (itemMeta.hasDisplayName()) {
-                        TextComponent componentItem = new TextComponent(itemMeta.getDisplayName());
+                        componentItem = componentAmount.append(item.displayName());
 
-                        Logger.infoLog(itemMeta.getDisplayName());
-
-                        player.sendMessage(componentPlayer1, componentAmount, componentItem, componentPlayer2);
-                        partnerPlayer.sendMessage(componentPartner1, componentAmount, componentItem, componentPartner2);
                     } else {
-                        TranslatableComponent componentItem = new TranslatableComponent(Utils.getItemKey(material));
-
-                        player.sendMessage(componentPlayer1, componentAmount, componentItem, componentPlayer2);
-                        partnerPlayer.sendMessage(componentPartner1, componentAmount, componentItem, componentPartner2);
+                        componentItem = componentAmount.append(Component.translatable(item.translationKey()));
                     }
 
+                    TextReplacementConfig replacementConfig = TextReplacementConfig.builder().match("%item%").replacement(componentItem).build();
 
+                    Component msgPlayer = Component.text(Language.getMessage("marry_gift_sent")).replaceText(replacementConfig);
+                    Component msgPartner = Component.text(Language.getMessage("marry_gift_got")).replaceText(replacementConfig);
 
+                    player.sendMessage(msgPlayer);
+                    partnerPlayer.sendMessage(msgPartner);
                 }
 
             }

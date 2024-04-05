@@ -5,13 +5,6 @@ import de.janschuri.lunaticFamily.commands.gender.subcommands.GenderInfoSubcomma
 import de.janschuri.lunaticFamily.commands.gender.subcommands.GenderSetSubcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.handler.FamilyPlayer;
-import de.janschuri.lunaticFamily.utils.Utils;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,7 +13,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class GenderCommand implements CommandExecutor, TabCompleter {

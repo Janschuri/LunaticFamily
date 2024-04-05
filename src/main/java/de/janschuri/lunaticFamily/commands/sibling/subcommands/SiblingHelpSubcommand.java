@@ -3,8 +3,7 @@ package de.janschuri.lunaticFamily.commands.sibling.subcommands;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.utils.Logger;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -31,10 +30,10 @@ public class SiblingHelpSubcommand extends Subcommand {
         } else if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
-            TextComponent msg = new TextComponent(Language.getMessage(mainCommand + "_help") + "\n");
+            Component msg = Component.text(Language.getMessage(mainCommand + "_help") + "\n");
 
             for (Subcommand subcommand : subcommands) {
-                msg.addExtra(subcommand.getHelp(sender));
+                msg = msg.append(subcommand.getHelp(sender));
             }
 
             sender.sendMessage(msg);
