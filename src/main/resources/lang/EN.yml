@@ -108,7 +108,7 @@ messages:
   marry_divorce_cancel: "You have cancelled the divorce!"
   marry_kiss_no_partner: "You are not married! If you want to marry someone, please use /family marry propose <Name>"
   marry_gift_no_partner: "You are not married! If you want to marry someone, please use /family marry propose <Name>"
-  marry_gift_empty_Hand: "You must be holding an item in your hand."
+  marry_gift_empty_hand: "You must be holding an item in your hand."
   marry_gift_partner_full_inv: "Your partner has no space in their inventory."
   marry_gift_sent: "You have gifted %item% to your partner."
   marry_gift_got: "Your partner has gifted you %item%."

@@ -41,7 +41,7 @@ public class MarryGiftSubcommand extends Subcommand {
             } else if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) == null) {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", Bukkit.getOfflinePlayer(UUID.fromString(playerFam.getPartner().getUUID())).getName()));
             } else if (player.getInventory().getItemInMainHand().isEmpty()) {
-                sender.sendMessage(Language.prefix + Language.getMessage("marry_gift_hand_empty"));
+                sender.sendMessage(Language.prefix + Language.getMessage("marry_gift_empty_hand"));
             } else {
                 Player partnerPlayer = playerFam.getPartner().getPlayer();
                 if (partnerPlayer.getInventory().firstEmpty() == -1) {

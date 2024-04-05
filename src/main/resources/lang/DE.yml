@@ -108,7 +108,7 @@ messages:
   marry_divorce_cancel: "Du hast die Scheidung abgebrochen!"
   marry_kiss_no_partner: "Du bist nicht verheiratet!"
   marry_gift_no_partner: "Du bist nicht verheiratet!"
-  marry_gift_empty_Hand: "Du musst ein Item in der Hand halten."
+  marry_gift_empty_hand: "Du musst ein Item in der Hand halten."
   marry_gift_partner_full_inv: "Dein Partner hat kein Platz im Inventar."
   marry_gift_sent: "Du hast deinem Partner %item% geschenkt."
   marry_gift_got: "Dein Partner hat dir %item% geschenkt."
