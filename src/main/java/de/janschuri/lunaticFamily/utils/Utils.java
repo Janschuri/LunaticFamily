@@ -2,10 +2,11 @@ package de.janschuri.lunaticFamily.utils;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.Language;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -24,20 +25,22 @@ import java.util.UUID;
 
 public class Utils {
 
-    public static TextComponent createClickableMessage(String message, String confirmHoverText, String confirmCommand, String cancelHoverText, String cancelCommand) {
-        TextComponent confirm = new TextComponent(ChatColor.GREEN + "" + ChatColor.BOLD + " ✓");
-        confirm.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, confirmCommand));
-        confirm.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(confirmHoverText).create()));
+    public static Component createClickableMessage(String message, String confirmHoverText, String confirmCommand, String cancelHoverText, String cancelCommand) {
 
-
-        TextComponent cancel = new TextComponent(ChatColor.RED + " ❌");
-        cancel.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, cancelCommand));
-        cancel.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(cancelHoverText).create()));
-
-        TextComponent prefix = new TextComponent(Language.prefix);
-        TextComponent msg = new TextComponent(message);
-
-        return new TextComponent(prefix, msg, confirm, cancel);
+        return Component.text(Language.prefix + message)
+                .append(Component.text(" ✓", NamedTextColor.GREEN, TextDecoration.BOLD).clickEvent(ClickEvent.runCommand(
+                        confirmCommand
+                )))
+                .hoverEvent(HoverEvent.showText(Component.text(
+                        confirmHoverText
+                )))
+                .append(Component.text(" ❌", NamedTextColor.RED, TextDecoration.BOLD).clickEvent(ClickEvent.runCommand(
+                        cancelCommand
+                )))
+                .hoverEvent(HoverEvent.showText(Component.text(
+                        cancelHoverText
+                )))
+                .toBuilder().build();
     }
 
     public static String getName(String name) {

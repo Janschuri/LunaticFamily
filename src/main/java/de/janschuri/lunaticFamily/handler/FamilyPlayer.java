@@ -7,7 +7,7 @@ import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.external.Vault;
 import de.janschuri.lunaticFamily.utils.Utils;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -364,7 +364,7 @@ public class FamilyPlayer {
         }
     }
 
-    public boolean sendMessage(TextComponent message) {
+    public boolean sendMessage(Component message) {
         if (this.getPlayer() != null) {
             this.getPlayer().sendMessage(message);
             return true;
