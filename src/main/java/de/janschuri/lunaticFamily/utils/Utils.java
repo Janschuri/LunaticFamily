@@ -1,5 +1,6 @@
 package de.janschuri.lunaticFamily.utils;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.Language;
 import net.kyori.adventure.text.Component;
@@ -12,7 +13,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 import org.bukkit.util.Vector;
 
@@ -54,10 +54,7 @@ public class Utils {
     public static boolean playerExists(String name) {
         String uuid = Bukkit.getOfflinePlayer(name).getUniqueId().toString();
 
-        if (LunaticFamily.getDatabase().getID(uuid) != 0) {
-            return true;
-        }
-        return false;
+        return LunaticFamily.getDatabase().getID(uuid) != 0;
     }
 
     public static void addMissingProperties(File file, String filePath, LunaticFamily plugin) {
@@ -74,6 +71,7 @@ public class Utils {
         try {
             config.save(file);
         } catch (IOException e) {
+            Logger.errorLog("Could not save file: " + file.getName());
             e.printStackTrace();
         }
     }
@@ -83,9 +81,7 @@ public class Utils {
 
         Vector midpoint = vec1.clone().add(vec2).multiply(0.5);
 
-        Location position = new Location(loc1.getWorld(), midpoint.getX(), midpoint.getY(), midpoint.getZ());
-
-        return position;
+        return new Location(loc1.getWorld(), midpoint.getX(), midpoint.getY(), midpoint.getZ());
     }
 
     public static boolean isInRange(Location firstLocation, Location secondLocation, double range) {
@@ -131,22 +127,7 @@ public class Utils {
     }
 
     public static ItemStack getSkull(String url) {
-
-        PlayerProfile pProfile = getProfile(url);
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta meta = (SkullMeta) head.getItemMeta();
-        meta.setOwnerProfile(pProfile);
-        head.setItemMeta(meta);
-
-        return head;
-    }
-
-    public static String getUUID(String name) {
-        return Bukkit.getOfflinePlayer(name).getUniqueId().toString();
-    }
-
-    private static PlayerProfile getProfile(String url) {
-        PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID());
+        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
         PlayerTextures textures = profile.getTextures();
         URL urlObject;
         try {
@@ -156,7 +137,17 @@ public class Utils {
         }
         textures.setSkin(urlObject);
         profile.setTextures(textures);
-        return profile;
+
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        meta.setPlayerProfile(profile);
+        head.setItemMeta(meta);
+
+        return head;
+    }
+
+    public static String getUUID(String name) {
+        return Bukkit.getOfflinePlayer(name).getUniqueId().toString();
     }
 
     public static Player getPlayer(String arg) {
