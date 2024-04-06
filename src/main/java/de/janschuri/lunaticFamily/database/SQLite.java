@@ -1,7 +1,6 @@
 package de.janschuri.lunaticFamily.database;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.utils.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,37 +39,12 @@ public class SQLite extends Database {
                         ")";
 
                 stmt.execute(sql);
-
-                for (Column column : columns) {
-                    addMissingColumnsTable(table, column);
-                }
             }
             stmt.close();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public boolean columnExists(String tableName, String columnName) {
-        try {
-            String queryTableInfoSQL = "PRAGMA table_info(" + tableName + ")";
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(queryTableInfoSQL);
-
-            while (rs.next()) {
-                if (columnName.equals(rs.getString("name"))) {
-                    return true;
-                }
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
     }
 
     public Connection getSQLConnection() {
