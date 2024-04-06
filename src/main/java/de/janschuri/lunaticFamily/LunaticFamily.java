@@ -2,11 +2,11 @@ package de.janschuri.lunaticFamily;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import de.janschuri.lunaticFamily.commands.adopt.AdoptCommand;
-import de.janschuri.lunaticFamily.commands.family.FamilyCommand;
-import de.janschuri.lunaticFamily.commands.gender.GenderCommand;
-import de.janschuri.lunaticFamily.commands.marry.MarryCommand;
-import de.janschuri.lunaticFamily.commands.sibling.SiblingCommand;
+import de.janschuri.lunaticFamily.commands.AdoptCommand;
+import de.janschuri.lunaticFamily.commands.FamilyCommand;
+import de.janschuri.lunaticFamily.commands.GenderCommand;
+import de.janschuri.lunaticFamily.commands.MarryCommand;
+import de.janschuri.lunaticFamily.commands.SiblingCommand;
 import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.database.Database;
