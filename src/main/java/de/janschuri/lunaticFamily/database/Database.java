@@ -5,6 +5,7 @@ import de.janschuri.lunaticFamily.LunaticFamily;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 
@@ -19,10 +20,40 @@ public abstract class Database {
     public Database(LunaticFamily instance) {
         plugin = instance;
     }
-
     public abstract Connection getSQLConnection();
 
     public abstract void load();
+    protected final List<String> tables = List.of("playerData", "marriages", "adoptions", "siblinghoods");
+    protected final Map<String, List<Column>> tableColumns = Map.of(
+            "playerData", List.of(
+                    new Column("id", "INT", true, true),
+                    new Column("uuid", "varchar(36)", true),
+                    new Column("name", "varchar(16)"),
+                    new Column("skinURL", "varchar(127)"),
+                    new Column("gender", "varchar(2)"),
+                    new Column("background", "varchar(127)")
+            ),
+            "marriages", List.of(
+                    new Column("id", "INT", true, true),
+                    new Column("player1ID", "INT", true, "playerData(id) ON DELETE CASCADE"),
+                    new Column("player2ID", "INT", true, "playerData(id) ON DELETE CASCADE"),
+                    new Column("priest", "INT", false, "playerData(id) ON DELETE SET NULL"),
+                    new Column("heart", "varchar(127)"),
+                    new Column("date", "DATETIME", "CURRENT_TIMESTAMP", true)
+            ),
+            "adoptions", List.of(
+                    new Column("id", "INT", true, true),
+                    new Column("parentID", "INT", true, "playerData(id) ON DELETE CASCADE"),
+                    new Column("childID", "INT", true, "playerData(id) ON DELETE CASCADE"),
+                    new Column("date", "DATETIME", "CURRENT_TIMESTAMP", true)
+            ),
+            "siblinghoods", List.of(
+                    new Column("id", "INT", true, true),
+                    new Column("player1ID", "INT", true, "playerData(id) ON DELETE CASCADE"),
+                    new Column("player2ID", "INT", true, "playerData(id) ON DELETE CASCADE"),
+                    new Column("date", "DATETIME", "CURRENT_TIMESTAMP", true)
+            )
+    );
 
     public void initialize() {
         connection = getSQLConnection();

@@ -5,48 +5,12 @@ import de.janschuri.lunaticFamily.utils.Logger;
 
 import java.sql.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class MySQL extends Database {
     String host, database, username, password;
     int port;
-    private final List<String> tables = List.of("playerData", "marriages", "adoptions", "siblinghoods");
-    private final Map<String, Set<Column>> tableColumns = Map.of(
-            "playerData", Set.of(
-                    new Column("id", "INT", true, true),
-                    new Column("uuid", "varchar(36)", true),
-                    new Column("name", "varchar(16)"),
-                    new Column("skinURL", "varchar(127)"),
-                    new Column("gender", "varchar(2)"),
-                    new Column("background", "varchar(127)")
-            ),
-            "marriages", Set.of(
-                    new Column("id", "INT", true, true),
-                    new Column("player1ID", "INT", true, "playerData(id) ON DELETE CASCADE"),
-                    new Column("player2ID", "INT", true, "playerData(id) ON DELETE CASCADE"),
-                    new Column("priest", "INT", false, "playerData(id) ON DELETE SET NULL"),
-                    new Column("heart", "varchar(127)"),
-                    new Column("date", "DATETIME", "CURRENT_TIMESTAMP", true)
-            ),
-            "adoptions", Set.of(
-                    new Column("id", "INT", true, true),
-                    new Column("parentID", "INT", true, "playerData(id) ON DELETE CASCADE"),
-                    new Column("childID", "INT", true, "playerData(id) ON DELETE CASCADE"),
-                    new Column("date", "DATETIME", "CURRENT_TIMESTAMP", true)
-            ),
-            "siblinghoods", Set.of(
-                    new Column("id", "INT", true, true),
-                    new Column("player1ID", "INT", true, "playerData(id) ON DELETE CASCADE"),
-                    new Column("player2ID", "INT", true, "playerData(id) ON DELETE CASCADE"),
-                    new Column("date", "DATETIME", "CURRENT_TIMESTAMP", true)
-            )
-    );
-
-
-
 
     public MySQL(LunaticFamily instance) {
         super(instance);
@@ -62,7 +26,7 @@ public class MySQL extends Database {
         try {
             Statement stmt = connection.createStatement();
             for (String table : tables) {
-                Set<Column> columns = tableColumns.get(table);
+                List<Column> columns = tableColumns.get(table);
 
                 String sql = "CREATE TABLE IF NOT EXISTS " + table + " (" +
                         columns.stream()
