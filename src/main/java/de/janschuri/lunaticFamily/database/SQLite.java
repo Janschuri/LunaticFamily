@@ -1,6 +1,7 @@
 package de.janschuri.lunaticFamily.database;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.utils.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class SQLite extends Database {
 
                 String sql = "CREATE TABLE IF NOT EXISTS " + table + " (" +
                         columns.stream()
-                                .map(column -> "'" + column.name + "' " + column.type +
+                                .map(column -> "`" + column.name + "` " + column.type +
                                         (column.primaryKey ? " PRIMARY KEY" : "") +
                                         (column.notNull ? " NOT NULL" : "") +
                                         (column.defaultValue != null ? " DEFAULT " + column.defaultValue : ""))

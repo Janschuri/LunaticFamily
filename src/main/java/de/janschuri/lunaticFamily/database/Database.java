@@ -26,7 +26,7 @@ public abstract class Database {
     protected final List<String> tables = List.of("playerData", "marriages", "adoptions", "siblinghoods");
     protected final Map<String, List<Column>> tableColumns = Map.of(
             "playerData", List.of(
-                    new Column("id", "INT", true, true),
+                    new Column("id", "INTEGER", true, true),
                     new Column("uuid", "varchar(36)", true),
                     new Column("name", "varchar(16)"),
                     new Column("skinURL", "varchar(127)"),
@@ -34,7 +34,7 @@ public abstract class Database {
                     new Column("background", "varchar(127)")
             ),
             "marriages", List.of(
-                    new Column("id", "INT", true, true),
+                    new Column("id", "INTEGER", true, true),
                     new Column("player1ID", "INT", true, "playerData(id) ON DELETE CASCADE"),
                     new Column("player2ID", "INT", true, "playerData(id) ON DELETE CASCADE"),
                     new Column("priest", "INT", false, "playerData(id) ON DELETE SET NULL"),
@@ -42,13 +42,13 @@ public abstract class Database {
                     new Column("date", "DATETIME", "CURRENT_TIMESTAMP", true)
             ),
             "adoptions", List.of(
-                    new Column("id", "INT", true, true),
+                    new Column("id", "INTEGER", true, true),
                     new Column("parentID", "INT", true, "playerData(id) ON DELETE CASCADE"),
                     new Column("childID", "INT", true, "playerData(id) ON DELETE CASCADE"),
                     new Column("date", "DATETIME", "CURRENT_TIMESTAMP", true)
             ),
             "siblinghoods", List.of(
-                    new Column("id", "INT", true, true),
+                    new Column("id", "INTEGER", true, true),
                     new Column("player1ID", "INT", true, "playerData(id) ON DELETE CASCADE"),
                     new Column("player2ID", "INT", true, "playerData(id) ON DELETE CASCADE"),
                     new Column("date", "DATETIME", "CURRENT_TIMESTAMP", true)
