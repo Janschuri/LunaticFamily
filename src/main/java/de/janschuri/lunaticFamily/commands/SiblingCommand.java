@@ -16,14 +16,6 @@ public class SiblingCommand implements CommandExecutor, TabCompleter {
     private final LunaticFamily plugin;
 
     private final SiblingSubcommand familySiblingSubcommand = new SiblingSubcommand();
-//    private final SiblingAcceptSubcommand siblingAcceptSubcommand = new SiblingAcceptSubcommand();
-//    private final SiblingDenySubcommand siblingDenySubcommand = new SiblingDenySubcommand();
-//    private final SiblingHelpSubcommand siblingHelpSubcommand = new SiblingHelpSubcommand();
-//    private final SiblingProposeSubcommand siblingProposeSubcommand = new SiblingProposeSubcommand();
-//    private final SiblingSetSubcommand siblingSetSubcommand = new SiblingSetSubcommand();
-//    private final SiblingUnsetSubcommand siblingUnsetSubcommand = new SiblingUnsetSubcommand();
-//    private final SiblingUnsiblingSubcommand siblingUnsiblingSubcommand = new SiblingUnsiblingSubcommand();
-
 
     public SiblingCommand(LunaticFamily plugin) {
         this.plugin = plugin;
