@@ -14,10 +14,10 @@ public class FamilyHelpSubcommand extends Subcommand {
             new FamilyBackgroundSubcommand(),
             new FamilyListSubcommand(),
             new FamilyReloadSubcommand(),
-            new FamilyGenderSubcommand(),
-            new FamilyAdoptSubcommand(),
-            new FamilyMarrySubcommand(),
-            new FamilySiblingSubcommand()
+            new GenderSubcommand(),
+            new AdoptSubcommand(),
+            new MarrySubcommand(),
+            new SiblingSubcommand()
     };
 
     public FamilyHelpSubcommand() {

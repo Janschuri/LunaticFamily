@@ -15,7 +15,7 @@ public class Column {
         this.name = name;
         this.primaryKey = primaryKey;
         this.autoIncrement = autoIncrement;
-        this.notNull = true;
+        this.notNull = false;
         this.type = type;
         this.defaultValue = null;
         this.foreignKey = null;

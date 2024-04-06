@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class SiblingProposeSubcommand extends Subcommand {
-    private static final String mainCommand = "adopt";
+    private static final String mainCommand = "sibling";
     private static final String name = "propose";
     private static final String permission = "lunaticfamily.sibling";
 

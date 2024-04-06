@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SiblingHelpSubcommand extends Subcommand {
-    private static final String mainCommand = "adopt";
+    private static final String mainCommand = "sibling";
     private static final String name = "help";
     private static final String permission = "lunaticfamily.sibling";
     private static final Subcommand[] subcommands = {

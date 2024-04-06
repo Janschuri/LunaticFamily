@@ -9,7 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 public class SiblingUnsetSubcommand extends Subcommand {
-    private static final String mainCommand = "adopt";
+    private static final String mainCommand = "sibling";
     private static final String name = "unset";
     private static final String permission = "lunaticfamily.admin.sibling";
 

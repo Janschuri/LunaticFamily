@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public class SiblingDenySubcommand extends Subcommand {
-    private static final String mainCommand = "adopt";
+    private static final String mainCommand = "sibling";
     private static final String name = "deny";
     private static final String permission = "lunaticfamily.sibling";
 
