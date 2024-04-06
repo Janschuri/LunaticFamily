@@ -2,12 +2,14 @@ package de.janschuri.lunaticFamily.commands;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.Language;
+import de.janschuri.lunaticFamily.utils.Logger;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class Subcommand {
@@ -44,6 +46,7 @@ public abstract class Subcommand {
 
     public List<String> tabComplete(CommandSender sender, String[] args) {
         List<String> list = new ArrayList<>();
+        Logger.debugLog(Arrays.toString(args));
         if (sender.hasPermission(permission)) {
             if (args.length == 0) {
                 list.addAll(aliases);
@@ -53,10 +56,10 @@ public abstract class Subcommand {
                         list.add(s);
                     }
                 }
-            } else if (args.length == 2) {
+            } else {
                 if (Language.checkIsSubcommand(mainCommand, name, args[0])) {
                     if (args[1].equalsIgnoreCase("")) {
-                        if (params != null) {
+                        if (params != null && args.length == 2) {
                             list.addAll(params);
                         }
                         if (subcommands != null) {
@@ -67,7 +70,7 @@ public abstract class Subcommand {
                             }
                         }
                     } else {
-                        if (params != null) {
+                        if (params != null && args.length == 2) {
                             for (String s : params) {
                                 if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
                                     list.add(s);

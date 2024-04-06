@@ -23,7 +23,9 @@ public class FamilyCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+
         familySubcommand.execute(sender, args, plugin);
+
         return true;
     }
 

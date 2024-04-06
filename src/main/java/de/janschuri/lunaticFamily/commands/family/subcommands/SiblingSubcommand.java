@@ -20,13 +20,6 @@ public class SiblingSubcommand extends Subcommand {
     private static final SiblingUnsiblingSubcommand siblingUnsiblingSubcommand = new SiblingUnsiblingSubcommand();
 
     private static final Subcommand[] subcommands = {
-//        new SiblingAcceptSubcommand(),
-//        new SiblingDenySubcommand(),
-//        new SiblingHelpSubcommand(),
-//        new SiblingProposeSubcommand(),
-//        new SiblingSetSubcommand(),
-//        new SiblingUnsetSubcommand(),
-//        new SiblingUnsiblingSubcommand()
         siblingAcceptSubcommand,
         siblingDenySubcommand,
         siblingHelpSubcommand,
