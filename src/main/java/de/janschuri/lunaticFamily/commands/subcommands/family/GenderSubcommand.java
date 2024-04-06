@@ -15,7 +15,7 @@ public class GenderSubcommand extends Subcommand {
     private static final GenderHelpSubcommand genderHelpSubcommand = new GenderHelpSubcommand();
     private static final GenderInfoSubcommand genderInfoSubcommand = new GenderInfoSubcommand();
     private static final GenderSetSubcommand genderSetSubcommand = new GenderSetSubcommand();
-    private static final Subcommand[] subcommands = {
+    public static final Subcommand[] subcommands = {
         genderHelpSubcommand,
         genderInfoSubcommand,
         genderSetSubcommand

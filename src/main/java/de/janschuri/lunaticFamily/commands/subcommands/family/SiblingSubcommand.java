@@ -3,7 +3,6 @@ package de.janschuri.lunaticFamily.commands.subcommands.family;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.sibling.*;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.commands.subcommands.sibling.subcommands.*;
 import de.janschuri.lunaticFamily.config.Language;
 import org.bukkit.command.CommandSender;
 
@@ -20,7 +19,7 @@ public class SiblingSubcommand extends Subcommand {
     private static final SiblingUnsetSubcommand siblingUnsetSubcommand = new SiblingUnsetSubcommand();
     private static final SiblingUnsiblingSubcommand siblingUnsiblingSubcommand = new SiblingUnsiblingSubcommand();
 
-    private static final Subcommand[] subcommands = {
+    public static final Subcommand[] subcommands = {
         siblingAcceptSubcommand,
         siblingDenySubcommand,
         siblingHelpSubcommand,

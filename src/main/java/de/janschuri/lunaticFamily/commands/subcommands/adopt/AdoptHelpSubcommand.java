@@ -35,7 +35,9 @@ public class AdoptHelpSubcommand extends Subcommand {
             Component msg = Component.text(Language.getMessage(mainCommand + "_help") + "\n");
 
             for (Subcommand subcommand : subcommands) {
-                msg = msg.append(subcommand.getHelp(sender));
+                if (!(subcommand instanceof AdoptHelpSubcommand)) {
+                    msg = msg.append(subcommand.getHelp(sender));
+                }
             }
 
             sender.sendMessage(msg);

@@ -3,7 +3,6 @@ package de.janschuri.lunaticFamily.commands.subcommands.family;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.marry.*;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.commands.subcommands.marry.subcommands.*;
 import de.janschuri.lunaticFamily.config.Language;
 import org.bukkit.command.CommandSender;
 
@@ -27,7 +26,7 @@ public class MarrySubcommand extends Subcommand {
     private static final MarryHelpSubcommand marryHelpSubcommand = new MarryHelpSubcommand();
 
 
-    private static final Subcommand[] subcommands = {
+    public static final Subcommand[] subcommands = {
             marryAcceptSubcommand,
             marryBackpackSubcommand,
             marryDenySubcommand,

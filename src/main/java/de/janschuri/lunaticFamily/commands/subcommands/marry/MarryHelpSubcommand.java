@@ -2,6 +2,7 @@ package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
+import de.janschuri.lunaticFamily.commands.subcommands.family.MarrySubcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
@@ -10,20 +11,6 @@ public class MarryHelpSubcommand extends Subcommand {
     private static final String mainCommand = "marry";
     private static final String name = "help";
     private static final String permission = "lunaticfamily.marry";
-    private static final Subcommand[] subcommands = {
-            new MarryAcceptSubcommand(),
-            new MarryBackpackSubcommand(),
-            new MarryDenySubcommand(),
-            new MarryDivorceSubcommand(),
-            new MarryDivorceSubcommand(),
-            new MarryGiftSubcommand(),
-            new MarryKissSubcommand(),
-            new MarryListSubcommand(),
-            new MarryPriestSubcommand(),
-            new MarryProposeSubcommand(),
-            new MarrySetSubcommand(),
-            new MarryUnsetSubcommand()
-    };
 
     public MarryHelpSubcommand() {
         super(mainCommand, name, permission);
@@ -35,8 +22,10 @@ public class MarryHelpSubcommand extends Subcommand {
         } else {
             Component msg = Component.text(Language.getMessage(mainCommand + "_help") + "\n");
 
-            for (Subcommand subcommand : subcommands) {
-                msg = msg.append(subcommand.getHelp(sender));
+            for (Subcommand subcommand : MarrySubcommand.subcommands) {
+                if (!(subcommand instanceof MarryHelpSubcommand)) {
+                    msg = msg.append(subcommand.getHelp(sender));
+                }
             }
 
             sender.sendMessage(msg);

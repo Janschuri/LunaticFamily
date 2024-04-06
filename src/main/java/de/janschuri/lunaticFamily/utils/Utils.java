@@ -79,7 +79,6 @@ public class Utils {
                 List<String> comments = defaultConfig.getComments(key);
                 if (!comments.isEmpty()) {
                     newConfig.setComments(key, comments);
-                    Logger.debugLog("Added comments for key: " + key + " " + comments.toString());
                 }
             } else {
                 newConfig.set(key, config.get(key));
@@ -96,7 +95,6 @@ public class Utils {
 
                 if (!comments.isEmpty()) {
                     newConfig.setComments(key, comments);
-                    Logger.debugLog("Added comments for key: " + key + " " + comments.toString());
                 }
 
                 keys.remove(key);

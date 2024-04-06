@@ -10,15 +10,6 @@ public class FamilyHelpSubcommand extends Subcommand {
     private static final String mainCommand = "family";
     private static final String name = "help";
     private static final String permission = "lunaticfamily.family";
-    private static final Subcommand[] subcommands = {
-            new FamilyBackgroundSubcommand(),
-            new FamilyListSubcommand(),
-            new FamilyReloadSubcommand(),
-            new GenderSubcommand(),
-            new AdoptSubcommand(),
-            new MarrySubcommand(),
-            new SiblingSubcommand()
-    };
 
     public FamilyHelpSubcommand() {
         super(mainCommand, name, permission);
@@ -30,8 +21,10 @@ public class FamilyHelpSubcommand extends Subcommand {
         } else {
             Component msg = Component.text(Language.getMessage(mainCommand + "_help") + "\n");
 
-            for (Subcommand subcommand : subcommands) {
-                msg = msg.append(subcommand.getHelp(sender));
+            for (Subcommand subcommand : FamilySubcommand.subcommands) {
+                if (!(subcommand instanceof FamilyHelpSubcommand)) {
+                    msg = msg.append(subcommand.getHelp(sender));
+                }
             }
 
             sender.sendMessage(msg);

@@ -3,7 +3,6 @@ package de.janschuri.lunaticFamily.commands.subcommands.family;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.adopt.*;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.commands.subcommands.adopt.subcommands.*;
 import de.janschuri.lunaticFamily.config.Language;
 import org.bukkit.command.CommandSender;
 
@@ -19,7 +18,7 @@ public class AdoptSubcommand extends Subcommand {
     private static final AdoptProposeSubcommand adoptProposeSubcommand = new AdoptProposeSubcommand();
     private static final AdoptSetSubcommand adoptSetSubcommand = new AdoptSetSubcommand();
     private static final AdoptUnsetSubcommand adoptUnsetSubcommand = new AdoptUnsetSubcommand();
-    private static final Subcommand[] subcommands = {
+    public static final Subcommand[] subcommands = {
             adoptAcceptSubcommand,
             adoptDenySubcommand,
             adoptHelpSubcommand,

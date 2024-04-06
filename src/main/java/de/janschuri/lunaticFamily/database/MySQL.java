@@ -42,7 +42,6 @@ public class MySQL extends Database {
                                 .collect(Collectors.joining()) +
                         ") AUTO_INCREMENT=1;";
 
-                Logger.debugLog(sql);
                 stmt.execute(sql);
 
                 for (Column column : columns) {

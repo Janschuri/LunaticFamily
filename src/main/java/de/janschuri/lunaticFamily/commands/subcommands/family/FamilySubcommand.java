@@ -20,16 +20,16 @@ public class FamilySubcommand extends Subcommand {
     private static final FamilyReloadSubcommand familyReloadSubcommand = new FamilyReloadSubcommand();
     private static final FamilyTreeSubcommand familyTreeSubcommand = new FamilyTreeSubcommand();
 
-    private static final Subcommand[] subcommands = {
+    public static final Subcommand[] subcommands = {
             familyListSubcommand,
+            familyBackgroundSubcommand,
+            familyHelpSubcommand,
+            familyTreeSubcommand,
+            familyMarrySubcommand,
             familyAdoptSubcommand,
             familyGenderSubcommand,
             familySiblingSubcommand,
-            familyBackgroundSubcommand,
-            familyHelpSubcommand,
-            familyMarrySubcommand,
-            familyReloadSubcommand,
-            familyTreeSubcommand
+            familyReloadSubcommand
     };
 
     public FamilySubcommand() {

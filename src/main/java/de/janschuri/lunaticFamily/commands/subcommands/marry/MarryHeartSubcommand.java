@@ -5,7 +5,6 @@ import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
-import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
@@ -48,7 +47,6 @@ public class MarryHeartSubcommand extends Subcommand {
                     String colorKey = Language.getColorKeyFromLang(color);
                     if (player.hasPermission(permission + ".color." + colorKey)){
                         hexColor = Config.colors.get(colorKey);
-                        Logger.debugLog("ColorLang: " + hexColor);
                     } else {
                         sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
                         return;
@@ -56,14 +54,12 @@ public class MarryHeartSubcommand extends Subcommand {
                 } else {
                     if (player.hasPermission(permission + ".hex")) {
                         hexColor = args[1];
-                        Logger.debugLog("ColorHex: " + hexColor);
                     } else {
                         sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
                         return;
                     }
                 }
 
-                Logger.debugLog("Color: " + hexColor);
 
                 Component colorMsg = Component.text(color)
                         .color(TextColor.fromHexString(hexColor));

@@ -2,14 +2,12 @@ package de.janschuri.lunaticFamily.commands.subcommands;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.utils.Logger;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class Subcommand {
@@ -17,8 +15,8 @@ public abstract class Subcommand {
     protected final List<String> aliases;
     protected final String name;
     protected final String mainCommand;
-    protected List<String> params = null;
-    protected Subcommand[] subcommands = null;
+    protected List<String> params;
+    protected Subcommand[] subcommands;
 
 
     protected Subcommand(String mainCommand, String name, String permission) {
@@ -36,7 +34,7 @@ public abstract class Subcommand {
         this.params = params;
     }
 
-    protected Subcommand(String mainCommand, String name, String permission, Subcommand... subcommands) {
+    protected Subcommand(String mainCommand, String name, String permission, Subcommand[] subcommands) {
         this.mainCommand = mainCommand;
         this.name = name;
         this.permission = permission;
@@ -46,7 +44,6 @@ public abstract class Subcommand {
 
     public List<String> tabComplete(CommandSender sender, String[] args) {
         List<String> list = new ArrayList<>();
-        Logger.debugLog(Arrays.toString(args));
         if (sender.hasPermission(permission)) {
             if (args.length == 0) {
                 list.addAll(aliases);
@@ -107,6 +104,7 @@ public abstract class Subcommand {
           return msg;
         }
     }
+
     public abstract void execute(CommandSender sender, String[] args, LunaticFamily plugin);
 
 }

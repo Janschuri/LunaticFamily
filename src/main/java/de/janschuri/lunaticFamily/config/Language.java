@@ -144,10 +144,8 @@ public class Language {
     public static List<String> getColorLangs() {
         List<String> list = new ArrayList<>();
         for (String color : Config.colors.keySet()) {
-            Logger.debugLog("Color: " + color);
             list.add(Language.getColorLang(color));
         }
-        Logger.debugLog("Colors: " + list.toString());
         return list;
     }
     public static String getColorKeyFromLang(String key) {

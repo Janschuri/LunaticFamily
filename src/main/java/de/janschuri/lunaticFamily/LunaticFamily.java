@@ -66,9 +66,6 @@ public final class LunaticFamily extends JavaPlugin {
 
         db.load();
 
-        Logger.debugLog("" + getDatabase().columnExists("marriages", "heart"));
-        Logger.debugLog("" + getDatabase().columnExists("marriages", "player1ID"));
-
         getServer().getPluginManager().registerEvents(new JoinListener(this), this);
         getServer().getPluginManager().registerEvents(new QuitListener(), this);
 
