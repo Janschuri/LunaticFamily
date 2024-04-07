@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class QuitListener implements Listener {
 
     @EventHandler
-    public void onPlayerJoin(PlayerQuitEvent event) {
+    public void onPlayerQuit(PlayerQuitEvent event) {
 
         Player player = event.getPlayer();
         String uuid = player.getUniqueId().toString();
