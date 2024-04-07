@@ -1,6 +1,5 @@
 package de.janschuri.lunaticFamily.commands.subcommands.gender;
 
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
@@ -22,7 +21,7 @@ public class GenderSetSubcommand extends Subcommand {
         super(mainCommand, name, permission);
     }
     @Override
-    public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
+    public void execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {

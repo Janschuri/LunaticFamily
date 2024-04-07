@@ -1,12 +1,10 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
 import com.google.common.collect.BiMap;
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
-import de.janschuri.lunaticFamily.handler.FamilyTree;
 import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -24,7 +22,7 @@ public class FamilyListSubcommand extends Subcommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
+    public void execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
@@ -37,7 +35,7 @@ public class FamilyListSubcommand extends Subcommand {
                 String uuid = player.getUniqueId().toString();
                 FamilyPlayer playerFam = new FamilyPlayer(uuid);
 
-                new FamilyTree(playerFam.getID());
+                playerFam.updateFamilyTree();
 
                 BiMap<String, Integer> familyList = playerFam.getFamilyList();
                 StringBuilder msg = new StringBuilder(Language.prefix + Language.getMessage("family_list") + "\n");

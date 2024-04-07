@@ -1,8 +1,7 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
-import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.commands.subcommands.marry.*;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
+import de.janschuri.lunaticFamily.commands.subcommands.marry.*;
 import de.janschuri.lunaticFamily.config.Language;
 import org.bukkit.command.CommandSender;
 
@@ -15,7 +14,7 @@ public class MarrySubcommand extends Subcommand {
     private static final MarryUnsetSubcommand marryUnsetSubcommand = new MarryUnsetSubcommand();
     private static final MarryProposeSubcommand marryProposeSubcommand = new MarryProposeSubcommand();
     private static final MarryPriestSubcommand marryPriestSubcommand = new MarryPriestSubcommand();
-    private static final MarryAcceptSubcommand marryAcceptSubcommand = new MarryAcceptSubcommand();
+    private static final AcceptSubcommand ACCEPT_SUBCOMMAND = new AcceptSubcommand();
     private static final MarryDenySubcommand marryDenySubcommand = new MarryDenySubcommand();
     private static final MarryDivorceSubcommand marryDivorceSubcommand = new MarryDivorceSubcommand();
     private static final MarryKissSubcommand marryKissSubcommand = new MarryKissSubcommand();
@@ -27,7 +26,7 @@ public class MarrySubcommand extends Subcommand {
 
 
     public static final Subcommand[] subcommands = {
-            marryAcceptSubcommand,
+            ACCEPT_SUBCOMMAND,
             marryBackpackSubcommand,
             marryDenySubcommand,
             marryDivorceSubcommand,
@@ -46,40 +45,40 @@ public class MarrySubcommand extends Subcommand {
         super(mainCommand, name, permission, subcommands);
     }
     @Override
-    public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
+    public void execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
             if (args.length == 0) {
-                marryHelpSubcommand.execute(sender, args, plugin);
+                marryHelpSubcommand.execute(sender, args);
             } else {
                 final String subcommand = args[0];
                 if (Language.checkIsSubcommand(name, "set", subcommand)) {
-                    marrySetSubcommand.execute(sender, args, plugin);
+                    marrySetSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "unset", subcommand)) {
-                    marryUnsetSubcommand.execute(sender, args, plugin);
+                    marryUnsetSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "propose", subcommand)) {
-                    marryProposeSubcommand.execute(sender, args, plugin);
+                    marryProposeSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "priest", subcommand)) {
-                    marryPriestSubcommand.execute(sender, args, plugin);
+                    marryPriestSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "accept", subcommand)) {
-                    marryAcceptSubcommand.execute(sender, args, plugin);
+                    ACCEPT_SUBCOMMAND.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "deny", subcommand)) {
-                    marryDenySubcommand.execute(sender, args, plugin);
+                    marryDenySubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "divorce", subcommand)) {
-                    marryDivorceSubcommand.execute(sender, args, plugin);
+                    marryDivorceSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "kiss", subcommand)) {
-                    marryKissSubcommand.execute(sender, args, plugin);
+                    marryKissSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "gift", subcommand)) {
-                    marryGiftSubcommand.execute(sender, args, plugin);
+                    marryGiftSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "backpack", subcommand)) {
-                    marryBackpackSubcommand.execute(sender, args, plugin);
+                    marryBackpackSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "heart", subcommand)) {
-                    marryHeartSubcommand.execute(sender, args, plugin);
+                    marryHeartSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "list", subcommand)) {
-                    marryListSubcommand.execute(sender, args, plugin);
+                    marryListSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "help", subcommand)) {
-                    marryHelpSubcommand.execute(sender, args, plugin);
+                    marryHelpSubcommand.execute(sender, args);
                 } else {
                     sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
                 }

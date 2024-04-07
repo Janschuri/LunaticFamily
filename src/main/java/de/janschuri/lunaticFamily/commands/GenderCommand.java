@@ -1,6 +1,5 @@
 package de.janschuri.lunaticFamily.commands;
 
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.family.GenderSubcommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,18 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GenderCommand implements CommandExecutor, TabCompleter {
-
-    private final LunaticFamily plugin;
     private final GenderSubcommand familyGenderSubcommand = new GenderSubcommand();
 
-    public GenderCommand(LunaticFamily plugin) {
-        this.plugin = plugin;
-    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
-        familyGenderSubcommand.execute(sender, args, plugin);
+        familyGenderSubcommand.execute(sender, args);
         return true;
     }
 

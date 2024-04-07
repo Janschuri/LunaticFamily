@@ -789,7 +789,7 @@ public class FamilyPlayer {
     }
 
     public void updateFamilyTree() {
-        if (this.getPlayer() != null) {
+        if (this.getPlayer() != null && Config.enabledCrazyAdvancementAPI) {
             new FamilyTree(this.id);
         }
     }

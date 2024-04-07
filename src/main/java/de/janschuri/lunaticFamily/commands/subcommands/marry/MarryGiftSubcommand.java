@@ -1,6 +1,5 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
@@ -24,7 +23,7 @@ public class MarryGiftSubcommand extends Subcommand {
         super(mainCommand, name, permission);
     }
     @Override
-    public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
+    public void execute(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
         } else if (!sender.hasPermission(permission)) {

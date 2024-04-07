@@ -1,6 +1,5 @@
 package de.janschuri.lunaticFamily.commands.subcommands;
 
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.Language;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
@@ -17,7 +16,7 @@ public class HelpSubcommand extends Subcommand {
         this.commandCommandClass = commandClass;
     }
     @Override
-    public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
+    public void execute(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
         } else if (!sender.hasPermission(permission)) {

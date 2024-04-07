@@ -12,11 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class JoinListener implements Listener {
 
-    private final LunaticFamily plugin;
 
-    public JoinListener(LunaticFamily plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -29,6 +25,6 @@ public class JoinListener implements Listener {
                     new FamilyTree(familyPlayer.getID());
                 }
             }
-        }.runTaskLater(plugin, 5L);
+        }.runTaskLater(LunaticFamily.getInstance(), 5L);
     }
 }

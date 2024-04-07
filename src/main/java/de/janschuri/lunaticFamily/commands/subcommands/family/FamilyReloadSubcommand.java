@@ -13,11 +13,11 @@ public class FamilyReloadSubcommand extends Subcommand {
     public FamilyReloadSubcommand() {
         super(mainCommand, name, permission);
     }
-    public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
+    public void execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
-            plugin.loadConfig(plugin);
+            LunaticFamily.getInstance().loadConfig();
             sender.sendMessage(Language.prefix + Language.getMessage("admin_reload"));
         }
     }

@@ -1,6 +1,5 @@
 package de.janschuri.lunaticFamily.commands;
 
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.family.FamilySubcommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,18 +12,12 @@ import java.util.List;
 
 public class FamilyCommand implements CommandExecutor, TabCompleter {
 
-    private final LunaticFamily plugin;
     private final FamilySubcommand familySubcommand = new FamilySubcommand();
-
-
-    public FamilyCommand(LunaticFamily plugin) {
-        this.plugin = plugin;
-    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
-        familySubcommand.execute(sender, args, plugin);
+        familySubcommand.execute(sender, args);
 
         return true;
     }

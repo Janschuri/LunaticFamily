@@ -1,6 +1,5 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import org.bukkit.command.CommandSender;
@@ -36,34 +35,34 @@ public class FamilySubcommand extends Subcommand {
         super(mainCommand, name, permission, subcommands);
     }
     @Override
-    public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
+    public void execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
             if (args.length == 0) {
-                familyHelpSubcommand.execute(sender, args, plugin);
+                familyHelpSubcommand.execute(sender, args);
             } else {
                 final String subcommand = args[0];
                 String[] newArgs = new String[args.length - 1];
                 System.arraycopy(args, 1, newArgs, 0, args.length - 1);
                 if (Language.checkIsSubcommand("family", "gender", subcommand)) {
-                    familyGenderSubcommand.execute(sender, newArgs, plugin);
+                    familyGenderSubcommand.execute(sender, newArgs);
                 } else if (Language.checkIsSubcommand("family", "adopt", subcommand)) {
-                    familyAdoptSubcommand.execute(sender, newArgs, plugin);
+                    familyAdoptSubcommand.execute(sender, newArgs);
                 } else if (Language.checkIsSubcommand("family", "marry", subcommand)) {
-                    familyMarrySubcommand.execute(sender, newArgs, plugin);
+                    familyMarrySubcommand.execute(sender, newArgs);
                 } else if (Language.checkIsSubcommand("family", "sibling", subcommand)) {
-                    familySiblingSubcommand.execute(sender, newArgs, plugin);
+                    familySiblingSubcommand.execute(sender, newArgs);
                 } else if (Language.checkIsSubcommand("family", "reload", subcommand)) {
-                    familyReloadSubcommand.execute(sender, args, plugin);
+                    familyReloadSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand("family", "list", subcommand)) {
-                    familyListSubcommand.execute(sender, args, plugin);
+                    familyListSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand("family", "background", subcommand)) {
-                    familyBackgroundSubcommand.execute(sender, args, plugin);
+                    familyBackgroundSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand("family", "tree", subcommand)) {
-                    familyTreeSubcommand.execute(sender, args, plugin);
+                    familyTreeSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand("family", "help", subcommand)) {
-                    familyHelpSubcommand.execute(sender, args, plugin);
+                    familyHelpSubcommand.execute(sender, args);
                 } else {
                     sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
                 }

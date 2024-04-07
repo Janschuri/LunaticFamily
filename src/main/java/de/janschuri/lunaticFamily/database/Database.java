@@ -438,6 +438,9 @@ public abstract class Database {
             rs = ps.executeQuery();
             while (rs.next()) {
                 if (rs.getInt("player1ID") == playerID || rs.getInt("player2ID") == playerID) {
+                    if (rs.getString("heart") == null) {
+                        return "#FFFFFF";
+                    }
                     return rs.getString("heart");
                 }
             }
@@ -453,7 +456,7 @@ public abstract class Database {
                 plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
             }
         }
-        return "#000000";
+        return "#FFFFFF";
     }
 
     public List<Integer> getParents(int playerID) {

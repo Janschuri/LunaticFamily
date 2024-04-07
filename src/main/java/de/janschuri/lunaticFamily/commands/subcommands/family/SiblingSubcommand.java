@@ -1,8 +1,7 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
-import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.commands.subcommands.sibling.*;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
+import de.janschuri.lunaticFamily.commands.subcommands.sibling.*;
 import de.janschuri.lunaticFamily.config.Language;
 import org.bukkit.command.CommandSender;
 
@@ -33,28 +32,28 @@ public class SiblingSubcommand extends Subcommand {
         super(mainCommand, name, permission, subcommands);
     }
 
-    public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
+    public void execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
             if (args.length == 0) {
-                siblingHelpSubcommand.execute(sender, args, plugin);
+                siblingHelpSubcommand.execute(sender, args);
             } else {
                 final String subcommand = args[0];
                 if (Language.checkIsSubcommand(name, "set", subcommand)) {
-                    siblingSetSubcommand.execute(sender, args, plugin);
+                    siblingSetSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "unset", subcommand)) {
-                    siblingUnsetSubcommand.execute(sender, args, plugin);
+                    siblingUnsetSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "propose", subcommand)) {
-                    siblingProposeSubcommand.execute(sender, args, plugin);
+                    siblingProposeSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "accept", subcommand)) {
-                    siblingAcceptSubcommand.execute(sender, args, plugin);
+                    siblingAcceptSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "deny", subcommand)) {
-                    siblingDenySubcommand.execute(sender, args, plugin);
+                    siblingDenySubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "unsibling", subcommand)) {
-                    siblingUnsiblingSubcommand.execute(sender, args, plugin);
+                    siblingUnsiblingSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "help", subcommand)) {
-                    siblingHelpSubcommand.execute(sender, args, plugin);
+                    siblingHelpSubcommand.execute(sender, args);
                 } else {
                     sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
                 }

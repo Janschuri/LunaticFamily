@@ -1,6 +1,5 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.gender.GenderHelpSubcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.gender.GenderInfoSubcommand;
@@ -25,20 +24,20 @@ public class GenderSubcommand extends Subcommand {
         super(mainCommand, name, permission, subcommands);
     }
     @Override
-    public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
+    public void execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
             if (args.length == 0) {
-                genderHelpSubcommand.execute(sender, args, plugin);
+                genderHelpSubcommand.execute(sender, args);
             } else {
                 final String subcommand = args[0];
                 if (Language.checkIsSubcommand(name, "set", subcommand)) {
-                    genderSetSubcommand.execute(sender, args, plugin);
+                    genderSetSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "info", subcommand)) {
-                    genderInfoSubcommand.execute(sender, args, plugin);
+                    genderInfoSubcommand.execute(sender, args);
                 } else if (Language.checkIsSubcommand(name, "help", subcommand)) {
-                    genderHelpSubcommand.execute(sender, args, plugin);
+                    genderHelpSubcommand.execute(sender, args);
                 } else {
                     sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
                 }

@@ -6,12 +6,16 @@ import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.LoggingSeverity;
 import de.janschuri.lunaticFamily.utils.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.*;
 
 public class Language {
@@ -212,6 +216,11 @@ public class Language {
             list.add(command);
         }
         return list;
+    }
+
+    public static void getCommandAliases(Command cmd) {
+
+
     }
 
     public static boolean checkIsSubcommand(final String command, final String subcommand, final String arg) {

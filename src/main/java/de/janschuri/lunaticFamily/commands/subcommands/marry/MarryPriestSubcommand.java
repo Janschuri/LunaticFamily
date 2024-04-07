@@ -19,7 +19,7 @@ public class MarryPriestSubcommand extends Subcommand {
         super(mainCommand, name, permission);
     }
     @Override
-    public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
+    public void execute(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
         } else if (!sender.hasPermission(permission)) {
@@ -98,7 +98,7 @@ public class MarryPriestSubcommand extends Subcommand {
                                         LunaticFamily.marryPriest.remove(player1UUID);
                                     }
                                 }
-                            }.runTaskLater(plugin, 600L);
+                            }.runTaskLater(LunaticFamily.getInstance(), 600L);
                         }
                     }
                 }

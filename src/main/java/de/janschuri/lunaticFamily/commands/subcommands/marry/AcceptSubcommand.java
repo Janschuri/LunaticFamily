@@ -14,16 +14,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
 
-public class MarryAcceptSubcommand extends Subcommand {
+public class AcceptSubcommand extends Subcommand {
     private static final String mainCommand = "marry";
     private static final String name = "accept";
     private static final String permission = "lunaticfamily.marry";
 
-    public MarryAcceptSubcommand() {
+    public AcceptSubcommand() {
         super(mainCommand, name, permission);
     }
     @Override
-    public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
+    public void execute(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
         } else if (!sender.hasPermission(permission)) {
@@ -71,7 +71,7 @@ public class MarryAcceptSubcommand extends Subcommand {
                                 public void run() {
                                     priestFam.chat(Language.getMessage("marry_priest_complete"));
                                 }
-                            }.runTaskLater(plugin, 20L);
+                            }.runTaskLater(LunaticFamily.getInstance(), 20L);
 
                             LunaticFamily.marryRequests.remove(playerUUID);
                             LunaticFamily.marryPriestRequests.remove(partnerUUID);
@@ -139,7 +139,7 @@ public class MarryAcceptSubcommand extends Subcommand {
                                 public void run() {
                                     priestFam.chat(Language.getMessage("marry_accept_request").replace("%player1%", partnerFam.getName()).replace("%player2%", playerFam.getName()));
                                 }
-                            }.runTaskLater(plugin, 20L);
+                            }.runTaskLater(LunaticFamily.getInstance(), 20L);
 
 
                             partnerFam.sendMessage(Utils.createClickableMessage(

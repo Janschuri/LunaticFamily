@@ -2,11 +2,7 @@ package de.janschuri.lunaticFamily;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import de.janschuri.lunaticFamily.commands.AdoptCommand;
-import de.janschuri.lunaticFamily.commands.FamilyCommand;
-import de.janschuri.lunaticFamily.commands.GenderCommand;
-import de.janschuri.lunaticFamily.commands.MarryCommand;
-import de.janschuri.lunaticFamily.commands.SiblingCommand;
+import de.janschuri.lunaticFamily.commands.*;
 import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.database.Database;
@@ -18,8 +14,8 @@ import de.janschuri.lunaticFamily.listener.JoinListener;
 import de.janschuri.lunaticFamily.listener.QuitListener;
 import de.janschuri.lunaticFamily.utils.Logger;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -51,7 +47,7 @@ public final class LunaticFamily extends JavaPlugin {
 
         saveDefaultConfig();
 
-        loadConfig(this);
+        loadConfig();
 
         if (Config.enabledMySQL) {
             db = new MySQL(this);
@@ -66,27 +62,27 @@ public final class LunaticFamily extends JavaPlugin {
 
         db.load();
 
-        getServer().getPluginManager().registerEvents(new JoinListener(this), this);
+        getServer().getPluginManager().registerEvents(new JoinListener(), this);
         getServer().getPluginManager().registerEvents(new QuitListener(), this);
 
-        getCommand("family").setExecutor(new FamilyCommand(this));
-        getCommand("family").setTabCompleter(new FamilyCommand(this));
+        getCommand("family").setExecutor(new FamilyCommand());
+        getCommand("family").setTabCompleter(new FamilyCommand());
 
-        getCommand("adopt").setExecutor(new AdoptCommand(this));
-        getCommand("adopt").setTabCompleter(new AdoptCommand(this));
+        getCommand("adopt").setExecutor(new AdoptCommand());
+        getCommand("adopt").setTabCompleter(new AdoptCommand());
 
-        getCommand("gender").setExecutor(new GenderCommand(this));
-        getCommand("gender").setTabCompleter(new GenderCommand(this));
+        getCommand("gender").setExecutor(new GenderCommand());
+        getCommand("gender").setTabCompleter(new GenderCommand());
 
-        getCommand("marry").setExecutor(new MarryCommand(this));
-        getCommand("marry").setTabCompleter(new MarryCommand(this));
+        getCommand("marry").setExecutor(new MarryCommand());
+        getCommand("marry").setTabCompleter(new MarryCommand());
 
-        getCommand("sibling").setExecutor(new SiblingCommand(this));
-        getCommand("sibling").setTabCompleter(new SiblingCommand(this));
+        getCommand("sibling").setExecutor(new SiblingCommand());
+        getCommand("sibling").setTabCompleter(new SiblingCommand());
 
     }
 
-    public void loadConfig(LunaticFamily plugin) {
+    public void loadConfig() {
 
         new Config(this);
         new Language(this);
@@ -107,11 +103,25 @@ public final class LunaticFamily extends JavaPlugin {
             aliases.put(command, map);
         }
 
-        registerCommand("family");
-        registerCommand("marry");
-        registerCommand("adopt");
-        registerCommand("sibling");
-        registerCommand("gender");
+        for (String command : commands) {
+            Command cmd = getCommand(command);
+            assert cmd != null;
+            try {
+                final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+                bukkitCommandMap.setAccessible(true);
+                CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+
+                List<String> list = Language.getAliases(command);
+
+                list.forEach(alias -> {
+                    commandMap.register(alias, instance.getName(), cmd);
+                });
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
 
         checkSoftDepends();
         if (Config.enabledCrazyAdvancementAPI) {
@@ -130,30 +140,6 @@ public final class LunaticFamily extends JavaPlugin {
 
     public static Database getDatabase() {
         return LunaticFamily.db;
-    }
-
-    public static List<String> getAliases(String command, String subcommand) {
-        Map<String, List<String>> commandAliases = LunaticFamily.aliases.getOrDefault(command, new HashMap<>());
-
-        List<String> list = commandAliases.getOrDefault(subcommand, new ArrayList<>());
-        if (list.isEmpty()) {
-            if (subcommand.equalsIgnoreCase("base_command")) {
-                list.add(command);
-            } else {
-                list.add(subcommand);
-            }
-        }
-        return list;
-    }
-
-    public static List<String> getAliases(String command) {
-        Map<String, List<String>> commandAliases = LunaticFamily.aliases.getOrDefault(command, new HashMap<>());
-
-        List<String> list = commandAliases.getOrDefault("base_command", new ArrayList<>());
-        if (list.isEmpty()) {
-            list.add(command);
-        }
-        return list;
     }
 
     public static void checkSoftDepends() {
@@ -185,26 +171,5 @@ public final class LunaticFamily extends JavaPlugin {
         }
 
 
-    }
-
-    private void registerCommand(String command) {
-
-        PluginCommand cmd = getCommand(command);
-
-        try {
-            final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-            bukkitCommandMap.setAccessible(true);
-            CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
-
-            List<String> list = this.getAliases(command);
-
-            list.forEach(alias -> {
-                commandMap.register(alias, "lunaticFamily", cmd);
-            });
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
     }
 }

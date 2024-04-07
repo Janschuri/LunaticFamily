@@ -9,17 +9,17 @@ import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class AdoptAcceptSubcommand extends Subcommand{
+public class AcceptSubcommand extends Subcommand{
     private static final String permission = "lunaticfamily.adopt";
     private static final String mainCommand = "adopt";
     private static final String name = "accept";
 
-    public AdoptAcceptSubcommand() {
+    public AcceptSubcommand() {
         super(mainCommand, name, permission);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
+    public void execute(CommandSender sender, String[] args) {
 
         if (!(sender instanceof Player)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));

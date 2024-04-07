@@ -23,7 +23,7 @@ public class MarryKissSubcommand extends Subcommand {
         super(mainCommand, name, permission);
     }
     @Override
-    public void execute(CommandSender sender, String[] args, LunaticFamily plugin) {
+    public void execute(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
         } else if (!sender.hasPermission(permission)) {
@@ -47,7 +47,7 @@ public class MarryKissSubcommand extends Subcommand {
                     location.setY(location.getY() + 2);
 
                     for (int i = 0; i < 6; i++) {
-                        Bukkit.getScheduler().runTaskLater(plugin, () -> Utils.spawnParticles(location, Particle.HEART), i * 5L);
+                        Bukkit.getScheduler().runTaskLater(LunaticFamily.getInstance(), () -> Utils.spawnParticles(location, Particle.HEART), i * 5L);
                     }
                 }
             }

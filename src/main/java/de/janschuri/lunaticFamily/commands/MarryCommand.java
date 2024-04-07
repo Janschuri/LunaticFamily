@@ -1,6 +1,5 @@
 package de.janschuri.lunaticFamily.commands;
 
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.family.MarrySubcommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,16 +12,11 @@ import java.util.List;
 
 public class MarryCommand implements CommandExecutor, TabCompleter {
 
-    private final LunaticFamily plugin;
     MarrySubcommand familyMarrySubcommand = new MarrySubcommand();
-
-    public MarryCommand(LunaticFamily plugin) {
-        this.plugin = plugin;
-    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        familyMarrySubcommand.execute(sender, args, plugin);
+        familyMarrySubcommand.execute(sender, args);
         return true;
     }
 
