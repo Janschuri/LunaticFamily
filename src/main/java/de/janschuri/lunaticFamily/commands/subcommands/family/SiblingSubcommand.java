@@ -3,6 +3,7 @@ package de.janschuri.lunaticFamily.commands.subcommands.family;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.sibling.*;
 import de.janschuri.lunaticFamily.config.Language;
+import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.command.CommandSender;
 
 public class SiblingSubcommand extends Subcommand {
@@ -40,19 +41,19 @@ public class SiblingSubcommand extends Subcommand {
                 siblingHelpSubcommand.execute(sender, args);
             } else {
                 final String subcommand = args[0];
-                if (Language.checkIsSubcommand(name, "set", subcommand)) {
+                if (Utils.checkIsSubcommand(name, "set", subcommand)) {
                     siblingSetSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "unset", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "unset", subcommand)) {
                     siblingUnsetSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "propose", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "propose", subcommand)) {
                     siblingProposeSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "accept", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "accept", subcommand)) {
                     siblingAcceptSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "deny", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "deny", subcommand)) {
                     siblingDenySubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "unsibling", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "unsibling", subcommand)) {
                     siblingUnsiblingSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "help", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "help", subcommand)) {
                     siblingHelpSubcommand.execute(sender, args);
                 } else {
                     sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));

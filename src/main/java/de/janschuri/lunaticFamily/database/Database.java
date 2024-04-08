@@ -94,7 +94,7 @@ public abstract class Database {
                 }
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -102,7 +102,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
         return 0;
@@ -123,7 +123,7 @@ public abstract class Database {
                 }
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -131,7 +131,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
         return null;
@@ -152,7 +152,7 @@ public abstract class Database {
                 }
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -160,7 +160,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
         return null;
@@ -181,7 +181,7 @@ public abstract class Database {
                 }
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -189,7 +189,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
         return null;
@@ -216,7 +216,7 @@ public abstract class Database {
                 }
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -224,7 +224,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
         return 0;
@@ -250,7 +250,7 @@ public abstract class Database {
                 }
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -258,7 +258,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
         return null;
@@ -285,7 +285,7 @@ public abstract class Database {
                 }
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -293,7 +293,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
         return 0;
@@ -316,7 +316,7 @@ public abstract class Database {
                 marryList.add(player1);
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (rs != null)
@@ -326,7 +326,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
         return marryList;
@@ -351,7 +351,7 @@ public abstract class Database {
                 }
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (rs != null)
@@ -361,7 +361,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
         return 0;
@@ -382,7 +382,7 @@ public abstract class Database {
                 }
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -390,7 +390,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
         return null;
@@ -411,7 +411,7 @@ public abstract class Database {
                 }
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -419,7 +419,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
         return null;
@@ -445,7 +445,7 @@ public abstract class Database {
                 }
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -453,7 +453,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
         return "#FFFFFF";
@@ -476,7 +476,7 @@ public abstract class Database {
                 parentsList.add(parentID);
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (rs != null)
@@ -486,7 +486,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
 
@@ -510,7 +510,7 @@ public abstract class Database {
                 childsList.add(childID);
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (rs != null)
@@ -520,7 +520,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
 
@@ -541,7 +541,7 @@ public abstract class Database {
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -549,7 +549,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
     }
@@ -569,7 +569,7 @@ public abstract class Database {
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -577,7 +577,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
     }
@@ -593,7 +593,7 @@ public abstract class Database {
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -601,7 +601,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
     }
@@ -618,7 +618,7 @@ public abstract class Database {
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -626,7 +626,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
     }
@@ -642,7 +642,7 @@ public abstract class Database {
             ps.setInt(3, playerID);
             ps.executeUpdate();
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -650,7 +650,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
     }
@@ -665,7 +665,7 @@ public abstract class Database {
             ps.setInt(2, playerID);
             ps.executeUpdate();
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -673,7 +673,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
     }
@@ -689,7 +689,7 @@ public abstract class Database {
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -697,7 +697,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
         return;
@@ -713,7 +713,7 @@ public abstract class Database {
             ps.setInt(2, playerID);
             ps.executeUpdate();
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -721,7 +721,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
     }
@@ -737,7 +737,7 @@ public abstract class Database {
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -745,7 +745,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
         return;
@@ -761,7 +761,7 @@ public abstract class Database {
             ps.setInt(2, childID);
             ps.executeUpdate();
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Error.execute(ex);
         } finally {
             try {
                 if (ps != null)
@@ -769,7 +769,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                Error.close(ex);
             }
         }
     }
@@ -782,7 +782,7 @@ public abstract class Database {
             if (rs != null)
                 rs.close();
         } catch (SQLException ex) {
-            Error.close(plugin, ex);
+            Error.close(ex);
         }
     }
 }

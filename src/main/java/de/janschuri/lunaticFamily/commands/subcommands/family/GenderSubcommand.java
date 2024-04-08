@@ -5,6 +5,7 @@ import de.janschuri.lunaticFamily.commands.subcommands.gender.GenderHelpSubcomma
 import de.janschuri.lunaticFamily.commands.subcommands.gender.GenderInfoSubcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.gender.GenderSetSubcommand;
 import de.janschuri.lunaticFamily.config.Language;
+import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.command.CommandSender;
 
 public class GenderSubcommand extends Subcommand {
@@ -32,11 +33,11 @@ public class GenderSubcommand extends Subcommand {
                 genderHelpSubcommand.execute(sender, args);
             } else {
                 final String subcommand = args[0];
-                if (Language.checkIsSubcommand(name, "set", subcommand)) {
+                if (Utils.checkIsSubcommand(name, "set", subcommand)) {
                     genderSetSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "info", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "info", subcommand)) {
                     genderInfoSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "help", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "help", subcommand)) {
                     genderHelpSubcommand.execute(sender, args);
                 } else {
                     sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));

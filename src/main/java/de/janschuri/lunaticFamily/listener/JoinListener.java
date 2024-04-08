@@ -1,7 +1,7 @@
 package de.janschuri.lunaticFamily.listener;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.config.Config;
+import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.handler.FamilyTree;
 import org.bukkit.entity.Player;
@@ -18,7 +18,7 @@ public class JoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         new BukkitRunnable() {
             public void run() {
-                if (Config.enabledCrazyAdvancementAPI) {
+                if (PluginConfig.enabledCrazyAdvancementAPI) {
                     Player player = event.getPlayer();
                     String uuid = player.getUniqueId().toString();
                     FamilyPlayer familyPlayer = new FamilyPlayer(uuid);

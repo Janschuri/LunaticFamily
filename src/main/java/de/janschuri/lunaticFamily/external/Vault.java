@@ -1,6 +1,6 @@
 package de.janschuri.lunaticFamily.external;
 
-import de.janschuri.lunaticFamily.config.Config;
+import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.utils.Logger;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -12,7 +12,7 @@ public class Vault {
     public Vault() {
         if (!setupEconomy() ) {
             Logger.warnLog("Could not setup Economy.");
-            Config.enabledVault = false;
+            PluginConfig.enabledVault = false;
         }
     }
 

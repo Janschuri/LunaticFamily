@@ -3,7 +3,7 @@ package de.janschuri.lunaticFamily;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticFamily.commands.*;
-import de.janschuri.lunaticFamily.config.Config;
+import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.database.MySQL;
@@ -49,7 +49,7 @@ public final class LunaticFamily extends JavaPlugin {
 
         loadConfig();
 
-        if (Config.enabledMySQL) {
+        if (PluginConfig.enabledMySQL) {
             db = new MySQL(this);
             if (db.getSQLConnection() == null) {
                 Logger.errorLog("Error initializing MySQL database");
@@ -84,8 +84,8 @@ public final class LunaticFamily extends JavaPlugin {
 
     public void loadConfig() {
 
-        new Config(this);
-        new Language(this);
+        new PluginConfig();
+        new Language();
 
         List<String> commands = Arrays.asList("family", "marry", "sibling", "adopt", "gender");
 
@@ -124,11 +124,11 @@ public final class LunaticFamily extends JavaPlugin {
         }
 
         checkSoftDepends();
-        if (Config.enabledCrazyAdvancementAPI) {
+        if (PluginConfig.enabledCrazyAdvancementAPI) {
             FamilyTree.loadAdvancementMap(instance);
         }
 
-        if (Config.enabledVault) {
+        if (PluginConfig.enabledVault) {
             new Vault();
         }
     }
@@ -146,27 +146,27 @@ public final class LunaticFamily extends JavaPlugin {
         try {
             Class.forName("eu.endercentral.crazy_advancements.CrazyAdvancementsAPI");
         } catch (ClassNotFoundException e) {
-            if (Config.enabledCrazyAdvancementAPI) {
+            if (PluginConfig.enabledCrazyAdvancementAPI) {
                 Logger.warnLog("CrazyAdvancementsAPI is not installed. Disabling CrazyAdvancementsAPI features.");
-                Config.enabledCrazyAdvancementAPI = false;
+                PluginConfig.enabledCrazyAdvancementAPI = false;
             }
         }
 
         try {
             Class.forName("net.milkbowl.vault.economy.Economy");
         } catch (ClassNotFoundException e) {
-            if (Config.enabledVault) {
+            if (PluginConfig.enabledVault) {
                 Logger.warnLog("Vault is not installed. Disabling Vault features.");
-                Config.enabledVault = false;
+                PluginConfig.enabledVault = false;
             }
         }
 
         try {
             Class.forName("at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin");
         } catch (ClassNotFoundException e) {
-            if (Config.enabledMinepacks) {
+            if (PluginConfig.enabledMinepacks) {
                 Logger.warnLog("Minepacks is not installed. Disabling Minepacks features.");
-                Config.enabledMinepacks = false;
+                PluginConfig.enabledMinepacks = false;
             }
         }
 

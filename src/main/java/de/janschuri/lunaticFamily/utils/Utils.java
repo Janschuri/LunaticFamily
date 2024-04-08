@@ -9,18 +9,16 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerTextures;
 import org.bukkit.util.Vector;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,57 +61,6 @@ public class Utils {
         return LunaticFamily.getDatabase().getID(uuid) != 0;
     }
 
-    public static void addMissingProperties(File file, File defaultFile) {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(defaultFile);
-
-        YamlConfiguration newConfig = new YamlConfiguration();
-
-        Set<String> keys = config.getKeys(true);
-
-
-        for (String key : defaultConfig.getKeys(true)) {
-            if (!config.contains(key)) {
-                newConfig.set(key, defaultConfig.get(key));
-
-                List<String> comments = defaultConfig.getComments(key);
-                if (!comments.isEmpty()) {
-                    newConfig.setComments(key, comments);
-                }
-            } else {
-                newConfig.set(key, config.get(key));
-
-                List<String> defaultComments = defaultConfig.getComments(key);
-                List<String> configComments = config.getComments(key);
-                List<String> comments = new ArrayList<>();
-
-                if (!new HashSet<>(configComments).containsAll(defaultComments)) {
-                    comments.addAll(defaultComments);
-                }
-
-                comments.addAll(configComments);
-
-                if (!comments.isEmpty()) {
-                    newConfig.setComments(key, comments);
-                }
-
-                keys.remove(key);
-            }
-        }
-
-        // Transfer remaining properties without comments
-        for (String key : keys) {
-            newConfig.set(key, config.get(key));
-        }
-
-        try {
-            // Save the merged configuration with comments
-            newConfig.save(file);
-        } catch (IOException e) {
-            Logger.errorLog("Could not save file: " + file.getName());
-            e.printStackTrace();
-        }
-    }
     public static Location getPositionBetweenLocations(Location loc1, Location loc2) {
         Vector vec1 = new Vector(loc1.getX(), loc1.getY(), loc1.getZ());
         Vector vec2 = new Vector(loc2.getX(), loc2.getY(), loc2.getZ());
@@ -191,5 +138,9 @@ public class Utils {
 
     public static Player getPlayer(String arg) {
         return Bukkit.getPlayer(arg);
+    }
+
+    public static boolean checkIsSubcommand(final String command, final String subcommand, final String arg) {
+        return subcommand.equalsIgnoreCase(arg) || Language.getAliases(command, subcommand).stream().anyMatch(element -> arg.equalsIgnoreCase(element));
     }
 }

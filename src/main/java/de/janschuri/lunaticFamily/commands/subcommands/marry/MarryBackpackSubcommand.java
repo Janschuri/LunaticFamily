@@ -1,7 +1,7 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.Config;
+import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.external.Minepacks;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
@@ -33,11 +33,11 @@ public class MarryBackpackSubcommand extends Subcommand {
 
             if (!player.hasPermission("lunaticFamily.marry.backpack")) {
                 sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
-            } else if(!Config.enabledMinepacks) {
+            } else if(!PluginConfig.enabledMinepacks) {
                 sender.sendMessage(Language.prefix + Language.getMessage("disabled_feature"));
             } else if (!playerFam.isMarried()) {
                 sender.sendMessage(Language.prefix + Language.getMessage("marry_backpack_no_partner"));
-            } else if (!Config.marryBackpackOffline && Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) == null) {
+            } else if (!PluginConfig.marryBackpackOffline && Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) == null) {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", playerFam.getPartner().getName()));
             } else {
                 OfflinePlayer partnerPlayer = playerFam.getPartner().getOfflinePlayer();

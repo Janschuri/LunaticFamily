@@ -1,33 +1,15 @@
 package de.janschuri.lunaticFamily.utils;
 
-import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.config.PluginConfig;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 
 public class Logger {
 
     private static final LunaticFamily plugin = LunaticFamily.getInstance();
 
-    public static void log(final String message, LoggingSeverity severity) {
-        switch (severity) {
-            case INFO:
-                infoLog(message);
-                break;
-            case DEBUG:
-                debugLog(message);
-                break;
-            case WARN:
-                warnLog(message);
-                break;
-            case ERROR:
-                errorLog(message);
-                break;
-        }
-    }
-
     public static void debugLog(String msg) {
-        if(Config.isDebug){
+        if(PluginConfig.isDebug){
             Bukkit.getLogger().info("[" +plugin.getName() + "] " + msg);
         }
     }

@@ -1,6 +1,7 @@
 package de.janschuri.lunaticFamily.commands.subcommands;
 
 import de.janschuri.lunaticFamily.config.Language;
+import de.janschuri.lunaticFamily.utils.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -53,7 +54,7 @@ public abstract class Subcommand {
                     }
                 }
             } else {
-                if (Language.checkIsSubcommand(mainCommand, name, args[0])) {
+                if (Utils.checkIsSubcommand(mainCommand, name, args[0])) {
                     if (args[1].equalsIgnoreCase("")) {
                         if (params != null && args.length == 2) {
                             list.addAll(params);

@@ -3,6 +3,7 @@ package de.janschuri.lunaticFamily.commands.subcommands.family;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.marry.*;
 import de.janschuri.lunaticFamily.config.Language;
+import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.command.CommandSender;
 
 public class MarrySubcommand extends Subcommand {
@@ -53,31 +54,31 @@ public class MarrySubcommand extends Subcommand {
                 marryHelpSubcommand.execute(sender, args);
             } else {
                 final String subcommand = args[0];
-                if (Language.checkIsSubcommand(name, "set", subcommand)) {
+                if (Utils.checkIsSubcommand(name, "set", subcommand)) {
                     marrySetSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "unset", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "unset", subcommand)) {
                     marryUnsetSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "propose", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "propose", subcommand)) {
                     marryProposeSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "priest", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "priest", subcommand)) {
                     marryPriestSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "accept", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "accept", subcommand)) {
                     ACCEPT_SUBCOMMAND.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "deny", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "deny", subcommand)) {
                     marryDenySubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "divorce", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "divorce", subcommand)) {
                     marryDivorceSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "kiss", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "kiss", subcommand)) {
                     marryKissSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "gift", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "gift", subcommand)) {
                     marryGiftSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "backpack", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "backpack", subcommand)) {
                     marryBackpackSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "heart", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "heart", subcommand)) {
                     marryHeartSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "list", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "list", subcommand)) {
                     marryListSubcommand.execute(sender, args);
-                } else if (Language.checkIsSubcommand(name, "help", subcommand)) {
+                } else if (Utils.checkIsSubcommand(name, "help", subcommand)) {
                     marryHelpSubcommand.execute(sender, args);
                 } else {
                     sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));

@@ -1,7 +1,7 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.Config;
+import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
@@ -74,7 +74,7 @@ public class MarryDivorceSubcommand extends Subcommand {
                 playerFam.withdrawPlayer("marry_divorce_leaving_player");
                 playerFam.getPartner().withdrawPlayer("marry_divorce_leaving_player");
 
-                for (String command : Config.successCommands.get("divorce")) {
+                for (String command : PluginConfig.successCommands.get("divorce")) {
                     command = command.replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName());
                     Utils.sendConsoleCommand(command);
                 }

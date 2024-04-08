@@ -2,7 +2,7 @@ package de.janschuri.lunaticFamily.handler;
 
 import com.google.common.collect.BiMap;
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.config.Config;
+import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
@@ -50,7 +50,7 @@ public class FamilyTree {
         AdvancementVisibility visibility = AdvancementVisibility.ALWAYS;
 
         ItemStack icon = new ItemStack(Material.STONE);
-        String background = Config.defaultBackground;
+        String background = PluginConfig.defaultBackground;
 
 
         AdvancementDisplay display = new AdvancementDisplay(icon, title, description, frame, visibility);
