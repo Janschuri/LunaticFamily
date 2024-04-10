@@ -7,6 +7,11 @@ import org.bukkit.Bukkit;
 public class Logger {
 
     private static final LunaticFamily plugin = LunaticFamily.getInstance();
+    private static java.util.logging.Logger logger;
+
+    public Logger(java.util.logging.Logger logger) {
+        Logger.logger = logger;
+    }
 
     public static void debugLog(String msg) {
         if(PluginConfig.isDebug){
@@ -14,11 +19,12 @@ public class Logger {
         }
     }
     public static void infoLog(String msg) {
-        Bukkit.getLogger().info("[" + plugin.getName() + "] " + msg);
+        logger.info("[" + logger.getName() + "] " + msg);
     }
 
     public static void warnLog(String msg) {
         Bukkit.getLogger().warning("[" + plugin.getName() + "] Warning: " + msg);
+        logger.warning("[" + logger.getName() + "] " + msg);
     }
 
     public static void errorLog(String msg) {

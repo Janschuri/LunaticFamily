@@ -3,14 +3,16 @@ package de.janschuri.lunaticFamily;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticFamily.commands.*;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.config.DatabaseConfig;
 import de.janschuri.lunaticFamily.config.Language;
+import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.database.MySQL;
 import de.janschuri.lunaticFamily.database.SQLite;
 import de.janschuri.lunaticFamily.external.Vault;
 import de.janschuri.lunaticFamily.handler.FamilyTree;
 import de.janschuri.lunaticFamily.listener.JoinListener;
+import de.janschuri.lunaticFamily.listener.ProxyListener;
 import de.janschuri.lunaticFamily.listener.QuitListener;
 import de.janschuri.lunaticFamily.utils.Logger;
 import org.bukkit.Bukkit;
@@ -33,8 +35,10 @@ public final class LunaticFamily extends JavaPlugin {
     public static BiMap<String, String> marryPriest = HashBiMap.create();
     public static BiMap<String, String> adoptRequests = HashBiMap.create();
     public static BiMap<String, String> siblingRequests = HashBiMap.create();
+    private static final String IDENTIFIER = "velocity:lunaticfamily";
 
     private static LunaticFamily instance;
+    public static boolean isProxy = false;
 
     public static LunaticFamily getInstance() {
         return instance;
@@ -44,12 +48,13 @@ public final class LunaticFamily extends JavaPlugin {
     public void onEnable() {
 
         instance = this;
-
-        saveDefaultConfig();
+        new Logger(getLogger());
+        getServer().getMessenger().registerIncomingPluginChannel(this, IDENTIFIER, new ProxyListener());
+        getServer().getMessenger().registerOutgoingPluginChannel(this, IDENTIFIER);
 
         loadConfig();
 
-        if (PluginConfig.enabledMySQL) {
+        if (DatabaseConfig.useMySQL) {
             db = new MySQL(this);
             if (db.getSQLConnection() == null) {
                 Logger.errorLog("Error initializing MySQL database");
@@ -80,12 +85,21 @@ public final class LunaticFamily extends JavaPlugin {
         getCommand("sibling").setExecutor(new SiblingCommand());
         getCommand("sibling").setTabCompleter(new SiblingCommand());
 
+
     }
 
     public void loadConfig() {
 
-        new PluginConfig();
-        new Language();
+        saveResource("defaultConfig.yml", true);
+        saveResource("database.yml", false);
+        saveResource("config.yml", false);
+        saveResource("lang/EN.yml", true);
+        saveResource("lang/DE.yml", true);
+        saveResource("lang.yml", false);
+
+        new PluginConfig(this);
+        new Language(this);
+        new DatabaseConfig(this);
 
         List<String> commands = Arrays.asList("family", "marry", "sibling", "adopt", "gender");
 

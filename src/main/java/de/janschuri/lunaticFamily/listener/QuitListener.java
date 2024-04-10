@@ -1,5 +1,7 @@
 package de.janschuri.lunaticFamily.listener;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
@@ -51,6 +53,10 @@ public class QuitListener implements Listener {
             LunaticFamily.adoptRequests.inverse().remove(uuid);
         }
 
-
+        if (playerFam.isMarried() && !LunaticFamily.isProxy) {
+            String parterUUID = playerFam.getPartner().getUUID();
+            FamilyPlayer partnerFam = new FamilyPlayer(parterUUID);
+            partnerFam.sendMessage(Language.prefix + Language.getMessage("marry_partner_offline") + 7);
+        }
     }
 }

@@ -75,7 +75,7 @@ public abstract class Database {
             close(psSiblinghoods, rsSiblinghoods);
 
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, "Unable to retreive connection", ex);
+            Error.noConnection(ex);
         }
     }
 

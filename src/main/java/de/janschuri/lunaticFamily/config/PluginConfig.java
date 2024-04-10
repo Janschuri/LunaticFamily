@@ -11,10 +11,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class PluginConfig extends Config {
-    private final LunaticFamily plugin = LunaticFamily.getInstance();
-    private final File defaultConfigFile = new File(plugin.getDataFolder().getAbsolutePath() + "/defaultConfig.yml");
-    private final File configFile = new File(plugin.getDataFolder().getAbsolutePath() + "/config.yml");
-    private static FileConfiguration config;
+    private final File defaultConfigFile;
+    private final File configFile;
     public static boolean isDebug;
     public static String language;
     public static String defaultGender;
@@ -23,7 +21,6 @@ public class PluginConfig extends Config {
     public static boolean enabledCrazyAdvancementAPI;
     public static boolean enabledVault;
     public static boolean enabledMinepacks;
-    public static boolean enabledMySQL;
     public static boolean marryBackpackOffline;
     public static String dateFormat;
     public static double marryKissRange;
@@ -33,23 +30,22 @@ public class PluginConfig extends Config {
     public static Map<String, Double> commandWithdraws = new HashMap<>();
     public static Map<String, String> colors = new HashMap<>();
 
-    public PluginConfig() {
+    public PluginConfig(LunaticFamily plugin) {
+        defaultConfigFile = new File(plugin.getDataFolder().getAbsolutePath() + "/defaultConfig.yml");
+        configFile = new File(plugin.getDataFolder().getAbsolutePath() + "/config.yml");
         this.load();
     }
 
     public void load() {
 
-        plugin.saveResource("defaultConfig.yml", true);
-
         if (!configFile.exists()) {
-            plugin.saveResource("/config.yml", false);
             addMissingProperties(configFile, defaultConfigFile);
         } else {
             addMissingProperties(configFile, defaultConfigFile);
         }
 
 
-        config = YamlConfiguration.loadConfiguration(configFile);
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
         allowSingleAdopt = config.getBoolean("allow_single_adopt");
         marryBackpackOffline = config.getBoolean("marry_backpack_offline_access");
@@ -66,7 +62,6 @@ public class PluginConfig extends Config {
         enabledMinepacks = config.getBoolean("use_minepacks");
         enabledVault = config.getBoolean("use_vault");
         enabledCrazyAdvancementAPI = config.getBoolean("use_crazy_advancement_api");
-        enabledMySQL = config.getBoolean("Database.MySQL.enabled");
 
         successCommands = getStringListsFromSection(config, "success_commands");
         commandWithdraws = getDoublesFromSection(config, "command_withdraws");

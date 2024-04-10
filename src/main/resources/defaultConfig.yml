@@ -11,16 +11,6 @@ is_debug: false
 # ───║by Janschuri       ║────────────────────────────────#
 # ───╚══════════╝────────────────────────────────#
 # ───────────────────────────────────────────────#
-Database:
-  MySQL:
-    enabled: false
-    host: localhost
-    port: 3306
-    database: playerData
-    username: root
-    password:
-  SQLite:
-    Filename:
 default_gender: "fe"
 use_vault: true
 command_withdraws:

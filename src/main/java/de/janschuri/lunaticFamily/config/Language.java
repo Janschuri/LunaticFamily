@@ -12,9 +12,8 @@ import java.io.File;
 import java.util.*;
 
 public class Language extends Config {
-    private final LunaticFamily plugin = LunaticFamily.getInstance();
-    private final File defaultLangFile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang/" + PluginConfig.language + ".yml");
-    private final File langFile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang.yml");
+    private final File defaultLangFile;
+    private final File langFile;
     private static Map<String, String> messages = new HashMap<>();
     private static Map<String, String> genderLang = new HashMap<>();
     public static List<String> genders = new ArrayList<>();
@@ -28,16 +27,15 @@ public class Language extends Config {
 
     private static final Map<String, Map<String, List<String>>> aliases = new HashMap<>();
 
-    public Language() {
+    public Language(LunaticFamily plugin) {
+        this.defaultLangFile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang/" + PluginConfig.language + ".yml");
+        this.langFile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang.yml");
         this.load();
     }
 
     public void load(){
-        plugin.saveResource("lang/EN.yml", true);
-        plugin.saveResource("lang/DE.yml", true);
 
         if (!langFile.exists()) {
-            plugin.saveResource("lang.yml", false);
             addMissingProperties(langFile, defaultLangFile);
         } else {
             addMissingProperties(langFile, defaultLangFile);

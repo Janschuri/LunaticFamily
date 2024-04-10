@@ -1,6 +1,7 @@
 package de.janschuri.lunaticFamily.database;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.config.DatabaseConfig;
 
 import java.sql.*;
 import java.util.List;
@@ -13,11 +14,12 @@ public class MySQL extends Database {
 
     public MySQL(LunaticFamily instance) {
         super(instance);
-        host = plugin.getConfig().getString("Database.MySQL.Host", "localhost");
-        port = plugin.getConfig().getInt("Database.MySQL.Port", 3306);
-        database = plugin.getConfig().getString("Database.MySQL.Database", "lunaticfamily");
-        username = plugin.getConfig().getString("Database.MySQL.Username", "root");
-        password = plugin.getConfig().getString("Database.MySQL.Password", "");
+
+        host = DatabaseConfig.host;
+        port = DatabaseConfig.port;
+        database = DatabaseConfig.database;
+        username = DatabaseConfig.username;
+        password = DatabaseConfig.password;
     }
 
     public void createTables() {

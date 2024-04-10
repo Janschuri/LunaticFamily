@@ -1,6 +1,7 @@
 package de.janschuri.lunaticFamily.database;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.config.DatabaseConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +16,9 @@ public class SQLite extends Database {
 
     public SQLite(LunaticFamily instance) {
         super(instance);
-        dbname = plugin.getConfig().getString("SQLite.Filename", "lunaticfamily");
+//        dbname = plugin.getConfig().getString("SQLite.Filename", "lunaticfamily");
+        dbname = DatabaseConfig.filename;
+
     }
 
     public void createTables() {

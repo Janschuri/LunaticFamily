@@ -77,6 +77,8 @@ messages:
   #marry command
   marry_yes: "Ja, ich will!"
   marry_no: "Nein, ich will nicht."
+  marry_partner_online: "Dein Partner ist online."
+  marry_partner_offline: "Dein Partner ist offline."
   marry_propose_already_married: "Du bist bereits mit %player% verheiratet."
   marry_propose_player_already_married: "%player% ist bereits verheiratet."
   marry_propose_request: "%player1%, möchtest du %player2% auf diesem Minecraft-Server heiraten?"
