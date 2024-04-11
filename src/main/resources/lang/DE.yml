@@ -25,7 +25,6 @@ messages:
   gender_info_help: "&6/gender info&r - Sehe welches Geschlecht du hast."
   marry_help: "---------Marry-Hilfe---------"
   marry_accept_help: "&6/marry accept&r - Akzeptiere eine Heiratsanfrage."
-  marry_backpack_help: "&6/marry backpack&r - Öffne den Backpack deines Partners."
   marry_deny_help: "&6/marry deny&r - Lehne eine Heiratsanfrage ab."
   marry_divorce_help: "&6/marry divorce&r - Lass dich scheiden."
   marry_gift_help: "&6/marry gift&r - Schenke deinem Partner das Item in deiner Hand."
@@ -118,8 +117,6 @@ messages:
   marry_gift_got: "Dein Partner hat dir %item% geschenkt."
   marry_heart_no_color: "Du musst eine Farbe angeben."
   marry_heart_color: "Du hast die Farbe %color% gewählt."
-  marry_backpack_open: "Du hast den Rucksack deines Partners geöffnet."
-  marry_backpack_no_partner: "Du bist nicht verheiratet!"
   marry_list: "Alle Ehepaare auf diesem Server: "
   marry_list_no_number: "%input% ist keine ganze Zahl!"
   marry_list_emoji: "&4❤"
@@ -313,9 +310,6 @@ aliases:
       - kiss
     gift:
       - gift
-    backpack:
-      - backpack
-      - bp
     set:
       - set
     unset:

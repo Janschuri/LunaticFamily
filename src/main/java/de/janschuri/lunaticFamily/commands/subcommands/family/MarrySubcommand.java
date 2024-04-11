@@ -20,7 +20,6 @@ public class MarrySubcommand extends Subcommand {
     private static final MarryDivorceSubcommand marryDivorceSubcommand = new MarryDivorceSubcommand();
     private static final MarryKissSubcommand marryKissSubcommand = new MarryKissSubcommand();
     private static final MarryGiftSubcommand marryGiftSubcommand = new MarryGiftSubcommand();
-    private static final MarryBackpackSubcommand marryBackpackSubcommand = new MarryBackpackSubcommand();
     private static final MarryHeartSubcommand marryHeartSubcommand = new MarryHeartSubcommand();
     private static final MarryListSubcommand marryListSubcommand = new MarryListSubcommand();
     private static final MarryHelpSubcommand marryHelpSubcommand = new MarryHelpSubcommand();
@@ -28,7 +27,6 @@ public class MarrySubcommand extends Subcommand {
 
     public static final Subcommand[] subcommands = {
             ACCEPT_SUBCOMMAND,
-            marryBackpackSubcommand,
             marryDenySubcommand,
             marryDivorceSubcommand,
             marryGiftSubcommand,
@@ -72,8 +70,6 @@ public class MarrySubcommand extends Subcommand {
                     marryKissSubcommand.execute(sender, args);
                 } else if (Utils.checkIsSubcommand(name, "gift", subcommand)) {
                     marryGiftSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "backpack", subcommand)) {
-                    marryBackpackSubcommand.execute(sender, args);
                 } else if (Utils.checkIsSubcommand(name, "heart", subcommand)) {
                     marryHeartSubcommand.execute(sender, args);
                 } else if (Utils.checkIsSubcommand(name, "list", subcommand)) {

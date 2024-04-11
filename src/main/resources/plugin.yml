@@ -29,8 +29,6 @@ permissions:
     description: Use /marry priest
   lunaticFamily.marry.gift:
     description: Use /marry gift
-  lunaticFamily.marry.backpack:
-    description: Use /marry backpack
   lunaticFamily.marry.heart:
     description: Use /marry heart
   lunaticFamily.marry.heart.color.*:

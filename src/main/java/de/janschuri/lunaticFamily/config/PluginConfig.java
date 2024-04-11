@@ -21,7 +21,6 @@ public class PluginConfig extends Config {
     public static boolean enabledCrazyAdvancementAPI;
     public static boolean enabledVault;
     public static boolean enabledMinepacks;
-    public static boolean marryBackpackOffline;
     public static String dateFormat;
     public static double marryKissRange;
     public static Map<String, List<String>> successCommands = new HashMap<>();
@@ -48,7 +47,6 @@ public class PluginConfig extends Config {
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
         allowSingleAdopt = config.getBoolean("allow_single_adopt");
-        marryBackpackOffline = config.getBoolean("marry_backpack_offline_access");
         defaultBackground = "textures/block/" + config.getString("default_background") + ".png";
         defaultGender = config.getString("default_gender");
         familyList = Objects.requireNonNull(config.getStringList("family_list"));

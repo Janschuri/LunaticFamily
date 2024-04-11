@@ -1,6 +1,7 @@
 package de.janschuri.lunaticFamily.listener;
 
 import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.Language;
@@ -15,16 +16,17 @@ public class ProxyListener implements PluginMessageListener {
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
         LunaticFamily.isProxy = true;
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
+
         String subchannel = in.readUTF();
         if (subchannel.equals("PlayerJoinEvent")) {
             String playerUUID = in.readUTF();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
             if (playerFam.isMarried()) {
-                if (playerFam.getPartner().sendMessage(Language.prefix + Language.getMessage("marry_partner_online") + 9)) {
-                    player.sendMessage(Language.prefix + Language.getMessage("marry_partner_online") + 10);
-                } else {
-                    player.sendMessage(Language.prefix + Language.getMessage("marry_partner_offline") + 11);
-                }
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("PlayerJoinEvent");
+                out.writeUTF(playerUUID);
+                out.writeUTF(playerFam.getPartner().getUUID());
+                LunaticFamily.sendPluginMessage(out.toByteArray());
             }
         }
         if (subchannel.equals("PlayerJumpEvent")) {

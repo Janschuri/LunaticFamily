@@ -152,6 +152,10 @@ public final class LunaticFamily extends JavaPlugin {
         // Plugin shutdown logic
     }
 
+    public static void sendPluginMessage(byte[] message) {
+        getInstance().getServer().sendPluginMessage(getInstance(), IDENTIFIER, message);
+    }
+
     public static Database getDatabase() {
         return LunaticFamily.db;
     }

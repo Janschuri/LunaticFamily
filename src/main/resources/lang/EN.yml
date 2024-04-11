@@ -43,7 +43,6 @@ messages:
   gender_info_help: "&6/gender info&r - See what gender you have."
   marry_help: "---------Marry-Help---------"
   marry_accept_help: "&6/marry accept&r - Accept a marriage proposal."
-  marry_backpack_help: "&6/marry backpack&r - Access your partner's backpack."
   marry_deny_help: "&6/marry deny&r - Deny a marriage proposal."
   marry_divorce_help: "&6/marry divorce&r - Get divorced."
   marry_gift_help: "&6/marry gift&r - Gift the item in your hand to your partner."
@@ -309,9 +308,6 @@ aliases:
       - kiss
     gift:
       - gift
-    backpack:
-      - backpack
-      - bp
     set:
       - set
     unset:

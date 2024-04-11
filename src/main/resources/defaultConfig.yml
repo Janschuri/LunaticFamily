@@ -40,8 +40,6 @@ backgrounds:
   - "gold_block"
 allow_single_adopt: true
 language: "DE"
-use_minepacks: true
-marry_backpack_offline_access: true
 use_crazy_advancement_api: true
 date_format: "yyyy-MM-dd HH:mm:ss"
 marry_kiss_range: 3
