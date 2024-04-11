@@ -1,7 +1,7 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
@@ -45,7 +45,7 @@ public class MarryHeartSubcommand extends Subcommand {
                 if (Language.isColorLang(args[1])) {
                     String colorKey = Language.getColorKeyFromLang(color);
                     if (player.hasPermission(permission + ".color." + colorKey)){
-                        hexColor = PluginConfig.colors.get(colorKey);
+                        hexColor = Config.colors.get(colorKey);
                     } else {
                         sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
                         return;

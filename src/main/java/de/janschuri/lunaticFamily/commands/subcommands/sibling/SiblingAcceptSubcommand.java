@@ -2,7 +2,7 @@ package de.janschuri.lunaticFamily.commands.subcommands.sibling;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
@@ -55,7 +55,7 @@ public class SiblingAcceptSubcommand extends Subcommand {
                     LunaticFamily.siblingRequests.remove(siblingUUID);
                     playerFam.addSibling(siblingFam.getID());
 
-                    for (String command : PluginConfig.successCommands.get("sibling")) {
+                    for (String command : Config.successCommands.get("sibling")) {
                         command = command.replace("%player1%", playerFam.getName()).replace("%player2%", siblingFam.getName());
                         Utils.sendConsoleCommand(command);
                     }

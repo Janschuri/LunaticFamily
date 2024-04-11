@@ -1,7 +1,7 @@
 package de.janschuri.lunaticFamily.utils;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.config.Config;
 import org.bukkit.Bukkit;
 
 public class Logger {
@@ -14,7 +14,7 @@ public class Logger {
     }
 
     public static void debugLog(String msg) {
-        if(PluginConfig.isDebug){
+        if(Config.isDebug){
             Bukkit.getLogger().info("[" +plugin.getName() + "] " + msg);
         }
     }

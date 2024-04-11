@@ -2,7 +2,7 @@ package de.janschuri.lunaticFamily.commands.subcommands.family;
 
 import com.google.common.collect.BiMap;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
@@ -26,7 +26,7 @@ public class FamilyListSubcommand extends Subcommand {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
-            List<String> list = PluginConfig.familyList;
+            List<String> list = Config.familyList;
 
             if (!(sender instanceof Player) && args.length < 2) {
                 sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));

@@ -1,7 +1,7 @@
 package de.janschuri.lunaticFamily.commands.subcommands.adopt;
 
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
@@ -102,14 +102,14 @@ public class AdoptKickoutSubcommand extends Subcommand {
                                     playerFam.getPartner().withdrawPlayer("adopt_kickout_parent", 0.5);
                                     playerFam.withdrawPlayer("adopt_kickout_parent", 0.5);
 
-                                    for (String command : PluginConfig.successCommands.get("kickout")) {
+                                    for (String command : Config.successCommands.get("kickout")) {
                                         command = command.replace("%parent1%", playerFam.getName()).replace("%parent2%", playerFam.getPartner().getName()).replace("%child%", childFam.getName());
                                         Utils.sendConsoleCommand(command);
                                     }
                                 } else {
                                     playerFam.withdrawPlayer("adopt_kickout_parent");
 
-                                    for (String command : PluginConfig.successCommands.get("kickout_single")) {
+                                    for (String command : Config.successCommands.get("kickout_single")) {
                                         command = command.replace("%parent%", playerFam.getName()).replace("%child%", childFam.getName());
                                         Utils.sendConsoleCommand(command);
                                     }

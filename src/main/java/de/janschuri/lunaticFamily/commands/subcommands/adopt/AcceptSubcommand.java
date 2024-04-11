@@ -2,7 +2,7 @@ package de.janschuri.lunaticFamily.commands.subcommands.adopt;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
@@ -50,14 +50,14 @@ public class AcceptSubcommand extends Subcommand{
                         parentFam.getPartner().sendMessage(Language.prefix + Language.getMessage("adopt_accept_adopted").replace("%player%", playerFam.getName()));
                         parentFam.getPartner().withdrawPlayer("adopt_parent", 0.5);
                         parentFam.withdrawPlayer("adopt_parent", 0.5);
-                        for (String command : PluginConfig.successCommands.get("adopt")) {
+                        for (String command : Config.successCommands.get("adopt")) {
                             command = command.replace("%parent1%", parentFam.getName()).replace("%parent2%", parentFam.getPartner().getName()).replace("%child%", playerFam.getName());
 
                             Utils.sendConsoleCommand(command);
                         }
                     } else {
                         sender.sendMessage(Language.prefix + Language.getMessage("adopt_accept_adopted_by_single").replace("%player%", parentFam.getName()));
-                        for (String command : PluginConfig.successCommands.get("adopt_single")) {
+                        for (String command : Config.successCommands.get("adopt_single")) {
                             command = command.replace("%parent%", parentFam.getName()).replace("%child%", playerFam.getName());
                             Utils.sendConsoleCommand(command);
                         }

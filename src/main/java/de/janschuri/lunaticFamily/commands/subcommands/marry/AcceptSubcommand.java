@@ -2,7 +2,7 @@ package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
@@ -79,7 +79,7 @@ public class AcceptSubcommand extends Subcommand {
 
                             playerFam.marry(partnerFam.getID(), priestFam.getID());
 
-                            for (String command : PluginConfig.successCommands.get("marry_priest")) {
+                            for (String command : Config.successCommands.get("marry_priest")) {
                                 command = command.replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()).replace("%priest%", priestFam.getName());
                                 Utils.sendConsoleCommand(command);
                             }
@@ -102,7 +102,7 @@ public class AcceptSubcommand extends Subcommand {
 
                             playerFam.marry(partnerFam.getID());
 
-                            for (String command : PluginConfig.successCommands.get("marry")) {
+                            for (String command : Config.successCommands.get("marry")) {
                                 command = command.replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName());
                                 Utils.sendConsoleCommand(command);
                             }

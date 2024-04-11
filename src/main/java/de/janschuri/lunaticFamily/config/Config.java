@@ -1,105 +1,69 @@
 package de.janschuri.lunaticFamily.config;
 
-import de.janschuri.lunaticFamily.utils.Logger;
-import org.bukkit.configuration.ConfigurationSection;
+import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.utils.ConfigUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-public abstract class Config {
-    public abstract void load();
+public class Config {
+    private final File defaultConfigFile;
+    private final File configFile;
+    public static boolean isDebug;
+    public static String language;
+    public static String defaultGender;
+    public static String defaultBackground;
+    public static boolean allowSingleAdopt;
+    public static boolean enabledCrazyAdvancementAPI;
+    public static boolean enabledVault;
+    public static boolean enabledMinepacks;
+    public static String dateFormat;
+    public static double marryKissRange;
+    public static Map<String, List<String>> successCommands = new HashMap<>();
+    public static List<String> familyList;
+    public static List<String> backgrounds;
+    public static Map<String, Double> commandWithdraws = new HashMap<>();
+    public static Map<String, String> colors = new HashMap<>();
 
-    protected void addMissingProperties(File file, File defaultFile) {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(defaultFile);
-
-        YamlConfiguration newConfig = new YamlConfiguration();
-
-        Set<String> keys = config.getKeys(true);
-
-
-        for (String key : defaultConfig.getKeys(true)) {
-            if (!config.contains(key)) {
-                newConfig.set(key, defaultConfig.get(key));
-
-                List<String> comments = defaultConfig.getComments(key);
-                if (!comments.isEmpty()) {
-                    newConfig.setComments(key, comments);
-                }
-            } else {
-                newConfig.set(key, config.get(key));
-
-                List<String> defaultComments = defaultConfig.getComments(key);
-                List<String> configComments = config.getComments(key);
-                List<String> comments = new ArrayList<>();
-
-                if (!new HashSet<>(configComments).containsAll(defaultComments)) {
-                    comments.addAll(defaultComments);
-                }
-
-                comments.addAll(configComments);
-
-                if (!comments.isEmpty()) {
-                    newConfig.setComments(key, comments);
-                }
-
-                keys.remove(key);
-            }
-        }
-
-        // Transfer remaining properties without comments
-        for (String key : keys) {
-            newConfig.set(key, config.get(key));
-        }
-
-        try {
-            // Save the merged configuration with comments
-            newConfig.save(file);
-        } catch (IOException e) {
-            Logger.errorLog("Could not save file: " + file.getName());
-            e.printStackTrace();
-        }
+    public Config(LunaticFamily plugin) {
+        defaultConfigFile = new File(plugin.getDataFolder().getAbsolutePath() + "/defaultConfig.yml");
+        configFile = new File(plugin.getDataFolder().getAbsolutePath() + "/config.yml");
+        this.load();
     }
 
-    protected Map<String, String> getStringsFromSection(FileConfiguration config, String sectionName) {
-        ConfigurationSection section = config.getConfigurationSection(sectionName);
-        Map<String, String> map = new HashMap<>();
-        if (section != null) {
-            for (String key : section.getKeys(false)) {
-                map.put(key, section.getString(key));
-            }
-        } else {
-            Logger.warnLog("Could not find '" + sectionName + "' in config.yml");
-        }
-        return map;
-    }
+    public void load() {
 
-    protected Map<String, Double> getDoublesFromSection(FileConfiguration config, String sectionName) {
-        ConfigurationSection section = config.getConfigurationSection(sectionName);
-        Map<String, Double> map = new HashMap<>();
-        if (section != null) {
-            for (String key : section.getKeys(false)) {
-                map.put(key, section.getDouble(key));
-            }
+        if (!configFile.exists()) {
+            ConfigUtils.addMissingProperties(configFile, defaultConfigFile);
         } else {
-            Logger.warnLog("Could not find '" + sectionName + "' in config.yml");
+            ConfigUtils.addMissingProperties(configFile, defaultConfigFile);
         }
-        return map;
-    }
 
-    protected Map<String, List<String>> getStringListsFromSection(FileConfiguration config, String sectionName) {
-        ConfigurationSection section = config.getConfigurationSection(sectionName);
-        Map<String, List<String>> map = new HashMap<>();
-        if (section != null) {
-            for (String key : section.getKeys(false)) {
-                map.put(key, section.getStringList(key));
-            }
-        } else {
-            Logger.warnLog("Could not find '" + sectionName + "' in config.yml");
-        }
-        return map;
+
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+
+        allowSingleAdopt = config.getBoolean("allow_single_adopt");
+        defaultBackground = "textures/block/" + config.getString("default_background") + ".png";
+        defaultGender = config.getString("default_gender");
+        familyList = Objects.requireNonNull(config.getStringList("family_list"));
+        backgrounds = Objects.requireNonNull(config.getStringList("backgrounds"));
+        language = config.getString("language");
+        dateFormat = config.getString("date_format");
+        marryKissRange = config.getDouble("marry_kiss_range");
+
+        isDebug = config.getBoolean("is_debug");
+
+        enabledMinepacks = config.getBoolean("use_minepacks");
+        enabledVault = config.getBoolean("use_vault");
+        enabledCrazyAdvancementAPI = config.getBoolean("use_crazy_advancement_api");
+
+        successCommands = ConfigUtils.getStringListsFromSection(config, "success_commands");
+        commandWithdraws = ConfigUtils.getDoublesFromSection(config, "command_withdraws");
+        colors = ConfigUtils.getStringsFromSection(config, "colors");
     }
 }

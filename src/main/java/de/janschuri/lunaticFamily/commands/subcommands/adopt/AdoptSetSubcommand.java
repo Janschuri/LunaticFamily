@@ -2,7 +2,7 @@ package de.janschuri.lunaticFamily.commands.subcommands.adopt;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
@@ -45,7 +45,7 @@ public class AdoptSetSubcommand extends Subcommand {
                 String childUUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
                 FamilyPlayer childFam = new FamilyPlayer(childUUID);
 
-                if (!firstParentFam.isMarried() && !PluginConfig.allowSingleAdopt) {
+                if (!firstParentFam.isMarried() && !Config.allowSingleAdopt) {
                     sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_set_no_single_adopt").replace("%player%", firstParentFam.getName()));
                 } else if (childFam.isAdopted()) {
                     sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_set_already_adopted").replace("%child%", childFam.getName()));

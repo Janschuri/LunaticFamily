@@ -2,7 +2,7 @@ package de.janschuri.lunaticFamily.commands.subcommands.adopt;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
@@ -47,7 +47,7 @@ public class AdoptProposeSubcommand extends Subcommand {
                 sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
             } else if (cancel) {
                 sender.sendMessage(Language.prefix + Language.getMessage("adopt_propose_cancel").replace("%player%", args[2]));
-            } else if (!playerFam.isMarried() && !PluginConfig.allowSingleAdopt) {
+            } else if (!playerFam.isMarried() && !Config.allowSingleAdopt) {
                 sender.sendMessage(Language.prefix + Language.getMessage("adopt_propose_no_single_adopt"));
             } else if (playerFam.getChildrenAmount() > 1) {
                 sender.sendMessage(Language.prefix + Language.getMessage("adopt_propose_limit"));

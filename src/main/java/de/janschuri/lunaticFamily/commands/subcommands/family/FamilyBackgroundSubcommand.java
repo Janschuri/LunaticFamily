@@ -1,7 +1,7 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import org.bukkit.command.CommandSender;
@@ -13,7 +13,7 @@ public class FamilyBackgroundSubcommand extends Subcommand {
     private static final String mainCommand = "family";
     private static final String name = "background";
     private static final String permission = "lunaticfamily.family.background";
-    private static final List<String> params = PluginConfig.backgrounds;
+    private static final List<String> params = Config.backgrounds;
 
     public FamilyBackgroundSubcommand() {
         super(mainCommand, name, permission, params);

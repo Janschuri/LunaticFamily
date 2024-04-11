@@ -3,7 +3,7 @@ package de.janschuri.lunaticFamily.handler;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.external.Vault;
 import de.janschuri.lunaticFamily.utils.Utils;
@@ -68,13 +68,13 @@ public class FamilyPlayer {
 
 
         if (LunaticFamily.getDatabase().getGender(id) == null) {
-            gender = PluginConfig.defaultGender;
+            gender = Config.defaultGender;
         } else {
             gender = LunaticFamily.getDatabase().getGender(id);
         }
 
         if (LunaticFamily.getDatabase().getBackground(uuid) == null) {
-            background = PluginConfig.defaultBackground;
+            background = Config.defaultBackground;
         } else {
             background = LunaticFamily.getDatabase().getBackground(uuid);
         }
@@ -119,13 +119,13 @@ public class FamilyPlayer {
 
 
         if (LunaticFamily.getDatabase().getGender(id) == null) {
-            gender = PluginConfig.defaultGender;
+            gender = Config.defaultGender;
         } else {
             gender = LunaticFamily.getDatabase().getGender(id);
         }
 
         if (LunaticFamily.getDatabase().getBackground(uuid) == null) {
-            background = PluginConfig.defaultBackground;
+            background = Config.defaultBackground;
         } else {
             background = LunaticFamily.getDatabase().getBackground(uuid);
         }
@@ -216,7 +216,7 @@ public class FamilyPlayer {
 
     public String getMarriageDate() {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PluginConfig.dateFormat);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Config.dateFormat);
 
         return formatter.format(this.marryDate.toLocalDateTime());
     }
@@ -308,13 +308,13 @@ public class FamilyPlayer {
     }
 
     public void withdrawPlayer(String... withdrawKeys) {
-        if (PluginConfig.enabledVault) {
+        if (Config.enabledVault) {
             OfflinePlayer player = this.getOfflinePlayer();
 
             double amount = 0.0;
             for (String key : withdrawKeys) {
-                if (PluginConfig.commandWithdraws.containsKey(key)) {
-                    amount += PluginConfig.commandWithdraws.get(key);
+                if (Config.commandWithdraws.containsKey(key)) {
+                    amount += Config.commandWithdraws.get(key);
                 }
             }
             if (amount > 0) {
@@ -327,11 +327,11 @@ public class FamilyPlayer {
     }
 
     public void withdrawPlayer(String withdrawKey, double factor) {
-        if (PluginConfig.enabledVault) {
+        if (Config.enabledVault) {
             OfflinePlayer player = this.getOfflinePlayer();
 
             double amount = 0.0;
-            amount += PluginConfig.commandWithdraws.get(withdrawKey) * factor;
+            amount += Config.commandWithdraws.get(withdrawKey) * factor;
 
 
             if (amount > 0) {
@@ -344,12 +344,12 @@ public class FamilyPlayer {
     }
 
     public boolean hasEnoughMoney(String... withdrawKeys) {
-        if (PluginConfig.enabledVault) {
+        if (Config.enabledVault) {
             OfflinePlayer player = this.getOfflinePlayer();
             double amount = 0.0;
             for (String key : withdrawKeys) {
-                if (PluginConfig.commandWithdraws.containsKey(key)) {
-                    amount += PluginConfig.commandWithdraws.get(key);
+                if (Config.commandWithdraws.containsKey(key)) {
+                    amount += Config.commandWithdraws.get(key);
                 }
             }
             return (amount < Vault.getEconomy().getBalance(player));
@@ -359,9 +359,9 @@ public class FamilyPlayer {
     }
 
     public boolean hasEnoughMoney(String withdrawKey, double factor) {
-        if (PluginConfig.enabledVault) {
+        if (Config.enabledVault) {
             OfflinePlayer player = this.getOfflinePlayer();
-            return (PluginConfig.commandWithdraws.get(withdrawKey) * factor < Vault.getEconomy().getBalance(player));
+            return (Config.commandWithdraws.get(withdrawKey) * factor < Vault.getEconomy().getBalance(player));
         } else {
             return true;
         }
@@ -453,7 +453,7 @@ public class FamilyPlayer {
 
         playerFam.deleteMarriage();
 
-        if (!PluginConfig.allowSingleAdopt) {
+        if (!Config.allowSingleAdopt) {
             for (FamilyPlayer child : playerChildren) {
                 partnerFam.deleteAdoption(child.getID());
             }
@@ -789,7 +789,7 @@ public class FamilyPlayer {
     }
 
     public void updateFamilyTree() {
-        if (this.getPlayer() != null && PluginConfig.enabledCrazyAdvancementAPI) {
+        if (this.getPlayer() != null && Config.enabledCrazyAdvancementAPI) {
             new FamilyTree(this.id);
         }
     }

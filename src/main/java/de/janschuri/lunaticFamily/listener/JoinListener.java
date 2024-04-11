@@ -1,13 +1,10 @@
 package de.janschuri.lunaticFamily.listener;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.handler.FamilyTree;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,7 +22,7 @@ public class JoinListener implements Listener {
 
         new BukkitRunnable() {
             public void run() {
-                if (PluginConfig.enabledCrazyAdvancementAPI) {
+                if (Config.enabledCrazyAdvancementAPI) {
                     new FamilyTree(playerFam.getID());
                 }
                 if (playerFam.isMarried()) {

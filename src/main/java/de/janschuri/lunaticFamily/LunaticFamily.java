@@ -5,7 +5,7 @@ import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticFamily.commands.*;
 import de.janschuri.lunaticFamily.config.DatabaseConfig;
 import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.database.MySQL;
 import de.janschuri.lunaticFamily.database.SQLite;
@@ -97,7 +97,7 @@ public final class LunaticFamily extends JavaPlugin {
         saveResource("lang/DE.yml", true);
         saveResource("lang.yml", false);
 
-        new PluginConfig(this);
+        new Config(this);
         new Language(this);
         new DatabaseConfig(this);
 
@@ -138,11 +138,11 @@ public final class LunaticFamily extends JavaPlugin {
         }
 
         checkSoftDepends();
-        if (PluginConfig.enabledCrazyAdvancementAPI) {
+        if (Config.enabledCrazyAdvancementAPI) {
             FamilyTree.loadAdvancementMap(instance);
         }
 
-        if (PluginConfig.enabledVault) {
+        if (Config.enabledVault) {
             new Vault();
         }
     }
@@ -164,27 +164,27 @@ public final class LunaticFamily extends JavaPlugin {
         try {
             Class.forName("eu.endercentral.crazy_advancements.CrazyAdvancementsAPI");
         } catch (ClassNotFoundException e) {
-            if (PluginConfig.enabledCrazyAdvancementAPI) {
+            if (Config.enabledCrazyAdvancementAPI) {
                 Logger.warnLog("CrazyAdvancementsAPI is not installed. Disabling CrazyAdvancementsAPI features.");
-                PluginConfig.enabledCrazyAdvancementAPI = false;
+                Config.enabledCrazyAdvancementAPI = false;
             }
         }
 
         try {
             Class.forName("net.milkbowl.vault.economy.Economy");
         } catch (ClassNotFoundException e) {
-            if (PluginConfig.enabledVault) {
+            if (Config.enabledVault) {
                 Logger.warnLog("Vault is not installed. Disabling Vault features.");
-                PluginConfig.enabledVault = false;
+                Config.enabledVault = false;
             }
         }
 
         try {
             Class.forName("at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin");
         } catch (ClassNotFoundException e) {
-            if (PluginConfig.enabledMinepacks) {
+            if (Config.enabledMinepacks) {
                 Logger.warnLog("Minepacks is not installed. Disabling Minepacks features.");
-                PluginConfig.enabledMinepacks = false;
+                Config.enabledMinepacks = false;
             }
         }
 

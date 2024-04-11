@@ -3,6 +3,7 @@ package de.janschuri.lunaticFamily.config;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.utils.ConfigUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,7 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.util.*;
 
-public class Language extends Config {
+public class Language {
     private final File defaultLangFile;
     private final File langFile;
     private static Map<String, String> messages = new HashMap<>();
@@ -28,7 +29,7 @@ public class Language extends Config {
     private static final Map<String, Map<String, List<String>>> aliases = new HashMap<>();
 
     public Language(LunaticFamily plugin) {
-        this.defaultLangFile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang/" + PluginConfig.language + ".yml");
+        this.defaultLangFile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang/" + Config.language + ".yml");
         this.langFile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang.yml");
         this.load();
     }
@@ -36,24 +37,24 @@ public class Language extends Config {
     public void load(){
 
         if (!langFile.exists()) {
-            addMissingProperties(langFile, defaultLangFile);
+            ConfigUtils.addMissingProperties(langFile, defaultLangFile);
         } else {
-            addMissingProperties(langFile, defaultLangFile);
+            ConfigUtils.addMissingProperties(langFile, defaultLangFile);
         }
 
         lang = YamlConfiguration.loadConfiguration(langFile);
 
         prefix = ChatColor.translateAlternateColorCodes('&', lang.getString("prefix", "&8[&6LunaticFamily&8] "));
 
-        messages = getStringsFromSection(lang, "messages");
+        messages = ConfigUtils.getStringsFromSection(lang, "messages");
 
-        genderLang = getStringsFromSection(lang, "genders");
+        genderLang = ConfigUtils.getStringsFromSection(lang, "genders");
 
         ConfigurationSection familyRelationships = lang.getConfigurationSection("family_relationships");
         genders = new ArrayList<>(familyRelationships.getKeys(false));
 
         for (String gender : genders) {
-            Map<String, String> map = getStringsFromSection(lang, "family_relationships." + gender);
+            Map<String, String> map = ConfigUtils.getStringsFromSection(lang, "family_relationships." + gender);
 
             relationships.put(gender, map);
         }
@@ -61,11 +62,11 @@ public class Language extends Config {
         List<String> commands = Arrays.asList("family", "marry", "sibling", "adopt", "gender");
 
         for (String command : commands) {
-            Map<String, List<String>> map = getStringListsFromSection(lang, "aliases." + command);
+            Map<String, List<String>> map = ConfigUtils.getStringListsFromSection(lang, "aliases." + command);
             aliases.put(command, map);
         }
 
-        colorsTranslations = getStringsFromSection(lang, "color_translations");
+        colorsTranslations = ConfigUtils.getStringsFromSection(lang, "color_translations");
     }
 
     public static String getMessage(String key) {
@@ -96,7 +97,7 @@ public class Language extends Config {
 
     public static List<String> getColorLangs() {
         List<String> list = new ArrayList<>();
-        for (String color : PluginConfig.colors.keySet()) {
+        for (String color : Config.colors.keySet()) {
             list.add(Language.getColorLang(color));
         }
         return list;

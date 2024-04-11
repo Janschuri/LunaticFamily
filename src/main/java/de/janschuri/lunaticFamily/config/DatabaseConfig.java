@@ -1,12 +1,13 @@
 package de.janschuri.lunaticFamily.config;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.utils.ConfigUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
-public class DatabaseConfig extends Config {
+public class DatabaseConfig{
     private final File databaseConfigFile;
     public static String host, database, username, password, filename;
     public static int port;
@@ -17,9 +18,12 @@ public class DatabaseConfig extends Config {
         this.load();
     }
 
-    @Override
     public void load() {
-//        plugin.saveResource("database.yml", false);
+        if (!databaseConfigFile.exists()) {
+            LunaticFamily.getInstance().saveResource("database.yml", false);
+        } else {
+            ConfigUtils.addMissingProperties(databaseConfigFile, databaseConfigFile);
+        }
 
         FileConfiguration databaseConfig = YamlConfiguration.loadConfiguration(databaseConfigFile);
 
