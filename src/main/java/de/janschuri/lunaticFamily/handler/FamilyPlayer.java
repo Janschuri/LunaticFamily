@@ -367,22 +367,12 @@ public class FamilyPlayer {
         }
     }
 
-    public boolean sendMessage(String message) {
-        if (this.getPlayer() != null) {
-            this.getPlayer().sendMessage(message);
-            return true;
-        } else {
-            return false;
-        }
+    public void sendMessage(String message) {
+        LunaticFamily.sendMessageToPlayer(this.uuid, message);
     }
 
-    public boolean sendMessage(Component message) {
-        if (this.getPlayer() != null) {
-            this.getPlayer().sendMessage(message);
-            return true;
-        } else {
-            return false;
-        }
+    public void sendMessage(Component message) {
+        LunaticFamily.sendMessageToPlayer(this.uuid, message);
     }
 
     public boolean chat(String message) {

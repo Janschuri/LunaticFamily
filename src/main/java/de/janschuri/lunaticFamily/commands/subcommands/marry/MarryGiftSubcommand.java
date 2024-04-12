@@ -1,5 +1,6 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
+import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
@@ -34,22 +35,22 @@ public class MarryGiftSubcommand extends Subcommand {
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
             if (!playerFam.isMarried()) {
-                sender.sendMessage(Language.prefix + Language.getMessage("marry_gift_no_partner"));
+                playerFam.sendMessage(Language.prefix + Language.getMessage("marry_gift_no_partner"));
             } else if (!player.hasPermission("lunaticFamily.marry.gift")) {
-                sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
-            } else if (Bukkit.getPlayer(UUID.fromString(playerFam.getPartner().getUUID())) == null) {
-                sender.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", Bukkit.getOfflinePlayer(UUID.fromString(playerFam.getPartner().getUUID())).getName()));
+                playerFam.sendMessage(Language.prefix + Language.getMessage("no_permission"));
+            } else if (!LunaticFamily.isPlayerOnline(playerFam.getPartner().getUUID())) {
+                playerFam.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", Bukkit.getOfflinePlayer(UUID.fromString(playerFam.getPartner().getUUID())).getName()));
             } else if (player.getInventory().getItemInMainHand().isEmpty()) {
-                sender.sendMessage(Language.prefix + Language.getMessage("marry_gift_empty_hand"));
+                playerFam.sendMessage(Language.prefix + Language.getMessage("marry_gift_empty_hand"));
             } else {
-                Player partnerPlayer = playerFam.getPartner().getPlayer();
-                if (partnerPlayer.getInventory().firstEmpty() == -1) {
-                    sender.sendMessage(Language.prefix + Language.getMessage("marry_gift_partner_full_inv"));
-                } else {
+                FamilyPlayer partnerFam = playerFam.getPartner();
+//                if (partnerPlayer.getInventory().firstEmpty() == -1) {
+//                    playerFam.sendMessage(Language.prefix + Language.getMessage("marry_gift_partner_full_inv"));
+//                } else {
                     ItemStack item = player.getInventory().getItemInMainHand();
                     player.getInventory().removeItem(item);
-                    partnerPlayer.getInventory().addItem(item);
-                    Material material = item.getType();
+//                    partnerPlayer.getInventory().addItem(item);
+                LunaticFamily.dropItemToPlayer(partnerFam.getUUID(), item);
                     int amount = item.getAmount();
 
                     ItemMeta itemMeta = item.getItemMeta();
@@ -74,9 +75,9 @@ public class MarryGiftSubcommand extends Subcommand {
                     Component msgPlayer = Component.text(Language.prefix + Language.getMessage("marry_gift_sent")).replaceText(replacementConfig);
                     Component msgPartner = Component.text(Language.prefix + Language.getMessage("marry_gift_got")).replaceText(replacementConfig);
 
-                    player.sendMessage(msgPlayer);
-                    partnerPlayer.sendMessage(msgPartner);
-                }
+                    playerFam.sendMessage(msgPlayer);
+                    partnerFam.sendMessage(msgPartner);
+//                }
 
             }
         }

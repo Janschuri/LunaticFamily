@@ -115,6 +115,33 @@ public class Velocity {
         if (subchannel.equals("OnlinePlayers")) {
             RegisteredServer server = proxy.getServer(in.readUTF()).orElse(null);
             proxy.getAllServers().forEach(serverConnection -> serverConnection.sendPluginMessage(IDENTIFIER, getOnlinePlayers()));
+            return;
+        }
+        if (subchannel.equals("MessageToPlayer")) {
+            out.writeUTF("MessageToPlayer");
+            out.writeUTF(in.readUTF());
+            out.writeUTF(in.readUTF());
+            proxy.getAllServers().forEach(serverConnection -> serverConnection.sendPluginMessage(IDENTIFIER, out.toByteArray()));
+            return;
+        }
+        if (subchannel.equals("ComponentMessageToPlayer")) {
+            out.writeUTF("ComponentMessageToPlayer");
+            out.writeUTF(in.readUTF());
+            out.writeUTF(in.readUTF());
+            proxy.getAllServers().forEach(serverConnection -> serverConnection.sendPluginMessage(IDENTIFIER, out.toByteArray()));
+            return;
+        }
+        if (subchannel.equals("DropItemToPlayer")) {
+            logger.info("Received DropItemToPlayer");
+            out.writeUTF("DropItemToPlayer");
+            out.writeUTF(in.readUTF());
+            int arrayLength = in.readInt();
+            out.writeInt(arrayLength);
+            for (int i = 0; i < arrayLength; i++) {
+                out.writeByte(in.readByte());
+            }
+            proxy.getAllServers().forEach(serverConnection -> serverConnection.sendPluginMessage(IDENTIFIER, out.toByteArray()));
+            return;
         }
 
     }

@@ -17,15 +17,21 @@ import de.janschuri.lunaticFamily.listener.JoinListener;
 import de.janschuri.lunaticFamily.listener.ProxyListener;
 import de.janschuri.lunaticFamily.listener.QuitListener;
 import de.janschuri.lunaticFamily.utils.Logger;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.List;
 
 
 public final class LunaticFamily extends JavaPlugin {
@@ -204,6 +210,55 @@ public final class LunaticFamily extends JavaPlugin {
             return proxyPlayers.contains(uuid);
         } else {
             return Bukkit.getPlayer(UUID.fromString(uuid)) != null;
+        }
+    }
+
+    public static void sendMessageToPlayer(String uuid, Component component) {
+        if (Bukkit.getPlayer(UUID.fromString(uuid)) != null) {
+            Bukkit.getPlayer(UUID.fromString(uuid)).sendMessage(component);
+            return;
+        }
+
+        if (isProxy) {
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("ComponentMessageToPlayer");
+            out.writeUTF(uuid);
+            out.writeUTF(GsonComponentSerializer.gson().serialize(component));
+            getInstance().getServer().sendPluginMessage(getInstance(), IDENTIFIER, out.toByteArray());
+        }
+    }
+    public static void sendMessageToPlayer(String uuid, String message) {
+        if (Bukkit.getPlayer(UUID.fromString(uuid)) != null) {
+            Bukkit.getPlayer(UUID.fromString(uuid)).sendMessage(message);
+            return;
+        }
+
+        if (isProxy) {
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("MessageToPlayer");
+            out.writeUTF(uuid);
+            out.writeUTF(message);
+            getInstance().getServer().sendPluginMessage(getInstance(), IDENTIFIER, out.toByteArray());
+        }
+    }
+
+    public static void dropItemToPlayer (String uuid, ItemStack item){
+        if (Bukkit.getPlayer(UUID.fromString(uuid)) != null) {
+            Player player = Bukkit.getPlayer(UUID.fromString(uuid));
+            Item itemEntity = player.getLocation().getWorld().dropItem(player.getLocation(), item);
+            return;
+        }
+
+        if(isProxy){
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("DropItemToPlayer");
+            out.writeUTF(uuid);
+            byte[] itemBytes = item.serializeAsBytes();
+            out.writeInt(itemBytes.length);
+            for (byte b : itemBytes) {
+                out.writeByte(b);
+            }
+            getInstance().getServer().sendPluginMessage(getInstance(), IDENTIFIER, out.toByteArray());
         }
     }
 }
