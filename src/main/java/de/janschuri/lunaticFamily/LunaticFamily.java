@@ -2,6 +2,8 @@ package de.janschuri.lunaticFamily;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import de.janschuri.lunaticFamily.commands.*;
 import de.janschuri.lunaticFamily.config.DatabaseConfig;
 import de.janschuri.lunaticFamily.config.Language;
@@ -23,18 +25,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public final class LunaticFamily extends JavaPlugin {
     private static Database db;
     private static final Map<String, Map<String, List<String>>> aliases = new HashMap<>();
-
-
     public static BiMap<String, String> marryRequests = HashBiMap.create();
     public static BiMap<String, String> marryPriestRequests = HashBiMap.create();
     public static BiMap<String, String> marryPriest = HashBiMap.create();
     public static BiMap<String, String> adoptRequests = HashBiMap.create();
     public static BiMap<String, String> siblingRequests = HashBiMap.create();
+    public static Set<String> proxyPlayers = new HashSet<>();
     private static final String IDENTIFIER = "velocity:lunaticfamily";
 
     private static LunaticFamily instance;
@@ -48,9 +50,9 @@ public final class LunaticFamily extends JavaPlugin {
     public void onEnable() {
 
         instance = this;
-        new Logger(getLogger());
         getServer().getMessenger().registerIncomingPluginChannel(this, IDENTIFIER, new ProxyListener());
         getServer().getMessenger().registerOutgoingPluginChannel(this, IDENTIFIER);
+        sendPluginMessage("OnlinePlayers", Bukkit.getServer().getName());
 
         loadConfig();
 
@@ -152,9 +154,15 @@ public final class LunaticFamily extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-    public static void sendPluginMessage(byte[] message) {
-        getInstance().getServer().sendPluginMessage(getInstance(), IDENTIFIER, message);
+    public static void sendPluginMessage(String subchannel, String... messages) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF(subchannel);
+        for (String message : messages) {
+            out.writeUTF(message);
+        }
+        getInstance().getServer().sendPluginMessage(getInstance(), IDENTIFIER, out.toByteArray());
     }
+
 
     public static Database getDatabase() {
         return LunaticFamily.db;
@@ -189,5 +197,13 @@ public final class LunaticFamily extends JavaPlugin {
         }
 
 
+    }
+
+    public static boolean isPlayerOnline (String uuid) {
+        if (isProxy) {
+            return proxyPlayers.contains(uuid);
+        } else {
+            return Bukkit.getPlayer(UUID.fromString(uuid)) != null;
+        }
     }
 }

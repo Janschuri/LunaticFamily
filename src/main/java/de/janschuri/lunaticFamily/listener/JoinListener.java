@@ -5,6 +5,8 @@ import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.config.Config;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.handler.FamilyTree;
+import de.janschuri.lunaticFamily.utils.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,10 +29,11 @@ public class JoinListener implements Listener {
                 }
                 if (playerFam.isMarried()) {
                     if (!LunaticFamily.isProxy) {
-                        if (playerFam.getPartner().sendMessage(Language.prefix + Language.getMessage("marry_partner_online") + 8)) {
-                            player.sendMessage(Language.prefix + Language.getMessage("marry_partner_online") + 1);
+                        if (LunaticFamily.isPlayerOnline(playerFam.getPartner().getUUID())) {
+                            playerFam.getPartner().sendMessage("marry_partner_online");
+                            playerFam.sendMessage("marry_partner_online");
                         } else {
-                            player.sendMessage(Language.prefix + Language.getMessage("marry_partner_offline") + 2);
+                            playerFam.sendMessage("marry_partner_offline");
                         }
                     }
                 }

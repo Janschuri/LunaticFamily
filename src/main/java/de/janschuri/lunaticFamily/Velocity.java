@@ -15,6 +15,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
 
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -80,22 +82,21 @@ public class Velocity {
 
     @Subscribe
     public void onPlayerConnect(ServerPostConnectEvent event) {
+        proxy.getAllServers().forEach(serverConnection -> serverConnection.sendPluginMessage(IDENTIFIER, getOnlinePlayers()));
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         if (event.getPreviousServer() != null) {
             out.writeUTF("PlayerJumpEvent");
         } else {
             out.writeUTF("PlayerJoinEvent");
         }
-        Player player = event.getPlayer();
-        String uuid = player.getUniqueId().toString();
+        String uuid = event.getPlayer().getUniqueId().toString();
         out.writeUTF(uuid);
-        logger.info(uuid);
-        ServerConnection server = player.getCurrentServer().get();
-        server.sendPluginMessage(IDENTIFIER, out.toByteArray());
+        proxy.getAllServers().forEach(serverConnection -> serverConnection.sendPluginMessage(IDENTIFIER, out.toByteArray()));
     }
 
     @Subscribe
     public void onPlayerDisconnect(DisconnectEvent event) {
+        proxy.getAllServers().forEach(serverConnection -> serverConnection.sendPluginMessage(IDENTIFIER, getOnlinePlayers()));
         Player player = event.getPlayer();
         String uuid = player.getUniqueId().toString();
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -110,24 +111,21 @@ public class Velocity {
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         String subchannel = in.readUTF();
-        if (subchannel.equals("PlayerJoinEvent")) {
-            String playerUUID = in.readUTF();
-            String partnerUUID = in.readUTF();
-            Optional<Player> partner = proxy.getPlayer(UUID.fromString(partnerUUID));
-            if(partner.isPresent()) {
-                out.writeUTF("PartnerIsOnline");
-                Player partnerPlayer = partner.get();
-                ServerConnection server = partnerPlayer.getCurrentServer().get();
-                server.sendPluginMessage(IDENTIFIER, out.toByteArray());
-            } else {
-                out.writeUTF("PartnerIsOffline");
-            }
-            out.writeUTF(playerUUID);
-            out.writeUTF(partnerUUID);
-            Player player = proxy.getPlayer(UUID.fromString(playerUUID)).get();
-            player.getCurrentServer().get().sendPluginMessage(IDENTIFIER, out.toByteArray());
-            logger.info(partnerUUID);
+        logger.info("Received plugin message with subchannel: " + subchannel);
+        if (subchannel.equals("OnlinePlayers")) {
+            RegisteredServer server = proxy.getServer(in.readUTF()).orElse(null);
+            proxy.getAllServers().forEach(serverConnection -> serverConnection.sendPluginMessage(IDENTIFIER, getOnlinePlayers()));
         }
 
+    }
+
+    private byte[] getOnlinePlayers() {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("OnlinePlayers");
+        Collection<Player> players = proxy.getAllPlayers();
+        for (Player player : players) {
+            out.writeUTF(player.getUniqueId().toString());
+        }
+        return out.toByteArray();
     }
 }
