@@ -47,7 +47,7 @@ public class MarryGiftSubcommand extends Subcommand {
                     sender.sendMessage(Language.prefix + Language.getMessage("marry_gift_partner_full_inv"));
                 } else {
                     ItemStack item = player.getInventory().getItemInMainHand();
-                    player.getInventory().remove(item);
+                    player.getInventory().removeItem(item);
                     partnerPlayer.getInventory().addItem(item);
                     Material material = item.getType();
                     int amount = item.getAmount();
@@ -71,8 +71,8 @@ public class MarryGiftSubcommand extends Subcommand {
 
                     TextReplacementConfig replacementConfig = TextReplacementConfig.builder().match("%item%").replacement(componentItem).build();
 
-                    Component msgPlayer = Component.text(Language.getMessage("marry_gift_sent")).replaceText(replacementConfig);
-                    Component msgPartner = Component.text(Language.getMessage("marry_gift_got")).replaceText(replacementConfig);
+                    Component msgPlayer = Component.text(Language.prefix + Language.getMessage("marry_gift_sent")).replaceText(replacementConfig);
+                    Component msgPartner = Component.text(Language.prefix + Language.getMessage("marry_gift_got")).replaceText(replacementConfig);
 
                     player.sendMessage(msgPlayer);
                     partnerPlayer.sendMessage(msgPartner);
