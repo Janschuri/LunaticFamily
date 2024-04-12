@@ -30,10 +30,10 @@ public class JoinListener implements Listener {
                 if (playerFam.isMarried()) {
                     if (!LunaticFamily.isProxy) {
                         if (LunaticFamily.isPlayerOnline(playerFam.getPartner().getUUID())) {
-                            playerFam.getPartner().sendMessage("marry_partner_online");
-                            playerFam.sendMessage("marry_partner_online");
+                            playerFam.getPartner().sendMessage(Language.prefix + Language.getMessage("marry_partner_online"));
+                            playerFam.sendMessage(Language.prefix + Language.getMessage("marry_partner_online"));
                         } else {
-                            playerFam.sendMessage("marry_partner_offline");
+                            playerFam.sendMessage(Language.prefix + Language.getMessage("marry_partner_offline"));
                         }
                     }
                 }

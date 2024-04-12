@@ -57,7 +57,7 @@ public class Utils {
 
     public static boolean playerExists(String name) {
         String uuid = Bukkit.getOfflinePlayer(name).getUniqueId().toString();
-
+        Logger.debugLog("Player exists: " + uuid);
         return LunaticFamily.getDatabase().getID(uuid) != 0;
     }
 
