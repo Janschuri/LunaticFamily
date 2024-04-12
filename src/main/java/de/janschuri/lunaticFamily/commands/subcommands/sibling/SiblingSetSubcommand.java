@@ -40,9 +40,19 @@ public class SiblingSetSubcommand extends Subcommand {
                 sender.sendMessage(Language.prefix + Language.getMessage("admin_marry_set_same_player"));
             } else {
 
-                String player1UUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
+                String player1UUID;
+                String player2UUID;
+                if (Utils.isUUID(args[1])) {
+                    player1UUID = args[1];
+                } else {
+                    player1UUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
+                }
+                if (Utils.isUUID(args[2])) {
+                    player2UUID = args[2];
+                } else {
+                    player2UUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
+                }
                 FamilyPlayer player1Fam = new FamilyPlayer(player1UUID);
-                String player2UUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
                 FamilyPlayer player2Fam = new FamilyPlayer(player2UUID);
 
                 if (player1Fam.isAdopted() && player2Fam.isAdopted()) {

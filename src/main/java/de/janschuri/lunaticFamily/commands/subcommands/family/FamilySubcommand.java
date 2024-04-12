@@ -19,6 +19,7 @@ public class FamilySubcommand extends Subcommand {
     private static final MarrySubcommand familyMarrySubcommand = new MarrySubcommand();
     private static final FamilyReloadSubcommand familyReloadSubcommand = new FamilyReloadSubcommand();
     private static final FamilyTreeSubcommand familyTreeSubcommand = new FamilyTreeSubcommand();
+    private static final FamilyDeleteSubcommand familyDeleteSubcommand = new FamilyDeleteSubcommand();
 
     public static final Subcommand[] subcommands = {
             familyListSubcommand,
@@ -29,7 +30,8 @@ public class FamilySubcommand extends Subcommand {
             familyAdoptSubcommand,
             familyGenderSubcommand,
             familySiblingSubcommand,
-            familyReloadSubcommand
+            familyReloadSubcommand,
+            familyDeleteSubcommand
     };
 
     public FamilySubcommand() {
@@ -60,8 +62,10 @@ public class FamilySubcommand extends Subcommand {
                     familyListSubcommand.execute(sender, args);
                 } else if (Utils.checkIsSubcommand("family", "background", subcommand)) {
                     familyBackgroundSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand("family", "tree", subcommand)) {
-                    familyTreeSubcommand.execute(sender, args);
+                } else if (Utils.checkIsSubcommand("family", "help", subcommand)) {
+                    familyHelpSubcommand.execute(sender, args);
+                } else if (Utils.checkIsSubcommand("family", "delete", subcommand)) {
+                    familyDeleteSubcommand.execute(sender, args);
                 } else if (Utils.checkIsSubcommand("family", "help", subcommand)) {
                     familyHelpSubcommand.execute(sender, args);
                 } else {

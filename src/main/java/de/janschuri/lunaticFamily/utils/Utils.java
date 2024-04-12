@@ -56,7 +56,12 @@ public class Utils {
     }
 
     public static boolean playerExists(String name) {
-        String uuid = Bukkit.getOfflinePlayer(name).getUniqueId().toString();
+        String uuid;
+        if (isUUID(name)) {
+            uuid = name;
+        } else {
+            uuid = Bukkit.getOfflinePlayer(name).getUniqueId().toString();
+        }
         Logger.debugLog("Player exists: " + uuid);
         return LunaticFamily.getDatabase().getID(uuid) != 0;
     }
@@ -142,5 +147,11 @@ public class Utils {
 
     public static boolean checkIsSubcommand(final String command, final String subcommand, final String arg) {
         return subcommand.equalsIgnoreCase(arg) || Language.getAliases(command, subcommand).stream().anyMatch(element -> arg.equalsIgnoreCase(element));
+    }
+
+    public static boolean isUUID(String input) {
+        Pattern UUID_PATTERN = Pattern.compile(
+                "^([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}$");
+        return UUID_PATTERN.matcher(input).matches();
     }
 }

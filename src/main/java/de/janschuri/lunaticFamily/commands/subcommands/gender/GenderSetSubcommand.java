@@ -63,8 +63,13 @@ public class GenderSetSubcommand extends Subcommand {
                 } else if (!Utils.playerExists(args[1])) {
                     sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[1]));
                 } else {
-                    String player1 = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
-                    FamilyPlayer player1Fam = new FamilyPlayer(player1);
+                    String uuid;
+                    if (Utils.isUUID(args[1])) {
+                        uuid = args[1];
+                    } else {
+                        uuid = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
+                    }
+                    FamilyPlayer player1Fam = new FamilyPlayer(uuid);
 
                     if (!Language.genders.contains(args[2].toLowerCase())) {
                         sender.sendMessage(Language.prefix + Language.getMessage("gender_not_exist"));

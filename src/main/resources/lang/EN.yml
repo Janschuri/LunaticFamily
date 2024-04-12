@@ -197,6 +197,8 @@ messages:
   admin_marry_unset_divorced: "You have dissolved the marriage between %player1% and %player2%."
   #admin family commands
   admin_reload: "The configuration has been reloaded."
+  admin_delete_confirm: "Do you really want to delete %player% from the database?"
+  admin_delete: "You have deleted %player% from the database."
   #admin sibling commands
   admin_sibling_added: "The siblings %player1% and %player2% have been successfully added!"
   admin_sibling_is_adopted: "%player% is adoptiert. Setze die Adoption durch die Eltern, um %player% zum Geschwisterkind zu machen."
@@ -282,6 +284,8 @@ aliases:
       - list
     reload:
       - reload
+    delete:
+      - delete
   gender:
     base_command:
       - gender

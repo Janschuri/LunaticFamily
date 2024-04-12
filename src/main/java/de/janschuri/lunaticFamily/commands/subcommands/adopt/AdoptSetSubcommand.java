@@ -40,9 +40,20 @@ public class AdoptSetSubcommand extends Subcommand {
                 sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_set_same_player"));
             } else {
 
-                String firstParentUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
+
+                String firstParentUUID;
+                String childUUID;
+                if (Utils.isUUID(args[1])) {
+                    firstParentUUID = args[1];
+                } else {
+                    firstParentUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
+                }
+                if (Utils.isUUID(args[2])) {
+                    childUUID = args[2];
+                } else {
+                    childUUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
+                }
                 FamilyPlayer firstParentFam = new FamilyPlayer(firstParentUUID);
-                String childUUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
                 FamilyPlayer childFam = new FamilyPlayer(childUUID);
 
                 if (!firstParentFam.isMarried() && !Config.allowSingleAdopt) {

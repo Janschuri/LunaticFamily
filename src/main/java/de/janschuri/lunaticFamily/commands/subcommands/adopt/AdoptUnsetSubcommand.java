@@ -27,7 +27,12 @@ public class AdoptUnsetSubcommand extends Subcommand {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", Utils.getName(args[1])));
             } else {
 
-                String childUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
+                String childUUID;
+                if (Utils.isUUID(args[1])) {
+                    childUUID = args[1];
+                } else {
+                    childUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
+                }
                 FamilyPlayer childFam = new FamilyPlayer(childUUID);
 
                 if (!childFam.isAdopted()) {

@@ -774,6 +774,28 @@ public abstract class Database {
         }
     }
 
+    public void deletePlayerData(String uuid) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("DELETE FROM `" + playerData + "` WHERE uuid = ?");
+            ps.setString(1, uuid);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+    }
+
 
     public void close(PreparedStatement ps, ResultSet rs) {
         try {

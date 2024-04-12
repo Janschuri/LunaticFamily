@@ -26,7 +26,12 @@ public class MarryUnsetSubcommand extends Subcommand {
             } else if (!Utils.playerExists(args[1])) {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[1]));
             } else {
-                String player1UUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
+                String player1UUID;
+                if (Utils.isUUID(args[1])) {
+                    player1UUID = args[1];
+                } else {
+                    player1UUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
+                }
                 FamilyPlayer player1Fam = new FamilyPlayer(player1UUID);
 
                 if (!player1Fam.isMarried()) {
