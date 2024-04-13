@@ -28,8 +28,12 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
-@Plugin(id = "lunaticfamily", name = "LunaticFamily", version = "1.0-SNAPSHOT",
-        url = "https://example.org", description = "I did it!", authors = {"Me"})
+@Plugin(
+        id = "lunaticfamily",
+        name = "LunaticFamily",
+        version = "1.0-SNAPSHOT",
+        authors = "janschuri"
+)
 public class Velocity {
 
     private final ProxyServer proxy;
@@ -43,8 +47,6 @@ public class Velocity {
         this.proxy = proxy;
         this.logger = logger;
         this.dataDirectory = dataDirectory;
-
-        logger.info("Hello there! I made my first plugin with Velocity.");
     }
 
     private File loadConfig() {
@@ -111,7 +113,6 @@ public class Velocity {
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         String subchannel = in.readUTF();
-        logger.info("Received plugin message with subchannel: " + subchannel);
         if (subchannel.equals("OnlinePlayers")) {
             RegisteredServer server = proxy.getServer(in.readUTF()).orElse(null);
             proxy.getAllServers().forEach(serverConnection -> serverConnection.sendPluginMessage(IDENTIFIER, getOnlinePlayers()));
@@ -132,7 +133,6 @@ public class Velocity {
             return;
         }
         if (subchannel.equals("DropItemToPlayer")) {
-            logger.info("Received DropItemToPlayer");
             out.writeUTF("DropItemToPlayer");
             out.writeUTF(in.readUTF());
             int arrayLength = in.readInt();
