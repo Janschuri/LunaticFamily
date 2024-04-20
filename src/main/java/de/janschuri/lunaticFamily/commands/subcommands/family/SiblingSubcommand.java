@@ -1,10 +1,10 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
+import de.janschuri.lunaticFamily.commands.senders.CommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.sibling.*;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.utils.Utils;
-import org.bukkit.command.CommandSender;
 
 public class SiblingSubcommand extends Subcommand {
     private static final String mainCommand = "family";
@@ -33,7 +33,8 @@ public class SiblingSubcommand extends Subcommand {
         super(mainCommand, name, permission, subcommands);
     }
 
-    public void execute(CommandSender sender, String[] args) {
+    @Override
+    public boolean execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
@@ -60,5 +61,6 @@ public class SiblingSubcommand extends Subcommand {
                 }
             }
         }
+        return true;
     }
 }

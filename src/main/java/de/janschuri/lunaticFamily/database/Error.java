@@ -1,6 +1,6 @@
 package de.janschuri.lunaticFamily.database;
 
-import de.janschuri.lunaticFamily.utils.Logger;
+import de.janschuri.lunaticFamily.utils.logger.Logger;
 
 public class Error {
 
@@ -14,6 +14,9 @@ public class Error {
 
     public static void noConnection(Exception ex) {
         Logger.errorLog("Unable to retrieve SQL connection: " + ex);
+    }
+    public static void errorOnInitilization(Exception ex) {
+        Logger.errorLog("Error on initialization: " + ex);
     }
 
     public static void noTable(Exception ex) {

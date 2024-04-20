@@ -2,17 +2,10 @@ package de.janschuri.lunaticFamily.handler;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.config.Config;
-import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.external.Vault;
+import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.utils.Utils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import de.janschuri.lunaticFamily.utils.logger.Logger;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +17,7 @@ public class FamilyPlayer {
 
 
     private final int id;
-    private final String uuid;
+    private final UUID uuid;
     private final String name;
     private final String skinURL;
     private final int partner;
@@ -39,95 +32,55 @@ public class FamilyPlayer {
     private final BiMap<String, Integer> familyList = HashBiMap.create();
 
     public FamilyPlayer(int id) {
-
-        this.id = id;
-
-        uuid = LunaticFamily.getDatabase().getUUID(id);
-
-        partner = LunaticFamily.getDatabase().getPartner(id);
-        marryDate = LunaticFamily.getDatabase().getMarryDate(id);
-        priest = LunaticFamily.getDatabase().getPriest(id);
-        sibling = LunaticFamily.getDatabase().getSibling(id);
-        parents = LunaticFamily.getDatabase().getParents(id);
-        children = LunaticFamily.getDatabase().getChildren(id);
-
-
-        if (Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName() != null) {
-            name = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName();
-        } else {
-            name = LunaticFamily.getDatabase().getName(id);
-        }
-
-        if (Bukkit.getPlayer(UUID.fromString(uuid)) != null) {
-            skinURL = Bukkit.getPlayer(UUID.fromString(uuid)).getPlayerProfile().getTextures().getSkin().toString();
-        } else if (LunaticFamily.getDatabase().getSkinURL(id) != null) {
-            skinURL = LunaticFamily.getDatabase().getSkinURL(id);
-        } else {
-            skinURL = "http://textures.minecraft.net/texture/2705fd94a0c431927fb4e639b0fcfb49717e412285a02b439e0112da22b2e2ec";
-        }
-
-
-        if (LunaticFamily.getDatabase().getGender(id) == null) {
-            gender = Config.defaultGender;
-        } else {
-            gender = LunaticFamily.getDatabase().getGender(id);
-        }
-
-        if (LunaticFamily.getDatabase().getBackground(uuid) == null) {
-            background = Config.defaultBackground;
-        } else {
-            background = LunaticFamily.getDatabase().getBackground(uuid);
-        }
-
-
-        savePlayerData();
+        this(Database.getDatabase().getUUID(id));
 
     }
 
     public FamilyPlayer(String uuid) {
+        this(UUID.fromString(uuid));
+    }
+
+    public FamilyPlayer(UUID uuid) {
 
         this.uuid = uuid;
 
-        if (LunaticFamily.getDatabase().getID(uuid) != 0) {
-            id = LunaticFamily.getDatabase().getID(uuid);
+        if (Database.getDatabase().getID(uuid) != 0) {
+            id = Database.getDatabase().getID(uuid);
         } else {
             savePlayerData();
-            id = LunaticFamily.getDatabase().getID(uuid);
+            id = Database.getDatabase().getID(uuid);
         }
 
-        partner = LunaticFamily.getDatabase().getPartner(id);
-        marryDate = LunaticFamily.getDatabase().getMarryDate(id);
-        priest = LunaticFamily.getDatabase().getPriest(id);
-        sibling = LunaticFamily.getDatabase().getSibling(id);
-        parents = LunaticFamily.getDatabase().getParents(id);
-        children = LunaticFamily.getDatabase().getChildren(id);
+        partner = Database.getDatabase().getPartner(id);
+        marryDate = Database.getDatabase().getMarryDate(id);
+        priest = Database.getDatabase().getPriest(id);
+        sibling = Database.getDatabase().getSibling(id);
+        parents = Database.getDatabase().getParents(id);
+        children = Database.getDatabase().getChildren(id);
 
-
-        if (Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName() != null) {
-            name = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName();
+        if (Utils.getUtils().getPlayerName(uuid) != null) {
+            name = (Utils.getUtils().getPlayerName(uuid));
         } else {
-            name = LunaticFamily.getDatabase().getName(id);
+            name = Database.getDatabase().getName(id);
         }
 
-        if (Bukkit.getPlayer(UUID.fromString(uuid)) != null) {
-            skinURL = Bukkit.getPlayer(UUID.fromString(uuid)).getPlayerProfile().getTextures().getSkin().toString();
-        } else if (LunaticFamily.getDatabase().getSkinURL(id) != null) {
-            skinURL = LunaticFamily.getDatabase().getSkinURL(id);
+        if (Database.getDatabase().getSkinURL(id) != null) {
+            skinURL = Database.getDatabase().getSkinURL(id);
         } else {
             skinURL = "http://textures.minecraft.net/texture/2705fd94a0c431927fb4e639b0fcfb49717e412285a02b439e0112da22b2e2ec";
         }
 
 
-        if (LunaticFamily.getDatabase().getGender(id) == null) {
-            gender = Config.defaultGender;
+        if (Database.getDatabase().getGender(id) == null) {
+            gender = PluginConfig.defaultGender;
         } else {
-            gender = LunaticFamily.getDatabase().getGender(id);
+            gender = Database.getDatabase().getGender(id);
         }
 
-        if (LunaticFamily.getDatabase().getBackground(uuid) == null) {
-            background = Config.defaultBackground;
+        if (Database.getDatabase().getBackground(id) == null) {
+            background = PluginConfig.defaultBackground;
         } else {
-            background = LunaticFamily.getDatabase().getBackground(uuid);
+            background = Database.getDatabase().getBackground(id);
         }
 
 
@@ -136,10 +89,10 @@ public class FamilyPlayer {
     }
 
     public String getName() {
-        if (Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName() != null) {
-            return Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName();
+        if (Utils.getUtils().getPlayerName(uuid) != null) {
+            return Utils.getUtils().getPlayerName(uuid);
         } else {
-            return LunaticFamily.getDatabase().getName(id);
+            return Database.getDatabase().getName(id);
         }
     }
 
@@ -147,48 +100,48 @@ public class FamilyPlayer {
         return id;
     }
 
-    public String getUUID() {
+    public UUID getUniqueId() {
         return uuid;
     }
 
     private void savePlayerData() {
         if (id == 0) {
-            LunaticFamily.getDatabase().savePlayerData(uuid, name, skinURL, gender, background);
+            Database.getDatabase().savePlayerData(uuid.toString(), name, skinURL, gender, background);
         } else {
-            LunaticFamily.getDatabase().updatePlayerData(id, uuid, name, skinURL, gender, background);
+            Database.getDatabase().updatePlayerData(id, uuid.toString(), name, skinURL, gender, background);
         }
     }
 
     private void saveMarriage(int partnerID) {
-        LunaticFamily.getDatabase().saveMarriage(this.id, partnerID);
+        Database.getDatabase().saveMarriage(this.id, partnerID);
     }
 
     private void saveMarriage(int partnerID, int priest) {
-        LunaticFamily.getDatabase().saveMarriage(this.id, partnerID, priest);
+        Database.getDatabase().saveMarriage(this.id, partnerID, priest);
     }
 
     private void saveMarriageHeartColor(String color) {
-        LunaticFamily.getDatabase().saveMarriageHeartColor(this.id, color);
+        Database.getDatabase().saveMarriageHeartColor(this.id, color);
     }
 
     private void deleteMarriage() {
-        LunaticFamily.getDatabase().deleteMarriage(this.id);
+        Database.getDatabase().deleteMarriage(this.id);
     }
 
     private void saveSiblinghood(int siblingID) {
-        LunaticFamily.getDatabase().saveSiblinghood(this.id, siblingID);
+        Database.getDatabase().saveSiblinghood(this.id, siblingID);
     }
 
     private void deleteSiblinghood() {
-        LunaticFamily.getDatabase().deleteSiblinghood(this.id);
+        Database.getDatabase().deleteSiblinghood(this.id);
     }
 
     private void saveAdoption(int childID) {
-        LunaticFamily.getDatabase().saveAdoption(this.id, childID);
+        Database.getDatabase().saveAdoption(this.id, childID);
     }
 
     private void deleteAdoption(int childID) {
-        LunaticFamily.getDatabase().deleteAdoption(this.id, childID);
+        Database.getDatabase().deleteAdoption(this.id, childID);
     }
 
     public String getSkinURL() {
@@ -198,8 +151,8 @@ public class FamilyPlayer {
     public void setHeartColor(String color) {
         saveMarriageHeartColor(color);
     }
-    public TextColor getHeartColor() {
-        return TextColor.fromHexString(LunaticFamily.getDatabase().getMarriageHeartColor(this.id));
+    public String getHeartColor() {
+        return Database.getDatabase().getMarriageHeartColor(this.id);
     }
 
     public FamilyPlayer getPartner() {
@@ -216,7 +169,7 @@ public class FamilyPlayer {
 
     public String getMarriageDate() {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Config.dateFormat);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PluginConfig.dateFormat);
 
         return formatter.format(this.marryDate.toLocalDateTime());
     }
@@ -291,98 +244,9 @@ public class FamilyPlayer {
         return children.size();
     }
 
-    public OfflinePlayer getOfflinePlayer() {
-        return Bukkit.getOfflinePlayer(UUID.fromString(this.uuid));
-    }
-
-    public Player getPlayer() {
-        if (Bukkit.getPlayer(UUID.fromString(uuid)) != null) {
-            return Bukkit.getPlayer(UUID.fromString(this.uuid));
-        } else {
-            return null;
-        }
-    }
-
-    public boolean isOnline() {
-        return Bukkit.getPlayer(UUID.fromString(uuid)) != null;
-    }
-
-    public void withdrawPlayer(String... withdrawKeys) {
-        if (Config.enabledVault) {
-            OfflinePlayer player = this.getOfflinePlayer();
-
-            double amount = 0.0;
-            for (String key : withdrawKeys) {
-                if (Config.commandWithdraws.containsKey(key)) {
-                    amount += Config.commandWithdraws.get(key);
-                }
-            }
-            if (amount > 0) {
-                Vault.getEconomy().withdrawPlayer(player, amount);
-                if (player.getPlayer() != null) {
-                    player.getPlayer().sendMessage(Language.prefix + Language.getMessage("withdraw").replace("%amount%", amount + ""));
-                }
-            }
-        }
-    }
-
-    public void withdrawPlayer(String withdrawKey, double factor) {
-        if (Config.enabledVault) {
-            OfflinePlayer player = this.getOfflinePlayer();
-
-            double amount = 0.0;
-            amount += Config.commandWithdraws.get(withdrawKey) * factor;
-
-
-            if (amount > 0) {
-                Vault.getEconomy().withdrawPlayer(player, amount);
-                if (player.getPlayer() != null) {
-                    player.getPlayer().sendMessage(Language.prefix + Language.getMessage("withdraw").replace("%amount%", amount + ""));
-                }
-            }
-        }
-    }
-
-    public boolean hasEnoughMoney(String... withdrawKeys) {
-        if (Config.enabledVault) {
-            OfflinePlayer player = this.getOfflinePlayer();
-            double amount = 0.0;
-            for (String key : withdrawKeys) {
-                if (Config.commandWithdraws.containsKey(key)) {
-                    amount += Config.commandWithdraws.get(key);
-                }
-            }
-            return (amount < Vault.getEconomy().getBalance(player));
-        } else {
-            return true;
-        }
-    }
-
-    public boolean hasEnoughMoney(String withdrawKey, double factor) {
-        if (Config.enabledVault) {
-            OfflinePlayer player = this.getOfflinePlayer();
-            return (Config.commandWithdraws.get(withdrawKey) * factor < Vault.getEconomy().getBalance(player));
-        } else {
-            return true;
-        }
-    }
-
-    public void sendMessage(String message) {
-        LunaticFamily.sendMessageToPlayer(this.uuid, message);
-    }
-
-    public void sendMessage(Component message) {
-        LunaticFamily.sendMessageToPlayer(this.uuid, message);
-    }
-
-    public boolean chat(String message) {
-        if (this.getPlayer() != null) {
-            this.getPlayer().chat(message);
-            return true;
-        } else {
-            return false;
-        }
-    }
+//    public void sendMessage(String message) {
+//        LunaticFamily.sendMessageToPlayer(this.uuid, message);
+//    }
 
 
     public void marry(int partnerID) {
@@ -443,7 +307,7 @@ public class FamilyPlayer {
 
         playerFam.deleteMarriage();
 
-        if (!Config.allowSingleAdopt) {
+        if (!PluginConfig.allowSingleAdopt) {
             for (FamilyPlayer child : playerChildren) {
                 partnerFam.deleteAdoption(child.getID());
             }
@@ -514,10 +378,6 @@ public class FamilyPlayer {
 
     public boolean isFamilyMember(int id) {
         return this.getFamilyList().containsValue(id);
-    }
-
-    public ItemStack getSkull() {
-        return Utils.getSkull(this.getSkinURL());
     }
 
     public BiMap<String, Integer> getFamilyList() {
@@ -779,9 +639,7 @@ public class FamilyPlayer {
     }
 
     public void updateFamilyTree() {
-        if (this.getPlayer() != null && Config.enabledCrazyAdvancementAPI) {
-            new FamilyTree(this.id);
-        }
+        Utils.getUtils().updateFamilyTree(this.id);
     }
 
 }

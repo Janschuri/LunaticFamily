@@ -1,26 +1,46 @@
 package de.janschuri.lunaticFamily.database;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.config.DatabaseConfig;
+import de.janschuri.lunaticFamily.utils.logger.Logger;
 
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
+import java.util.UUID;
 
 
 public abstract class Database {
-    LunaticFamily plugin;
     Connection connection;
+    private static Database db;
     public String playerData = "playerData";
     public String marriages = "marriages";
     public String adoptions = "adoptions";
     public String siblinghoods = "siblinghoods";
-
-    public Database(LunaticFamily instance) {
-        plugin = instance;
-    }
     public abstract Connection getSQLConnection();
+
+    public static void loadDatabase(Path dataDirectory) {
+        if (DatabaseConfig.useMySQL) {
+            db = new MySQL();
+            if (db.getSQLConnection() == null) {
+                Logger.errorLog("Error initializing MySQL database");
+                Logger.warnLog("Falling back to SQLite due to initialization error");
+                db = new SQLite(dataDirectory);
+            } else {
+                Logger.infoLog("Successfully initialized MySQL database");
+            }
+        } else {
+            db = new SQLite(dataDirectory);
+            Logger.infoLog("Successfully initialized SQLite database");
+        }
+        db.load();
+    };
+
+    public static Database getDatabase() {
+        return db;
+    }
 
     public abstract void load();
     protected final List<String> tables = List.of("playerData", "marriages", "adoptions", "siblinghoods");
@@ -79,17 +99,17 @@ public abstract class Database {
         }
     }
 
-    public int getID(String uuid) {
+    public int getID(UUID uuid) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE uuid = '" + uuid + "';");
+            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE uuid = '" + uuid.toString() + "';");
 
             rs = ps.executeQuery();
             while (rs.next()) {
-                if (rs.getString("uuid").equals(uuid)) {
+                if (rs.getString("uuid").equals(uuid.toString())) {
                     return rs.getInt("id");
                 }
             }
@@ -108,7 +128,7 @@ public abstract class Database {
         return 0;
     }
 
-    public String getUUID(int id) {
+    public UUID getUUID(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -119,7 +139,7 @@ public abstract class Database {
             rs = ps.executeQuery();
             while (rs.next()) {
                 if (rs.getInt("id") == id) {
-                    return rs.getString("uuid");
+                    return UUID.fromString(rs.getString("uuid"));
                 }
             }
         } catch (SQLException ex) {
@@ -165,6 +185,37 @@ public abstract class Database {
         }
         return null;
     }
+
+    public UUID getUUID(String name) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE LOWER(name) = LOWER(?);");
+            ps.setString(1, name);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                if (rs.getString("name").equalsIgnoreCase(name)) {
+                    return UUID.fromString(rs.getString("uuid"));
+                }
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return null;
+    }
+
 
     public String getSkinURL(int id) {
         Connection conn = null;
@@ -396,17 +447,17 @@ public abstract class Database {
         return null;
     }
 
-    public String getBackground(String uuid) {
+    public String getBackground(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE uuid = '" + uuid + "';");
+            ps = conn.prepareStatement("SELECT * FROM " + playerData + " WHERE id = '" + id + "';");
 
             rs = ps.executeQuery();
             while (rs.next()) {
-                if (rs.getString("uuid").equals(uuid)) {
+                if (rs.getInt("id") == id) {
                     return rs.getString("background");
                 }
             }

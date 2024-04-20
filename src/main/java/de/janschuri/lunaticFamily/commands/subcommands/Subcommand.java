@@ -1,11 +1,15 @@
 package de.janschuri.lunaticFamily.commands.subcommands;
 
+import de.janschuri.lunaticFamily.commands.ClickableMessage;
+import de.janschuri.lunaticFamily.commands.senders.CommandSender;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.utils.Utils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
-import org.bukkit.command.CommandSender;
+//import net.kyori.adventure.text.Component;
+//import net.kyori.adventure.text.event.ClickEvent;
+//import net.kyori.adventure.text.event.HoverEvent;
+//import net.kyori.adventure.text.Component;
+//import net.kyori.adventure.text.event.ClickEvent;
+//import net.kyori.adventure.text.event.HoverEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,23 +92,18 @@ public abstract class Subcommand {
         return list;
     }
 
-    public Component getHelp(CommandSender sender) {
-        Component msg = Component.empty();
+    public ClickableMessage getHelp(CommandSender sender) {
         if (sender.hasPermission(permission)) {
             if (subcommands != null) {
-                msg = Component.text(Language.getMessage(mainCommand + "_" + name + "_help") + "\n")
-                        .clickEvent(ClickEvent.runCommand("/lunaticfamily:" + mainCommand + " " + name + " help"))
-                        .hoverEvent(HoverEvent.showText(Component.text(Language.getMessage(name + "_help"))))
-                        .toBuilder().build();
+                return new ClickableMessage(Language.getMessage(mainCommand + "_" + name + "_help") + "\n", Language.getMessage(name + "_help"), mainCommand + " " + name + " help");
             } else {
-                msg = Component.text(Language.getMessage(mainCommand + "_" + name + "_help") + "\n");
+                return new ClickableMessage(Language.getMessage(mainCommand + "_" + name + "_help") + "\n");
             }
-            return msg;
         } else {
-          return msg;
+          return ClickableMessage.empty();
         }
     }
 
-    public abstract void execute(CommandSender sender, String[] args);
+    public abstract boolean execute(CommandSender sender, String[] args);
 
 }

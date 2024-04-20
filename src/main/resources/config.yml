@@ -1,0 +1,135 @@
+is_debug: false
+# ───────────────────────────────────────────────#
+# ───╔╗────────────╔╗╔╗───╔═══╗───────╔╦╗────────#
+# ───║║────────────║║╚╝───║╔══╝───────╚╣║────────#
+# ───║║──╔╗╔╦╦═╦══╗║╚╦╦══╗║╚═╦══╗╔╦═╦═╦╣║╔╗─╔╗───#
+# ───║║──║║║║╔╗║╔╗║║╔╣║╔═╝║╔═╣╔╗║║╔╗╔╗║║║║║─║║───#
+# ───║╚══╣╚╝║║║║╚╝╚╣╚╣║╚═╗║║─║╚╝╚╣║║║║║║╚╣╚═╝║───#
+# ───╚═══╩══╩╝╚╩═╩═╩═╩╩══╝╚╝─╚═╩═╩╝╚╝╚╩╩═╬══╗║───#
+# ───────────────────────────────────────╚═══╝───#
+# ───╔══════════╗────────────────────────────────#
+# ───║by Janschuri       ║────────────────────────────────#
+# ───╚══════════╝────────────────────────────────#
+# ───────────────────────────────────────────────#
+default_gender: "fe"
+use_vault: true
+use_proxy: false
+command_withdraws:
+  marry_proposing_player: 10.0
+  marry_proposed_player: 10.0
+  marry_priest: 10.0
+  marry_priest_player: 10.0
+  marry_divorce_leaving_player: 10.0
+  marry_divorce_left_player: 10.0
+  adopt_parent: 10.0
+  adopt_child: 10.0
+  adopt_kickout_parent: 10.0
+  adopt_kickout_child: 10.0
+  adopt_moveout_parent: 10.0
+  adopt_moveout_child: 10.0
+  sibling_proposing_player: 10.0
+  sibling_proposed_player: 10.0
+  sibling_unsibling_leaving_player: 10.0
+  sibling_unsibling_left_player: 10.0
+default_background: "moss_block"
+backgrounds:
+  - "moss_block"
+  - "oak_planks"
+  - "red_wool"
+  - "pink_wool"
+  - "diamond_block"
+  - "gold_block"
+allow_single_adopt: true
+language: "DE"
+use_crazy_advancement_api: true
+date_format: "yyyy-MM-dd HH:mm:ss"
+distances:
+  marry_kiss_range: 3
+  marry_propose_range: 3
+  marry_priest_range: 3
+  adopt_propose_range: 3
+  sibling_propose_range: 3
+success_commands:
+  marry: [] #avaible placeholders: %player1%, %player2%
+  marry_priest: [] #avaible placeholders: %player1%, %player2%, %priest%
+  adopt: [] #avaible placeholders: %parent1%, %parent2%, %child%
+  adopt_single: [] #avaible placeholders: %parent%, %child%
+  sibling: [] #avaible placeholders: %player1%, %player2%
+  divorce: [] #avaible placeholders: %player1%, %player2%
+  kickout: [] #avaible placeholders: %parent1%, %parent2%, %child%
+  moveout: [] #avaible placeholders: %parent1%, %parent2%, %child%
+  kickout_single: [] #avaible placeholders: %parent%, %child%
+  moveout_single: [] #avaible placeholders: %parent%, %child%
+  unsibling: [] #avaible placeholders: %player% %player2%
+colors:
+  black: "#000000"
+  dark_blue: "#0000AA"
+  dark_green: "#00AA00"
+  dark_aqua: "#00AAAA"
+  dark_red: "#AA0000"
+  dark_purple: "#AA00AA"
+  gold: "#FFAA00"
+  gray: "#AAAAAA"
+  dark_gray: "#555555"
+  blue: "#5555FF"
+  green: "#55FF55"
+  aqua: "#55FFFF"
+  red: "#FF5555"
+  light_purple: "#FF55FF"
+  yellow: "#FFFF55"
+  white: "#FFFFFF"
+family_list:
+  - partner
+  - sibling
+  - first_child
+  - second_child
+  - first_parent
+  - second_parent
+  - first_grandchild
+  - second_grandchild
+  - third_grandchild
+  - fourth_grandchild
+  - first_grandparent
+  - second_grandparent
+  - third_grandparent
+  - fourth_grandparent
+  - first_parent_in_law
+  - second_parent_in_law
+  - first_child_in_law
+  - second_child_in_law
+  - first_aunt_or_uncle
+  - second_aunt_or_uncle
+  - third_aunt_or_uncle
+  - fourth_aunt_or_uncle
+  - first_sibling_in_law
+  - second_sibling_in_law
+  - first_cousin
+  - second_cousin
+  - third_cousin
+  - fourth_cousin
+  - first_niece_or_nephew
+  - second_niece_or_nephew
+  - first_great_grandparent
+  - second_great_grandparent
+  - third_great_grandparent
+  - fourth_great_grandparent
+  - fifth_great_grandparent
+  - sixth_great_grandparent
+  - seventh_great_grandparent
+  - eighth_great_grandparent
+  - first_great_aunt_or_uncle
+  - second_great_aunt_or_uncle
+  - third_great_aunt_or_uncle
+  - fourth_great_aunt_or_uncle
+  - first_grandchild_in_law
+  - second_grandchild_in_law
+  - third_grandchild_in_law
+  - fourth_grandchild_in_law
+  - first_great_grandchild
+  - second_great_grandchild
+  - third_great_grandchild
+  - fourth_great_grandchild
+  - fifth_great_grandchild
+  - sixth_great_grandchild
+  - seventh_great_grandchild
+  - eighth_great_grandchild

@@ -1,12 +1,18 @@
 package de.janschuri.lunaticFamily.commands.subcommands.adopt;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.commands.senders.CommandSender;
+import de.janschuri.lunaticFamily.commands.senders.PaperCommandSender;
+import de.janschuri.lunaticFamily.commands.senders.PaperPlayerCommandSender;
+import de.janschuri.lunaticFamily.commands.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
+
+import java.util.UUID;
+//import org.bukkit.Bukkit;
+//import org.bukkit.command.CommandSender;
 
 public class AdoptUnsetSubcommand extends Subcommand {
     private static final String mainCommand = "adopt";
@@ -17,22 +23,29 @@ public class AdoptUnsetSubcommand extends Subcommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public boolean execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
             if (args.length < 2) {
                 sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
-            } else if (!Utils.playerExists(args[1])) {
-                sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", Utils.getName(args[1])));
+                return true;
+            }
+
+            UUID childUUID;
+            PlayerCommandSender child;
+            if (Utils.isUUID(args[1])) {
+                childUUID = UUID.fromString(args[1]);
+                child = sender.getPlayerCommandSender(childUUID);
+            } else {
+                child = sender.getPlayerCommandSender(args[1]);
+                childUUID = child.getUniqueId();
+            }
+
+            if (!child.exists()) {
+                sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[1]));
             } else {
 
-                String childUUID;
-                if (Utils.isUUID(args[1])) {
-                    childUUID = args[1];
-                } else {
-                    childUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
-                }
                 FamilyPlayer childFam = new FamilyPlayer(childUUID);
 
                 if (!childFam.isAdopted()) {
@@ -50,5 +63,6 @@ public class AdoptUnsetSubcommand extends Subcommand {
                 }
             }
         }
+        return true;
     }
 }

@@ -1,16 +1,14 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.commands.ClickableDecisionMessage;
+import de.janschuri.lunaticFamily.commands.senders.CommandSender;
+import de.janschuri.lunaticFamily.commands.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.Config;
+import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
 
@@ -23,13 +21,13 @@ public class AcceptSubcommand extends Subcommand {
         super(mainCommand, name, permission);
     }
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player)) {
+    public boolean execute(CommandSender sender, String[] args) {
+        if (!(sender instanceof PlayerCommandSender)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
         } else if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
-            Player player = (Player) sender;
+            PlayerCommandSender player = (PlayerCommandSender) sender;
             String playerUUID = player.getUniqueId().toString();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
@@ -41,37 +39,36 @@ public class AcceptSubcommand extends Subcommand {
 
                 if (LunaticFamily.marryRequests.containsKey(playerUUID)) {
 
-                    String partnerUUID = LunaticFamily.marryRequests.get(playerUUID);
+                    UUID partnerUUID = UUID.fromString(LunaticFamily.marryRequests.get(playerUUID));
                     FamilyPlayer partnerFam = new FamilyPlayer(partnerUUID);
+                    PlayerCommandSender partner = sender.getPlayerCommandSender(partnerUUID);
 
                     if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
                         int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
                         sender.sendMessage(Language.prefix + Language.getMessage("marry_accept_too_many_children").replace("%partner%", partnerFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
-                    } else if (!partnerFam.isOnline()) {
+                    } else if (!partner.isOnline()) {
                         sender.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", partnerFam.getName()));
                     } else if (LunaticFamily.marryPriest.containsKey(partnerUUID)) {
-                        String priestUUID = LunaticFamily.marryPriest.get(partnerUUID);
+                        UUID priestUUID = UUID.fromString(LunaticFamily.marryPriest.get(partnerUUID));
                         FamilyPlayer priestFam = new FamilyPlayer(priestUUID);
+                        PlayerCommandSender priest = sender.getPlayerCommandSender(priestUUID);
 
-                        if (!priestFam.hasEnoughMoney("marry_priest")) {
+                        if (!priest.hasEnoughMoney("marry_priest")) {
                             sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money").replace("%player%", priestFam.getName()));
-                        } else if (!playerFam.hasEnoughMoney("marry_priest_player")) {
+                        } else if (!player.hasEnoughMoney("marry_priest_player")) {
                             sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money").replace("%player%", player.getName()));
-                        } else if (!partnerFam.hasEnoughMoney("marry_priest_player")) {
+                        } else if (!partner.hasEnoughMoney("marry_priest_player")) {
                             sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", partnerFam.getName()));
                         } else {
 
-                            priestFam.withdrawPlayer("marry_priest");
-                            playerFam.withdrawPlayer("marry_priest_player");
-                            partnerFam.withdrawPlayer("marry_priest_player");
+                            priest.withdrawMoney("marry_priest");
+                            player.withdrawMoney("marry_priest_player");
+                            partner.withdrawMoney("marry_priest_player");
 
                             player.chat(Language.getMessage("marry_yes"));
 
-                            new BukkitRunnable() {
-                                public void run() {
-                                    priestFam.chat(Language.getMessage("marry_priest_complete"));
-                                }
-                            }.runTaskLater(LunaticFamily.getInstance(), 20L);
+
+                            priest.chat(Language.getMessage("marry_priest_complete"), 20);
 
                             LunaticFamily.marryRequests.remove(playerUUID);
                             LunaticFamily.marryPriestRequests.remove(partnerUUID);
@@ -79,22 +76,22 @@ public class AcceptSubcommand extends Subcommand {
 
                             playerFam.marry(partnerFam.getID(), priestFam.getID());
 
-                            for (String command : Config.successCommands.get("marry_priest")) {
+                            for (String command : PluginConfig.successCommands.get("marry_priest")) {
                                 command = command.replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()).replace("%priest%", priestFam.getName());
-                                Utils.sendConsoleCommand(command);
+                                Utils.getUtils().sendConsoleCommand(command);
                             }
                         }
                     } else {
-                        if (!partnerFam.hasEnoughMoney("marry_proposing_player")) {
+                        if (!partner.hasEnoughMoney("marry_proposing_player")) {
                             sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", partnerFam.getName()));
-                        } else if (!playerFam.hasEnoughMoney("marry_proposed_player")) {
+                        } else if (!player.hasEnoughMoney("marry_proposed_player")) {
                             sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money").replace("%player%", player.getName()));
                         } else {
                             sender.sendMessage(Language.prefix + Language.getMessage("marry_accept_complete"));
-                            partnerFam.sendMessage(Language.prefix + Language.getMessage("marry_accept_complete"));
+                            partner.sendMessage(Language.prefix + Language.getMessage("marry_accept_complete"));
 
-                            playerFam.withdrawPlayer("marry_proposed_player");
-                            partnerFam.withdrawPlayer("marry_proposing_player");
+                            player.withdrawMoney("marry_proposed_player");
+                            partner.withdrawMoney("marry_proposing_player");
 
                             LunaticFamily.marryRequests.remove(playerUUID);
                             LunaticFamily.marryPriestRequests.remove(partnerUUID);
@@ -102,9 +99,9 @@ public class AcceptSubcommand extends Subcommand {
 
                             playerFam.marry(partnerFam.getID());
 
-                            for (String command : Config.successCommands.get("marry")) {
+                            for (String command : PluginConfig.successCommands.get("marry")) {
                                 command = command.replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName());
-                                Utils.sendConsoleCommand(command);
+                                Utils.getUtils().sendConsoleCommand(command);
                             }
                         }
                     }
@@ -113,36 +110,34 @@ public class AcceptSubcommand extends Subcommand {
 
                 else if (LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
 
-                    String partnerUUID = LunaticFamily.marryPriestRequests.get(playerUUID);
+                    UUID partnerUUID = UUID.fromString(LunaticFamily.marryPriestRequests.get(playerUUID));
                     FamilyPlayer partnerFam = new FamilyPlayer(partnerUUID);
-                    OfflinePlayer partnerPlayer = Bukkit.getOfflinePlayer(UUID.fromString(partnerUUID));
+                    PlayerCommandSender partner = sender.getPlayerCommandSender(partnerUUID);
 
                     if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
                         int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
                         sender.sendMessage(Language.prefix + Language.getMessage("marry_accept_too_many_children").replace("%partner%", partnerFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
                     } else {
 
-                        String priestUUID = LunaticFamily.marryPriest.get(playerUUID);
-                        FamilyPlayer priestFam = new FamilyPlayer(priestUUID);
+                        UUID priestUUID = UUID.fromString(LunaticFamily.marryPriest.get(playerUUID));
+                        PlayerCommandSender priest = sender.getPlayerCommandSender(priestUUID);
 
-                        if (!partnerFam.hasEnoughMoney("marry_proposing_player")) {
+                        if (!partner.hasEnoughMoney("marry_proposing_player")) {
                             sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", partnerFam.getName()));
-                        } else if (!playerFam.hasEnoughMoney("marry_proposed_player")) {
+                        } else if (!player.hasEnoughMoney("marry_proposed_player")) {
                             sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money").replace("%player%", player.getName()));
                         } else {
 
                             LunaticFamily.marryPriestRequests.remove(playerUUID);
-                            LunaticFamily.marryRequests.put(partnerUUID, playerUUID);
+                            LunaticFamily.marryRequests.put(partnerUUID.toString(), playerUUID);
                             player.chat(Language.getMessage("marry_yes"));
 
-                            new BukkitRunnable() {
-                                public void run() {
-                                    priestFam.chat(Language.getMessage("marry_accept_request").replace("%player1%", partnerFam.getName()).replace("%player2%", playerFam.getName()));
-                                }
-                            }.runTaskLater(LunaticFamily.getInstance(), 20L);
+
+                            priest.chat(Language.getMessage("marry_accept_request").replace("%player1%", partnerFam.getName()).replace("%player2%", playerFam.getName()));
 
 
-                            partnerFam.sendMessage(Utils.createClickableMessage(
+
+                            partner.sendMessage(new ClickableDecisionMessage(
                                     "",
                                     Language.getMessage("marry_yes"),
                                     "/lunaticfamily:marry accept",
@@ -153,5 +148,6 @@ public class AcceptSubcommand extends Subcommand {
                 }
             }
         }
+        return true;
     }
 }

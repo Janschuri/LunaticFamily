@@ -1,12 +1,12 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
+import de.janschuri.lunaticFamily.commands.senders.CommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.gender.GenderHelpSubcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.gender.GenderInfoSubcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.gender.GenderSetSubcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.utils.Utils;
-import org.bukkit.command.CommandSender;
 
 public class GenderSubcommand extends Subcommand {
     private static final String mainCommand = "family";
@@ -25,7 +25,7 @@ public class GenderSubcommand extends Subcommand {
         super(mainCommand, name, permission, subcommands);
     }
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public boolean execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
@@ -44,5 +44,6 @@ public class GenderSubcommand extends Subcommand {
                 }
             }
         }
+        return true;
     }
 }

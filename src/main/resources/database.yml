@@ -1,10 +1,11 @@
-Database:
-  MySQL:
-    enabled: false
-    host: localhost
-    port: 3306
-    database: playerData
-    username: root
-    password:
-  SQLite:
-    Filename:
+#test
+# Database configuration
+MySQL:
+  enabled: false
+  host: localhost
+  port: 3306
+  database: lunaticfamily
+  username: root
+  password:
+SQLite:
+  Filename: #test

@@ -4,101 +4,187 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.commands.senders.PaperPlayerCommandSender;
+import de.janschuri.lunaticFamily.commands.senders.VelocityPlayerCommandSender;
 import de.janschuri.lunaticFamily.config.Language;
+import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
-import de.janschuri.lunaticFamily.utils.Logger;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import de.janschuri.lunaticFamily.handler.FamilyTree;
+import de.janschuri.lunaticFamily.utils.logger.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.messaging.PluginMessageListener;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 public class ProxyListener implements PluginMessageListener {
     @Override
-    public void onPluginMessageReceived(String channel, Player player, byte[] message) {
-        LunaticFamily.isProxy = true;
-        Logger.debugLog("ProxyListener: ");
-        ByteArrayDataInput in = ByteStreams.newDataInput(message);
+    public void onPluginMessageReceived(String channel, Player p, byte[] message) {
+        if (!LunaticFamily.isProxy) {
+            LunaticFamily.isProxy = true;
+            Logger.infoLog("Connected to Proxy.");
+        }
 
+        ByteArrayDataInput in = ByteStreams.newDataInput(message);
         String subchannel = in.readUTF();
         Logger.debugLog("ProxyListener: " + subchannel);
-        if (subchannel.equals("PlayerJoinEvent")) {
-            String playerUUID = in.readUTF();
-            FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
-            new BukkitRunnable() {
-                public void run() {
-                    if (playerFam.isMarried()) {
-                        if (LunaticFamily.isPlayerOnline(playerFam.getPartner().getUUID())) {
-                            playerFam.sendMessage(Language.prefix + Language.getMessage("marry_partner_online"));
-                            playerFam.getPartner().sendMessage(Language.prefix + Language.getMessage("marry_partner_online"));
-                        } else {
-                            playerFam.sendMessage(Language.prefix + Language.getMessage("marry_partner_offline"));
-                        }
-                    }
-                }
-            }.runTaskLater(LunaticFamily.getInstance(), 5L);
+
+        if (!PluginConfig.useProxy) {
+            Logger.warnLog("Detected Proxy Message, but Proxy is disabled in the config. Enable it to connect to the Proxy.");
             return;
         }
-        if (subchannel.equals("PlayerJumpEvent")) {
-            return;
+
+        if (subchannel.equals("MarryKissEvent")) {
+            UUID playerUUID = UUID.fromString(in.readUTF());
+            UUID partnerUUID = UUID.fromString(in.readUTF());
+            double range = in.readDouble();
+            PaperPlayerCommandSender player = new PaperPlayerCommandSender(playerUUID);
+            PaperPlayerCommandSender partner = new PaperPlayerCommandSender(partnerUUID);
+
+            player.spawnKissParticles(partnerUUID);
         }
-        if (subchannel.equals("OnlinePlayers")) {
-            Set<String> players = new HashSet<>();
-            try {
-                while(true) {
-                    players.add(in.readUTF());
-                }
-            } catch (IllegalStateException e) {
-                LunaticFamily.proxyPlayers = players;
+
+        if (subchannel.equals("IsInRangeRequest")) {
+            int requestId = in.readInt();
+            UUID playerUUID = UUID.fromString(in.readUTF());
+            UUID partnerUUID = UUID.fromString(in.readUTF());
+            double range = in.readDouble();
+
+            PaperPlayerCommandSender player = new PaperPlayerCommandSender(playerUUID);
+            PaperPlayerCommandSender partner = new PaperPlayerCommandSender(partnerUUID);
+            if (!player.isOnline() || !partner.isOnline()) {
+                return;
             }
-            return;
+
+            boolean isInRange = player.isInRange(partnerUUID, range);
+
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("IsInRangeResponse");
+            out.writeInt(requestId);
+            out.writeBoolean(isInRange);
+
+            LunaticFamily.sendPluginMessage(out.toByteArray());
         }
-        if (subchannel.equals("PlayerLeaveEvent")) {
-            String playerUUID = in.readUTF();
-            LunaticFamily.proxyPlayers.remove(playerUUID);
-            FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
-            if (playerFam.isMarried()) {
-                playerFam.getPartner().sendMessage(Language.prefix + Language.getMessage("marry_partner_offline"));
-            }
-            return;
+
+        if (subchannel.equals("HasEnoughMoneyRequest")) {
+            int requestId = in.readInt();
+            UUID playerUUID = UUID.fromString(in.readUTF());
+            double amount = in.readDouble();
+
+            PaperPlayerCommandSender player = new PaperPlayerCommandSender(playerUUID);
+
+            boolean hasEnoughMoney = player.hasEnoughMoney(amount);
+
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("HasEnoughMoneyResponse");
+            out.writeInt(requestId);
+            out.writeBoolean(hasEnoughMoney);
+
+            LunaticFamily.sendPluginMessage(out.toByteArray());
         }
-        if (subchannel.equals("MessageToPlayer")) {
-            String playerUUID = in.readUTF();
-            String messageToPlayer = in.readUTF();
-            if (Bukkit.getPlayer(playerUUID) != null) {
-                Bukkit.getPlayer(playerUUID).sendMessage(messageToPlayer);
+        if (subchannel.equals("UpdateFamilyTree")) {
+            int id = in.readInt();
+            UUID uuid = UUID.fromString(in.readUTF());
+
+            if (Database.getDatabase().getUUID(id) == null) {
+                Logger.warnLog("Player with ID " + id + " not found in the database. Proxy and " + Bukkit.getServer().getName() + " are not connected to the same Database.");
+                return;
             }
-            return;
+            if (!Database.getDatabase().getUUID(id).equals(uuid)) {
+                Logger.warnLog("UUID of Player with ID " + id + " does not match the database. Proxy and " + Bukkit.getServer().getName() + " are not connected to the same Database.");
+                return;
+            }
+
+            if (Bukkit.getPlayer(uuid) != null) {
+                new FamilyTree(id);
+            }
         }
-        if (subchannel.equals("ComponentMessageToPlayer")) {
-            String playerUUID = in.readUTF();
-            Component messageToPlayer = GsonComponentSerializer.gson().deserialize(in.readUTF());
-            Logger.debugLog(Bukkit.getOfflinePlayer(UUID.fromString(playerUUID)).getName());
-            if (Bukkit.getPlayer(UUID.fromString(playerUUID)) != null) {
-                Bukkit.getPlayer(UUID.fromString(playerUUID)).sendMessage(messageToPlayer);
+
+        if (subchannel.equals("HasItemInMainHandRequest")) {
+
+            int requestId = in.readInt();
+            UUID playerUUID = UUID.fromString(in.readUTF());
+
+            if (Bukkit.getPlayer(playerUUID) == null) {
+                return;
             }
-            return;
+
+            PaperPlayerCommandSender player = new PaperPlayerCommandSender(playerUUID);
+
+            boolean hasItemInMainHand = player.hasItemInMainHand();
+
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("HasItemInMainHandResponse");
+            out.writeInt(requestId);
+            out.writeBoolean(hasItemInMainHand);
+
+            LunaticFamily.sendPluginMessage(out.toByteArray());
         }
-        if (subchannel.equals("DropItemToPlayer")) {
-            String playerUUID = in.readUTF();
-            Logger.debugLog(Bukkit.getOfflinePlayer(UUID.fromString(playerUUID)).getName());
-            if (Bukkit.getPlayer(UUID.fromString(playerUUID)) != null) {
-                int arrayLength = in.readInt();
-                byte[] itemBytes = new byte[arrayLength];
-                for (int i = 0; i < arrayLength; i++) {
-                    itemBytes[i] = in.readByte();
-                }
-                ItemStack item = ItemStack.deserializeBytes(itemBytes);
-                Bukkit.getPlayer(UUID.fromString(playerUUID)).getWorld().dropItem(player.getLocation(), item);
+
+        if (subchannel.equals("GetItemInMainHandRequest")) {
+            int requestId = in.readInt();
+            UUID playerUUID = UUID.fromString(in.readUTF());
+
+            if (Bukkit.getPlayer(playerUUID) == null) {
+                return;
             }
-            return;
+
+            PaperPlayerCommandSender player = new PaperPlayerCommandSender(playerUUID);
+
+            byte[] item = player.getItemInMainHand();
+
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("GetItemInMainHandResponse");
+            out.writeInt(requestId);
+            out.writeInt(item.length);
+            out.write(item);
+
+            LunaticFamily.sendPluginMessage(out.toByteArray());
+        }
+
+        if (subchannel.equals("RemoveItemInMainHandRequest")) {
+            int requestId = in.readInt();
+            UUID playerUUID = UUID.fromString(in.readUTF());
+
+            if (Bukkit.getPlayer(playerUUID) == null) {
+                return;
+            }
+
+            PaperPlayerCommandSender player = new PaperPlayerCommandSender(playerUUID);
+
+            boolean removed = player.removeItemInMainHand();
+
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("RemoveItemInMainHandResponse");
+            out.writeInt(requestId);
+            out.writeBoolean(removed);
+
+            LunaticFamily.sendPluginMessage(out.toByteArray());
+        }
+
+        if (subchannel.equals("GiveItemDropRequest")) {
+            int requestId = in.readInt();
+            UUID playerUUID = UUID.fromString(in.readUTF());
+
+            if (Bukkit.getPlayer(playerUUID) == null) {
+                return;
+            }
+
+            byte[] item = new byte[in.readInt()];
+            in.readFully(item);
+
+            PaperPlayerCommandSender player = new PaperPlayerCommandSender(playerUUID);
+
+            boolean dropped = player.giveItemDrop(item);
+
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("GiveItemDropResponse");
+            out.writeInt(requestId);
+            out.writeBoolean(dropped);
+
+            LunaticFamily.sendPluginMessage(out.toByteArray());
         }
     }
 

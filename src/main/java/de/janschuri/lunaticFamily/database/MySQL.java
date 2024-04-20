@@ -1,6 +1,5 @@
 package de.janschuri.lunaticFamily.database;
 
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.DatabaseConfig;
 
 import java.sql.*;
@@ -12,9 +11,7 @@ public class MySQL extends Database {
     String host, database, username, password;
     int port;
 
-    public MySQL(LunaticFamily instance) {
-        super(instance);
-
+    public MySQL() {
         host = DatabaseConfig.host;
         port = DatabaseConfig.port;
         database = DatabaseConfig.database;
@@ -64,7 +61,7 @@ public class MySQL extends Database {
 
             return conn;
         } catch (SQLException | ClassNotFoundException ex) {
-            plugin.getLogger().log(Level.SEVERE, "MySQL exception on initialize", ex);
+            Error.errorOnInitilization(ex);
         }
         return null;
     }

@@ -1,13 +1,17 @@
 package de.janschuri.lunaticFamily.commands.subcommands.adopt;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.commands.senders.CommandSender;
+import de.janschuri.lunaticFamily.commands.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.Config;
+import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
+
+import java.util.UUID;
+//import org.bukkit.Bukkit;
+//import org.bukkit.command.CommandSender;
 
 public class AdoptSetSubcommand extends Subcommand {
     private static final String mainCommand = "adopt";
@@ -18,7 +22,7 @@ public class AdoptSetSubcommand extends Subcommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public boolean execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
@@ -32,31 +36,44 @@ public class AdoptSetSubcommand extends Subcommand {
 
             if (args.length < 3) {
                 sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
-            } else if (!Utils.playerExists(args[1]) && !force) {
+                return true;
+            }
+
+            PlayerCommandSender firstParent;
+            PlayerCommandSender child;
+            UUID firstParentUUID;
+            UUID childUUID;
+
+            if (Utils.isUUID(args[1])) {
+                firstParentUUID = UUID.fromString(args[1]);
+                firstParent = sender.getPlayerCommandSender(firstParentUUID);
+            } else {
+                force = false;
+                firstParent = sender.getPlayerCommandSender(args[1]);
+                firstParentUUID = firstParent.getUniqueId();
+            }
+            if (Utils.isUUID(args[2])) {
+                childUUID = UUID.fromString(args[2]);
+                child = sender.getPlayerCommandSender(childUUID);
+            } else {
+                force = false;
+                child = sender.getPlayerCommandSender(args[2]);
+                childUUID = child.getUniqueId();
+            }
+
+
+            if (!firstParent.exists() && !force) {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[1]));
-            } else if (!Utils.playerExists(args[2]) && !force) {
+            } else if (!child.exists() && !force) {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[2]));
             } else if (args[1].equalsIgnoreCase(args[2])) {
                 sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_set_same_player"));
             } else {
 
-
-                String firstParentUUID;
-                String childUUID;
-                if (Utils.isUUID(args[1])) {
-                    firstParentUUID = args[1];
-                } else {
-                    firstParentUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId().toString();
-                }
-                if (Utils.isUUID(args[2])) {
-                    childUUID = args[2];
-                } else {
-                    childUUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString();
-                }
                 FamilyPlayer firstParentFam = new FamilyPlayer(firstParentUUID);
                 FamilyPlayer childFam = new FamilyPlayer(childUUID);
 
-                if (!firstParentFam.isMarried() && !Config.allowSingleAdopt) {
+                if (!firstParentFam.isMarried() && !PluginConfig.allowSingleAdopt) {
                     sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_set_no_single_adopt").replace("%player%", firstParentFam.getName()));
                 } else if (childFam.isAdopted()) {
                     sender.sendMessage(Language.prefix + Language.getMessage("admin_adopt_set_already_adopted").replace("%child%", childFam.getName()));
@@ -80,5 +97,6 @@ public class AdoptSetSubcommand extends Subcommand {
                 }
             }
         }
+        return true;
     }
 }

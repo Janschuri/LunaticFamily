@@ -2,8 +2,11 @@ package de.janschuri.lunaticFamily.handler;
 
 import com.google.common.collect.BiMap;
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.config.Config;
+import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
+import de.janschuri.lunaticFamily.database.Database;
+import de.janschuri.lunaticFamily.utils.PaperUtils;
+import de.janschuri.lunaticFamily.utils.Utils;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
 import eu.endercentral.crazy_advancements.advancement.AdvancementDisplay;
@@ -11,6 +14,7 @@ import eu.endercentral.crazy_advancements.advancement.AdvancementFlag;
 import eu.endercentral.crazy_advancements.advancement.AdvancementVisibility;
 import eu.endercentral.crazy_advancements.manager.AdvancementManager;
 import eu.endercentral.crazy_advancements.packet.AdvancementsPacket;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,10 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class FamilyTree {
@@ -50,7 +51,7 @@ public class FamilyTree {
         AdvancementVisibility visibility = AdvancementVisibility.ALWAYS;
 
         ItemStack icon = new ItemStack(Material.STONE);
-        String background = Config.defaultBackground;
+        String background = PluginConfig.defaultBackground;
 
 
         AdvancementDisplay display = new AdvancementDisplay(icon, title, description, frame, visibility);
@@ -118,13 +119,13 @@ public class FamilyTree {
         this.familyList = playerFam.getFamilyList();
         this.familyList.put("ego", id);
 
-        String uuid = playerFam.getUUID();
-        Player player = playerFam.getPlayer();
+        UUID uuid = Database.getDatabase().getUUID(id);
+        Player player = Bukkit.getPlayer(uuid);
 
         AdvancementsPacket packet = new AdvancementsPacket(player, false, null, advancementNameKeys);
         packet.send();
 
-        AdvancementManager manager = new AdvancementManager(new NameKey("manager", uuid));
+        AdvancementManager manager = new AdvancementManager(new NameKey("manager", uuid.toString()));
         manager.addPlayer(player);
 
         for (String advancementKey : advancements) {
@@ -149,7 +150,7 @@ public class FamilyTree {
                 FamilyPlayer relationFam = new FamilyPlayer(familyList.get(relation));
                 advancement.getDisplay().setTitle(relationFam.getName());
                 advancement.getDisplay().setDescription(Language.getRelation(relationKey, relationFam.getGender()));
-                advancement.getDisplay().setIcon(relationFam.getSkull());
+                advancement.getDisplay().setIcon(PaperUtils.getSkull(relationFam.getSkinURL()));
                 if (relation.equalsIgnoreCase("ego")) {
                     advancement.getDisplay().setBackgroundTexture(playerFam.getBackground());
                 }

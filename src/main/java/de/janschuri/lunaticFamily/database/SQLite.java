@@ -1,10 +1,11 @@
 package de.janschuri.lunaticFamily.database;
 
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.DatabaseConfig;
+import de.janschuri.lunaticFamily.utils.logger.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.List;
 import java.util.logging.Level;
@@ -13,12 +14,11 @@ import java.util.stream.Collectors;
 
 public class SQLite extends Database {
     private final String dbname;
+    private final Path dataDirectory;
 
-    public SQLite(LunaticFamily instance) {
-        super(instance);
-//        dbname = plugin.getConfig().getString("SQLite.Filename", "lunaticfamily");
+    public SQLite(Path dataDirectory) {
         dbname = DatabaseConfig.filename;
-
+        this.dataDirectory = dataDirectory;
     }
 
     public void createTables() {
@@ -51,12 +51,12 @@ public class SQLite extends Database {
     }
 
     public Connection getSQLConnection() {
-        File dataFolder = new File(plugin.getDataFolder(), dbname + ".db");
+        File dataFolder = new File(dataDirectory.toFile(), dbname + ".db");
         if (!dataFolder.exists()) {
             try {
                 dataFolder.createNewFile();
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "File write error: " + dbname + ".db");
+                Logger.errorLog("File write error: " + dbname + ".db");
             }
         }
         try {
@@ -67,9 +67,9 @@ public class SQLite extends Database {
             connection = DriverManager.getConnection("jdbc:sqlite:" + dataFolder);
             return connection;
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, "SQLite exception on initialize", ex);
+            Logger.errorLog("SQLite exception on initialize");
         } catch (ClassNotFoundException ex) {
-            plugin.getLogger().log(Level.SEVERE, "You need the SQLite JBDC library. Google it. Put it in /lib folder.");
+            Logger.errorLog("You need the SQLite JBDC library. Google it. Put it in /lib folder.");
         }
         return null;
     }

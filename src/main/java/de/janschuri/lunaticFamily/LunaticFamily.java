@@ -4,39 +4,32 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import de.janschuri.lunaticFamily.commands.*;
+import de.janschuri.lunaticFamily.commands.paper.*;
 import de.janschuri.lunaticFamily.config.DatabaseConfig;
 import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.config.Config;
+import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.database.Database;
-import de.janschuri.lunaticFamily.database.MySQL;
-import de.janschuri.lunaticFamily.database.SQLite;
 import de.janschuri.lunaticFamily.external.Vault;
 import de.janschuri.lunaticFamily.handler.FamilyTree;
 import de.janschuri.lunaticFamily.listener.JoinListener;
 import de.janschuri.lunaticFamily.listener.ProxyListener;
 import de.janschuri.lunaticFamily.listener.QuitListener;
-import de.janschuri.lunaticFamily.utils.Logger;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import de.janschuri.lunaticFamily.utils.logger.BukkitLogger;
+import de.janschuri.lunaticFamily.utils.logger.Logger;
+import de.janschuri.lunaticFamily.utils.PaperUtils;
+import de.janschuri.lunaticFamily.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.awt.*;
 import java.lang.reflect.Field;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 
 
 public final class LunaticFamily extends JavaPlugin {
-    private static Database db;
-    private static final Map<String, Map<String, List<String>>> aliases = new HashMap<>();
     public static BiMap<String, String> marryRequests = HashBiMap.create();
     public static BiMap<String, String> marryPriestRequests = HashBiMap.create();
     public static BiMap<String, String> marryPriest = HashBiMap.create();
@@ -44,6 +37,7 @@ public final class LunaticFamily extends JavaPlugin {
     public static BiMap<String, String> siblingRequests = HashBiMap.create();
     public static Set<String> proxyPlayers = new HashSet<>();
     private static final String IDENTIFIER = "velocity:lunaticfamily";
+    private static Path dataDirectory;
 
     private static LunaticFamily instance;
     public static boolean isProxy = false;
@@ -58,72 +52,48 @@ public final class LunaticFamily extends JavaPlugin {
         instance = this;
         getServer().getMessenger().registerIncomingPluginChannel(this, IDENTIFIER, new ProxyListener());
         getServer().getMessenger().registerOutgoingPluginChannel(this, IDENTIFIER);
-        sendPluginMessage("OnlinePlayers", Bukkit.getServer().getName());
+        Logger.loadLogger(new BukkitLogger());
+
+        Utils.loadUtils(new PaperUtils());
 
         loadConfig();
+        Database.loadDatabase(dataDirectory);
 
-        if (DatabaseConfig.useMySQL) {
-            db = new MySQL(this);
-            if (db.getSQLConnection() == null) {
-                Logger.errorLog("Error initializing MySQL database");
-                Logger.warnLog("Falling back to SQLite due to initialization error");
-                db = new SQLite(this);
-            }
+        if (!PluginConfig.useProxy) {
+
+            getServer().getPluginManager().registerEvents(new JoinListener(), this);
+            getServer().getPluginManager().registerEvents(new QuitListener(), this);
+
+            getCommand("family").setExecutor(new FamilyCommand());
+            getCommand("family").setTabCompleter(new FamilyCommand());
+
+            getCommand("adopt").setExecutor(new AdoptCommand());
+            getCommand("adopt").setTabCompleter(new AdoptCommand());
+
+            getCommand("gender").setExecutor(new GenderCommand());
+            getCommand("gender").setTabCompleter(new GenderCommand());
+
+            getCommand("marry").setExecutor(new MarryCommand());
+            getCommand("marry").setTabCompleter(new MarryCommand());
+
+            getCommand("sibling").setExecutor(new SiblingCommand());
+            getCommand("sibling").setTabCompleter(new SiblingCommand());
+
         } else {
-            db = new SQLite(this);
+            Logger.infoLog("Proxy mode enabled.");
         }
-
-        db.load();
-
-        getServer().getPluginManager().registerEvents(new JoinListener(), this);
-        getServer().getPluginManager().registerEvents(new QuitListener(), this);
-
-        getCommand("family").setExecutor(new FamilyCommand());
-        getCommand("family").setTabCompleter(new FamilyCommand());
-
-        getCommand("adopt").setExecutor(new AdoptCommand());
-        getCommand("adopt").setTabCompleter(new AdoptCommand());
-
-        getCommand("gender").setExecutor(new GenderCommand());
-        getCommand("gender").setTabCompleter(new GenderCommand());
-
-        getCommand("marry").setExecutor(new MarryCommand());
-        getCommand("marry").setTabCompleter(new MarryCommand());
-
-        getCommand("sibling").setExecutor(new SiblingCommand());
-        getCommand("sibling").setTabCompleter(new SiblingCommand());
-
 
     }
 
     public void loadConfig() {
 
-        saveResource("defaultConfig.yml", true);
-        saveResource("database.yml", false);
-        saveResource("config.yml", false);
-        saveResource("lang/EN.yml", true);
-        saveResource("lang/DE.yml", true);
-        saveResource("lang.yml", false);
+        dataDirectory = getDataFolder().toPath();
 
-        new Config(this);
-        new Language(this);
-        new DatabaseConfig(this);
+        new PluginConfig(dataDirectory);
+        new Language(dataDirectory);
+        new DatabaseConfig(dataDirectory);
 
         List<String> commands = Arrays.asList("family", "marry", "sibling", "adopt", "gender");
-
-        for (String command : commands) {
-            Map<String, List<String>> map = new HashMap<>();
-            ConfigurationSection section = Language.lang.getConfigurationSection("aliases." + command);
-            if (section != null) {
-                for (String key : section.getKeys(false)) {
-                    List<String> list = section.getStringList(key);
-                    map.put(key, list);
-                }
-            } else {
-                getLogger().warning("Could not find 'aliases." + command + "' section in lang.yml");
-            }
-            aliases.put(command, map);
-        }
 
         for (String command : commands) {
             Command cmd = getCommand(command);
@@ -146,11 +116,11 @@ public final class LunaticFamily extends JavaPlugin {
         }
 
         checkSoftDepends();
-        if (Config.enabledCrazyAdvancementAPI) {
+        if (PluginConfig.enabledCrazyAdvancementAPI) {
             FamilyTree.loadAdvancementMap(instance);
         }
 
-        if (Config.enabledVault) {
+        if (PluginConfig.enabledVault) {
             new Vault();
         }
     }
@@ -160,105 +130,27 @@ public final class LunaticFamily extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-    public static void sendPluginMessage(String subchannel, String... messages) {
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF(subchannel);
-        for (String message : messages) {
-            out.writeUTF(message);
-        }
-        getInstance().getServer().sendPluginMessage(getInstance(), IDENTIFIER, out.toByteArray());
-    }
-
-
-    public static Database getDatabase() {
-        return LunaticFamily.db;
+    public static void sendPluginMessage(byte[] message) {
+        getInstance().getServer().sendPluginMessage(getInstance(), IDENTIFIER, message);
     }
 
     public static void checkSoftDepends() {
         try {
             Class.forName("eu.endercentral.crazy_advancements.CrazyAdvancementsAPI");
         } catch (ClassNotFoundException e) {
-            if (Config.enabledCrazyAdvancementAPI) {
+            if (PluginConfig.enabledCrazyAdvancementAPI) {
                 Logger.warnLog("CrazyAdvancementsAPI is not installed. Disabling CrazyAdvancementsAPI features.");
-                Config.enabledCrazyAdvancementAPI = false;
+                PluginConfig.enabledCrazyAdvancementAPI = false;
             }
         }
 
         try {
             Class.forName("net.milkbowl.vault.economy.Economy");
         } catch (ClassNotFoundException e) {
-            if (Config.enabledVault) {
+            if (PluginConfig.enabledVault) {
                 Logger.warnLog("Vault is not installed. Disabling Vault features.");
-                Config.enabledVault = false;
+                PluginConfig.enabledVault = false;
             }
-        }
-
-        try {
-            Class.forName("at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin");
-        } catch (ClassNotFoundException e) {
-            if (Config.enabledMinepacks) {
-                Logger.warnLog("Minepacks is not installed. Disabling Minepacks features.");
-                Config.enabledMinepacks = false;
-            }
-        }
-
-
-    }
-
-    public static boolean isPlayerOnline (String uuid) {
-        if (isProxy) {
-            return proxyPlayers.contains(uuid);
-        } else {
-            return Bukkit.getPlayer(UUID.fromString(uuid)) != null;
-        }
-    }
-
-    public static void sendMessageToPlayer(String uuid, Component component) {
-        if (Bukkit.getPlayer(UUID.fromString(uuid)) != null) {
-            Bukkit.getPlayer(UUID.fromString(uuid)).sendMessage(component);
-            return;
-        }
-
-        if (isProxy) {
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("ComponentMessageToPlayer");
-            out.writeUTF(uuid);
-            out.writeUTF(GsonComponentSerializer.gson().serialize(component));
-            getInstance().getServer().sendPluginMessage(getInstance(), IDENTIFIER, out.toByteArray());
-        }
-    }
-    public static void sendMessageToPlayer(String uuid, String message) {
-        if (Bukkit.getPlayer(UUID.fromString(uuid)) != null) {
-            Bukkit.getPlayer(UUID.fromString(uuid)).sendMessage(message);
-            return;
-        }
-
-        if (isProxy) {
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("MessageToPlayer");
-            out.writeUTF(uuid);
-            out.writeUTF(message);
-            getInstance().getServer().sendPluginMessage(getInstance(), IDENTIFIER, out.toByteArray());
-        }
-    }
-
-    public static void dropItemToPlayer (String uuid, ItemStack item){
-        if (Bukkit.getPlayer(UUID.fromString(uuid)) != null) {
-            Player player = Bukkit.getPlayer(UUID.fromString(uuid));
-            Item itemEntity = player.getLocation().getWorld().dropItem(player.getLocation(), item);
-            return;
-        }
-
-        if(isProxy){
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("DropItemToPlayer");
-            out.writeUTF(uuid);
-            byte[] itemBytes = item.serializeAsBytes();
-            out.writeInt(itemBytes.length);
-            for (byte b : itemBytes) {
-                out.writeByte(b);
-            }
-            getInstance().getServer().sendPluginMessage(getInstance(), IDENTIFIER, out.toByteArray());
         }
     }
 }

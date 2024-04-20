@@ -1,12 +1,15 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
+import de.janschuri.lunaticFamily.commands.ClickableDecisionMessage;
+import de.janschuri.lunaticFamily.commands.senders.CommandSender;
+import de.janschuri.lunaticFamily.commands.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.Config;
+import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class MarryDivorceSubcommand extends Subcommand {
     private static final String mainCommand = "marry";
@@ -17,13 +20,13 @@ public class MarryDivorceSubcommand extends Subcommand {
         super(mainCommand, name, permission);
     }
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player)) {
+    public boolean execute(CommandSender sender, String[] args) {
+        if (!(sender instanceof PlayerCommandSender)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
         } else if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
-            Player player = (Player) sender;
+            PlayerCommandSender player = (PlayerCommandSender) sender;
             String playerUUID = player.getUniqueId().toString();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
@@ -47,21 +50,30 @@ public class MarryDivorceSubcommand extends Subcommand {
 
 
             if (!playerFam.isMarried()) {
-                sender.sendMessage(Language.prefix + Language.getMessage("marry_divorce_no_partner"));
+                player.sendMessage(Language.prefix + Language.getMessage("marry_divorce_no_partner"));
+                return true;
             } else if (!confirm) {
-                sender.sendMessage(Utils.createClickableMessage(
+                player.sendMessage(new ClickableDecisionMessage(
                         Language.getMessage("marry_divorce_confirm"),
                         Language.getMessage("confirm"),
                         "/lunaticfamily:marry divorce confirm",
                         Language.getMessage("cancel"),
                         "/lunaticfamily:marry divorce cancel"));
+                return true;
             } else if (cancel) {
                 sender.sendMessage(Language.prefix + Language.getMessage("marry_divorce_cancel"));
-            } else if (!playerFam.hasEnoughMoney("marry_divorce_leaving_player")) {
+                return true;
+            } else if (!player.hasEnoughMoney("marry_divorce_leaving_player")) {
                 sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
-            } else if (!playerFam.getPartner().hasEnoughMoney("marry_divorce_left_player")) {
-                sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", playerFam.getPartner().getName()));
-                sender.sendMessage(Utils.createClickableMessage(
+                return true;
+            }
+
+            UUID partnerUUID = playerFam.getPartner().getUniqueId();
+            PlayerCommandSender partner = sender.getPlayerCommandSender(partnerUUID);
+
+            if (!partner.hasEnoughMoney("marry_divorce_left_player")) {
+                player.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", playerFam.getPartner().getName()));
+                player.sendMessage(new ClickableDecisionMessage(
                         Language.getMessage("take_payment_confirm"),
                         Language.getMessage("confirm"),
                         "/lunaticfamily:marry divorce confirm force",
@@ -69,18 +81,19 @@ public class MarryDivorceSubcommand extends Subcommand {
                         "/lunaticfamily:marry divorce cancel"));
             } else {
                 sender.sendMessage(Language.prefix + Language.getMessage("marry_divorce_divorced"));
-                playerFam.getPartner().sendMessage(Language.prefix + Language.getMessage("marry_divorce_divorced"));
+                partner.sendMessage(Language.prefix + Language.getMessage("marry_divorce_divorced"));
 
-                playerFam.withdrawPlayer("marry_divorce_leaving_player");
-                playerFam.getPartner().withdrawPlayer("marry_divorce_leaving_player");
+                player.withdrawMoney("marry_divorce_leaving_player");
+                partner.withdrawMoney("marry_divorce_leaving_player");
 
-                for (String command : Config.successCommands.get("divorce")) {
+                for (String command : PluginConfig.successCommands.get("divorce")) {
                     command = command.replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName());
-                    Utils.sendConsoleCommand(command);
+                    Utils.getUtils().sendConsoleCommand(command);
                 }
 
                 playerFam.divorce();
             }
         }
+        return true;
     }
 }

@@ -1,13 +1,15 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.commands.ClickableMessage;
+import de.janschuri.lunaticFamily.commands.senders.CommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
+import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.HoverEvent;
-import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+import java.util.HexFormat;
 import java.util.List;
 
 public class MarryListSubcommand extends Subcommand {
@@ -19,7 +21,7 @@ public class MarryListSubcommand extends Subcommand {
         super(mainCommand, name, permission);
     }
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public boolean execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
@@ -32,8 +34,9 @@ public class MarryListSubcommand extends Subcommand {
                 }
             }
 
-            List<Integer> marryList = LunaticFamily.getDatabase().getMarryList(page, 10);
-            Component msg = Component.text(Language.prefix + Language.getMessage("marry_list") + "\n");
+            List<Integer> marryList = Database.getDatabase().getMarryList(page, 10);
+            List<ClickableMessage> msg = new ArrayList<>();
+            msg.add(new ClickableMessage(Language.prefix + Language.getMessage("marry_list") + "\n"));
             int index = 1 + (10*(page-1));
             for (Integer e : marryList) {
                 FamilyPlayer player1Fam = new FamilyPlayer(e);
@@ -45,17 +48,15 @@ public class MarryListSubcommand extends Subcommand {
                     hoverText = hoverText + " -> " + player1Fam.getPriest().getName();
                 }
 
-                msg = msg.append(Component.text(Language.prefix + " " + index + ": " + player1Fam.getName()))
-                        .append(Component.text(" ❤ ")
-                                .hoverEvent(HoverEvent.showText(Component.text(hoverText)))
-                                .color(player1Fam.getHeartColor())
-                        )
-                        .append(Component.text(player2Fam.getName() + "\n"));
+                msg.add(new ClickableMessage((Language.prefix + " " + index + ": " + player1Fam.getName())));
+                msg.add(new ClickableMessage(" ❤ ", hoverText).setColor(player1Fam.getHeartColor()));
+                msg.add(new ClickableMessage(player2Fam.getName() + "\n"));
 
 
                 index++;
             }
             sender.sendMessage(msg);
         }
+        return true;
     }
 }

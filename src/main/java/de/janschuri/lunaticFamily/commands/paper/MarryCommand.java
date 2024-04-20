@@ -1,10 +1,13 @@
-package de.janschuri.lunaticFamily.commands;
+package de.janschuri.lunaticFamily.commands.paper;
 
+import de.janschuri.lunaticFamily.commands.senders.PaperCommandSender;
+import de.janschuri.lunaticFamily.commands.senders.PaperPlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.family.MarrySubcommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -16,7 +19,14 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        familyMarrySubcommand.execute(sender, args);
+
+        if (sender instanceof Player) {
+            PaperPlayerCommandSender commandSender = new PaperPlayerCommandSender(sender);
+            familyMarrySubcommand.execute(commandSender, args);
+        } else {
+            PaperCommandSender consoleCommandSender = new PaperCommandSender(sender);
+            familyMarrySubcommand.execute(consoleCommandSender, args);
+        }
         return true;
     }
 
@@ -25,7 +35,8 @@ public class MarryCommand implements CommandExecutor, TabCompleter {
         String[] newArgs = new String[args.length + 1];
         newArgs[0] = "marry";
         System.arraycopy(args, 0, newArgs, 1, args.length);
-        return new ArrayList<>(familyMarrySubcommand.tabComplete(sender, newArgs));
+        PaperPlayerCommandSender playerCommandSender = new PaperPlayerCommandSender(sender);
+        return new ArrayList<>(familyMarrySubcommand.tabComplete(playerCommandSender, newArgs));
     }
 }
 

@@ -2,23 +2,16 @@ package de.janschuri.lunaticFamily.config;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.utils.ConfigUtils;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import de.janschuri.lunaticFamily.utils.logger.Logger;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 
-public class Language {
-    private final File defaultLangFile;
-    private final File langFile;
+public class Language extends Config {
     private static Map<String, String> messages = new HashMap<>();
     private static Map<String, String> genderLang = new HashMap<>();
     public static List<String> genders = new ArrayList<>();
-    public static FileConfiguration lang;
 
     public static String prefix;
     private static Map<String, String> colorsTranslations = new HashMap<>();
@@ -28,51 +21,42 @@ public class Language {
 
     private static final Map<String, Map<String, List<String>>> aliases = new HashMap<>();
 
-    public Language(LunaticFamily plugin) {
-        this.defaultLangFile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang/" + Config.language + ".yml");
-        this.langFile = new File(plugin.getDataFolder().getAbsolutePath() + "/lang.yml");
+    public Language(Path dataDirectory) {
+        super(dataDirectory, "lang.yml", "lang/" + PluginConfig.language + ".yml");
         this.load();
     }
 
     public void load(){
+        super.load();
 
-        if (!langFile.exists()) {
-            ConfigUtils.addMissingProperties(langFile, defaultLangFile);
-        } else {
-            ConfigUtils.addMissingProperties(langFile, defaultLangFile);
-        }
+        prefix = translateAlternateColorCodes('&', getString("prefix", "&8[&6LunaticFamily&8] "));
 
-        lang = YamlConfiguration.loadConfiguration(langFile);
+        messages = getStringMap("messages");
 
-        prefix = ChatColor.translateAlternateColorCodes('&', lang.getString("prefix", "&8[&6LunaticFamily&8] "));
+        genderLang = getStringMap("genders");
 
-        messages = ConfigUtils.getStringsFromSection(lang, "messages");
-
-        genderLang = ConfigUtils.getStringsFromSection(lang, "genders");
-
-        ConfigurationSection familyRelationships = lang.getConfigurationSection("family_relationships");
-        genders = new ArrayList<>(familyRelationships.getKeys(false));
+        genders = getKeys("family_relationships");
 
         for (String gender : genders) {
-            Map<String, String> map = ConfigUtils.getStringsFromSection(lang, "family_relationships." + gender);
-
+            Map<String, String> map = getStringMap("family_relationships." + gender);
             relationships.put(gender, map);
         }
 
         List<String> commands = Arrays.asList("family", "marry", "sibling", "adopt", "gender");
 
         for (String command : commands) {
-            Map<String, List<String>> map = ConfigUtils.getStringListsFromSection(lang, "aliases." + command);
+            Map<String, List<String>> map = getStringListMap("aliases." + command);
             aliases.put(command, map);
         }
 
-        colorsTranslations = ConfigUtils.getStringsFromSection(lang, "color_translations");
+        colorsTranslations = getStringMap("color_translations");
     }
 
     public static String getMessage(String key) {
 
         if (messages.containsKey(key.toLowerCase())) {
-            return ChatColor.translateAlternateColorCodes('&', messages.get(key));
+            Logger.debugLog(translateAlternateColorCodes('&', messages.get(key)));
+            return translateAlternateColorCodes('&', messages.get(key));
         } else {
             return "Message '" + key.toLowerCase() + "' not found!";
         }
@@ -80,7 +64,7 @@ public class Language {
     public static String getGenderLang(String key) {
 
         if (genderLang.containsKey(key)) {
-            return ChatColor.translateAlternateColorCodes('&', genderLang.get(key.toLowerCase()));
+            return translateAlternateColorCodes('&', genderLang.get(key.toLowerCase()));
         } else {
             return "undefined";
         }
@@ -89,7 +73,7 @@ public class Language {
     public static String getColorLang(String key) {
 
         if (colorsTranslations.containsKey(key)) {
-            return ChatColor.translateAlternateColorCodes('&', colorsTranslations.get(key.toLowerCase()));
+            return translateAlternateColorCodes('&', colorsTranslations.get(key.toLowerCase()));
         } else {
             return "undefined";
         }
@@ -97,7 +81,7 @@ public class Language {
 
     public static List<String> getColorLangs() {
         List<String> list = new ArrayList<>();
-        for (String color : Config.colors.keySet()) {
+        for (String color : PluginConfig.colors.keySet()) {
             list.add(Language.getColorLang(color));
         }
         return list;
@@ -128,7 +112,7 @@ public class Language {
         if (genders.contains(gender)) {
             Map<String, String> relations = relationships.get(gender);
             if (relations.get(relation) != null) {
-                return ChatColor.translateAlternateColorCodes('&', relations.get(relation));
+                return translateAlternateColorCodes('&', relations.get(relation));
             } else {
                 return "undefined";
             }
@@ -136,7 +120,7 @@ public class Language {
             gender = genders.get(0);
             Map<String, String> relations = relationships.get(gender);
             if (relations.get(relation) != null) {
-                return ChatColor.translateAlternateColorCodes('&', relations.get(relation));
+                return translateAlternateColorCodes('&', relations.get(relation));
             } else {
                 return "undefined";
             }
