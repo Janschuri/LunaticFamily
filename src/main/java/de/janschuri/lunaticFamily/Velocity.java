@@ -15,15 +15,15 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
-import de.janschuri.lunaticFamily.commands.senders.VelocityPlayerCommandSender;
+import de.janschuri.lunaticFamily.commands.velocity.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.velocity.*;
-import de.janschuri.lunaticFamily.config.Config;
-import de.janschuri.lunaticFamily.config.DatabaseConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.config.PluginConfig;
-import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
-import de.janschuri.lunaticFamily.listener.JoinSubevent;
+import de.janschuri.lunaticFamily.listener.JoinEvent;
+import de.janschuri.lunaticFamily.listener.velocity.JoinListener;
+import de.janschuri.lunaticFamily.listener.velocity.MessageListener;
+import de.janschuri.lunaticFamily.listener.velocity.QuitListener;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticFamily.utils.VelocityUtils;
 import org.slf4j.Logger;
@@ -71,6 +71,9 @@ public class Velocity {
     public void onProxyInitialization(ProxyInitializeEvent event) {
         LunaticFamily.mode = Mode.PROXY;
         proxy.getChannelRegistrar().register(IDENTIFIER);
+        proxy.getEventManager().register(this, new MessageListener());
+        proxy.getEventManager().register(this, new JoinListener());
+        proxy.getEventManager().register(this, new QuitListener());
         de.janschuri.lunaticFamily.utils.logger.Logger.loadLogger(new de.janschuri.lunaticFamily.utils.logger.VelocityLogger(logger));
         Utils.loadUtils(new VelocityUtils());
 
@@ -104,11 +107,11 @@ public class Velocity {
                 .plugin(this)
                 .build();
 
-        SimpleCommand familyCommand = new VelocityFamilyCommand();
-        SimpleCommand marryCommand = new VelocityMarryCommand();
-        SimpleCommand adoptCommand = new VelocityAdoptCommand();
-        SimpleCommand genderCommand = new VelocityGenderCommand();
-        SimpleCommand siblingCommand = new VelocitySiblingCommand();
+        SimpleCommand familyCommand = new FamilyCommand();
+        SimpleCommand marryCommand = new MarryCommand();
+        SimpleCommand adoptCommand = new AdoptCommand();
+        SimpleCommand genderCommand = new GenderCommand();
+        SimpleCommand siblingCommand = new SiblingCommand();
 
         commandManager.register(familyCommandMeta, familyCommand);
         commandManager.register(marryCommandMeta, marryCommand);
@@ -125,8 +128,8 @@ public class Velocity {
         if (event.getPreviousServer() != null) {
 
         } else {
-            JoinSubevent joinSubevent = new JoinSubevent();
-            joinSubevent.execute(new VelocityPlayerCommandSender(uuid));
+            JoinEvent joinSubevent = new JoinEvent();
+            joinSubevent.execute(new PlayerCommandSender(uuid));
         }
 
         if (PluginConfig.enabledCrazyAdvancementAPI) {
@@ -136,51 +139,6 @@ public class Velocity {
             out.writeInt(playerFam.getID());
             out.writeUTF(uuid.toString());
             Velocity.sendPluginMessage(out.toByteArray());
-        }
-    }
-
-    @Subscribe
-    public void onPluginMessage(PluginMessageEvent event) {
-        byte[] message = event.getData();
-        ByteArrayDataInput in = ByteStreams.newDataInput(message);
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        String subchannel = in.readUTF();
-        if (subchannel.equals("IsInRangeResponse")) {
-            int requestId = in.readInt();
-            boolean isInRange = in.readBoolean();
-            CompletableFuture<Boolean> request = booleanRequestMap.get(requestId);
-            request.complete(isInRange);
-        }
-        if (subchannel.equals("HasEnoughMoneyResponse")) {
-            int requestId = in.readInt();
-            boolean hasEnoughMoney = in.readBoolean();
-            CompletableFuture<Boolean> request = booleanRequestMap.get(requestId);
-            request.complete(hasEnoughMoney);
-        }
-        if (subchannel.equals("HasItemInMainHandResponse")) {
-            int requestId = in.readInt();
-            boolean hasItem = in.readBoolean();
-            CompletableFuture<Boolean> request = booleanRequestMap.get(requestId);
-            request.complete(hasItem);
-        }
-        if (subchannel.equals("GetItemInMainHandResponse")) {
-            int requestId = in.readInt();
-            byte[] item = new byte[in.readInt()];
-            in.readFully(item);
-            CompletableFuture<byte[]> request = byteArrayRequestMap.get(requestId);
-            request.complete(item);
-        }
-        if (subchannel.equals("RemoveItemInMainHandResponse")) {
-            int requestId = in.readInt();
-            boolean success = in.readBoolean();
-            CompletableFuture<Boolean> request = booleanRequestMap.get(requestId);
-            request.complete(success);
-        }
-        if (subchannel.equals("GiveItemDropResponse")) {
-            int requestId = in.readInt();
-            boolean success = in.readBoolean();
-            CompletableFuture<Boolean> request = booleanRequestMap.get(requestId);
-            request.complete(success);
         }
     }
 

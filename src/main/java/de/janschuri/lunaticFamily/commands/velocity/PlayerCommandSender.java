@@ -1,4 +1,4 @@
-package de.janschuri.lunaticFamily.commands.senders;
+package de.janschuri.lunaticFamily.commands.velocity;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -25,7 +25,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class VelocityPlayerCommandSender extends PlayerCommandSender {
+public class PlayerCommandSender extends de.janschuri.lunaticFamily.commands.PlayerCommandSender {
 
     private final UUID uuid;
     private final AtomicInteger requestIdGenerator = new AtomicInteger(0);
@@ -38,17 +38,17 @@ public class VelocityPlayerCommandSender extends PlayerCommandSender {
                 .delay(delayTicks/20, TimeUnit.SECONDS)
                 .schedule();
     }
-    public VelocityPlayerCommandSender(CommandSource sender) {
+    public PlayerCommandSender(CommandSource sender) {
         super(((Player) sender).getUniqueId());
         this.uuid = ((Player) sender).getUniqueId();
     }
 
-    public VelocityPlayerCommandSender(UUID uuid) {
+    public PlayerCommandSender(UUID uuid) {
         super(uuid);
         this.uuid = uuid;
     }
 
-    public VelocityPlayerCommandSender(String name) {
+    public PlayerCommandSender(String name) {
         super(name);
         this.uuid = Database.getDatabase().getUUID(name);
     }
@@ -412,13 +412,13 @@ public class VelocityPlayerCommandSender extends PlayerCommandSender {
     }
 
     @Override
-    public PlayerCommandSender getPlayerCommandSender(UUID uuid) {
-        return new VelocityPlayerCommandSender(uuid);
+    public de.janschuri.lunaticFamily.commands.PlayerCommandSender getPlayerCommandSender(UUID uuid) {
+        return new PlayerCommandSender(uuid);
     }
 
     @Override
-    public PlayerCommandSender getPlayerCommandSender(String name) {
-        return new VelocityPlayerCommandSender(name);
+    public de.janschuri.lunaticFamily.commands.PlayerCommandSender getPlayerCommandSender(String name) {
+        return new PlayerCommandSender(name);
     }
 
     @Override
@@ -434,7 +434,7 @@ public class VelocityPlayerCommandSender extends PlayerCommandSender {
                     LunaticFamily.adoptRequests.remove(childUUID.toString());
                     FamilyPlayer playerFam = getFamilyPlayer();
                     FamilyPlayer childFam = new FamilyPlayer(childUUID);
-                    PlayerCommandSender child = getPlayerCommandSender(childUUID);
+                    de.janschuri.lunaticFamily.commands.PlayerCommandSender child = getPlayerCommandSender(childUUID);
                     if (playerFam.isMarried()) {
                         FamilyPlayer partnerFam = playerFam.getPartner();
                         child.sendMessage(Language.prefix + Language.getMessage("adopt_propose_request_expired").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));
@@ -450,7 +450,7 @@ public class VelocityPlayerCommandSender extends PlayerCommandSender {
 
     @Override
     public void sendMarryRequest(UUID uuid) {
-        PaperPlayerCommandSender partner = new PaperPlayerCommandSender(uuid);
+        de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender partner = new de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender(uuid);
         Runnable task = () -> {
             if (LunaticFamily.marryRequests.containsKey(uuid.toString())) {
                 LunaticFamily.marryRequests.remove(uuid.toString());
@@ -465,8 +465,8 @@ public class VelocityPlayerCommandSender extends PlayerCommandSender {
 
     @Override
     public void sendMarryPriestRequest(UUID player1UUID, UUID player2UUID) {
-        PaperPlayerCommandSender player1 = new PaperPlayerCommandSender(player1UUID);
-        PaperPlayerCommandSender player2 = new PaperPlayerCommandSender(player2UUID);
+        de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender player1 = new de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender(player1UUID);
+        de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender player2 = new de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender(player2UUID);
         Runnable task = () -> {
             if (LunaticFamily.marryPriest.containsValue(getUniqueId().toString())) {
                 sendMessage(Language.prefix + Language.getMessage("marry_priest_request_expired_priest").replace("%player1%", player1.getName()).replace("%player2%", player2.getName()));
@@ -484,7 +484,7 @@ public class VelocityPlayerCommandSender extends PlayerCommandSender {
 
     @Override
     public void sendSiblingRequest(UUID siblingUUID) {
-        PaperPlayerCommandSender sibling = new PaperPlayerCommandSender(siblingUUID);
+        de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender sibling = new de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender(siblingUUID);
         Runnable task = () -> {
             if (LunaticFamily.siblingRequests.containsKey(siblingUUID.toString())) {
                 LunaticFamily.siblingRequests.remove(siblingUUID.toString());
@@ -502,7 +502,7 @@ public class VelocityPlayerCommandSender extends PlayerCommandSender {
         FamilyPlayer playerFam = getFamilyPlayer();
         Runnable task = () -> {
             if (playerFam.isMarried()) {
-                PlayerCommandSender partner = getPlayerCommandSender(playerFam.getPartner().getUniqueId());
+                de.janschuri.lunaticFamily.commands.PlayerCommandSender partner = getPlayerCommandSender(playerFam.getPartner().getUniqueId());
                 if (!LunaticFamily.isProxy) {
                     if (partner.isOnline()) {
                         partner.sendMessage(Language.prefix + Language.getMessage("marry_partner_online"));

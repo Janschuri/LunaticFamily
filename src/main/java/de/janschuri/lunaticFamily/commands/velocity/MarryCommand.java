@@ -3,17 +3,13 @@ package de.janschuri.lunaticFamily.commands.velocity;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
-import de.janschuri.lunaticFamily.commands.senders.VelocityCommandSender;
-import de.janschuri.lunaticFamily.commands.senders.VelocityPlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.family.MarrySubcommand;
 import de.janschuri.lunaticFamily.utils.Utils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public final class VelocityMarryCommand implements SimpleCommand {
+public final class MarryCommand implements SimpleCommand {
 
     private final MarrySubcommand marrySubcommand = new MarrySubcommand();
 
@@ -24,10 +20,10 @@ public final class VelocityMarryCommand implements SimpleCommand {
         String[] args = invocation.arguments();
 
         if (source instanceof Player) {
-            VelocityPlayerCommandSender commandSender = new VelocityPlayerCommandSender((Player) source);
+            PlayerCommandSender commandSender = new PlayerCommandSender((Player) source);
             marrySubcommand.execute(commandSender, args);
         } else {
-            VelocityCommandSender consoleCommandSender = new VelocityCommandSender(source);
+            CommandSender consoleCommandSender = new CommandSender(source);
             marrySubcommand.execute(consoleCommandSender, args);
         }
     }
@@ -60,6 +56,6 @@ public final class VelocityMarryCommand implements SimpleCommand {
             newArgs[1] = "";
         }
         System.arraycopy(args, 0, newArgs, 1, args.length);
-        return CompletableFuture.completedFuture(marrySubcommand.tabComplete(new VelocityPlayerCommandSender(source), newArgs));
+        return CompletableFuture.completedFuture(marrySubcommand.tabComplete(new PlayerCommandSender(source), newArgs));
     }
 }

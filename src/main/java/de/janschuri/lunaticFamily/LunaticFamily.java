@@ -9,9 +9,9 @@ import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.external.Vault;
 import de.janschuri.lunaticFamily.handler.FamilyTree;
-import de.janschuri.lunaticFamily.listener.JoinListener;
-import de.janschuri.lunaticFamily.listener.ProxyListener;
-import de.janschuri.lunaticFamily.listener.QuitListener;
+import de.janschuri.lunaticFamily.listener.paper.JoinListener;
+import de.janschuri.lunaticFamily.listener.paper.MessageListener;
+import de.janschuri.lunaticFamily.listener.paper.QuitListener;
 import de.janschuri.lunaticFamily.utils.logger.BukkitLogger;
 import de.janschuri.lunaticFamily.utils.logger.Logger;
 import de.janschuri.lunaticFamily.utils.PaperUtils;
@@ -33,7 +33,6 @@ public final class LunaticFamily extends JavaPlugin {
     public static BiMap<String, String> marryPriest = HashBiMap.create();
     public static BiMap<String, String> adoptRequests = HashBiMap.create();
     public static BiMap<String, String> siblingRequests = HashBiMap.create();
-    public static Set<String> proxyPlayers = new HashSet<>();
     private static final String IDENTIFIER = "velocity:lunaticfamily";
     private static Path dataDirectory;
     static Mode mode = Mode.STANDALONE;
@@ -50,7 +49,7 @@ public final class LunaticFamily extends JavaPlugin {
 
         instance = this;
         dataDirectory = getDataFolder().toPath();
-        getServer().getMessenger().registerIncomingPluginChannel(this, IDENTIFIER, new ProxyListener());
+        getServer().getMessenger().registerIncomingPluginChannel(this, IDENTIFIER, new MessageListener());
         getServer().getMessenger().registerOutgoingPluginChannel(this, IDENTIFIER);
         Logger.loadLogger(new BukkitLogger());
 

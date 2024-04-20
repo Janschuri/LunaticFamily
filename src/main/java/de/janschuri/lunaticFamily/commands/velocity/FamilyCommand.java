@@ -4,20 +4,15 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import java.util.List;
 
 import com.velocitypowered.api.proxy.Player;
-import de.janschuri.lunaticFamily.commands.senders.VelocityCommandSender;
-import de.janschuri.lunaticFamily.commands.senders.VelocityPlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.family.FamilySubcommand;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticFamily.utils.logger.Logger;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 
-public final class VelocityFamilyCommand implements SimpleCommand {
+public final class FamilyCommand implements SimpleCommand {
 
     private final FamilySubcommand familySubcommand = new FamilySubcommand();
 
@@ -28,10 +23,10 @@ public final class VelocityFamilyCommand implements SimpleCommand {
         String[] args = invocation.arguments();
 
         if (source instanceof Player) {
-            VelocityPlayerCommandSender commandSender = new VelocityPlayerCommandSender((Player) source);
+            PlayerCommandSender commandSender = new PlayerCommandSender((Player) source);
             familySubcommand.execute(commandSender, args);
         } else {
-            VelocityCommandSender consoleCommandSender = new VelocityCommandSender(source);
+            CommandSender consoleCommandSender = new CommandSender(source);
             familySubcommand.execute(consoleCommandSender, args);
         }
     }
@@ -65,6 +60,6 @@ public final class VelocityFamilyCommand implements SimpleCommand {
         }
         System.arraycopy(args, 0, newArgs, 1, args.length);
         Logger.warnLog("newArgs: " + Arrays.toString(newArgs));
-        return CompletableFuture.completedFuture(familySubcommand.tabComplete(new VelocityPlayerCommandSender(source), newArgs));
+        return CompletableFuture.completedFuture(familySubcommand.tabComplete(new PlayerCommandSender(source), newArgs));
     }
 }

@@ -2,8 +2,8 @@ package de.janschuri.lunaticFamily.commands.subcommands.adopt;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.ClickableDecisionMessage;
-import de.janschuri.lunaticFamily.commands.senders.CommandSender;
-import de.janschuri.lunaticFamily.commands.senders.PlayerCommandSender;
+import de.janschuri.lunaticFamily.commands.CommandSender;
+import de.janschuri.lunaticFamily.commands.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;

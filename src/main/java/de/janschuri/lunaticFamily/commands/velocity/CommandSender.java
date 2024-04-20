@@ -1,4 +1,4 @@
-package de.janschuri.lunaticFamily.commands.senders;
+package de.janschuri.lunaticFamily.commands.velocity;
 
 import com.velocitypowered.api.command.CommandSource;
 import de.janschuri.lunaticFamily.commands.ClickableDecisionMessage;
@@ -16,11 +16,11 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import java.util.List;
 import java.util.UUID;
 
-public class VelocityCommandSender extends CommandSender {
+public class CommandSender extends de.janschuri.lunaticFamily.commands.CommandSender {
 
     CommandSource sender;
 
-    public VelocityCommandSender(CommandSource source) {
+    public CommandSender(CommandSource source) {
         this.sender = source;
     }
 
@@ -91,12 +91,12 @@ public class VelocityCommandSender extends CommandSender {
     }
 
     @Override
-    public PlayerCommandSender getPlayerCommandSender(UUID uuid) {
-        return new VelocityPlayerCommandSender(uuid);
+    public de.janschuri.lunaticFamily.commands.PlayerCommandSender getPlayerCommandSender(UUID uuid) {
+        return new PlayerCommandSender(uuid);
     }
 
     @Override
-    public PlayerCommandSender getPlayerCommandSender(String name) {
-        return new VelocityPlayerCommandSender(name);
+    public de.janschuri.lunaticFamily.commands.PlayerCommandSender getPlayerCommandSender(String name) {
+        return new PlayerCommandSender(name);
     }
 }

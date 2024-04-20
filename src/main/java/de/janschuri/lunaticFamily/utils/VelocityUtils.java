@@ -5,11 +5,9 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.proxy.Player;
 import de.janschuri.lunaticFamily.Velocity;
-import de.janschuri.lunaticFamily.commands.senders.VelocityPlayerCommandSender;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 
-import java.io.BufferedOutputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

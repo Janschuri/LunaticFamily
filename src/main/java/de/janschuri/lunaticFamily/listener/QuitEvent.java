@@ -1,13 +1,13 @@
 package de.janschuri.lunaticFamily.listener;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.commands.senders.PlayerCommandSender;
+import de.janschuri.lunaticFamily.commands.PlayerCommandSender;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 
 import java.util.UUID;
 
-public class QuitSubevent {
+public class QuitEvent {
 
     public boolean execute(PlayerCommandSender sender) {
         PlayerCommandSender player = (PlayerCommandSender) sender;

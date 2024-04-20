@@ -1,4 +1,4 @@
-package de.janschuri.lunaticFamily.commands.senders;
+package de.janschuri.lunaticFamily.commands;
 
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 

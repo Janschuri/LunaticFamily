@@ -1,22 +1,18 @@
 package de.janschuri.lunaticFamily.commands.velocity;
 
+
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
-import de.janschuri.lunaticFamily.commands.senders.VelocityCommandSender;
-import de.janschuri.lunaticFamily.commands.senders.VelocityPlayerCommandSender;
-import de.janschuri.lunaticFamily.commands.subcommands.family.FamilySubcommand;
-import de.janschuri.lunaticFamily.commands.subcommands.family.GenderSubcommand;
+import de.janschuri.lunaticFamily.commands.subcommands.family.AdoptSubcommand;
 import de.janschuri.lunaticFamily.utils.Utils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public final class VelocityGenderCommand implements SimpleCommand {
+public final class AdoptCommand implements SimpleCommand {
 
-    private final GenderSubcommand genderSubcommand = new GenderSubcommand();
+    private final AdoptSubcommand adoptSubcommand = new AdoptSubcommand();
 
     @Override
     public void execute(final Invocation invocation) {
@@ -25,11 +21,11 @@ public final class VelocityGenderCommand implements SimpleCommand {
         String[] args = invocation.arguments();
 
         if (source instanceof Player) {
-            VelocityPlayerCommandSender commandSender = new VelocityPlayerCommandSender((Player) source);
-            genderSubcommand.execute(commandSender, args);
+            PlayerCommandSender commandSender = new PlayerCommandSender((Player) source);
+            adoptSubcommand.execute(commandSender, args);
         } else {
-            VelocityCommandSender consoleCommandSender = new VelocityCommandSender(source);
-            genderSubcommand.execute(consoleCommandSender, args);
+            CommandSender consoleCommandSender = new CommandSender(source);
+            adoptSubcommand.execute(consoleCommandSender, args);
         }
     }
 
@@ -39,7 +35,7 @@ public final class VelocityGenderCommand implements SimpleCommand {
     // will be sent directly to the server on which the sender is located
     @Override
     public boolean hasPermission(final Invocation invocation) {
-        boolean perm = invocation.source().hasPermission("lunaticfamily.gender");
+        boolean perm = invocation.source().hasPermission("lunaticfamily.adopt");
         boolean onWhitelistedServer = true;
         if (invocation.source() instanceof Player) {
             onWhitelistedServer = Utils.getUtils().isPlayerOnWhitelistedServer(((Player) invocation.source()).getUniqueId());
@@ -56,11 +52,11 @@ public final class VelocityGenderCommand implements SimpleCommand {
         String[] args = invocation.arguments();
         int newSize = args.length > 0 ? args.length + 1 : 2;
         String[] newArgs = new String[newSize];
-        newArgs[0] = "gender";
+        newArgs[0] = "adopt";
         if (args.length == 0) {
             newArgs[1] = "";
         }
         System.arraycopy(args, 0, newArgs, 1, args.length);
-        return CompletableFuture.completedFuture(genderSubcommand.tabComplete(new VelocityPlayerCommandSender(source), newArgs));
+        return CompletableFuture.completedFuture(adoptSubcommand.tabComplete(new PlayerCommandSender(source), newArgs));
     }
 }

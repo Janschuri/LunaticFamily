@@ -1,10 +1,10 @@
-package de.janschuri.lunaticFamily.listener;
+package de.janschuri.lunaticFamily.listener.paper;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.commands.senders.PaperPlayerCommandSender;
+import de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.handler.FamilyTree;
@@ -15,7 +15,7 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.util.UUID;
 
-public class ProxyListener implements PluginMessageListener {
+public class MessageListener implements PluginMessageListener {
     @Override
     public void onPluginMessageReceived(String channel, Player p, byte[] message) {
         if (!LunaticFamily.isProxy) {
@@ -36,8 +36,8 @@ public class ProxyListener implements PluginMessageListener {
             UUID playerUUID = UUID.fromString(in.readUTF());
             UUID partnerUUID = UUID.fromString(in.readUTF());
             double range = in.readDouble();
-            PaperPlayerCommandSender player = new PaperPlayerCommandSender(playerUUID);
-            PaperPlayerCommandSender partner = new PaperPlayerCommandSender(partnerUUID);
+            PlayerCommandSender player = new PlayerCommandSender(playerUUID);
+            PlayerCommandSender partner = new PlayerCommandSender(partnerUUID);
 
             player.spawnKissParticles(partnerUUID);
         }
@@ -48,8 +48,8 @@ public class ProxyListener implements PluginMessageListener {
             UUID partnerUUID = UUID.fromString(in.readUTF());
             double range = in.readDouble();
 
-            PaperPlayerCommandSender player = new PaperPlayerCommandSender(playerUUID);
-            PaperPlayerCommandSender partner = new PaperPlayerCommandSender(partnerUUID);
+            PlayerCommandSender player = new PlayerCommandSender(playerUUID);
+            PlayerCommandSender partner = new PlayerCommandSender(partnerUUID);
             if (!player.isOnline() || !partner.isOnline()) {
                 return;
             }
@@ -69,7 +69,7 @@ public class ProxyListener implements PluginMessageListener {
             UUID playerUUID = UUID.fromString(in.readUTF());
             double amount = in.readDouble();
 
-            PaperPlayerCommandSender player = new PaperPlayerCommandSender(playerUUID);
+            PlayerCommandSender player = new PlayerCommandSender(playerUUID);
 
             boolean hasEnoughMoney = player.hasEnoughMoney(amount);
 
@@ -108,7 +108,7 @@ public class ProxyListener implements PluginMessageListener {
                 return;
             }
 
-            PaperPlayerCommandSender player = new PaperPlayerCommandSender(playerUUID);
+            PlayerCommandSender player = new PlayerCommandSender(playerUUID);
 
             boolean hasItemInMainHand = player.hasItemInMainHand();
 
@@ -128,7 +128,7 @@ public class ProxyListener implements PluginMessageListener {
                 return;
             }
 
-            PaperPlayerCommandSender player = new PaperPlayerCommandSender(playerUUID);
+            PlayerCommandSender player = new PlayerCommandSender(playerUUID);
 
             byte[] item = player.getItemInMainHand();
 
@@ -149,7 +149,7 @@ public class ProxyListener implements PluginMessageListener {
                 return;
             }
 
-            PaperPlayerCommandSender player = new PaperPlayerCommandSender(playerUUID);
+            PlayerCommandSender player = new PlayerCommandSender(playerUUID);
 
             boolean removed = player.removeItemInMainHand();
 
@@ -172,7 +172,7 @@ public class ProxyListener implements PluginMessageListener {
             byte[] item = new byte[in.readInt()];
             in.readFully(item);
 
-            PaperPlayerCommandSender player = new PaperPlayerCommandSender(playerUUID);
+            PlayerCommandSender player = new PlayerCommandSender(playerUUID);
 
             boolean dropped = player.giveItemDrop(item);
 

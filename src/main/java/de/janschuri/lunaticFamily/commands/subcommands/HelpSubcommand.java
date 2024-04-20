@@ -1,8 +1,8 @@
 package de.janschuri.lunaticFamily.commands.subcommands;
 
 import de.janschuri.lunaticFamily.commands.ClickableMessage;
-import de.janschuri.lunaticFamily.commands.senders.CommandSender;
-import de.janschuri.lunaticFamily.commands.senders.PlayerCommandSender;
+import de.janschuri.lunaticFamily.commands.CommandSender;
+import de.janschuri.lunaticFamily.commands.PlayerCommandSender;
 import de.janschuri.lunaticFamily.config.Language;
 //import net.kyori.adventure.text.Component;
 //import org.bukkit.entity.Player;

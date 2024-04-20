@@ -1,9 +1,5 @@
-package de.janschuri.lunaticFamily.commands.senders;
+package de.janschuri.lunaticFamily.commands;
 
-import de.janschuri.lunaticFamily.commands.ClickableDecisionMessage;
-import de.janschuri.lunaticFamily.commands.ClickableMessage;
-
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.UUID;
 

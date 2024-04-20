@@ -1,4 +1,4 @@
-package de.janschuri.lunaticFamily.commands.senders;
+package de.janschuri.lunaticFamily.commands.paper;
 
 import de.janschuri.lunaticFamily.commands.ClickableDecisionMessage;
 import de.janschuri.lunaticFamily.commands.ClickableMessage;
@@ -11,17 +11,15 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
-import org.bukkit.command.ConsoleCommandSender;
 
 import java.util.List;
 import java.util.UUID;
 
-public class PaperCommandSender extends CommandSender {
+public class CommandSender extends de.janschuri.lunaticFamily.commands.CommandSender {
 
     private final org.bukkit.command.CommandSender sender;
 
-    public PaperCommandSender(org.bukkit.command.CommandSender sender) {
+    public CommandSender(org.bukkit.command.CommandSender sender) {
         this.sender = sender;
     }
 
@@ -38,13 +36,13 @@ public class PaperCommandSender extends CommandSender {
     }
 
     @Override
-    public PlayerCommandSender getPlayerCommandSender(String name) {
-        return new PaperPlayerCommandSender(name);
+    public de.janschuri.lunaticFamily.commands.PlayerCommandSender getPlayerCommandSender(String name) {
+        return new PlayerCommandSender(name);
     }
 
     @Override
-    public PlayerCommandSender getPlayerCommandSender(UUID uuid) {
-        return new PaperPlayerCommandSender(uuid);
+    public de.janschuri.lunaticFamily.commands.PlayerCommandSender getPlayerCommandSender(UUID uuid) {
+        return new PlayerCommandSender(uuid);
     }
 
     @Override

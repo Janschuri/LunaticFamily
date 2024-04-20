@@ -1,10 +1,7 @@
 package de.janschuri.lunaticFamily.commands.subcommands.adopt;
 
-import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.commands.senders.CommandSender;
-import de.janschuri.lunaticFamily.commands.senders.PaperCommandSender;
-import de.janschuri.lunaticFamily.commands.senders.PaperPlayerCommandSender;
-import de.janschuri.lunaticFamily.commands.senders.PlayerCommandSender;
+import de.janschuri.lunaticFamily.commands.CommandSender;
+import de.janschuri.lunaticFamily.commands.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;

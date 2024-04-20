@@ -1,10 +1,9 @@
 package de.janschuri.lunaticFamily.commands.subcommands;
 
 import de.janschuri.lunaticFamily.commands.ClickableMessage;
-import de.janschuri.lunaticFamily.commands.senders.CommandSender;
+import de.janschuri.lunaticFamily.commands.CommandSender;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.utils.Utils;
-import de.janschuri.lunaticFamily.utils.logger.Logger;
 //import net.kyori.adventure.text.Component;
 //import net.kyori.adventure.text.event.ClickEvent;
 //import net.kyori.adventure.text.event.HoverEvent;

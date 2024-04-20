@@ -1,6 +1,6 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
-import de.janschuri.lunaticFamily.commands.senders.CommandSender;
+import de.janschuri.lunaticFamily.commands.CommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.sibling.*;
 import de.janschuri.lunaticFamily.config.Language;

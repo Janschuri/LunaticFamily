@@ -1,9 +1,9 @@
 package de.janschuri.lunaticFamily.listener;
 
-import de.janschuri.lunaticFamily.commands.senders.CommandSender;
-import de.janschuri.lunaticFamily.commands.senders.PlayerCommandSender;
+import de.janschuri.lunaticFamily.commands.CommandSender;
+import de.janschuri.lunaticFamily.commands.PlayerCommandSender;
 
-public class JoinSubevent {
+public class JoinEvent {
 
     public boolean execute(CommandSender sender) {
         PlayerCommandSender playerCommandSender = (PlayerCommandSender) sender;

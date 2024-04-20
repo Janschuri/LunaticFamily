@@ -1,4 +1,4 @@
-package de.janschuri.lunaticFamily.commands.senders;
+package de.janschuri.lunaticFamily.commands.paper;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.ClickableDecisionMessage;
@@ -30,19 +30,19 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
 
-public class PaperPlayerCommandSender extends PlayerCommandSender {
+public class PlayerCommandSender extends de.janschuri.lunaticFamily.commands.PlayerCommandSender {
     private final UUID uuid;
-    public PaperPlayerCommandSender(CommandSender sender) {
+    public PlayerCommandSender(CommandSender sender) {
         super(((OfflinePlayer) sender).getUniqueId());
         this.uuid = ((OfflinePlayer) sender).getUniqueId();
     }
 
-    public PaperPlayerCommandSender(UUID uuid) {
+    public PlayerCommandSender(UUID uuid) {
         super(uuid);
         this.uuid = uuid;
     }
 
-    public PaperPlayerCommandSender(String name) {
+    public PlayerCommandSender(String name) {
         super(name);
         this.uuid = getUniqueId(name);
     }
@@ -102,13 +102,13 @@ public class PaperPlayerCommandSender extends PlayerCommandSender {
     }
 
     @Override
-    public PlayerCommandSender getPlayerCommandSender(UUID uuid) {
-        return new PaperPlayerCommandSender(uuid);
+    public de.janschuri.lunaticFamily.commands.PlayerCommandSender getPlayerCommandSender(UUID uuid) {
+        return new PlayerCommandSender(uuid);
     }
 
     @Override
-    public PlayerCommandSender getPlayerCommandSender(String name) {
-        return new PaperPlayerCommandSender(name);
+    public de.janschuri.lunaticFamily.commands.PlayerCommandSender getPlayerCommandSender(String name) {
+        return new PlayerCommandSender(name);
     }
 
     @Override
@@ -297,8 +297,8 @@ public class PaperPlayerCommandSender extends PlayerCommandSender {
     @Override
     public void spawnKissParticles(UUID partnerUUID) {
 
-        PaperPlayerCommandSender player = new PaperPlayerCommandSender(uuid);
-        PaperPlayerCommandSender partner = new PaperPlayerCommandSender(partnerUUID);
+        PlayerCommandSender player = new PlayerCommandSender(uuid);
+        PlayerCommandSender partner = new PlayerCommandSender(partnerUUID);
 
             double[] position = getPositionBetween(partnerUUID);
             position[1] += 2;
@@ -343,7 +343,7 @@ public class PaperPlayerCommandSender extends PlayerCommandSender {
                     LunaticFamily.adoptRequests.remove(childUUID.toString());
                     FamilyPlayer playerFam = getFamilyPlayer();
                     FamilyPlayer childFam = new FamilyPlayer(childUUID);
-                    PlayerCommandSender child = getPlayerCommandSender(childUUID);
+                    de.janschuri.lunaticFamily.commands.PlayerCommandSender child = getPlayerCommandSender(childUUID);
                     if (playerFam.isMarried()) {
                         FamilyPlayer partnerFam = playerFam.getPartner();
                         child.sendMessage(Language.prefix + Language.getMessage("adopt_propose_request_expired").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));
@@ -359,7 +359,7 @@ public class PaperPlayerCommandSender extends PlayerCommandSender {
     @Override
     public void sendMarryRequest(UUID uuid) {
 
-        PaperPlayerCommandSender partner = new PaperPlayerCommandSender(uuid);
+        PlayerCommandSender partner = new PlayerCommandSender(uuid);
 
         if (!isInRange(partner.getUniqueId(), PluginConfig.marryProposeRange)) {
             sendMessage(Language.prefix + Language.getMessage("player_too_far_away").replace("%player%", partner.getName()));
@@ -380,8 +380,8 @@ public class PaperPlayerCommandSender extends PlayerCommandSender {
 
     @Override
     public void sendMarryPriestRequest(UUID player1UUID, UUID player2UUID) {
-        PaperPlayerCommandSender player1 = new PaperPlayerCommandSender(player1UUID);
-        PaperPlayerCommandSender player2 = new PaperPlayerCommandSender(player2UUID);
+        PlayerCommandSender player1 = new PlayerCommandSender(player1UUID);
+        PlayerCommandSender player2 = new PlayerCommandSender(player2UUID);
         new BukkitRunnable() {
             public void run() {
                 if (LunaticFamily.marryPriest.containsValue(getUniqueId().toString())) {
@@ -399,7 +399,7 @@ public class PaperPlayerCommandSender extends PlayerCommandSender {
 
     @Override
     public void sendSiblingRequest(UUID siblingUUID) {
-        PaperPlayerCommandSender sibling = new PaperPlayerCommandSender(siblingUUID);
+        PlayerCommandSender sibling = new PlayerCommandSender(siblingUUID);
         new BukkitRunnable() {
             public void run() {
                 if (LunaticFamily.siblingRequests.containsKey(siblingUUID.toString())) {
@@ -421,7 +421,7 @@ public class PaperPlayerCommandSender extends PlayerCommandSender {
                     new FamilyTree(playerFam.getID());
                 }
                 if (playerFam.isMarried()) {
-                    PlayerCommandSender partner = getPlayerCommandSender(playerFam.getPartner().getUniqueId());
+                    de.janschuri.lunaticFamily.commands.PlayerCommandSender partner = getPlayerCommandSender(playerFam.getPartner().getUniqueId());
                     if (!LunaticFamily.isProxy) {
                         if (partner.isOnline()) {
                             partner.sendMessage(Language.prefix + Language.getMessage("marry_partner_online"));
