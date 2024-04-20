@@ -88,18 +88,23 @@ public final class LunaticFamily extends JavaPlugin {
 
             getCommand("family").setExecutor(new FamilyCommand());
             getCommand("family").setTabCompleter(new FamilyCommand());
+            getCommand("family").setPermission("lunaticfamily.family");
 
             getCommand("adopt").setExecutor(new AdoptCommand());
             getCommand("adopt").setTabCompleter(new AdoptCommand());
+            getCommand("adopt").setPermission("lunaticfamily.adopt");
 
             getCommand("gender").setExecutor(new GenderCommand());
             getCommand("gender").setTabCompleter(new GenderCommand());
+            getCommand("gender").setPermission("lunaticfamily.gender");
 
             getCommand("marry").setExecutor(new MarryCommand());
             getCommand("marry").setTabCompleter(new MarryCommand());
+            getCommand("marry").setPermission("lunaticfamily.marry");
 
             getCommand("sibling").setExecutor(new SiblingCommand());
             getCommand("sibling").setTabCompleter(new SiblingCommand());
+            getCommand("sibling").setPermission("lunaticfamily.sibling");
 
         } else {
             LunaticFamily.mode = Mode.BACKEND;
