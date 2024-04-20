@@ -95,6 +95,7 @@ public class ProxyListener implements PluginMessageListener {
 
             if (Bukkit.getPlayer(uuid) != null) {
                 new FamilyTree(id);
+                return;
             }
         }
 

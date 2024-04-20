@@ -36,7 +36,7 @@ public final class LunaticFamily extends JavaPlugin {
     public static Set<String> proxyPlayers = new HashSet<>();
     private static final String IDENTIFIER = "velocity:lunaticfamily";
     private static Path dataDirectory;
-    static Mode mode;
+    static Mode mode = Mode.STANDALONE;
 
     private static LunaticFamily instance;
     public static boolean isProxy = false;
@@ -58,10 +58,11 @@ public final class LunaticFamily extends JavaPlugin {
 
         loadConfig();
 
+        getServer().getPluginManager().registerEvents(new JoinListener(), this);
+        getServer().getPluginManager().registerEvents(new QuitListener(), this);
+
         if (!PluginConfig.isBackend) {
             LunaticFamily.mode = Mode.STANDALONE;
-            getServer().getPluginManager().registerEvents(new JoinListener(), this);
-            getServer().getPluginManager().registerEvents(new QuitListener(), this);
 
             List<String> commands = Arrays.asList("family", "marry", "sibling", "adopt", "gender");
 
@@ -122,6 +123,8 @@ public final class LunaticFamily extends JavaPlugin {
     public static void loadConfig() {
 
         new PluginConfig(dataDirectory);
+
+
         if (mode == Mode.STANDALONE || mode == Mode.PROXY) {
             new Language(dataDirectory);
         }
@@ -132,10 +135,12 @@ public final class LunaticFamily extends JavaPlugin {
             checkSoftDepends();
             if (PluginConfig.enabledCrazyAdvancementAPI) {
                 FamilyTree.loadAdvancementMap(instance);
+                Logger.infoLog("Loaded family tree.");
             }
 
             if (PluginConfig.enabledVault) {
                 new Vault();
+                Logger.infoLog("Loaded Vault.");
             }
         }
 
