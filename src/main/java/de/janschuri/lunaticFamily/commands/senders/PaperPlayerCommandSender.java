@@ -13,7 +13,6 @@ import de.janschuri.lunaticFamily.utils.PaperUtils;
 import de.janschuri.lunaticFamily.utils.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -24,7 +23,6 @@ import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
@@ -65,8 +63,13 @@ public class PaperPlayerCommandSender extends PlayerCommandSender {
     }
 
     @Override
+    public String getServerName() {
+        return Bukkit.getServer().getName();
+    }
+
+    @Override
     public boolean hasEnoughMoney(String... withdrawKeys) {
-        if (PluginConfig.enabledVault || PluginConfig.useProxy) {
+        if (PluginConfig.enabledVault || PluginConfig.isBackend) {
             OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
             double amount = 0.0;
             for (String key : withdrawKeys) {
@@ -82,7 +85,7 @@ public class PaperPlayerCommandSender extends PlayerCommandSender {
 
     @Override
     public boolean hasEnoughMoney(double factor, String... withdrawKeys) {
-        if (PluginConfig.enabledVault || PluginConfig.useProxy) {
+        if (PluginConfig.enabledVault || PluginConfig.isBackend) {
             OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
             double amount = 0.0;
             for (String key : withdrawKeys) {
@@ -312,6 +315,9 @@ public class PaperPlayerCommandSender extends PlayerCommandSender {
 
     @Override
     public boolean isInRange(UUID playerUUID, double range) {
+        if (range < 0) {
+            return true;
+        }
         Player player = Bukkit.getPlayer(playerUUID);
         return Bukkit.getPlayer(uuid).getLocation().distance(player.getLocation()) <= range;
     }

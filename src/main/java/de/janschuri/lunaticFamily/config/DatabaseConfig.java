@@ -1,5 +1,8 @@
 package de.janschuri.lunaticFamily.config;
 
+import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.Mode;
+
 import java.nio.file.Path;
 
 public class DatabaseConfig extends Config {
@@ -11,7 +14,7 @@ public class DatabaseConfig extends Config {
     public static boolean useMySQL;
 
     public DatabaseConfig(Path dataDirectory) {
-        super(dataDirectory, DATABASE_FILE);
+        super(dataDirectory, DATABASE_FILE, (LunaticFamily.getMode() == Mode.PROXY || LunaticFamily.getMode() == Mode.BACKEND) ? "proxyDatabase.yml" : "database.yml");
         this.load();
     }
 

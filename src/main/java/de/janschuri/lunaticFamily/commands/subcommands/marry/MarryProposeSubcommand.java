@@ -56,7 +56,12 @@ public class MarryProposeSubcommand extends Subcommand {
                 return true;
             }
 
-            if (!player.isSameServer(partnerUUID)) {
+            if (!Utils.getUtils().isPlayerOnWhitelistedServer(partner.getUniqueId())) {
+                player.sendMessage(Language.prefix + Language.getMessage("player_not_on_whitelisted_server").replace("%player%", partner.getName().replace("%server%", partner.getServerName())));
+                return true;
+            }
+
+            if (!player.isSameServer(partnerUUID) && PluginConfig.marryProposeRange >= 0) {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_not_same_server").replace("%player%", partner.getName()));
                 return true;
             }
@@ -80,11 +85,6 @@ public class MarryProposeSubcommand extends Subcommand {
                     sender.sendMessage(Language.prefix + Language.getMessage("marry_propose_player_already_married").replace("%player%", partnerFam.getName()));
                 } else {
 
-                    if (!player.isSameServer(partner.getUniqueId())) {
-                        sender.sendMessage(Language.prefix + Language.getMessage("player_not_same_server").replace("%player%", partner.getName()));
-                        return true;
-                    }
-
                     if (!player.isInRange(partner.getUniqueId(), PluginConfig.marryProposeRange)) {
                         player.sendMessage(Language.prefix + Language.getMessage("player_too_far_away").replace("%player%", partner.getName()));
                         return true;
@@ -93,9 +93,9 @@ public class MarryProposeSubcommand extends Subcommand {
                     partner.sendMessage(new ClickableDecisionMessage(Language.prefix +
                             Language.getMessage("marry_propose_request").replace("%player1%", partnerFam.getName()).replace("%player2%", playerFam.getName()),
                             Language.getMessage("marry_yes"),
-                            "/lunaticfamily:marry accept",
+                            "/family marry accept",
                             Language.getMessage("marry_no"),
-                            "/lunaticfamily:marry deny"));
+                            "/family marry deny"));
 
 
                     LunaticFamily.marryRequests.put(partnerUUID.toString(), playerUUID.toString());

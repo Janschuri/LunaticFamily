@@ -40,13 +40,27 @@ public class SiblingAcceptSubcommand extends Subcommand {
                 if (playerFam.getChildrenAmount() + siblingFam.getChildrenAmount() > 2) {
                     int amountDiff = playerFam.getChildrenAmount() + siblingFam.getChildrenAmount() - 2;
                     sender.sendMessage(Language.prefix + Language.getMessage("marry_accept_too_many_children").replace("%partner%", siblingFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
-                } else if (sibling.isOnline()) {
+                    return true;
+                }
+                if (sibling.isOnline()) {
                     sender.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", siblingFam.getName()));
-                } else if (!player.hasEnoughMoney("sibling_proposed_player")) {
+                    return true;
+                }
+
+                if (!Utils.getUtils().isPlayerOnWhitelistedServer(sibling.getUniqueId())) {
+                    player.sendMessage(Language.prefix + Language.getMessage("player_not_on_whitelisted_server").replace("%player%", sibling.getName().replace("%server%", sibling.getServerName())));
+                    return true;
+                }
+
+                if (!player.hasEnoughMoney("sibling_proposed_player")) {
                     sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
-                } else if (!player.hasEnoughMoney("sibling_proposing_player")) {
+                    return true;
+                }
+                if (!player.hasEnoughMoney("sibling_proposing_player")) {
                     sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", siblingFam.getName()));
-                } else {
+                    return true;
+                }
+
 
                     sender.sendMessage(Language.prefix + Language.getMessage("sibling_accept_complete").replace("%player%", siblingFam.getName()));
                     sibling.sendMessage(Language.prefix + Language.getMessage("sibling_accept_complete").replace("%player%", playerFam.getName()));
@@ -62,7 +76,7 @@ public class SiblingAcceptSubcommand extends Subcommand {
 
                     player.withdrawMoney("sibling_proposed_player");
                     sibling.withdrawMoney("sibling_proposing_player");
-                }
+
             }
         }
         return true;

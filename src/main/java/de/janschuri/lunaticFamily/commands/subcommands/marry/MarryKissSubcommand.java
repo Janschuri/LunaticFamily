@@ -6,6 +6,7 @@ import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import de.janschuri.lunaticFamily.utils.Utils;
 
 public class MarryKissSubcommand extends Subcommand {
     private static final String mainCommand = "marry";
@@ -35,6 +36,11 @@ public class MarryKissSubcommand extends Subcommand {
 
             if (!partner.isOnline()) {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", partner.getName()));
+                return true;
+            }
+
+            if (!Utils.getUtils().isPlayerOnWhitelistedServer(partner.getUniqueId())) {
+                player.sendMessage(Language.prefix + Language.getMessage("player_not_on_whitelisted_server").replace("%player%", partner.getName().replace("%server%", partner.getServerName())));
                 return true;
             }
 

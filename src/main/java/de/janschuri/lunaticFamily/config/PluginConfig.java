@@ -1,5 +1,8 @@
 package de.janschuri.lunaticFamily.config;
 
+import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.Mode;
+
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
@@ -8,11 +11,13 @@ import java.util.Map;
 public class PluginConfig extends Config {
     private static final String CONFIG_FILE = "config.yml";
     public static boolean isDebug;
-    public static boolean useProxy;
+    public static boolean isBackend;
     public static String language;
     public static String defaultGender;
     public static String defaultBackground;
     public static boolean allowSingleAdopt;
+    public static boolean enabledServerWhitelist;
+    public static List<String> serverWhitelist;
     public static boolean enabledCrazyAdvancementAPI;
     public static boolean enabledVault;
     public static String dateFormat;
@@ -28,7 +33,7 @@ public class PluginConfig extends Config {
     public static Map<String, String> colors = new HashMap<>();
 
     public PluginConfig(Path dataDirectory) {
-        super(dataDirectory, CONFIG_FILE);
+        super(dataDirectory, CONFIG_FILE, (LunaticFamily.getMode() == Mode.PROXY || LunaticFamily.getMode() == Mode.BACKEND) ? "proxyConfig.yml" : "config.yml");
         this.load();
     }
 
@@ -50,7 +55,7 @@ public class PluginConfig extends Config {
         siblingProposeRange = getDouble("distances.sibling_propose_range");
 
         isDebug = getBoolean("is_debug", true);
-        useProxy = getBoolean("use_proxy", false);
+        isBackend = getBoolean("use_proxy", false);
 
         enabledVault = getBoolean("use_vault");
         enabledCrazyAdvancementAPI = getBoolean("use_crazy_advancement_api");
@@ -58,5 +63,8 @@ public class PluginConfig extends Config {
         successCommands = getStringListMap("success_commands");
         commandWithdraws = getDoubleMap("command_withdraws");
         colors = getStringMap("colors");
+
+        enabledServerWhitelist = getBoolean("server_whitelist.enabled", false);
+        serverWhitelist = getStringList("server_whitelist.list");
     }
 }

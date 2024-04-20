@@ -46,9 +46,19 @@ public class AcceptSubcommand extends Subcommand {
                     if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
                         int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
                         sender.sendMessage(Language.prefix + Language.getMessage("marry_accept_too_many_children").replace("%partner%", partnerFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
-                    } else if (!partner.isOnline()) {
+                        return true;
+                    }
+                    if (!partner.isOnline()) {
                         sender.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", partnerFam.getName()));
-                    } else if (LunaticFamily.marryPriest.containsKey(partnerUUID)) {
+                        return true;
+                    }
+
+                    if (!Utils.getUtils().isPlayerOnWhitelistedServer(partner.getUniqueId())) {
+                        player.sendMessage(Language.prefix + Language.getMessage("player_not_on_whitelisted_server").replace("%player%", partner.getName().replace("%server%", partner.getServerName())));
+                        return true;
+                    }
+
+                    if (LunaticFamily.marryPriest.containsKey(partnerUUID)) {
                         UUID priestUUID = UUID.fromString(LunaticFamily.marryPriest.get(partnerUUID));
                         FamilyPlayer priestFam = new FamilyPlayer(priestUUID);
                         PlayerCommandSender priest = sender.getPlayerCommandSender(priestUUID);
@@ -140,9 +150,9 @@ public class AcceptSubcommand extends Subcommand {
                             partner.sendMessage(new ClickableDecisionMessage(
                                     "",
                                     Language.getMessage("marry_yes"),
-                                    "/lunaticfamily:marry accept",
+                                    "/family marry accept",
                                     Language.getMessage("marry_no"),
-                                    "/lunaticfamily:marry deny"));
+                                    "/family marry deny"));
                         }
                     }
                 }

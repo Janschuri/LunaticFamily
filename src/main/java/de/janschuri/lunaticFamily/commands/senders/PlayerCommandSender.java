@@ -30,7 +30,7 @@ public abstract class PlayerCommandSender extends CommandSender {
     public abstract boolean removeItemInMainHand();
     public abstract boolean giveItemDrop(byte[] item);
     public abstract boolean hasPermission(String permission);
-
+    public abstract String getServerName();
     public abstract boolean hasEnoughMoney(String... withdrawKeys);
     public abstract boolean hasEnoughMoney(double factor, String... withdrawKeys);
     public abstract boolean withdrawMoney(String... withdrawKeys);

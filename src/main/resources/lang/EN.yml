@@ -1,4 +1,4 @@
-prefix: "&9[FamilyPlugin]&r "
+prefix: "&9[LunaticFamily]&r "
 messages:
   #general messages
   wrong_usage: "Incorrect usage of this command!"
@@ -14,6 +14,7 @@ messages:
   no_permission: "You do not have permission to use this command!"
   disabled_feature: "Disabled feature."
   take_payment_confirm: "Do you want to cover the entire cost?"
+  player_not_on_whitelisted_server: "%player% is not on a server where LunaticFamily is enabled. (%server%)"
   yes: "Yes"
   no: "No"
   accept: "Accept"

@@ -8,6 +8,7 @@ import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import de.janschuri.lunaticFamily.utils.Utils;
 
 import java.util.UUID;
 //import org.bukkit.Bukkit;
@@ -65,18 +66,28 @@ public class AdoptProposeSubcommand extends Subcommand {
 
             if (!child.exists()) {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[1]));
-            } else if (child.isOnline()) {
+                return true;
+            }
+            if (!child.isOnline()) {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", args[1]));
-            } else if (!player.hasEnoughMoney("adopt_parent")) {
-                sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
-            } else {
+                return true;
+            }
 
-                if (!player.isSameServer(child.getUniqueId())) {
+            if (!Utils.getUtils().isPlayerOnWhitelistedServer(child.getUniqueId())) {
+                player.sendMessage(Language.prefix + Language.getMessage("player_not_on_whitelisted_server").replace("%player%", child.getName().replace("%server%", child.getServerName())));
+                return true;
+            }
+
+            if (!player.hasEnoughMoney("adopt_parent")) {
+                sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
+            }
+
+                if (!player.isSameServer(child.getUniqueId()) && PluginConfig.adoptProposeRange >= 0) {
                     sender.sendMessage(Language.prefix + Language.getMessage("player_not_same_server").replace("%player%", child.getName()));
                     return true;
                 }
 
-                if (!player.isInRange(child.getUniqueId(), PluginConfig.marryKissRange)) {
+                if (!player.isInRange(child.getUniqueId(), PluginConfig.adoptProposeRange)) {
                     player.sendMessage(Language.prefix + Language.getMessage("player_too_far_away").replace("%player%", child.getName()));
                     return true;
                 }
@@ -96,9 +107,9 @@ public class AdoptProposeSubcommand extends Subcommand {
                     player.sendMessage(new ClickableDecisionMessage(
                             Language.getMessage("adopt_propose_has_sibling").replace("%player1%", childFam.getName()).replace("%player2%", childFam.getSibling().getName()),
                             Language.getMessage("confirm"),
-                            "/lunaticfamily:adopt propose " + child.getName() + " confirm",
+                            "/family adopt propose " + child.getName() + " confirm",
                             Language.getMessage("cancel"),
-                            "/lunaticfamily:adopt propose " + child.getName() + " cancel"));
+                            "/family adopt propose " + child.getName() + " cancel"));
 
                 } else if (childFam.hasSibling() && playerFam.getChildrenAmount() > 0) {
                     sender.sendMessage(Language.prefix + Language.getMessage("adopt_propose_has_sibling_limit").replace("%player1%", childFam.getName()).replace("%player2%", childFam.getSibling().getName()));
@@ -107,23 +118,22 @@ public class AdoptProposeSubcommand extends Subcommand {
                         child.sendMessage(new ClickableDecisionMessage(
                                 Language.getMessage("adopt_propose_request").replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName()),
                                 Language.getMessage("accept"),
-                                "/lunaticfamily:adopt accept",
+                                "/family adopt accept",
                                 Language.getMessage("deny"),
-                                "/lunaticfamily:adopt deny"));
+                                "/family adopt deny"));
                     } else {
                         child.sendMessage(new ClickableDecisionMessage(
                                 Language.getMessage("adopt_propose_request_by_single").replace("%player%", playerFam.getName()),
                                 Language.getMessage("accept"),
-                                "/lunaticfamily:adopt accept",
+                                "/family adopt accept",
                                 Language.getMessage("deny"),
-                                "/lunaticfamily:adopt deny"));
+                                "/family adopt deny"));
                     }
                     LunaticFamily.adoptRequests.put(childUUID.toString(), playerUUID);
                     sender.sendMessage(Language.prefix + Language.getMessage("adopt_propose_request_sent").replace("%player%", childFam.getName()));
 
                     player.sendAdoptRequest(childUUID);
                 }
-            }
         }
         return true;
     }

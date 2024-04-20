@@ -1,6 +1,5 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.senders.CommandSender;
 import de.janschuri.lunaticFamily.commands.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
@@ -9,7 +8,6 @@ import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticFamily.utils.logger.Logger;
 
-import java.util.Locale;
 import java.util.UUID;
 
 public class MarryGiftSubcommand extends Subcommand {
@@ -44,9 +42,20 @@ public class MarryGiftSubcommand extends Subcommand {
 
             if (!partner.isOnline()) {
                 player.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", partner.getName()));
-            } else if (!player.hasItemInMainHand()) {
+                return true;
+            }
+
+            if (!Utils.getUtils().isPlayerOnWhitelistedServer(partnerUUID)) {
+                player.sendMessage(Language.prefix + Language.getMessage("player_not_on_whitelisted_server").replace("%player%", partner.getName().replace("%server%", partner.getServerName())));
+                return true;
+            }
+
+            if (!player.hasItemInMainHand()) {
                 player.sendMessage(Language.prefix + Language.getMessage("marry_gift_empty_hand"));
-            } else {
+                return true;
+            }
+
+
                 byte[] item = player.getItemInMainHand();
                 if (partner.giveItemDrop(item)) {
                     player.removeItemInMainHand();
@@ -55,8 +64,6 @@ public class MarryGiftSubcommand extends Subcommand {
                 } else {
                     Logger.errorLog("Error while giving item to partner.");
                 }
-
-            }
         }
         return true;
     }

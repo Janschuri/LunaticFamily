@@ -64,4 +64,6 @@ public abstract class Utils {
         return midpoint;
     }
 
+    public abstract boolean isPlayerOnWhitelistedServer(UUID uuid);
+
 }

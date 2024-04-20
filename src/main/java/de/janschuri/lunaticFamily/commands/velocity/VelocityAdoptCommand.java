@@ -42,21 +42,20 @@ public final class VelocityAdoptCommand implements SimpleCommand {
         return true;
     }
 
-    // With this method you can control the suggestions to send
-    // to the CommandSource according to the arguments
-    // it has already written or other requirements you need
-    @Override
-    public List<String> suggest(final Invocation invocation) {
-        CommandSource source = invocation.source();
-        String[] args = invocation.arguments();
-        return adoptSubcommand.tabComplete(new VelocityPlayerCommandSender(source), args);
-    }
-
     // Here you can offer argument suggestions in the same way as the previous method,
     // but asynchronously. It is recommended to use this method instead of the previous one
     // especially in cases where you make a more extensive logic to provide the suggestions
     @Override
     public CompletableFuture<List<String>> suggestAsync(final Invocation invocation) {
-        return CompletableFuture.completedFuture(List.of());
+        CommandSource source = invocation.source();
+        String[] args = invocation.arguments();
+        int newSize = args.length > 0 ? args.length + 1 : 2;
+        String[] newArgs = new String[newSize];
+        newArgs[0] = "adopt";
+        if (args.length == 0) {
+            newArgs[1] = "";
+        }
+        System.arraycopy(args, 0, newArgs, 1, args.length);
+        return CompletableFuture.completedFuture(adoptSubcommand.tabComplete(new VelocityPlayerCommandSender(source), newArgs));
     }
 }

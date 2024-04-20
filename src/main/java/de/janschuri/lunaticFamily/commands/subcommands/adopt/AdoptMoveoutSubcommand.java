@@ -56,9 +56,9 @@ public class AdoptMoveoutSubcommand extends Subcommand {
                 player.sendMessage(new ClickableDecisionMessage(
                         Language.getMessage("adopt_moveout_confirm"),
                         Language.getMessage("confirm"),
-                        "/lunaticfamily:adopt moveout confirm",
+                        "/family adopt moveout confirm",
                         Language.getMessage("cancel"),
-                        "/lunaticfamily:adopt moveout cancel"));
+                        "/family adopt moveout cancel"));
                 return true;
             } else if (cancel) {
                 sender.sendMessage(Language.prefix + Language.getMessage("adopt_moveout_cancel"));
@@ -75,18 +75,18 @@ public class AdoptMoveoutSubcommand extends Subcommand {
                 player.sendMessage(new ClickableDecisionMessage(
                         Language.getMessage("take_payment_confirm"),
                         Language.getMessage("confirm"),
-                        "/lunaticfamily:adopt moveout confirm force",
+                        "/family adopt moveout confirm force",
                         Language.getMessage("cancel"),
-                        "/lunaticfamily:adopt moveout cancel"));
+                        "/family adopt moveout cancel"));
                 return true;
             } else if (!force && playerFam.getParents().size() == 1 && !firstParent.hasEnoughMoney("adopt_moveout_parent")) {
                 player.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(0).getName()));
                 player.sendMessage(new ClickableDecisionMessage(
                         Language.getMessage("take_payment_confirm"),
                         Language.getMessage("confirm"),
-                        "/lunaticfamily:adopt moveout confirm force",
+                        "/family adopt moveout confirm force",
                         Language.getMessage("cancel"),
-                        "/lunaticfamily:adopt moveout cancel"));
+                        "/family adopt moveout cancel"));
                 return true;
             }
 
@@ -97,9 +97,9 @@ public class AdoptMoveoutSubcommand extends Subcommand {
                 player.sendMessage(new ClickableDecisionMessage(
                         Language.getMessage("take_payment_confirm"),
                         Language.getMessage("confirm"),
-                        "/lunaticfamily:adopt moveout confirm force",
+                        "/family adopt moveout confirm force",
                         Language.getMessage("cancel"),
-                        "/lunaticfamily:adopt moveout cancel"));
+                        "/family adopt moveout cancel"));
             } else if (force && !player.hasEnoughMoney("adopt_moveout_parent", "adopt_moveout_child")) {
                 sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
             } else {

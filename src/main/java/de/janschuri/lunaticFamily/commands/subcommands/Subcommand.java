@@ -4,6 +4,7 @@ import de.janschuri.lunaticFamily.commands.ClickableMessage;
 import de.janschuri.lunaticFamily.commands.senders.CommandSender;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.utils.Utils;
+import de.janschuri.lunaticFamily.utils.logger.Logger;
 //import net.kyori.adventure.text.Component;
 //import net.kyori.adventure.text.event.ClickEvent;
 //import net.kyori.adventure.text.event.HoverEvent;
@@ -12,6 +13,7 @@ import de.janschuri.lunaticFamily.utils.Utils;
 //import net.kyori.adventure.text.event.HoverEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class Subcommand {
@@ -89,6 +91,7 @@ public abstract class Subcommand {
                 }
             }
         }
+        System.out.println(Arrays.toString(args) + " || " + list);
         return list;
     }
 

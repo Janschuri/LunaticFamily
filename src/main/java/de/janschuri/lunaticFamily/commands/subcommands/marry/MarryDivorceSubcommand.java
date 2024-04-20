@@ -52,18 +52,21 @@ public class MarryDivorceSubcommand extends Subcommand {
             if (!playerFam.isMarried()) {
                 player.sendMessage(Language.prefix + Language.getMessage("marry_divorce_no_partner"));
                 return true;
-            } else if (!confirm) {
+            }
+            if (cancel) {
+                sender.sendMessage(Language.prefix + Language.getMessage("marry_divorce_cancel"));
+                return true;
+            }
+            if (!confirm) {
                 player.sendMessage(new ClickableDecisionMessage(
                         Language.getMessage("marry_divorce_confirm"),
                         Language.getMessage("confirm"),
-                        "/lunaticfamily:marry divorce confirm",
+                        "/family marry divorce confirm",
                         Language.getMessage("cancel"),
-                        "/lunaticfamily:marry divorce cancel"));
+                        "/family marry divorce cancel"));
                 return true;
-            } else if (cancel) {
-                sender.sendMessage(Language.prefix + Language.getMessage("marry_divorce_cancel"));
-                return true;
-            } else if (!player.hasEnoughMoney("marry_divorce_leaving_player")) {
+            }
+            if (!player.hasEnoughMoney("marry_divorce_leaving_player")) {
                 sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
                 return true;
             }
@@ -76,24 +79,36 @@ public class MarryDivorceSubcommand extends Subcommand {
                 player.sendMessage(new ClickableDecisionMessage(
                         Language.getMessage("take_payment_confirm"),
                         Language.getMessage("confirm"),
-                        "/lunaticfamily:marry divorce confirm force",
+                        "/family marry divorce confirm force",
                         Language.getMessage("cancel"),
-                        "/lunaticfamily:marry divorce cancel"));
-            } else {
-                sender.sendMessage(Language.prefix + Language.getMessage("marry_divorce_divorced"));
-                partner.sendMessage(Language.prefix + Language.getMessage("marry_divorce_divorced"));
+                        "/family marry divorce cancel"));
+                return true;
+            }
 
+            if (force && !player.hasEnoughMoney("marry_divorce_left_player", "marry_divorce_leaving_player")) {
+                sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
+                return true;
+            }
+
+
+            sender.sendMessage(Language.prefix + Language.getMessage("marry_divorce_divorced"));
+            partner.sendMessage(Language.prefix + Language.getMessage("marry_divorce_divorced"));
+
+            for (String command : PluginConfig.successCommands.get("divorce")) {
+                command = command.replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName());
+                Utils.getUtils().sendConsoleCommand(command);
+            }
+
+            if (force) {
+                player.withdrawMoney("marry_divorce_left_player", "marry_divorce_leaving_player");
+            } else {
                 player.withdrawMoney("marry_divorce_leaving_player");
                 partner.withdrawMoney("marry_divorce_leaving_player");
-
-                for (String command : PluginConfig.successCommands.get("divorce")) {
-                    command = command.replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName());
-                    Utils.getUtils().sendConsoleCommand(command);
-                }
-
-                playerFam.divorce();
             }
+
+            playerFam.divorce();
+            return true;
         }
-        return true;
+        return false;
     }
 }

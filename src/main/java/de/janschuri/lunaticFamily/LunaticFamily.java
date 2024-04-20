@@ -2,8 +2,6 @@ package de.janschuri.lunaticFamily;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import de.janschuri.lunaticFamily.commands.paper.*;
 import de.janschuri.lunaticFamily.config.DatabaseConfig;
 import de.janschuri.lunaticFamily.config.Language;
@@ -38,6 +36,7 @@ public final class LunaticFamily extends JavaPlugin {
     public static Set<String> proxyPlayers = new HashSet<>();
     private static final String IDENTIFIER = "velocity:lunaticfamily";
     private static Path dataDirectory;
+    static Mode mode;
 
     private static LunaticFamily instance;
     public static boolean isProxy = false;
@@ -50,6 +49,7 @@ public final class LunaticFamily extends JavaPlugin {
     public void onEnable() {
 
         instance = this;
+        dataDirectory = getDataFolder().toPath();
         getServer().getMessenger().registerIncomingPluginChannel(this, IDENTIFIER, new ProxyListener());
         getServer().getMessenger().registerOutgoingPluginChannel(this, IDENTIFIER);
         Logger.loadLogger(new BukkitLogger());
@@ -57,12 +57,33 @@ public final class LunaticFamily extends JavaPlugin {
         Utils.loadUtils(new PaperUtils());
 
         loadConfig();
-        Database.loadDatabase(dataDirectory);
 
-        if (!PluginConfig.useProxy) {
-
+        if (!PluginConfig.isBackend) {
+            LunaticFamily.mode = Mode.STANDALONE;
             getServer().getPluginManager().registerEvents(new JoinListener(), this);
             getServer().getPluginManager().registerEvents(new QuitListener(), this);
+
+            List<String> commands = Arrays.asList("family", "marry", "sibling", "adopt", "gender");
+
+            for (String command : commands) {
+                Command cmd = getCommand(command);
+                assert cmd != null;
+                try {
+                    final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+                    bukkitCommandMap.setAccessible(true);
+                    CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+
+                    List<String> list = Language.getAliases(command);
+
+                    list.forEach(alias -> {
+                        commandMap.register(alias, instance.getName(), cmd);
+                    });
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
 
             getCommand("family").setExecutor(new FamilyCommand());
             getCommand("family").setTabCompleter(new FamilyCommand());
@@ -80,49 +101,45 @@ public final class LunaticFamily extends JavaPlugin {
             getCommand("sibling").setTabCompleter(new SiblingCommand());
 
         } else {
-            Logger.infoLog("Proxy mode enabled.");
+            LunaticFamily.mode = Mode.BACKEND;
+            Logger.infoLog("Backend mode enabled.");
         }
 
     }
 
-    public void loadConfig() {
+    public static Mode getMode() {
+        return mode;
+    }
 
-        dataDirectory = getDataFolder().toPath();
+    public static Path getDataDirectory() {
+        return dataDirectory;
+    }
+
+    public static void setDataDirectory(Path dataDirectory) {
+        LunaticFamily.dataDirectory = dataDirectory;
+    }
+
+    public static void loadConfig() {
 
         new PluginConfig(dataDirectory);
-        new Language(dataDirectory);
+        if (mode == Mode.STANDALONE || mode == Mode.PROXY) {
+            new Language(dataDirectory);
+        }
         new DatabaseConfig(dataDirectory);
 
-        List<String> commands = Arrays.asList("family", "marry", "sibling", "adopt", "gender");
 
-        for (String command : commands) {
-            Command cmd = getCommand(command);
-            assert cmd != null;
-            try {
-                final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-                bukkitCommandMap.setAccessible(true);
-                CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+        if (mode == Mode.STANDALONE || mode == Mode.BACKEND) {
+            checkSoftDepends();
+            if (PluginConfig.enabledCrazyAdvancementAPI) {
+                FamilyTree.loadAdvancementMap(instance);
+            }
 
-                List<String> list = Language.getAliases(command);
-
-                list.forEach(alias -> {
-                    commandMap.register(alias, instance.getName(), cmd);
-                });
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+            if (PluginConfig.enabledVault) {
+                new Vault();
             }
         }
 
-        checkSoftDepends();
-        if (PluginConfig.enabledCrazyAdvancementAPI) {
-            FamilyTree.loadAdvancementMap(instance);
-        }
-
-        if (PluginConfig.enabledVault) {
-            new Vault();
-        }
+        Database.loadDatabase(dataDirectory);
     }
 
     @Override

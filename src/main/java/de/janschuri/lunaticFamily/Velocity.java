@@ -69,15 +69,13 @@ public class Velocity {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
+        LunaticFamily.mode = Mode.PROXY;
         proxy.getChannelRegistrar().register(IDENTIFIER);
         de.janschuri.lunaticFamily.utils.logger.Logger.loadLogger(new de.janschuri.lunaticFamily.utils.logger.VelocityLogger(logger));
         Utils.loadUtils(new VelocityUtils());
 
-        new PluginConfig(dataDirectory);
-        new Language(dataDirectory);
-        new DatabaseConfig(dataDirectory);
-
-        Database.loadDatabase(dataDirectory);
+        LunaticFamily.setDataDirectory(dataDirectory);
+        LunaticFamily.loadConfig();
 
         CommandManager commandManager = proxy.getCommandManager();
 
@@ -188,6 +186,13 @@ public class Velocity {
 
     public static void sendPluginMessage(byte[] message) {
         de.janschuri.lunaticFamily.utils.logger.Logger.debugLog("PluginMessage sent.");
-        proxy.getAllServers().forEach(serverConnection -> serverConnection.sendPluginMessage(IDENTIFIER, message));
+
+        if (PluginConfig.enabledServerWhitelist) {
+            proxy.getAllServers().stream()
+                    .filter(serverConnection -> PluginConfig.serverWhitelist.contains(serverConnection.getServerInfo().getName()))
+                    .forEach(serverConnection -> serverConnection.sendPluginMessage(IDENTIFIER, message));
+        } else {
+            proxy.getAllServers().forEach(serverConnection -> serverConnection.sendPluginMessage(IDENTIFIER, message));
+        }
     }
 }

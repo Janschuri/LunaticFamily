@@ -44,7 +44,7 @@ public class GenderSetSubcommand extends Subcommand {
             msg.add(new ClickableMessage(Language.prefix + Language.getMessage("gender_set") + "\n"));
             for (String gender : Language.genders) {
                 msg.add(new ClickableMessage(Language.prefix + " - " + Language.getGenderLang(gender) + "\n"));
-                msg.add(new ClickableMessage("/lunaticfamily:gender set " + gender));
+                msg.add(new ClickableMessage("/family gender set " + gender));
                 msg.add(new ClickableMessage(Language.getMessage("gender_set_hover").replace("%gender%", Language.getGenderLang(gender))));
             }
             player.sendMessage(msg);

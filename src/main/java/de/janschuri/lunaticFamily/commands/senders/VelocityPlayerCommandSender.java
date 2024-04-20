@@ -260,6 +260,12 @@ public class VelocityPlayerCommandSender extends PlayerCommandSender {
     }
 
     @Override
+    public String getServerName() {
+        Optional<Player> playerOptional = Velocity.getProxy().getPlayer(uuid);
+        return playerOptional.map(player -> player.getCurrentServer().get().getServerInfo().getName()).orElse(null);
+    }
+
+    @Override
     public boolean hasEnoughMoney(String... withdrawKeys) {
         if (PluginConfig.enabledVault) {
             double amount = 0.0;
@@ -374,6 +380,10 @@ public class VelocityPlayerCommandSender extends PlayerCommandSender {
 
     @Override
     public boolean isInRange(UUID playerUUID, double range) {
+        if (range < 0) {
+            return true;
+        }
+
         int requestId = requestIdGenerator.incrementAndGet();
         CompletableFuture<Boolean> responseFuture = new CompletableFuture<>();
 

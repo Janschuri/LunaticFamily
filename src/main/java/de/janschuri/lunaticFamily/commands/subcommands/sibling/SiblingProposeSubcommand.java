@@ -46,9 +46,18 @@ public class SiblingProposeSubcommand extends Subcommand {
 
             if (!sibling.exists()) {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[1]));
-            } else if (sibling.isOnline()) {
+                return true;
+            }
+            if (sibling.isOnline()) {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", sibling.getName()));
-            } else {
+                return true;
+            }
+
+            if (!Utils.getUtils().isPlayerOnWhitelistedServer(sibling.getUniqueId())) {
+                player.sendMessage(Language.prefix + Language.getMessage("player_not_on_whitelisted_server").replace("%player%", sibling.getName().replace("%server%", sibling.getServerName())));
+                return true;
+            }
+
                 UUID siblingUUID = sibling.getUniqueId();
                 FamilyPlayer siblingFam = sibling.getFamilyPlayer();
                 if (playerFam.getID() == siblingFam.getID()) {
@@ -65,7 +74,7 @@ public class SiblingProposeSubcommand extends Subcommand {
                     sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
                 } else {
 
-                    if (!player.isSameServer(sibling.getUniqueId())) {
+                    if (!player.isSameServer(sibling.getUniqueId()) && PluginConfig.siblingProposeRange >= 0) {
                         sender.sendMessage(Language.prefix + Language.getMessage("player_not_same_server").replace("%player%", sibling.getName()));
                         return true;
                     }
@@ -78,9 +87,9 @@ public class SiblingProposeSubcommand extends Subcommand {
                     sibling.sendMessage(new ClickableDecisionMessage(
                             Language.getMessage("sibling_propose_request").replace("%player%", siblingFam.getName()),
                             Language.getMessage("accept"),
-                            "/lunaticfamily:sibling accept",
+                            "/family sibling accept",
                             Language.getMessage("deny"),
-                            "/lunaticfamily:sibling deny"));
+                            "/family sibling deny"));
 
                     LunaticFamily.siblingRequests.put(siblingUUID.toString(), playerUUID.toString());
 
@@ -88,7 +97,7 @@ public class SiblingProposeSubcommand extends Subcommand {
 
                     player.sendSiblingRequest(siblingUUID);
                 }
-            }
+
         }
         return true;
     }

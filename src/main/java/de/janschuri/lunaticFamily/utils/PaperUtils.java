@@ -38,6 +38,11 @@ public class PaperUtils extends Utils {
         }
     }
 
+    @Override
+    public boolean isPlayerOnWhitelistedServer(UUID uuid) {
+        return true;
+    }
+
     public static ItemStack getSkull(String url) {
         PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
         PlayerTextures textures = profile.getTextures();
