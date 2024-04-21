@@ -1,6 +1,7 @@
 package de.janschuri.lunaticFamily.database;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.Mode;
 import de.janschuri.lunaticFamily.config.DatabaseConfig;
 import de.janschuri.lunaticFamily.utils.logger.Logger;
 
@@ -26,6 +27,14 @@ public abstract class Database {
             db = new MySQL();
             if (db.getSQLConnection() == null) {
                 Logger.errorLog("Error initializing MySQL database");
+                if (LunaticFamily.getMode() == Mode.PROXY) {
+                    Logger.errorLog("Proxy mode requires a MySQL database. Please check your configuration and try again.");
+                    return;
+                }
+                if (LunaticFamily.getMode() == Mode.BACKEND) {
+                    Logger.errorLog("Backend mode requires a MySQL database. Please check your configuration and try again.");
+                    return;
+                }
                 Logger.warnLog("Falling back to SQLite due to initialization error");
                 db = new SQLite(dataDirectory);
             } else {
@@ -36,7 +45,7 @@ public abstract class Database {
             Logger.infoLog("Successfully initialized SQLite database");
         }
         db.load();
-    };
+    }
 
     public static Database getDatabase() {
         return db;

@@ -26,7 +26,6 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 
-
 public final class LunaticFamily extends JavaPlugin {
     public static BiMap<String, String> marryRequests = HashBiMap.create();
     public static BiMap<String, String> marryPriestRequests = HashBiMap.create();
