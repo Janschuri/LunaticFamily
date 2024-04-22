@@ -8,7 +8,7 @@ import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.external.Vault;
-import de.janschuri.lunaticFamily.handler.FamilyTree;
+import de.janschuri.lunaticFamily.external.FamilyTree;
 import de.janschuri.lunaticFamily.listener.paper.JoinListener;
 import de.janschuri.lunaticFamily.listener.paper.MessageListener;
 import de.janschuri.lunaticFamily.listener.paper.QuitListener;
@@ -27,12 +27,12 @@ import java.util.*;
 import java.util.List;
 
 public final class LunaticFamily extends JavaPlugin {
-    public static BiMap<String, String> marryRequests = HashBiMap.create();
-    public static BiMap<String, String> marryPriestRequests = HashBiMap.create();
-    public static BiMap<String, String> marryPriest = HashBiMap.create();
-    public static BiMap<String, String> adoptRequests = HashBiMap.create();
-    public static BiMap<String, String> siblingRequests = HashBiMap.create();
-    private static final String IDENTIFIER = "velocity:lunaticfamily";
+    public static BiMap<UUID, UUID> marryRequests = HashBiMap.create();
+    public static BiMap<UUID, UUID> marryPriestRequests = HashBiMap.create();
+    public static BiMap<UUID, UUID> marryPriest = HashBiMap.create();
+    public static BiMap<UUID, UUID> adoptRequests = HashBiMap.create();
+    public static BiMap<UUID, UUID> siblingRequests = HashBiMap.create();
+    private static final String IDENTIFIER = "lunaticfamily:proxy";
     private static Path dataDirectory;
     static Mode mode = Mode.STANDALONE;
 
@@ -115,10 +115,6 @@ public final class LunaticFamily extends JavaPlugin {
         return mode;
     }
 
-    public static Path getDataDirectory() {
-        return dataDirectory;
-    }
-
     public static void setDataDirectory(Path dataDirectory) {
         LunaticFamily.dataDirectory = dataDirectory;
     }
@@ -135,7 +131,6 @@ public final class LunaticFamily extends JavaPlugin {
 
 
         if (mode == Mode.STANDALONE || mode == Mode.BACKEND) {
-            checkSoftDepends();
             if (PluginConfig.enabledCrazyAdvancementAPI) {
                 FamilyTree.loadAdvancementMap(instance);
                 Logger.infoLog("Loaded family tree.");
@@ -157,25 +152,5 @@ public final class LunaticFamily extends JavaPlugin {
 
     public static void sendPluginMessage(byte[] message) {
         getInstance().getServer().sendPluginMessage(getInstance(), IDENTIFIER, message);
-    }
-
-    public static void checkSoftDepends() {
-        try {
-            Class.forName("eu.endercentral.crazy_advancements.CrazyAdvancementsAPI");
-        } catch (ClassNotFoundException e) {
-            if (PluginConfig.enabledCrazyAdvancementAPI) {
-                Logger.warnLog("CrazyAdvancementsAPI is not installed. Disabling CrazyAdvancementsAPI features.");
-                PluginConfig.enabledCrazyAdvancementAPI = false;
-            }
-        }
-
-        try {
-            Class.forName("net.milkbowl.vault.economy.Economy");
-        } catch (ClassNotFoundException e) {
-            if (PluginConfig.enabledVault) {
-                Logger.warnLog("Vault is not installed. Disabling Vault features.");
-                PluginConfig.enabledVault = false;
-            }
-        }
     }
 }

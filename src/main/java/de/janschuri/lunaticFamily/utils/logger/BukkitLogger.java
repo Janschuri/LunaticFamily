@@ -7,20 +7,20 @@ import org.bukkit.Bukkit;
 public class BukkitLogger extends Logger {
     private static final LunaticFamily plugin = LunaticFamily.getInstance();
 
-    public void debug(String msg) {
+    public static void debugLog(String msg) {
         if(PluginConfig.isDebug){
             Bukkit.getLogger().info("[" +plugin.getName() + "] [DEBUG]: " + msg);
         }
     }
-    public void info(String msg) {
+    public static void infoLog(String msg) {
         Bukkit.getLogger().info("[" + plugin.getName() + "] [INFO]: " + msg);
     }
 
-    public void warn(String msg) {
+    public static void warnLog(String msg) {
         Bukkit.getLogger().warning("[" + plugin.getName() + "] [WARN]: " + msg);
     }
 
-    public void error(String msg) {
+    public static void errorLog(String msg) {
         Bukkit.getLogger().severe("[" + plugin.getName() + "] [ERROR]: " + msg);
     }
 }

@@ -1,7 +1,7 @@
 package de.janschuri.lunaticFamily.commands.subcommands.sibling;
 
-import de.janschuri.lunaticFamily.commands.CommandSender;
-import de.janschuri.lunaticFamily.commands.PlayerCommandSender;
+import de.janschuri.lunaticFamily.senders.CommandSender;
+import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
@@ -39,7 +39,7 @@ public class SiblingUnsetSubcommand extends Subcommand {
                 player1 = sender.getPlayerCommandSender(args[1]);
                 player1UUID = player1.getUniqueId();
             }
-            FamilyPlayer player1Fam = player1.getFamilyPlayer();
+            FamilyPlayer player1Fam = new FamilyPlayer(player1UUID);
 
             if (!player1.exists()) {
                 sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", player1.getName()));

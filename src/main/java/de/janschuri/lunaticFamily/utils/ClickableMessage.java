@@ -1,6 +1,4 @@
-package de.janschuri.lunaticFamily.commands;
-
-import java.util.HexFormat;
+package de.janschuri.lunaticFamily.utils;
 
 public class ClickableMessage {
     private String text;

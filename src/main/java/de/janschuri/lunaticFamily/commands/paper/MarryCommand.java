@@ -1,6 +1,8 @@
 package de.janschuri.lunaticFamily.commands.paper;
 
 import de.janschuri.lunaticFamily.commands.subcommands.family.MarrySubcommand;
+import de.janschuri.lunaticFamily.senders.paper.CommandSender;
+import de.janschuri.lunaticFamily.senders.paper.PlayerCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;

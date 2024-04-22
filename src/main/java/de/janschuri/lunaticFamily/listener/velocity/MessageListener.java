@@ -1,7 +1,6 @@
 package de.janschuri.lunaticFamily.listener.velocity;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
@@ -15,7 +14,6 @@ public class MessageListener {
     public void onPluginMessage(PluginMessageEvent event) {
         byte[] message = event.getData();
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
         String subchannel = in.readUTF();
         if (subchannel.equals("IsInRangeResponse")) {
             int requestId = in.readInt();
@@ -53,6 +51,16 @@ public class MessageListener {
             boolean success = in.readBoolean();
             CompletableFuture<Boolean> request = Velocity.booleanRequestMap.get(requestId);
             request.complete(success);
+        }
+
+        if (subchannel.equals("GetPositionResponse")) {
+            int requestId = in.readInt();
+            double[] position = new double[3];
+            position[0] = in.readDouble();
+            position[1] = in.readDouble();
+            position[2] = in.readDouble();
+            CompletableFuture<double[]> request = Velocity.doubleArrayRequestMap.get(requestId);
+            request.complete(position);
         }
     }
 }

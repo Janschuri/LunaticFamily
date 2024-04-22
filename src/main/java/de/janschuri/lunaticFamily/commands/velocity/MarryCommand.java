@@ -4,6 +4,8 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import de.janschuri.lunaticFamily.commands.subcommands.family.MarrySubcommand;
+import de.janschuri.lunaticFamily.senders.velocity.CommandSender;
+import de.janschuri.lunaticFamily.senders.velocity.PlayerCommandSender;
 import de.janschuri.lunaticFamily.utils.Utils;
 
 import java.util.List;

@@ -1,8 +1,8 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
-import de.janschuri.lunaticFamily.commands.ClickableDecisionMessage;
-import de.janschuri.lunaticFamily.commands.CommandSender;
-import de.janschuri.lunaticFamily.commands.PlayerCommandSender;
+import de.janschuri.lunaticFamily.utils.ClickableDecisionMessage;
+import de.janschuri.lunaticFamily.senders.CommandSender;
+import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
@@ -27,7 +27,7 @@ public class MarryDivorceSubcommand extends Subcommand {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
             PlayerCommandSender player = (PlayerCommandSender) sender;
-            String playerUUID = player.getUniqueId().toString();
+            UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
             boolean confirm = false;
@@ -66,7 +66,7 @@ public class MarryDivorceSubcommand extends Subcommand {
                         "/family marry divorce cancel"));
                 return true;
             }
-            if (!player.hasEnoughMoney("marry_divorce_leaving_player")) {
+            if (!Utils.getUtils().hasEnoughMoney(playerUUID, "marry_divorce_leaving_player")) {
                 sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
                 return true;
             }
@@ -74,7 +74,7 @@ public class MarryDivorceSubcommand extends Subcommand {
             UUID partnerUUID = playerFam.getPartner().getUniqueId();
             PlayerCommandSender partner = sender.getPlayerCommandSender(partnerUUID);
 
-            if (!partner.hasEnoughMoney("marry_divorce_left_player")) {
+            if (!Utils.getUtils().hasEnoughMoney(partnerUUID, "marry_divorce_left_player")) {
                 player.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", playerFam.getPartner().getName()));
                 player.sendMessage(new ClickableDecisionMessage(
                         Language.getMessage("take_payment_confirm"),
@@ -85,7 +85,7 @@ public class MarryDivorceSubcommand extends Subcommand {
                 return true;
             }
 
-            if (force && !player.hasEnoughMoney("marry_divorce_left_player", "marry_divorce_leaving_player")) {
+            if (force && !Utils.getUtils().hasEnoughMoney(playerUUID, "marry_divorce_left_player", "marry_divorce_leaving_player")) {
                 sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
                 return true;
             }
@@ -100,10 +100,10 @@ public class MarryDivorceSubcommand extends Subcommand {
             }
 
             if (force) {
-                player.withdrawMoney("marry_divorce_left_player", "marry_divorce_leaving_player");
+                Utils.getUtils().withdrawMoney(playerUUID, "marry_divorce_left_player", "marry_divorce_leaving_player");
             } else {
-                player.withdrawMoney("marry_divorce_leaving_player");
-                partner.withdrawMoney("marry_divorce_leaving_player");
+                Utils.getUtils().withdrawMoney(playerUUID, "marry_divorce_leaving_player");
+                Utils.getUtils().withdrawMoney(partnerUUID, "marry_divorce_leaving_player");
             }
 
             playerFam.divorce();

@@ -2,29 +2,25 @@ package de.janschuri.lunaticFamily.utils.logger;
 
 public class VelocityLogger extends Logger {
 
-    org.slf4j.Logger logger;
+    static org.slf4j.Logger logger;
 
     public VelocityLogger(org.slf4j.Logger logger) {
         this.logger = logger;
     }
 
-    @Override
-    public void debug(String msg) {
+    public static void debugLog(String msg) {
         logger.debug(msg);
     }
 
-    @Override
-    public void info(String msg) {
+    public static void infoLog(String msg) {
         logger.info(msg);
     }
 
-    @Override
-    public void warn(String msg) {
+    public static void warnLog(String msg) {
         logger.warn(msg);
     }
 
-    @Override
-    public void error(String msg) {
+    public static void errorLog(String msg) {
         logger.error(msg);
     }
 }

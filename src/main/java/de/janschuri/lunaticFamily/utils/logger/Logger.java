@@ -12,24 +12,19 @@ public abstract class Logger {
 
     public static void debugLog(String msg) {
         if(PluginConfig.isDebug){
-            logger.debug(msg);
+            logger.debugLog(msg);
         }
     }
 
     public static void infoLog(String msg) {
-        logger.info(msg);
+        logger.infoLog(msg);
     }
 
     public static void warnLog(String msg) {
-        logger.warn(msg);
+        logger.warnLog(msg);
     }
 
     public static void errorLog(String msg) {
-        logger.error(msg);
+        logger.errorLog(msg);
     }
-
-    public abstract void debug(String msg);
-    public abstract void info(String msg);
-    public abstract void warn(String msg);
-    public abstract void error(String msg);
 }

@@ -1,16 +1,13 @@
-package de.janschuri.lunaticFamily.commands.velocity;
+package de.janschuri.lunaticFamily.senders.velocity;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.scheduler.ScheduledTask;
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.Velocity;
-import de.janschuri.lunaticFamily.commands.ClickableDecisionMessage;
-import de.janschuri.lunaticFamily.commands.ClickableMessage;
-import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.utils.ClickableDecisionMessage;
+import de.janschuri.lunaticFamily.utils.ClickableMessage;
 import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import net.kyori.adventure.text.Component;
@@ -25,7 +22,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class PlayerCommandSender extends de.janschuri.lunaticFamily.commands.PlayerCommandSender {
+public class PlayerCommandSender extends de.janschuri.lunaticFamily.senders.PlayerCommandSender {
 
     private final UUID uuid;
     private final AtomicInteger requestIdGenerator = new AtomicInteger(0);
@@ -266,105 +263,25 @@ public class PlayerCommandSender extends de.janschuri.lunaticFamily.commands.Pla
     }
 
     @Override
-    public boolean hasEnoughMoney(String... withdrawKeys) {
-        if (PluginConfig.enabledVault) {
-            double amount = 0.0;
-            for (String key : withdrawKeys) {
-                if (PluginConfig.commandWithdraws.containsKey(key)) {
-                    amount += PluginConfig.commandWithdraws.get(key);
-                }
-            }
+    public double[] getPosition() {
+        int requestId = requestIdGenerator.incrementAndGet();
+        CompletableFuture<double[]> responseFuture = new CompletableFuture<>();
 
-            int requestId = requestIdGenerator.incrementAndGet();
-            CompletableFuture<Boolean> responseFuture = new CompletableFuture<>();
+        Velocity.doubleArrayRequestMap.put(requestId, responseFuture);
 
-            Velocity.booleanRequestMap.put(requestId, responseFuture);
-
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("HasEnoughMoneyRequest");
-            out.writeInt(requestId);
-            out.writeUTF(uuid.toString());
-            out.writeDouble(amount);
-            Velocity.sendPluginMessage(out.toByteArray());
-
-            try {
-                // Wait for the response with a timeout
-                return responseFuture.get(timeout, unit);
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                e.printStackTrace();
-                return false; // An error occurred while waiting for response or timeout
-            }
-
-        } else {
-            return true;
-        }
-    }
-
-    @Override
-    public boolean hasEnoughMoney(double factor, String... withdrawKeys) {
-        if (PluginConfig.enabledVault) {
-            double amount = 0.0;
-            for (String key : withdrawKeys) {
-                if (PluginConfig.commandWithdraws.containsKey(key)) {
-                    amount += PluginConfig.commandWithdraws.get(key);
-                }
-            }
-            amount *= factor;
-
-            int requestId = requestIdGenerator.incrementAndGet();
-            CompletableFuture<Boolean> responseFuture = new CompletableFuture<>();
-
-            Velocity.booleanRequestMap.put(requestId, responseFuture);
-
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("HasEnoughMoneyRequest");
-            out.writeInt(requestId);
-            out.writeUTF(uuid.toString());
-            out.writeDouble(amount);
-            Velocity.sendPluginMessage(out.toByteArray());
-
-            try {
-                // Wait for the response with a timeout
-                return responseFuture.get(timeout, unit);
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                e.printStackTrace();
-                return false; // An error occurred while waiting for response or timeout
-            }
-
-
-
-        } else {
-            return true;
-        }
-    }
-    @Override
-    public boolean withdrawMoney(String... withdrawKeys) {
-        return !PluginConfig.enabledVault;
-    }
-
-    @Override
-    public boolean withdrawMoney(double factor, String... withdrawKeys) {
-        return !PluginConfig.enabledVault;
-    }
-
-    @Override
-    public double[] getPositionBetween(UUID partnerUUID) {
-        return null;
-    }
-
-    @Override
-    public void spawnParticleCloud(double[] position, String particleString) {
-
-    }
-
-    @Override
-    public void spawnKissParticles(UUID partnerUUID) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("MarryKissEvent");
+        out.writeUTF("GetPositionRequest");
+        out.writeInt(requestId);
         out.writeUTF(uuid.toString());
-        out.writeUTF(partnerUUID.toString());
-        out.writeDouble(PluginConfig.marryKissRange);
         Velocity.sendPluginMessage(out.toByteArray());
+
+        try {
+            // Wait for the response with a timeout
+            return responseFuture.get(timeout, unit);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            e.printStackTrace();
+            return null; // An error occurred while waiting for response or timeout
+        }
     }
 
     @Override
@@ -412,116 +329,14 @@ public class PlayerCommandSender extends de.janschuri.lunaticFamily.commands.Pla
     }
 
     @Override
-    public de.janschuri.lunaticFamily.commands.PlayerCommandSender getPlayerCommandSender(UUID uuid) {
+    public de.janschuri.lunaticFamily.senders.PlayerCommandSender getPlayerCommandSender(UUID uuid) {
         return new PlayerCommandSender(uuid);
     }
 
     @Override
-    public de.janschuri.lunaticFamily.commands.PlayerCommandSender getPlayerCommandSender(String name) {
+    public de.janschuri.lunaticFamily.senders.PlayerCommandSender getPlayerCommandSender(String name) {
         return new PlayerCommandSender(name);
     }
-
-    @Override
-    public void sendAdoptRequest(UUID childUUID) {
-
-        if (PluginConfig.adoptProposeRange >= 0) {
-
-            return;
-        }
-
-        Runnable task = () -> {
-                if (LunaticFamily.adoptRequests.containsKey(childUUID.toString())) {
-                    LunaticFamily.adoptRequests.remove(childUUID.toString());
-                    FamilyPlayer playerFam = getFamilyPlayer();
-                    FamilyPlayer childFam = new FamilyPlayer(childUUID);
-                    de.janschuri.lunaticFamily.commands.PlayerCommandSender child = getPlayerCommandSender(childUUID);
-                    if (playerFam.isMarried()) {
-                        FamilyPlayer partnerFam = playerFam.getPartner();
-                        child.sendMessage(Language.prefix + Language.getMessage("adopt_propose_request_expired").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));
-                    } else {
-                        child.sendMessage(Language.prefix + Language.getMessage("adopt_propose_request_by_single_expired").replace("%player%", playerFam.getName()));
-                    }
-                    sendMessage(Language.prefix + Language.getMessage("adopt_request_sent_expired").replace("%player%", childFam.getName()));
-                }
-        };
-
-        executeAsync(task, 600);
-    }
-
-    @Override
-    public void sendMarryRequest(UUID uuid) {
-        de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender partner = new de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender(uuid);
-        Runnable task = () -> {
-            if (LunaticFamily.marryRequests.containsKey(uuid.toString())) {
-                LunaticFamily.marryRequests.remove(uuid.toString());
-                partner.sendMessage(Language.prefix + Language.getMessage("marry_propose_request_expired").replace("%player%", getName()));
-
-                sendMessage(Language.prefix + Language.getMessage("marry_propose_request_sent_expired").replace("%player%", partner.getName()));
-            }
-        };
-
-        executeAsync(task, 600);
-    }
-
-    @Override
-    public void sendMarryPriestRequest(UUID player1UUID, UUID player2UUID) {
-        de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender player1 = new de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender(player1UUID);
-        de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender player2 = new de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender(player2UUID);
-        Runnable task = () -> {
-            if (LunaticFamily.marryPriest.containsValue(getUniqueId().toString())) {
-                sendMessage(Language.prefix + Language.getMessage("marry_priest_request_expired_priest").replace("%player1%", player1.getName()).replace("%player2%", player2.getName()));
-                player1.sendMessage(Language.prefix + Language.getMessage("marry_priest_request_expired_player").replace("%player%", player2.getName()));
-                player2.sendMessage(Language.prefix + Language.getMessage("marry_priest_request_expired_player").replace("%player%", player1.getName()));
-
-                LunaticFamily.marryRequests.remove(player2UUID);
-                LunaticFamily.marryPriestRequests.remove(player1UUID);
-                LunaticFamily.marryPriest.remove(player1UUID);
-            }
-        };
-
-        executeAsync(task, 600);
-    }
-
-    @Override
-    public void sendSiblingRequest(UUID siblingUUID) {
-        de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender sibling = new de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender(siblingUUID);
-        Runnable task = () -> {
-            if (LunaticFamily.siblingRequests.containsKey(siblingUUID.toString())) {
-                LunaticFamily.siblingRequests.remove(siblingUUID.toString());
-                sibling.sendMessage(Language.prefix + Language.getMessage("sibling_propose_request_expired").replace("%player%", getName()));
-
-                sendMessage(Language.prefix + Language.getMessage("sibling_propose_request_sent_expired").replace("%player%", sibling.getName()));
-            }
-        };
-
-        executeAsync(task, 600);
-    }
-
-    @Override
-    public void onJoinEvent() {
-        FamilyPlayer playerFam = getFamilyPlayer();
-        Runnable task = () -> {
-            if (playerFam.isMarried()) {
-                de.janschuri.lunaticFamily.commands.PlayerCommandSender partner = getPlayerCommandSender(playerFam.getPartner().getUniqueId());
-                if (!LunaticFamily.isProxy) {
-                    if (partner.isOnline()) {
-                        partner.sendMessage(Language.prefix + Language.getMessage("marry_partner_online"));
-                        sendMessage(Language.prefix + Language.getMessage("marry_partner_online"));
-                    } else {
-                        sendMessage(Language.prefix + Language.getMessage("marry_partner_offline"));
-                    }
-                }
-            }
-        };
-
-        executeAsync(task, 5);
-    }
-
-    @Override
-    public void onQuitEvent() {
-
-    }
-
     @Override
     public boolean isSameServer(UUID player1UUID) {
         Optional<Player> player1 = Velocity.getProxy().getPlayer(player1UUID);

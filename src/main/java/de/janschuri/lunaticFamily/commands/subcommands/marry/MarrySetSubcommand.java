@@ -1,8 +1,8 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.commands.CommandSender;
-import de.janschuri.lunaticFamily.commands.PlayerCommandSender;
+import de.janschuri.lunaticFamily.senders.CommandSender;
+import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
@@ -75,8 +75,8 @@ public class MarrySetSubcommand extends Subcommand {
             }
             else {
 
-                FamilyPlayer player2Fam = player2.getFamilyPlayer();
-                FamilyPlayer player1Fam = player1.getFamilyPlayer();
+                FamilyPlayer player2Fam = new FamilyPlayer(player2UUID);
+                FamilyPlayer player1Fam = new FamilyPlayer(player1UUID);
 
                 if (player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() > 2) {
                     int amountDiff = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() - 2;

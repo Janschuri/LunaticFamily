@@ -26,14 +26,12 @@ public abstract class Database {
         if (DatabaseConfig.useMySQL) {
             db = new MySQL();
             if (db.getSQLConnection() == null) {
-                Logger.errorLog("Error initializing MySQL database");
+                Logger.errorLog("Error initializing MySQL database.");
                 if (LunaticFamily.getMode() == Mode.PROXY) {
-                    Logger.errorLog("Proxy mode requires a MySQL database. Please check your configuration and try again.");
-                    return;
+                    throw new RuntimeException("Proxy mode requires a MySQL database. Please check your configuration and try again.");
                 }
                 if (LunaticFamily.getMode() == Mode.BACKEND) {
-                    Logger.errorLog("Backend mode requires a MySQL database. Please check your configuration and try again.");
-                    return;
+                    throw new RuntimeException("Backend mode requires a MySQL database. Please check your configuration and try again.");
                 }
                 Logger.warnLog("Falling back to SQLite due to initialization error");
                 db = new SQLite(dataDirectory);

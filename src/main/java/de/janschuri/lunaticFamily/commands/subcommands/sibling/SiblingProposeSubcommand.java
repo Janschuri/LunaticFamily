@@ -1,15 +1,16 @@
 package de.janschuri.lunaticFamily.commands.subcommands.sibling;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.commands.ClickableDecisionMessage;
-import de.janschuri.lunaticFamily.commands.CommandSender;
-import de.janschuri.lunaticFamily.commands.PlayerCommandSender;
+import de.janschuri.lunaticFamily.utils.ClickableDecisionMessage;
+import de.janschuri.lunaticFamily.senders.CommandSender;
+import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
 
+import java.util.TimerTask;
 import java.util.UUID;
 
 public class SiblingProposeSubcommand extends Subcommand {
@@ -59,7 +60,7 @@ public class SiblingProposeSubcommand extends Subcommand {
             }
 
                 UUID siblingUUID = sibling.getUniqueId();
-                FamilyPlayer siblingFam = sibling.getFamilyPlayer();
+                FamilyPlayer siblingFam = new FamilyPlayer(siblingUUID);
                 if (playerFam.getID() == siblingFam.getID()) {
                     sender.sendMessage(Language.prefix + Language.getMessage("sibling_propose_self_request"));
                 } else if (playerFam.isFamilyMember(siblingFam.getID())) {
@@ -70,7 +71,7 @@ public class SiblingProposeSubcommand extends Subcommand {
                     sender.sendMessage(Language.prefix + Language.getMessage("sibling_propose_sibling_is_adopted").replace("%player%", siblingFam.getName()));
                 } else if (LunaticFamily.siblingRequests.containsKey(siblingUUID)) {
                     sender.sendMessage(Language.prefix + Language.getMessage("sibling_propose_open_request").replace("%player%", siblingFam.getName()));
-                } else if (!player.hasEnoughMoney("sibling_proposing_player")) {
+                } else if (!Utils.getUtils().hasEnoughMoney(playerUUID, "sibling_proposing_player")) {
                     sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
                 } else {
 
@@ -91,11 +92,23 @@ public class SiblingProposeSubcommand extends Subcommand {
                             Language.getMessage("deny"),
                             "/family sibling deny"));
 
-                    LunaticFamily.siblingRequests.put(siblingUUID.toString(), playerUUID.toString());
+                    LunaticFamily.siblingRequests.put(siblingUUID, playerUUID);
 
                     sender.sendMessage(Language.prefix + Language.getMessage("sibling_propose_request_sent").replace("%player%", siblingFam.getName()));
 
-                    player.sendSiblingRequest(siblingUUID);
+                    TimerTask task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            if (LunaticFamily.siblingRequests.containsKey(siblingUUID)) {
+                                LunaticFamily.siblingRequests.remove(siblingUUID);
+                                sibling.sendMessage(Language.prefix + Language.getMessage("sibling_propose_request_expired").replace("%player%", player.getName()));
+
+                                player.sendMessage(Language.prefix + Language.getMessage("sibling_propose_request_sent_expired").replace("%player%", sibling.getName()));
+                            }
+                        }
+                    };
+
+                    Utils.getTimer().schedule(task, 30 * 1000);
                 }
 
         }

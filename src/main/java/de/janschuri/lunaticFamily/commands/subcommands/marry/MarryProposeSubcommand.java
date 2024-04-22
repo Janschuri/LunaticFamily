@@ -1,9 +1,9 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.commands.ClickableDecisionMessage;
-import de.janschuri.lunaticFamily.commands.CommandSender;
-import de.janschuri.lunaticFamily.commands.PlayerCommandSender;
+import de.janschuri.lunaticFamily.utils.ClickableDecisionMessage;
+import de.janschuri.lunaticFamily.senders.CommandSender;
+import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.config.PluginConfig;
@@ -65,12 +65,12 @@ public class MarryProposeSubcommand extends Subcommand {
                 return true;
             }
 
-            if (!player.hasEnoughMoney("marry_proposing_player")) {
+            if (!Utils.getUtils().hasEnoughMoney(playerUUID, "marry_proposing_player")) {
                 sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
                 return true;
             }
 
-                FamilyPlayer partnerFam = partner.getFamilyPlayer();
+                FamilyPlayer partnerFam = new FamilyPlayer(partnerUUID);
                 if (playerFam.isFamilyMember(partnerFam.getID())) {
                     sender.sendMessage(Language.prefix + Language.getMessage("marry_propose_family_request").replace("%player%", partnerFam.getName()));
                 } else if (partnerFam.isFamilyMember(playerFam.getID())) {
@@ -97,7 +97,7 @@ public class MarryProposeSubcommand extends Subcommand {
                             "/family marry deny"));
 
 
-                    LunaticFamily.marryRequests.put(partnerUUID.toString(), playerUUID.toString());
+                    LunaticFamily.marryRequests.put(partnerUUID, playerUUID);
 
                     sender.sendMessage(Language.prefix + Language.getMessage("marry_propose_request_sent").replace("%player%", partnerFam.getName()));
                 }

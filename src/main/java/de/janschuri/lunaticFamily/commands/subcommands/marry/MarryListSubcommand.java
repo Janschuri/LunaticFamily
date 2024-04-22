@@ -1,7 +1,7 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
-import de.janschuri.lunaticFamily.commands.ClickableMessage;
-import de.janschuri.lunaticFamily.commands.CommandSender;
+import de.janschuri.lunaticFamily.utils.ClickableMessage;
+import de.janschuri.lunaticFamily.senders.CommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.database.Database;

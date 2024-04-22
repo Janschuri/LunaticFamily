@@ -9,6 +9,8 @@ import java.util.List;
 
 import com.velocitypowered.api.proxy.Player;
 import de.janschuri.lunaticFamily.commands.subcommands.family.FamilySubcommand;
+import de.janschuri.lunaticFamily.senders.velocity.CommandSender;
+import de.janschuri.lunaticFamily.senders.velocity.PlayerCommandSender;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticFamily.utils.logger.Logger;
 

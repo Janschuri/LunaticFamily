@@ -1,12 +1,15 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
-import de.janschuri.lunaticFamily.commands.CommandSender;
-import de.janschuri.lunaticFamily.commands.PlayerCommandSender;
+import de.janschuri.lunaticFamily.senders.CommandSender;
+import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
+
+import java.util.TimerTask;
+import java.util.UUID;
 
 public class MarryKissSubcommand extends Subcommand {
     private static final String mainCommand = "marry";
@@ -24,7 +27,7 @@ public class MarryKissSubcommand extends Subcommand {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
             PlayerCommandSender player = (PlayerCommandSender) sender;
-            String playerUUID = player.getUniqueId().toString();
+            UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
             if (!playerFam.isMarried()) {
@@ -54,7 +57,19 @@ public class MarryKissSubcommand extends Subcommand {
                 return true;
             }
 
-            player.spawnKissParticles(partner.getUniqueId());
+            double[] playerPosition = player.getPosition();
+            double[] partnerPosition = partner.getPosition();
+            double[] position = Utils.getPositionBetweenLocations(playerPosition, partnerPosition);
+            position[1] += 2;
+            for (int i = 0; i < 6; i++) {
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        Utils.getUtils().spawnParticleCloud(playerUUID, position, "HEART");
+                    }
+                };
+                Utils.getTimer().schedule(task, i * 5L);
+            }
 
         }
         return true;

@@ -4,10 +4,11 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.commands.paper.PlayerCommandSender;
+import de.janschuri.lunaticFamily.senders.paper.PlayerCommandSender;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.database.Database;
-import de.janschuri.lunaticFamily.handler.FamilyTree;
+import de.janschuri.lunaticFamily.external.FamilyTree;
+import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticFamily.utils.logger.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -30,16 +31,6 @@ public class MessageListener implements PluginMessageListener {
         if (!PluginConfig.isBackend) {
             Logger.warnLog("Detected Proxy Message, but Proxy is disabled in the config. Enable it to connect to the Proxy.");
             return;
-        }
-
-        if (subchannel.equals("MarryKissEvent")) {
-            UUID playerUUID = UUID.fromString(in.readUTF());
-            UUID partnerUUID = UUID.fromString(in.readUTF());
-            double range = in.readDouble();
-            PlayerCommandSender player = new PlayerCommandSender(playerUUID);
-            PlayerCommandSender partner = new PlayerCommandSender(partnerUUID);
-
-            player.spawnKissParticles(partnerUUID);
         }
 
         if (subchannel.equals("IsInRangeRequest")) {
@@ -69,9 +60,7 @@ public class MessageListener implements PluginMessageListener {
             UUID playerUUID = UUID.fromString(in.readUTF());
             double amount = in.readDouble();
 
-            PlayerCommandSender player = new PlayerCommandSender(playerUUID);
-
-            boolean hasEnoughMoney = player.hasEnoughMoney(amount);
+            boolean hasEnoughMoney = Utils.getUtils().hasEnoughMoney(playerUUID, amount);
 
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("HasEnoughMoneyResponse");
@@ -180,6 +169,46 @@ public class MessageListener implements PluginMessageListener {
             out.writeUTF("GiveItemDropResponse");
             out.writeInt(requestId);
             out.writeBoolean(dropped);
+
+            LunaticFamily.sendPluginMessage(out.toByteArray());
+        }
+
+        if (subchannel.equals("SpawnParticleCloud")) {
+            UUID playerUUID = UUID.fromString(in.readUTF());
+            double x = in.readDouble();
+            double y = in.readDouble();
+            double z = in.readDouble();
+            String particleType = in.readUTF();
+
+            if (Bukkit.getPlayer(playerUUID) == null) {
+                return;
+            }
+
+            double[] position = new double[]{x, y, z};
+
+            PlayerCommandSender player = new PlayerCommandSender(playerUUID);
+
+            Utils.getUtils().spawnParticleCloud(playerUUID, position, particleType);
+        }
+
+        if (subchannel.equals("GetPositionRequest")) {
+            int requestId = in.readInt();
+            UUID playerUUID = UUID.fromString(in.readUTF());
+
+            if (Bukkit.getPlayer(playerUUID) == null) {
+                return;
+            }
+
+            PlayerCommandSender player = new PlayerCommandSender(playerUUID);
+
+            double[] position = player.getPosition();
+
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("GetPositionResponse");
+            out.writeInt(requestId);
+            out.writeDouble(position[0]);
+            out.writeDouble(position[1]);
+            out.writeDouble(position[2]);
 
             LunaticFamily.sendPluginMessage(out.toByteArray());
         }

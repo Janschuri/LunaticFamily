@@ -1,15 +1,16 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.commands.ClickableDecisionMessage;
-import de.janschuri.lunaticFamily.commands.CommandSender;
-import de.janschuri.lunaticFamily.commands.PlayerCommandSender;
+import de.janschuri.lunaticFamily.utils.ClickableDecisionMessage;
+import de.janschuri.lunaticFamily.senders.CommandSender;
+import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
 
+import java.util.TimerTask;
 import java.util.UUID;
 
 public class MarryPriestSubcommand extends Subcommand {
@@ -28,8 +29,7 @@ public class MarryPriestSubcommand extends Subcommand {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
             PlayerCommandSender player = (PlayerCommandSender) sender;
-            String playerUUID = player.getUniqueId().toString();
-            FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
+            UUID playerUUID = player.getUniqueId();
 
             if (!player.hasPermission("lunaticFamily.marry.priest")) {
                 sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
@@ -95,15 +95,15 @@ public class MarryPriestSubcommand extends Subcommand {
                 }
 
                 UUID player1UUID = player1.getUniqueId();
-                FamilyPlayer player1Fam = player1.getFamilyPlayer();
+                FamilyPlayer player1Fam = new FamilyPlayer(player1UUID);
                 UUID player2UUID = player2.getUniqueId();
-                FamilyPlayer player2Fam = player2.getFamilyPlayer();
+                FamilyPlayer player2Fam = new FamilyPlayer(player2UUID);
 
-                if (!player1.hasEnoughMoney("marry_priest_player")) {
+                if (!Utils.getUtils().hasEnoughMoney(player1UUID, "marry_priest_player")) {
                     sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", player1.getName()));
-                } else if (!player1.hasEnoughMoney("marry_priest_player")) {
+                } else if (!Utils.getUtils().hasEnoughMoney(player2UUID, "marry_priest_player")) {
                     sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", player2.getName()));
-                } else if (!player.hasEnoughMoney("marry_priest")) {
+                } else if (!Utils.getUtils().hasEnoughMoney(playerUUID, "marry_priest")) {
                     sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money").replace("%player%", player.getName()));
                 } else {
 
@@ -129,10 +129,25 @@ public class MarryPriestSubcommand extends Subcommand {
                                 Language.getMessage("marry_no"),
                                 "/family marry deny"));
 
-                        LunaticFamily.marryPriestRequests.put(player1UUID.toString(), player2UUID.toString());
-                        LunaticFamily.marryPriest.put(player1UUID.toString(), playerUUID);
+                        LunaticFamily.marryPriestRequests.put(player1UUID, player2UUID);
+                        LunaticFamily.marryPriest.put(player1UUID, playerUUID);
 
-                        player.sendMarryPriestRequest(player1UUID, player2UUID);
+                        TimerTask task = new TimerTask() {
+                            @Override
+                            public void run() {
+                                if (LunaticFamily.marryPriest.containsValue(playerUUID)) {
+                                    player.sendMessage(Language.prefix + Language.getMessage("marry_priest_request_expired_priest").replace("%player1%", player1.getName()).replace("%player2%", player2.getName()));
+                                    player1.sendMessage(Language.prefix + Language.getMessage("marry_priest_request_expired_player").replace("%player%", player2.getName()));
+                                    player2.sendMessage(Language.prefix + Language.getMessage("marry_priest_request_expired_player").replace("%player%", player1.getName()));
+
+                                    LunaticFamily.marryRequests.remove(player2UUID);
+                                    LunaticFamily.marryPriestRequests.remove(player1UUID);
+                                    LunaticFamily.marryPriest.remove(player1UUID);
+                                }
+                            }
+                        };
+
+                        Utils.getTimer().schedule(task, 30 * 1000);
                     }
                 }
             }

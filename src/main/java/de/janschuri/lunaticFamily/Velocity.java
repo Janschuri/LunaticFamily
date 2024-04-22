@@ -1,26 +1,18 @@
 package de.janschuri.lunaticFamily;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.connection.PluginMessageEvent;
-import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
-import de.janschuri.lunaticFamily.commands.velocity.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.velocity.*;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.config.PluginConfig;
-import de.janschuri.lunaticFamily.handler.FamilyPlayer;
-import de.janschuri.lunaticFamily.listener.JoinEvent;
 import de.janschuri.lunaticFamily.listener.velocity.JoinListener;
 import de.janschuri.lunaticFamily.listener.velocity.MessageListener;
 import de.janschuri.lunaticFamily.listener.velocity.QuitListener;
@@ -28,9 +20,7 @@ import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticFamily.utils.VelocityUtils;
 import org.slf4j.Logger;
 
-import java.io.*;
 import java.nio.file.Path;
-import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,11 +35,11 @@ public class Velocity {
     private static ProxyServer proxy;
     private static Path dataDirectory;
     private static Logger logger;
-    private static File databaseConfigFile;
     private static Velocity instance;
-    public static final MinecraftChannelIdentifier IDENTIFIER = MinecraftChannelIdentifier.from("velocity:lunaticfamily");
+    public static final MinecraftChannelIdentifier IDENTIFIER = MinecraftChannelIdentifier.from("lunaticfamily:proxy");
     public static final ConcurrentHashMap<Integer, CompletableFuture<Boolean>> booleanRequestMap = new ConcurrentHashMap<>();
     public static final ConcurrentHashMap<Integer, CompletableFuture<byte[]>> byteArrayRequestMap = new ConcurrentHashMap<>();
+    public static final ConcurrentHashMap<Integer, CompletableFuture<double[]>> doubleArrayRequestMap = new ConcurrentHashMap<>();
 
     @Inject
     public Velocity(ProxyServer proxy, Logger logger, @DataDirectory Path dataDirectory) {
@@ -119,27 +109,6 @@ public class Velocity {
         commandManager.register(genderCommandMeta, genderCommand);
         commandManager.register(siblingCommandMeta, siblingCommand);
 
-    }
-
-
-    @Subscribe
-    public void onPlayerConnect(ServerPostConnectEvent event) {
-        UUID uuid = event.getPlayer().getUniqueId();
-        if (event.getPreviousServer() != null) {
-
-        } else {
-            JoinEvent joinSubevent = new JoinEvent();
-            joinSubevent.execute(new PlayerCommandSender(uuid));
-        }
-
-        if (PluginConfig.enabledCrazyAdvancementAPI) {
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            FamilyPlayer playerFam = new FamilyPlayer(uuid);
-            out.writeUTF("UpdateFamilyTree");
-            out.writeInt(playerFam.getID());
-            out.writeUTF(uuid.toString());
-            Velocity.sendPluginMessage(out.toByteArray());
-        }
     }
 
     public static void sendPluginMessage(byte[] message) {

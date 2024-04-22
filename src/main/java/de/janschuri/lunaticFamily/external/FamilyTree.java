@@ -1,10 +1,11 @@
-package de.janschuri.lunaticFamily.handler;
+package de.janschuri.lunaticFamily.external;
 
 import com.google.common.collect.BiMap;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.database.Database;
+import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.PaperUtils;
 import de.janschuri.lunaticFamily.utils.Utils;
 import eu.endercentral.crazy_advancements.NameKey;

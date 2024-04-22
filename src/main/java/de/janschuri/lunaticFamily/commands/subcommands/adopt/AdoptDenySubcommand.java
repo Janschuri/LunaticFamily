@@ -1,8 +1,8 @@
 package de.janschuri.lunaticFamily.commands.subcommands.adopt;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.commands.CommandSender;
-import de.janschuri.lunaticFamily.commands.PlayerCommandSender;
+import de.janschuri.lunaticFamily.senders.CommandSender;
+import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
@@ -28,13 +28,13 @@ public class AdoptDenySubcommand extends Subcommand {
             sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
         } else {
             PlayerCommandSender player = (PlayerCommandSender) sender;
-            String playerUUID = player.getUniqueId().toString();
+            UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
             if (!LunaticFamily.adoptRequests.containsKey(playerUUID)) {
                 sender.sendMessage(Language.prefix + Language.getMessage("adopt_deny_no_request"));
             } else {
-                UUID parentUUID = UUID.fromString(LunaticFamily.adoptRequests.get(playerUUID));
+                UUID parentUUID = LunaticFamily.adoptRequests.get(playerUUID);
                 FamilyPlayer parentFam = new FamilyPlayer(parentUUID);
                 PlayerCommandSender parent = player.getPlayerCommandSender(parentUUID);
                 parent.sendMessage(Language.prefix + Language.getMessage("adopt_deny").replace("%player%", playerFam.getName()));
