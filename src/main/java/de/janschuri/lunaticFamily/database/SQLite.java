@@ -1,14 +1,13 @@
 package de.janschuri.lunaticFamily.database;
 
 import de.janschuri.lunaticFamily.config.DatabaseConfig;
-import de.janschuri.lunaticFamily.utils.logger.Logger;
+import de.janschuri.lunaticFamily.utils.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.*;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 

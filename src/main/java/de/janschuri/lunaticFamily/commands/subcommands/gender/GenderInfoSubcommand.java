@@ -1,14 +1,12 @@
 package de.janschuri.lunaticFamily.commands.subcommands.gender;
 
-import de.janschuri.lunaticFamily.senders.CommandSender;
-import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
+import de.janschuri.lunaticlib.senders.AbstractSender;
 
 import java.util.UUID;
-//import org.bukkit.command.CommandSender;
-//import org.bukkit.entity.Player;
 
 public class GenderInfoSubcommand extends Subcommand {
     private static final String mainCommand = "gender";
@@ -19,28 +17,28 @@ public class GenderInfoSubcommand extends Subcommand {
         super(mainCommand, name, permission);
     }
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
+    public boolean execute(AbstractSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
+            sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
             return true;
         }
         if (args.length == 1) {
-            if (!(sender instanceof PlayerCommandSender)) {
-                sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
+            if (!(sender instanceof AbstractPlayerSender)) {
+                sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
                 return true;
             }
-            PlayerCommandSender player = (PlayerCommandSender) sender;
+            AbstractPlayerSender player = (AbstractPlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
-            sender.sendMessage(Language.prefix + Language.getMessage("gender_info").replace("%gender%", Language.getGenderLang(playerFam.getGender())));
+            sender.sendMessage( language.getPrefix() + language.getMessage("gender_info").replace("%gender%", Language.getGenderLang(playerFam.getGender())));
             return true;
         }
-        PlayerCommandSender player1 = (PlayerCommandSender) sender;
+        AbstractPlayerSender player1 = (AbstractPlayerSender) sender;
         if (!player1.exists()) {
-            sender.sendMessage(Language.prefix + Language.getMessage("player_not_exist").replace("%player%", args[1]));
+            sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[1]));
             return true;
         }
-        sender.sendMessage(Language.prefix + Language.getMessage("gender_info_others").replace("%player%", player1.getName()).replace("%gender%", Language.getGenderLang(args[1])));
+        sender.sendMessage(language.getPrefix() + language.getMessage("gender_info_others").replace("%player%", player1.getName()).replace("%gender%", language.getGenderLang(args[1])));
         return true;
     }
 }

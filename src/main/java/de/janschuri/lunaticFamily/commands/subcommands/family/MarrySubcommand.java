@@ -1,10 +1,11 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
-import de.janschuri.lunaticFamily.senders.CommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.marry.*;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.utils.Utils;
+import de.janschuri.lunaticlib.commands.AbstractSubcommand;
+import de.janschuri.lunaticlib.senders.AbstractSender;
 
 public class MarrySubcommand extends Subcommand {
     private static final String mainCommand = "family";
@@ -25,7 +26,7 @@ public class MarrySubcommand extends Subcommand {
     private static final MarryHelpSubcommand marryHelpSubcommand = new MarryHelpSubcommand();
 
 
-    public static final Subcommand[] subcommands = {
+    public static final AbstractSubcommand[] subcommands = {
             ACCEPT_SUBCOMMAND,
             marryDenySubcommand,
             marryDivorceSubcommand,
@@ -44,40 +45,40 @@ public class MarrySubcommand extends Subcommand {
         super(mainCommand, name, permission, subcommands);
     }
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
+    public boolean execute(AbstractSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
+            sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             if (args.length == 0) {
                 marryHelpSubcommand.execute(sender, args);
             } else {
                 final String subcommand = args[0];
-                if (Utils.checkIsSubcommand(name, "set", subcommand)) {
+                if (language.checkIsSubcommand(name, "set", subcommand)) {
                     marrySetSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "unset", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "unset", subcommand)) {
                     marryUnsetSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "propose", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "propose", subcommand)) {
                     marryProposeSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "priest", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "priest", subcommand)) {
                     marryPriestSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "accept", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "accept", subcommand)) {
                     ACCEPT_SUBCOMMAND.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "deny", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "deny", subcommand)) {
                     marryDenySubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "divorce", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "divorce", subcommand)) {
                     marryDivorceSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "kiss", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "kiss", subcommand)) {
                     marryKissSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "gift", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "gift", subcommand)) {
                     marryGiftSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "heart", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "heart", subcommand)) {
                     marryHeartSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "list", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "list", subcommand)) {
                     marryListSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "help", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "help", subcommand)) {
                     marryHelpSubcommand.execute(sender, args);
                 } else {
-                    sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
+                    sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
                 }
             }
         }

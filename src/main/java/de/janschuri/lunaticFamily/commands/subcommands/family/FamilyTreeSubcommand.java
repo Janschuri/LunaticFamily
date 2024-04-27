@@ -1,10 +1,10 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
-import de.janschuri.lunaticFamily.senders.CommandSender;
-import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
+import de.janschuri.lunaticlib.senders.AbstractSender;
 
 public class FamilyTreeSubcommand extends Subcommand {
     private static final String mainCommand = "family";
@@ -16,17 +16,17 @@ public class FamilyTreeSubcommand extends Subcommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof PlayerCommandSender)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
+    public boolean execute(AbstractSender sender, String[] args) {
+        if (!(sender instanceof AbstractPlayerSender)) {
+            sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
         } else if (!sender.hasPermission(permission)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
+            sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
-            PlayerCommandSender player = (PlayerCommandSender) sender;
+            AbstractPlayerSender player = (AbstractPlayerSender) sender;
             String playerUUID = player.getUniqueId().toString();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
             playerFam.updateFamilyTree();
-            player.sendMessage(Language.prefix + Language.getMessage("family_tree_reloaded"));
+            player.sendMessage(language.getPrefix() + language.getMessage("family_tree_reloaded"));
         }
         return true;
     }

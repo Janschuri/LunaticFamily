@@ -5,7 +5,6 @@ import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.utils.Utils;
-import de.janschuri.lunaticFamily.utils.logger.Logger;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;

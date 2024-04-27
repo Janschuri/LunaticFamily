@@ -1,8 +1,8 @@
 package de.janschuri.lunaticFamily.commands.paper;
 
 import de.janschuri.lunaticFamily.commands.subcommands.family.AdoptSubcommand;
-import de.janschuri.lunaticFamily.senders.paper.CommandSender;
-import de.janschuri.lunaticFamily.senders.paper.PlayerCommandSender;
+import de.janschuri.lunaticlib.senders.paper.PlayerSender;
+import de.janschuri.lunaticlib.senders.paper.Sender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
@@ -19,10 +19,10 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull org.bukkit.command.CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if (sender instanceof Player) {
-            PlayerCommandSender commandSender = new PlayerCommandSender(sender);
+            PlayerSender commandSender = new PlayerSender(sender);
             familyAdoptSubcommand.execute(commandSender, args);
         } else {
-            CommandSender consoleCommandSender = new CommandSender(sender);
+            Sender consoleCommandSender = new Sender(sender);
             familyAdoptSubcommand.execute(consoleCommandSender, args);
         }
 
@@ -34,7 +34,7 @@ public class AdoptCommand implements CommandExecutor, TabCompleter {
         String[] newArgs = new String[args.length + 1];
         newArgs[0] = "adopt";
         System.arraycopy(args, 0, newArgs, 1, args.length);
-        PlayerCommandSender playerCommandSender = new PlayerCommandSender(sender);
+        PlayerSender playerCommandSender = new PlayerSender(sender);
         return new ArrayList<>(familyAdoptSubcommand.tabComplete(playerCommandSender, newArgs));
     }
 }

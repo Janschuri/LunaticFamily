@@ -1,13 +1,13 @@
 package de.janschuri.lunaticFamily.commands.subcommands.sibling;
 
-import de.janschuri.lunaticFamily.utils.ClickableDecisionMessage;
-import de.janschuri.lunaticFamily.senders.CommandSender;
-import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
+import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
+import de.janschuri.lunaticlib.senders.AbstractSender;
+import de.janschuri.lunaticlib.utils.ClickableDecisionMessage;
 
 import java.util.UUID;
 
@@ -20,13 +20,13 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
         super(mainCommand, name, permission);
     }
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof PlayerCommandSender)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
+    public boolean execute(AbstractSender sender, String[] args) {
+        if (!(sender instanceof AbstractPlayerSender)) {
+            sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
         } else if (!sender.hasPermission(permission)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
+            sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
-            PlayerCommandSender player = (PlayerCommandSender) sender;
+            AbstractPlayerSender player = (AbstractPlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
@@ -49,36 +49,36 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
             }
 
             if (!playerFam.hasSibling()) {
-                sender.sendMessage(Language.prefix + Language.getMessage("sibling_unsibling_no_sibling"));
+                sender.sendMessage(language.getPrefix() + language.getMessage("sibling_unsibling_no_sibling"));
             }
 
             UUID siblingUUID = playerFam.getSibling().getUniqueId();
-            PlayerCommandSender sibling = player.getPlayerCommandSender(siblingUUID);
+            AbstractPlayerSender sibling = player.getPlayerCommandSender(siblingUUID);
 
             if (!confirm) {
                 sender.sendMessage(new ClickableDecisionMessage(
-                        Language.getMessage("sibling_unsibling_confirm"),
-                        Language.getMessage("confirm"),
+                        language.getMessage("sibling_unsibling_confirm"),
+                        language.getMessage("confirm"),
                         "/family sibling unsibling confirm",
-                        Language.getMessage("cancel"),
+                        language.getMessage("cancel"),
                         "/family sibling unsibling cancel"));
             } else if (cancel) {
-                sender.sendMessage(Language.prefix + Language.getMessage("sibling_unsibling_cancel"));
+                sender.sendMessage(language.getPrefix() + language.getMessage("sibling_unsibling_cancel"));
             } else if (playerFam.isAdopted()) {
-                sender.sendMessage(Language.prefix + Language.getMessage("sibling_unsibling_adopted"));
+                sender.sendMessage(language.getPrefix() + language.getMessage("sibling_unsibling_adopted"));
             } else if (!force && !Utils.getUtils().hasEnoughMoney(playerUUID, "sibling_unsibling_leaving_player")) {
-                sender.sendMessage(Language.prefix + Language.getMessage("not_enough_money"));
+                sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
             } else if (!force && !Utils.getUtils().hasEnoughMoney(siblingUUID, "sibling_unsibling_left_player")) {
-                sender.sendMessage(Language.prefix + Language.getMessage("player_not_enough_money").replace("%player%", playerFam.getSibling().getName()));
+                sender.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getSibling().getName()));
                 sender.sendMessage(new ClickableDecisionMessage(
-                        Language.getMessage("take_payment_confirm"),
-                        Language.getMessage("confirm"),
+                        language.getMessage("take_payment_confirm"),
+                        language.getMessage("confirm"),
                         "/family sibling unsibling confirm force",
-                        Language.getMessage("cancel"),
+                        language.getMessage("cancel"),
                         "/family sibling unsibling cancel"));
             } else {
-                sender.sendMessage(Language.prefix + Language.getMessage("sibling_unsibling_complete"));
-                sibling.sendMessage(Language.prefix + Language.getMessage("sibling_unsiblinged_complete"));
+                sender.sendMessage(language.getPrefix() + language.getMessage("sibling_unsibling_complete"));
+                sibling.sendMessage(language.getPrefix() + language.getMessage("sibling_unsiblinged_complete"));
 
                 if (force) {
                     Utils.getUtils().withdrawMoney(playerUUID, "sibling_unsibling_leaving_player", "sibling_unsibling_left_player");

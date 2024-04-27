@@ -1,6 +1,6 @@
 package de.janschuri.lunaticFamily.database;
 
-import de.janschuri.lunaticFamily.utils.logger.Logger;
+import de.janschuri.lunaticFamily.utils.Logger;
 
 public class Error {
 

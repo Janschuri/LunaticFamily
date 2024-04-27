@@ -1,13 +1,15 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.senders.CommandSender;
-import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import de.janschuri.lunaticFamily.utils.Utils;
+import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
+import de.janschuri.lunaticlib.senders.AbstractSender;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class MarryDenySubcommand extends Subcommand {
     private static final String mainCommand = "marry";
@@ -18,38 +20,45 @@ public class MarryDenySubcommand extends Subcommand {
         super(mainCommand, name, permission);
     }
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof PlayerCommandSender)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
+    public boolean execute(AbstractSender sender, String[] args) {
+        if (!(sender instanceof AbstractPlayerSender)) {
+            sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
         } else if (!sender.hasPermission(permission)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
+            sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
-            PlayerCommandSender player = (PlayerCommandSender) sender;
+            AbstractPlayerSender player = (AbstractPlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
             if (!LunaticFamily.marryRequests.containsKey(playerUUID) && !LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
-                sender.sendMessage(Language.prefix + Language.getMessage("marry_deny_no_request"));
+                sender.sendMessage(language.getPrefix() + language.getMessage("marry_deny_no_request"));
             } else {
                 if (LunaticFamily.marryRequests.containsKey(playerUUID)) {
                     UUID partnerUUID = LunaticFamily.marryRequests.get(playerUUID);
-                    PlayerCommandSender partner = sender.getPlayerCommandSender(partnerUUID);
+                    AbstractPlayerSender partner = sender.getPlayerCommandSender(partnerUUID);
                     if (!LunaticFamily.marryPriest.containsKey(partnerUUID)) {
-                        partner.sendMessage(Language.prefix + Language.getMessage("marry_deny_denied").replace("%player%", playerFam.getName()));
+                        partner.sendMessage(language.getPrefix() + language.getMessage("marry_deny_denied").replace("%player%", playerFam.getName()));
                     } else {
                         UUID priestUUID = LunaticFamily.marryPriest.get(partnerUUID);
-                        PlayerCommandSender priest = sender.getPlayerCommandSender(priestUUID);
-                        player.chat(Language.getMessage("marry_deny_no"));
-                        priest.chat(Language.getMessage("marry_deny_cancel"), 20);
+                        AbstractPlayerSender priest = sender.getPlayerCommandSender(priestUUID);
+                        player.chat(language.getMessage("marry_deny_no"));
+
+                        Runnable runnable = () -> {
+                            priest.chat(language.getMessage("marry_deny_cancel"));
+                        };
+
+                        Utils.scheduleTask(runnable, 250, TimeUnit.MILLISECONDS);
+
+
                         LunaticFamily.marryPriest.remove(partnerUUID);
                     }
                     LunaticFamily.marryRequests.remove(playerUUID);
 
                 } else if (LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
-                    player.chat(Language.getMessage("marry_deny_no"));
+                    player.chat(language.getMessage("marry_deny_no"));
                     UUID priestUUID = LunaticFamily.marryPriest.get(playerUUID);
-                    PlayerCommandSender priest = sender.getPlayerCommandSender(priestUUID);
-                    priest.chat(Language.getMessage("marry_deny_cancel"));
+                    AbstractPlayerSender priest = sender.getPlayerCommandSender(priestUUID);
+                    priest.chat(language.getMessage("marry_deny_cancel"));
                     LunaticFamily.marryPriestRequests.remove(playerUUID);
                     LunaticFamily.marryPriest.remove(playerUUID);
                 }

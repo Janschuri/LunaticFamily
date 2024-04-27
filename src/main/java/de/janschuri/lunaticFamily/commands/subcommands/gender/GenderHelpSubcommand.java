@@ -2,6 +2,7 @@ package de.janschuri.lunaticFamily.commands.subcommands.gender;
 
 import de.janschuri.lunaticFamily.commands.subcommands.HelpSubcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.family.GenderSubcommand;
+import de.janschuri.lunaticFamily.config.Language;
 
 public class GenderHelpSubcommand extends HelpSubcommand {
     private static final String mainCommand = "gender";

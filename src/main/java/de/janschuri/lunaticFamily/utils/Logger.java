@@ -1,11 +1,18 @@
-package de.janschuri.lunaticFamily.utils.logger;
+package de.janschuri.lunaticFamily.utils;
 
-public class VelocityLogger extends Logger {
 
-    static org.slf4j.Logger logger;
+import de.janschuri.lunaticlib.utils.logger.AbstractLogger;
 
-    public VelocityLogger(org.slf4j.Logger logger) {
-        this.logger = logger;
+public class Logger{
+
+    private static AbstractLogger logger;
+
+    public Logger(AbstractLogger logger) {
+        Logger.logger = logger;
+    }
+
+    public boolean isDebug() {
+        return true;
     }
 
     public static void debugLog(String msg) {
@@ -23,4 +30,7 @@ public class VelocityLogger extends Logger {
     public static void errorLog(String msg) {
         logger.error(msg);
     }
+
 }
+
+

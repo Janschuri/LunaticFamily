@@ -9,10 +9,10 @@ import java.util.List;
 
 import com.velocitypowered.api.proxy.Player;
 import de.janschuri.lunaticFamily.commands.subcommands.family.FamilySubcommand;
-import de.janschuri.lunaticFamily.senders.velocity.CommandSender;
-import de.janschuri.lunaticFamily.senders.velocity.PlayerCommandSender;
 import de.janschuri.lunaticFamily.utils.Utils;
-import de.janschuri.lunaticFamily.utils.logger.Logger;
+import de.janschuri.lunaticFamily.utils.Logger;
+import de.janschuri.lunaticlib.senders.velocity.PlayerSender;
+import de.janschuri.lunaticlib.senders.velocity.Sender;
 
 public final class FamilyCommand implements SimpleCommand {
 
@@ -25,10 +25,10 @@ public final class FamilyCommand implements SimpleCommand {
         String[] args = invocation.arguments();
 
         if (source instanceof Player) {
-            PlayerCommandSender commandSender = new PlayerCommandSender((Player) source);
+            PlayerSender commandSender = new PlayerSender((Player) source);
             familySubcommand.execute(commandSender, args);
         } else {
-            CommandSender consoleCommandSender = new CommandSender(source);
+            Sender consoleCommandSender = new Sender(source);
             familySubcommand.execute(consoleCommandSender, args);
         }
     }
@@ -61,7 +61,6 @@ public final class FamilyCommand implements SimpleCommand {
             newArgs[1] = "";
         }
         System.arraycopy(args, 0, newArgs, 1, args.length);
-        Logger.warnLog("newArgs: " + Arrays.toString(newArgs));
-        return CompletableFuture.completedFuture(familySubcommand.tabComplete(new PlayerCommandSender(source), newArgs));
+        return CompletableFuture.completedFuture(familySubcommand.tabComplete(new PlayerSender(source), newArgs));
     }
 }

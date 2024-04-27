@@ -1,11 +1,11 @@
 package de.janschuri.lunaticFamily.commands.subcommands.sibling;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.senders.CommandSender;
-import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
+import de.janschuri.lunaticlib.senders.AbstractSender;
 
 import java.util.UUID;
 
@@ -18,25 +18,25 @@ public class SiblingDenySubcommand extends Subcommand {
         super(mainCommand, name, permission);
     }
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof PlayerCommandSender)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
+    public boolean execute(AbstractSender sender, String[] args) {
+        if (!(sender instanceof AbstractPlayerSender)) {
+            sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
         } else if (!sender.hasPermission(permission)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
+            sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
-            PlayerCommandSender player = (PlayerCommandSender) sender;
+            AbstractPlayerSender player = (AbstractPlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
             if (!LunaticFamily.siblingRequests.containsKey(playerUUID) && !LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
-                sender.sendMessage(Language.prefix + Language.getMessage("propose_deny_no_request"));
+                sender.sendMessage(language.getPrefix() + language.getMessage("propose_deny_no_request"));
             } else {
                 if (!LunaticFamily.siblingRequests.containsKey(playerUUID)) {
 
                 }
                 UUID siblingUUID = LunaticFamily.marryRequests.get(playerUUID);
-                PlayerCommandSender sibling = player.getPlayerCommandSender(siblingUUID);
-                sibling.sendMessage(Language.prefix + Language.getMessage("propose_deny_denied").replace("%player%", playerFam.getName()));
+                AbstractPlayerSender sibling = player.getPlayerCommandSender(siblingUUID);
+                sibling.sendMessage(language.getPrefix() + language.getMessage("propose_deny_denied").replace("%player%", playerFam.getName()));
                 LunaticFamily.marryRequests.remove(playerUUID);
             }
         }

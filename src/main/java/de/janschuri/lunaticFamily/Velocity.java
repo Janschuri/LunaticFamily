@@ -3,9 +3,9 @@ package de.janschuri.lunaticFamily;
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
-import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -13,11 +13,14 @@ import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import de.janschuri.lunaticFamily.commands.velocity.*;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.config.PluginConfig;
+import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.listener.velocity.JoinListener;
 import de.janschuri.lunaticFamily.listener.velocity.MessageListener;
 import de.janschuri.lunaticFamily.listener.velocity.QuitListener;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticFamily.utils.VelocityUtils;
+import de.janschuri.lunaticlib.Mode;
+import de.janschuri.lunaticlib.utils.logger.VelocityLogger;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
@@ -28,7 +31,11 @@ import java.util.concurrent.ConcurrentHashMap;
         id = "lunaticfamily",
         name = "LunaticFamily",
         version = "1.0-SNAPSHOT",
-        authors = "janschuri"
+        authors = "janschuri",
+        dependencies = {
+        @Dependency(id = "lunaticlib")
+
+        }
 )
 public class Velocity {
 
@@ -64,55 +71,43 @@ public class Velocity {
         proxy.getEventManager().register(this, new MessageListener());
         proxy.getEventManager().register(this, new JoinListener());
         proxy.getEventManager().register(this, new QuitListener());
-        de.janschuri.lunaticFamily.utils.logger.Logger.loadLogger(new de.janschuri.lunaticFamily.utils.logger.VelocityLogger(logger));
+        new de.janschuri.lunaticFamily.utils.Logger(new VelocityLogger(logger));
         Utils.loadUtils(new VelocityUtils());
 
         LunaticFamily.setDataDirectory(dataDirectory);
         LunaticFamily.loadConfig();
+        Database.loadDatabase(dataDirectory);
 
         CommandManager commandManager = proxy.getCommandManager();
 
-        CommandMeta familyCommandMeta = commandManager.metaBuilder("family")
-                .aliases(Language.getAliases("family").toArray(new String[0]))
-                .plugin(this)
-                .build();
+        for (String command : LunaticFamily.commands) {
+            CommandMeta commandMeta = commandManager.metaBuilder(command)
+                    .aliases(Language.getInstance().getAliases(command).toArray(new String[0]))
+                    .plugin(this)
+                    .build();
 
-        CommandMeta marryCommandMeta = commandManager.metaBuilder("marry")
-                .aliases(Language.getAliases("marry").toArray(new String[0]))
-                .plugin(this)
-                .build();
-
-        CommandMeta adoptCommandMeta = commandManager.metaBuilder("adopt")
-                .aliases(Language.getAliases("adopt").toArray(new String[0]))
-                .plugin(this)
-                .build();
-
-        CommandMeta genderCommandMeta = commandManager.metaBuilder("gender")
-                .aliases(Language.getAliases("gender").toArray(new String[0]))
-                .plugin(this)
-                .build();
-
-        CommandMeta siblingCommandMeta = commandManager.metaBuilder("sibling")
-                .aliases(Language.getAliases("sibling").toArray(new String[0]))
-                .plugin(this)
-                .build();
-
-        SimpleCommand familyCommand = new FamilyCommand();
-        SimpleCommand marryCommand = new MarryCommand();
-        SimpleCommand adoptCommand = new AdoptCommand();
-        SimpleCommand genderCommand = new GenderCommand();
-        SimpleCommand siblingCommand = new SiblingCommand();
-
-        commandManager.register(familyCommandMeta, familyCommand);
-        commandManager.register(marryCommandMeta, marryCommand);
-        commandManager.register(adoptCommandMeta, adoptCommand);
-        commandManager.register(genderCommandMeta, genderCommand);
-        commandManager.register(siblingCommandMeta, siblingCommand);
-
+            switch (command) {
+                case "family":
+                    commandManager.register(commandMeta, new FamilyCommand());
+                    break;
+                case "marry":
+                    commandManager.register(commandMeta, new MarryCommand());
+                    break;
+                case "adopt":
+                    commandManager.register(commandMeta, new AdoptCommand());
+                    break;
+                case "gender":
+                    commandManager.register(commandMeta, new GenderCommand());
+                    break;
+                case "sibling":
+                    commandManager.register(commandMeta, new SiblingCommand());
+                    break;
+            }
+        }
     }
 
     public static void sendPluginMessage(byte[] message) {
-        de.janschuri.lunaticFamily.utils.logger.Logger.debugLog("PluginMessage sent.");
+        de.janschuri.lunaticFamily.utils.Logger.debugLog("PluginMessage sent.");
 
         if (PluginConfig.enabledServerWhitelist) {
             proxy.getAllServers().stream()

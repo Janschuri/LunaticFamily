@@ -3,7 +3,7 @@ package de.janschuri.lunaticFamily.listener.velocity;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import de.janschuri.lunaticFamily.listener.QuitEvent;
-import de.janschuri.lunaticFamily.senders.paper.PlayerCommandSender;
+import de.janschuri.lunaticlib.senders.velocity.PlayerSender;
 
 public class QuitListener {
 
@@ -11,7 +11,7 @@ public class QuitListener {
 
     @Subscribe
     public void onPlayerDisconnect(DisconnectEvent event) {
-        PlayerCommandSender playerCommandSender = new PlayerCommandSender(event.getPlayer().getUniqueId());
+        PlayerSender playerCommandSender = new PlayerSender(event.getPlayer().getUniqueId());
         quitEvent.execute(playerCommandSender);
     }
 }

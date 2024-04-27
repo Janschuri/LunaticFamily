@@ -1,11 +1,11 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
-import de.janschuri.lunaticFamily.senders.CommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.adopt.*;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.utils.Utils;
-//import org.bukkit.command.CommandSender;
+import de.janschuri.lunaticlib.commands.AbstractSubcommand;
+import de.janschuri.lunaticlib.senders.AbstractSender;
 
 public class AdoptSubcommand extends Subcommand {
     private static final String mainCommand = "family";
@@ -19,7 +19,7 @@ public class AdoptSubcommand extends Subcommand {
     private static final AdoptProposeSubcommand adoptProposeSubcommand = new AdoptProposeSubcommand();
     private static final AdoptSetSubcommand adoptSetSubcommand = new AdoptSetSubcommand();
     private static final AdoptUnsetSubcommand adoptUnsetSubcommand = new AdoptUnsetSubcommand();
-    public static final Subcommand[] subcommands = {
+    public static final AbstractSubcommand[] subcommands = {
             ACCEPT_SUBCOMMAND,
             adoptDenySubcommand,
             adoptHelpSubcommand,
@@ -35,32 +35,32 @@ public class AdoptSubcommand extends Subcommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
+    public boolean execute(AbstractSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
+            sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             if (args.length == 0) {
                 adoptHelpSubcommand.execute(sender, args);
             } else {
                 final String subcommand = args[0];
-                if (Utils.checkIsSubcommand(name, "set", subcommand)) {
+                if (language.checkIsSubcommand(name, "set", subcommand)) {
                     adoptSetSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "unset", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "unset", subcommand)) {
                     adoptUnsetSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "propose", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "propose", subcommand)) {
                     adoptProposeSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "accept", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "accept", subcommand)) {
                     ACCEPT_SUBCOMMAND.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "deny", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "deny", subcommand)) {
                     adoptDenySubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "moveout", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "moveout", subcommand)) {
                     adoptMoveoutSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "kickout", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "kickout", subcommand)) {
                     adoptKickoutSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand(name, "help", subcommand)) {
+                } else if (language.checkIsSubcommand(name, "help", subcommand)) {
                     adoptHelpSubcommand.execute(sender, args);
                 } else {
-                    sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
+                    sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
                 }
             }
         }

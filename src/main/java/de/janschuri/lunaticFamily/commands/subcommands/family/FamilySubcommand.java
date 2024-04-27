@@ -1,9 +1,9 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
-import de.janschuri.lunaticFamily.senders.CommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.utils.Utils;
+import de.janschuri.lunaticlib.commands.AbstractSubcommand;
+import de.janschuri.lunaticlib.senders.AbstractSender;
 
 public class FamilySubcommand extends Subcommand {
     private static final String mainCommand = "family";
@@ -21,7 +21,7 @@ public class FamilySubcommand extends Subcommand {
     private static final FamilyTreeSubcommand familyTreeSubcommand = new FamilyTreeSubcommand();
     private static final FamilyDeleteSubcommand familyDeleteSubcommand = new FamilyDeleteSubcommand();
 
-    public static final Subcommand[] subcommands = {
+    public static final AbstractSubcommand[] subcommands = {
             familyListSubcommand,
             familyBackgroundSubcommand,
             familyHelpSubcommand,
@@ -38,9 +38,9 @@ public class FamilySubcommand extends Subcommand {
         super(mainCommand, name, permission, subcommands);
     }
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
+    public boolean execute(AbstractSender sender, String[] args) {
         if (!sender.hasPermission(permission)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
+            sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             if (args.length == 0) {
                 familyHelpSubcommand.execute(sender, args);
@@ -48,30 +48,30 @@ public class FamilySubcommand extends Subcommand {
                 final String subcommand = args[0];
                 String[] newArgs = new String[args.length - 1];
                 System.arraycopy(args, 1, newArgs, 0, args.length - 1);
-                if (Utils.checkIsSubcommand("family", "gender", subcommand)) {
+                if (language.checkIsSubcommand("family", "gender", subcommand)) {
                     familyGenderSubcommand.execute(sender, newArgs);
-                } else if (Utils.checkIsSubcommand("family", "adopt", subcommand)) {
+                } else if (language.checkIsSubcommand("family", "adopt", subcommand)) {
                     familyAdoptSubcommand.execute(sender, newArgs);
-                } else if (Utils.checkIsSubcommand("family", "marry", subcommand)) {
+                } else if (language.checkIsSubcommand("family", "marry", subcommand)) {
                     familyMarrySubcommand.execute(sender, newArgs);
-                } else if (Utils.checkIsSubcommand("family", "sibling", subcommand)) {
+                } else if (language.checkIsSubcommand("family", "sibling", subcommand)) {
                     familySiblingSubcommand.execute(sender, newArgs);
-                } else if (Utils.checkIsSubcommand("family", "reload", subcommand)) {
+                } else if (language.checkIsSubcommand("family", "reload", subcommand)) {
                     familyReloadSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand("family", "list", subcommand)) {
+                } else if (language.checkIsSubcommand("family", "list", subcommand)) {
                     familyListSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand("family", "background", subcommand)) {
+                } else if (language.checkIsSubcommand("family", "background", subcommand)) {
                     familyBackgroundSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand("family", "help", subcommand)) {
+                } else if (language.checkIsSubcommand("family", "help", subcommand)) {
                     familyHelpSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand("family", "tree", subcommand)) {
+                } else if (language.checkIsSubcommand("family", "tree", subcommand)) {
                     familyTreeSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand("family", "delete", subcommand)) {
+                } else if (language.checkIsSubcommand("family", "delete", subcommand)) {
                     familyDeleteSubcommand.execute(sender, args);
-                } else if (Utils.checkIsSubcommand("family", "help", subcommand)) {
+                } else if (language.checkIsSubcommand("family", "help", subcommand)) {
                     familyHelpSubcommand.execute(sender, args);
                 } else {
-                    sender.sendMessage(Language.prefix + Language.getMessage("wrong_usage"));
+                    sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
                 }
             }
         }

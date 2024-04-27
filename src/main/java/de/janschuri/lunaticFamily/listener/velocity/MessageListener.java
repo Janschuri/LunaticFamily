@@ -4,17 +4,30 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
+import com.velocitypowered.api.proxy.ServerConnection;
 import de.janschuri.lunaticFamily.Velocity;
+import de.janschuri.lunaticFamily.utils.Logger;
 
 import java.util.concurrent.CompletableFuture;
+
+import static de.janschuri.lunaticFamily.Velocity.IDENTIFIER;
 
 public class MessageListener {
 
     @Subscribe
     public void onPluginMessage(PluginMessageEvent event) {
+
+        if (!(event.getSource() instanceof ServerConnection)) {
+            return;
+        }
+        if (event.getIdentifier() != IDENTIFIER) {
+            return;
+        }
+
         byte[] message = event.getData();
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
         String subchannel = in.readUTF();
+        Logger.debugLog("plugin message received 3: " + subchannel);
         if (subchannel.equals("IsInRangeResponse")) {
             int requestId = in.readInt();
             boolean isInRange = in.readBoolean();

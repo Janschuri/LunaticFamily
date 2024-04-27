@@ -1,15 +1,16 @@
 package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
-import de.janschuri.lunaticFamily.senders.CommandSender;
-import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
+import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
+import de.janschuri.lunaticlib.senders.AbstractSender;
 
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class MarryKissSubcommand extends Subcommand {
     private static final String mainCommand = "marry";
@@ -20,40 +21,40 @@ public class MarryKissSubcommand extends Subcommand {
         super(mainCommand, name, permission);
     }
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof PlayerCommandSender)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
+    public boolean execute(AbstractSender sender, String[] args) {
+        if (!(sender instanceof AbstractPlayerSender)) {
+            sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
         } else if (!sender.hasPermission(permission)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
+            sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
-            PlayerCommandSender player = (PlayerCommandSender) sender;
+            AbstractPlayerSender player = (AbstractPlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
             if (!playerFam.isMarried()) {
-                sender.sendMessage(Language.prefix + Language.getMessage("marry_kiss_no_partner"));
+                sender.sendMessage(language.getPrefix() + language.getMessage("marry_kiss_no_partner"));
                 return true;
             }
 
-            PlayerCommandSender partner = player.getPlayerCommandSender(playerFam.getPartner().getUniqueId());
+            AbstractPlayerSender partner = player.getPlayerCommandSender(playerFam.getPartner().getUniqueId());
 
             if (!partner.isOnline()) {
-                sender.sendMessage(Language.prefix + Language.getMessage("player_offline").replace("%player%", partner.getName()));
+                sender.sendMessage(language.getPrefix() + language.getMessage("player_offline").replace("%player%", partner.getName()));
                 return true;
             }
 
             if (!Utils.getUtils().isPlayerOnWhitelistedServer(partner.getUniqueId())) {
-                player.sendMessage(Language.prefix + Language.getMessage("player_not_on_whitelisted_server").replace("%player%", partner.getName().replace("%server%", partner.getServerName())));
+                player.sendMessage(language.getPrefix() + language.getMessage("player_not_on_whitelisted_server").replace("%player%", partner.getName().replace("%server%", partner.getServerName())));
                 return true;
             }
 
             if (!player.isSameServer(partner.getUniqueId())) {
-                sender.sendMessage(Language.prefix + Language.getMessage("player_not_same_server").replace("%player%", partner.getName()));
+                sender.sendMessage(language.getPrefix() + language.getMessage("player_not_same_server").replace("%player%", partner.getName()));
                 return true;
             }
 
             if (!player.isInRange(partner.getUniqueId(), PluginConfig.marryKissRange)) {
-                player.sendMessage(Language.prefix + Language.getMessage("player_too_far_away").replace("%player%", partner.getName()));
+                player.sendMessage(language.getPrefix() + language.getMessage("player_too_far_away").replace("%player%", partner.getName()));
                 return true;
             }
 
@@ -62,13 +63,12 @@ public class MarryKissSubcommand extends Subcommand {
             double[] position = Utils.getPositionBetweenLocations(playerPosition, partnerPosition);
             position[1] += 2;
             for (int i = 0; i < 6; i++) {
-                TimerTask task = new TimerTask() {
-                    @Override
-                    public void run() {
-                        Utils.getUtils().spawnParticleCloud(playerUUID, position, "HEART");
-                    }
+
+                Runnable runnable = () -> {
+                    Utils.getUtils().spawnParticleCloud(playerUUID, position, "HEART");
                 };
-                Utils.getTimer().schedule(task, i * 5L);
+
+                Utils.scheduleTask(runnable, i * 250L, TimeUnit.MILLISECONDS);
             }
 
         }

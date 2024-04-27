@@ -50,7 +50,7 @@ permissions:
   lunaticFamily.admin.reload:
     description: Use /family reload
 api-version: 1.20
+depend:
+  - LunaticLib
 softdepend:
   - CrazyAdvancementAPI
-  - Vault
-  - Minepacks

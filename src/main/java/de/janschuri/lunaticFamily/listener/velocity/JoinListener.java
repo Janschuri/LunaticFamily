@@ -8,7 +8,8 @@ import de.janschuri.lunaticFamily.Velocity;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.listener.JoinEvent;
-import de.janschuri.lunaticFamily.senders.velocity.PlayerCommandSender;
+import de.janschuri.lunaticFamily.utils.Logger;
+import de.janschuri.lunaticlib.senders.velocity.PlayerSender;
 
 import java.util.UUID;
 
@@ -17,11 +18,12 @@ public class JoinListener {
     @Subscribe
     public void onPlayerConnect(ServerPostConnectEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
+        Logger.debugLog("test");
         if (event.getPreviousServer() != null) {
 
         } else {
             JoinEvent joinSubevent = new JoinEvent();
-            joinSubevent.execute(new PlayerCommandSender(uuid));
+            joinSubevent.execute(new PlayerSender(uuid));
         }
 
         if (PluginConfig.enabledCrazyAdvancementAPI) {

@@ -1,54 +1,13 @@
 package de.janschuri.lunaticFamily.commands.subcommands;
 
-import de.janschuri.lunaticFamily.utils.ClickableMessage;
-import de.janschuri.lunaticFamily.senders.CommandSender;
-import de.janschuri.lunaticFamily.senders.PlayerCommandSender;
-import de.janschuri.lunaticFamily.config.Language;
-//import net.kyori.adventure.text.Component;
-//import org.bukkit.entity.Player;
+import de.janschuri.lunaticlib.commands.AbstractHelpSubcommand;
+import de.janschuri.lunaticlib.config.Language;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
+public class HelpSubcommand extends AbstractHelpSubcommand {
 
-public class HelpSubcommand extends Subcommand {
-
-    private final Class<?> commandClass;
+    protected static final Language language = Language.getInstance();
 
     public HelpSubcommand(String mainCommand, String name, String permission, Class<?> commandClass) {
-        super(mainCommand, name, permission);
-        this.commandClass = commandClass;
-    }
-    @Override
-    public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof PlayerCommandSender)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_console_command"));
-            return true;
-        }
-        if (!sender.hasPermission(permission)) {
-            sender.sendMessage(Language.prefix + Language.getMessage("no_permission"));
-            return true;
-        }
-
-        PlayerCommandSender playerCommandSender = (PlayerCommandSender) sender;
-        List<ClickableMessage> msg = new ArrayList<>();
-        msg.add(new ClickableMessage(Language.prefix + Language.getMessage(mainCommand + "_help") + "\n"));
-
-        try {
-            Subcommand command = (Subcommand) commandClass.getDeclaredConstructor().newInstance();
-            for (Subcommand subcommand : command.subcommands) {
-                if (!(subcommand instanceof HelpSubcommand)) {
-                    msg.add(subcommand.getHelp(sender));
-                }
-            }
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
-                 InvocationTargetException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        playerCommandSender.sendMessage(msg);
-
-        return true;
+        super(language, mainCommand, name, permission, commandClass);
     }
 }

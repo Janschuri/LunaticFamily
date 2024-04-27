@@ -12,10 +12,11 @@ import de.janschuri.lunaticFamily.external.FamilyTree;
 import de.janschuri.lunaticFamily.listener.paper.JoinListener;
 import de.janschuri.lunaticFamily.listener.paper.MessageListener;
 import de.janschuri.lunaticFamily.listener.paper.QuitListener;
-import de.janschuri.lunaticFamily.utils.logger.BukkitLogger;
-import de.janschuri.lunaticFamily.utils.logger.Logger;
+import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.PaperUtils;
 import de.janschuri.lunaticFamily.utils.Utils;
+import de.janschuri.lunaticlib.Mode;
+import de.janschuri.lunaticlib.utils.logger.BukkitLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -33,6 +34,8 @@ public final class LunaticFamily extends JavaPlugin {
     public static BiMap<UUID, UUID> adoptRequests = HashBiMap.create();
     public static BiMap<UUID, UUID> siblingRequests = HashBiMap.create();
     private static final String IDENTIFIER = "lunaticfamily:proxy";
+
+    static final List<String> commands = Arrays.asList("family", "marry", "sibling", "adopt", "gender");
     private static Path dataDirectory;
     static Mode mode = Mode.STANDALONE;
 
@@ -50,7 +53,7 @@ public final class LunaticFamily extends JavaPlugin {
         dataDirectory = getDataFolder().toPath();
         getServer().getMessenger().registerIncomingPluginChannel(this, IDENTIFIER, new MessageListener());
         getServer().getMessenger().registerOutgoingPluginChannel(this, IDENTIFIER);
-        Logger.loadLogger(new BukkitLogger());
+        new Logger(new BukkitLogger(this));
 
         Utils.loadUtils(new PaperUtils());
 
@@ -62,8 +65,6 @@ public final class LunaticFamily extends JavaPlugin {
         if (!PluginConfig.isBackend) {
             LunaticFamily.mode = Mode.STANDALONE;
 
-            List<String> commands = Arrays.asList("family", "marry", "sibling", "adopt", "gender");
-
             for (String command : commands) {
                 Command cmd = getCommand(command);
                 assert cmd != null;
@@ -72,7 +73,7 @@ public final class LunaticFamily extends JavaPlugin {
                     bukkitCommandMap.setAccessible(true);
                     CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
 
-                    List<String> list = Language.getAliases(command);
+                    List<String> list = Language.getInstance().getAliases(command);
 
                     list.forEach(alias -> {
                         commandMap.register(alias, instance.getName(), cmd);
@@ -109,6 +110,7 @@ public final class LunaticFamily extends JavaPlugin {
             Logger.infoLog("Backend mode enabled.");
         }
 
+        Database.loadDatabase(dataDirectory);
     }
 
     public static Mode getMode() {
@@ -125,7 +127,7 @@ public final class LunaticFamily extends JavaPlugin {
 
 
         if (mode == Mode.STANDALONE || mode == Mode.PROXY) {
-            new Language(dataDirectory);
+            new Language(dataDirectory, commands);
         }
         new DatabaseConfig(dataDirectory);
 
@@ -141,8 +143,6 @@ public final class LunaticFamily extends JavaPlugin {
                 Logger.infoLog("Loaded Vault.");
             }
         }
-
-        Database.loadDatabase(dataDirectory);
     }
 
     @Override

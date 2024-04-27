@@ -4,9 +4,9 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import de.janschuri.lunaticFamily.commands.subcommands.family.GenderSubcommand;
-import de.janschuri.lunaticFamily.senders.velocity.CommandSender;
-import de.janschuri.lunaticFamily.senders.velocity.PlayerCommandSender;
 import de.janschuri.lunaticFamily.utils.Utils;
+import de.janschuri.lunaticlib.senders.velocity.PlayerSender;
+import de.janschuri.lunaticlib.senders.velocity.Sender;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -22,10 +22,10 @@ public final class GenderCommand implements SimpleCommand {
         String[] args = invocation.arguments();
 
         if (source instanceof Player) {
-            PlayerCommandSender commandSender = new PlayerCommandSender((Player) source);
+            PlayerSender commandSender = new PlayerSender((Player) source);
             genderSubcommand.execute(commandSender, args);
         } else {
-            CommandSender consoleCommandSender = new CommandSender(source);
+            Sender consoleCommandSender = new Sender(source);
             genderSubcommand.execute(consoleCommandSender, args);
         }
     }
@@ -58,6 +58,6 @@ public final class GenderCommand implements SimpleCommand {
             newArgs[1] = "";
         }
         System.arraycopy(args, 0, newArgs, 1, args.length);
-        return CompletableFuture.completedFuture(genderSubcommand.tabComplete(new PlayerCommandSender(source), newArgs));
+        return CompletableFuture.completedFuture(genderSubcommand.tabComplete(new PlayerSender(source), newArgs));
     }
 }
