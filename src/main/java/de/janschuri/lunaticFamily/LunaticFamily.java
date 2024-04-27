@@ -15,7 +15,7 @@ import de.janschuri.lunaticFamily.listener.paper.QuitListener;
 import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.PaperUtils;
 import de.janschuri.lunaticFamily.utils.Utils;
-import de.janschuri.lunaticlib.Mode;
+import de.janschuri.lunaticlib.utils.Mode;
 import de.janschuri.lunaticlib.utils.logger.BukkitLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

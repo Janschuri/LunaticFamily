@@ -19,11 +19,10 @@ public class JoinEvent {
         Language language = Language.getInstance();
 
         FamilyPlayer playerFam = new FamilyPlayer(sender.getUniqueId());
-        Logger.debugLog("Player " + playerFam.getName() + " joined the server.");
 
         Runnable runnable = () -> {
             if (PluginConfig.enabledCrazyAdvancementAPI) {
-                new FamilyTree(playerFam.getID());
+                Utils.getUtils().updateFamilyTree(playerFam.getID());
             }
             if (playerFam.isMarried()) {
                 AbstractPlayerSender partner = sender.getPlayerCommandSender(playerFam.getPartner().getUniqueId());

@@ -19,7 +19,6 @@ public class MessageListener implements PluginMessageListener {
     @Override
     public void onPluginMessageReceived(String channel, Player p, byte[] message) {
 
-        Logger.infoLog("Received Plugin Message" + channel);
         if (!channel.equals("lunaticfamily:proxy")) {
             return;
         }
@@ -31,7 +30,6 @@ public class MessageListener implements PluginMessageListener {
 
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
         String subchannel = in.readUTF();
-        Logger.debugLog("plugin message received 4: " + subchannel + channel + "ert");
 
         if (!PluginConfig.isBackend) {
             Logger.warnLog("Detected Proxy Message, but Proxy is disabled in the config. Enable it to connect to the Proxy.");

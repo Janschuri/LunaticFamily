@@ -18,7 +18,6 @@ public class JoinListener {
     @Subscribe
     public void onPlayerConnect(ServerPostConnectEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        Logger.debugLog("test");
         if (event.getPreviousServer() != null) {
 
         } else {

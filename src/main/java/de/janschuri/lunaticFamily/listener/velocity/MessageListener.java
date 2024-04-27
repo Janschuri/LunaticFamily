@@ -27,7 +27,6 @@ public class MessageListener {
         byte[] message = event.getData();
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
         String subchannel = in.readUTF();
-        Logger.debugLog("plugin message received 3: " + subchannel);
         if (subchannel.equals("IsInRangeResponse")) {
             int requestId = in.readInt();
             boolean isInRange = in.readBoolean();

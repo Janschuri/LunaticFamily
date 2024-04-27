@@ -19,7 +19,7 @@ import de.janschuri.lunaticFamily.listener.velocity.MessageListener;
 import de.janschuri.lunaticFamily.listener.velocity.QuitListener;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticFamily.utils.VelocityUtils;
-import de.janschuri.lunaticlib.Mode;
+import de.janschuri.lunaticlib.utils.Mode;
 import de.janschuri.lunaticlib.utils.logger.VelocityLogger;
 import org.slf4j.Logger;
 
@@ -71,6 +71,7 @@ public class Velocity {
         proxy.getEventManager().register(this, new MessageListener());
         proxy.getEventManager().register(this, new JoinListener());
         proxy.getEventManager().register(this, new QuitListener());
+
         new de.janschuri.lunaticFamily.utils.Logger(new VelocityLogger(logger));
         Utils.loadUtils(new VelocityUtils());
 

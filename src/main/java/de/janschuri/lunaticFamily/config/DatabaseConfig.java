@@ -1,8 +1,8 @@
 package de.janschuri.lunaticFamily.config;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticlib.Mode;
 import de.janschuri.lunaticlib.config.Config;
+import de.janschuri.lunaticlib.utils.Mode;
 
 import java.nio.file.Path;
 

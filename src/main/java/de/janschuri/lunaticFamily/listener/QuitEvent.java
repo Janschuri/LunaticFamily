@@ -14,7 +14,6 @@ public class QuitEvent {
         Language language = Language.getInstance();
         UUID uuid = player.getUniqueId();
         FamilyPlayer playerFam = new FamilyPlayer(uuid);
-        Logger.debugLog("Player " + playerFam.getName() + " left the server.");
 
         if (LunaticFamily.marryRequests.containsValue(uuid) || LunaticFamily.marryRequests.containsKey(uuid) || LunaticFamily.marryPriest.containsKey(uuid)) {
 

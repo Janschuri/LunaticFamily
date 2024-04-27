@@ -3,7 +3,7 @@ package de.janschuri.lunaticFamily.database;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.DatabaseConfig;
 import de.janschuri.lunaticFamily.utils.Logger;
-import de.janschuri.lunaticlib.Mode;
+import de.janschuri.lunaticlib.utils.Mode;
 
 import java.nio.file.Path;
 import java.sql.*;
