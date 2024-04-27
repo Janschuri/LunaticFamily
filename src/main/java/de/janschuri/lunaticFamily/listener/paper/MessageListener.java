@@ -30,6 +30,7 @@ public class MessageListener implements PluginMessageListener {
 
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
         String subchannel = in.readUTF();
+        Logger.debugLog( "Received Plugin Message: " + subchannel);
 
         if (!PluginConfig.isBackend) {
             Logger.warnLog("Detected Proxy Message, but Proxy is disabled in the config. Enable it to connect to the Proxy.");
