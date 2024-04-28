@@ -54,3 +54,4 @@ depend:
   - LunaticLib
 softdepend:
   - CrazyAdvancementAPI
+  - Vault
