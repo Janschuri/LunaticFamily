@@ -33,7 +33,7 @@ public class SiblingAcceptSubcommand extends Subcommand {
                 sender.sendMessage(language.getPrefix() + language.getMessage("sibling_accept_no_request"));
             } else {
                 UUID siblingUUID = LunaticFamily.siblingRequests.get(playerUUID);
-                AbstractPlayerSender sibling = player.getPlayerCommandSender(siblingUUID);
+                AbstractPlayerSender sibling = AbstractSender.getPlayerSender(siblingUUID);
                 FamilyPlayer siblingFam = new FamilyPlayer(siblingUUID);
 
                 if (playerFam.getChildrenAmount() + siblingFam.getChildrenAmount() > 2) {

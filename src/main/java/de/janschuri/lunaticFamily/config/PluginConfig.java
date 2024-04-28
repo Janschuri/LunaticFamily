@@ -12,15 +12,15 @@ import java.util.Map;
 public class PluginConfig extends Config {
     private static final String CONFIG_FILE = "config.yml";
     public static boolean isDebug;
-    public static boolean isBackend;
     public static String language;
     public static String defaultGender;
     public static String defaultBackground;
     public static boolean allowSingleAdopt;
     public static boolean enabledServerWhitelist;
     public static List<String> serverWhitelist;
-    public static boolean enabledCrazyAdvancementAPI;
-    public static boolean enabledVault;
+    public static boolean useCrazyAdvancementAPI;
+    public static boolean useVault;
+    public static boolean useProxy;
     public static String dateFormat;
     public static double marryKissRange;
     public static double marryProposeRange;
@@ -56,10 +56,10 @@ public class PluginConfig extends Config {
         siblingProposeRange = getDouble("distances.sibling_propose_range");
 
         isDebug = getBoolean("is_debug", true);
-        isBackend = getBoolean("use_proxy", false);
 
-        enabledVault = getBoolean("use_vault");
-        enabledCrazyAdvancementAPI = getBoolean("use_crazy_advancement_api");
+        useProxy = getBoolean("use_proxy", false);
+        useVault = getBoolean("use_vault");
+        useCrazyAdvancementAPI = getBoolean("use_crazy_advancement_api");
 
         successCommands = getStringListMap("success_commands");
         commandWithdraws = getDoubleMap("command_withdraws");

@@ -19,7 +19,7 @@ public class FamilyReloadSubcommand extends Subcommand {
         if (!sender.hasPermission(permission)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
-            LunaticFamily.getInstance().loadConfig();
+            LunaticFamily.loadConfig();
             sender.sendMessage(language.getPrefix() + language.getMessage("admin_reload"));
         }
         return true;

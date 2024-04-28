@@ -37,7 +37,7 @@ public class AcceptSubcommand extends Subcommand {
 
                 UUID parent1UUID = LunaticFamily.adoptRequests.get(playerUUID);
                 FamilyPlayer parentFam = new FamilyPlayer(parent1UUID);
-                AbstractPlayerSender parent = player.getPlayerCommandSender(parent1UUID);
+                AbstractPlayerSender parent = AbstractSender.getPlayerSender(parent1UUID);
 
                 if (parentFam.getChildrenAmount() > 1) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("adopt_accept_parent_limit").replace("%player%", parentFam.getName()));
@@ -51,7 +51,6 @@ public class AcceptSubcommand extends Subcommand {
                         sender.sendMessage(language.getPrefix() + language.getMessage("adopt_accept_got_adopted").replace("%player1%", parentFam.getName()).replace("%player2%", parentFam.getPartner().getName()));
                         parent.sendMessage(language.getPrefix() + language.getMessage("adopt_accept_adopted").replace("%player%", playerFam.getName()));
                         UUID parent2UUID = parentFam.getPartner().getUniqueId();
-                        AbstractPlayerSender secondParent = player.getPlayerCommandSender(parent2UUID);
                         Utils.getUtils().withdrawMoney(parent2UUID, 0.5, "adopt_parent");
                         Utils.getUtils().withdrawMoney(parent1UUID, 0.5, "adopt_parent");
                         for (String command : PluginConfig.successCommands.get("adopt")) {

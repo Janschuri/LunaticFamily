@@ -72,7 +72,7 @@ public class MarryDivorceSubcommand extends Subcommand {
             }
 
             UUID partnerUUID = playerFam.getPartner().getUniqueId();
-            AbstractPlayerSender partner = sender.getPlayerCommandSender(partnerUUID);
+            AbstractPlayerSender partner = AbstractSender.getPlayerSender(partnerUUID);
 
             if (!Utils.getUtils().hasEnoughMoney(partnerUUID, "marry_divorce_left_player")) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getPartner().getName()));

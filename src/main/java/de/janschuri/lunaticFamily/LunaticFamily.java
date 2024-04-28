@@ -16,6 +16,7 @@ import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.PaperUtils;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticlib.utils.Mode;
+import de.janschuri.lunaticlib.utils.Platform;
 import de.janschuri.lunaticlib.utils.logger.BukkitLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -33,6 +34,9 @@ public final class LunaticFamily extends JavaPlugin {
     public static BiMap<UUID, UUID> marryPriest = HashBiMap.create();
     public static BiMap<UUID, UUID> adoptRequests = HashBiMap.create();
     public static BiMap<UUID, UUID> siblingRequests = HashBiMap.create();
+    public static boolean enabledProxy = false;
+    public static boolean installedVault = false;
+    public static boolean installedCrazyAdvancementsAPI = false;
     private static final String IDENTIFIER = "lunaticfamily:proxy";
 
     static final List<String> commands = Arrays.asList("family", "marry", "sibling", "adopt", "gender");
@@ -40,7 +44,6 @@ public final class LunaticFamily extends JavaPlugin {
     static Mode mode = Mode.STANDALONE;
 
     private static LunaticFamily instance;
-    public static boolean isProxy = false;
 
     public static LunaticFamily getInstance() {
         return instance;
@@ -55,14 +58,25 @@ public final class LunaticFamily extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, IDENTIFIER);
         new Logger(new BukkitLogger(this));
 
+        if (Utils.classExists("eu.endercentral.crazy_advancements.CrazyAdvancementsAPI")) {
+            installedCrazyAdvancementsAPI = true;
+        }
+
+        if (Utils.classExists("net.milkbowl.vault.economy.Economy")) {
+            installedVault = true;
+        }
+
         Utils.loadUtils(new PaperUtils());
 
-        loadConfig();
+        if (!loadConfig()) {
+            disable();
+            return;
+        }
 
         getServer().getPluginManager().registerEvents(new JoinListener(), this);
         getServer().getPluginManager().registerEvents(new QuitListener(), this);
 
-        if (!PluginConfig.isBackend) {
+        if (!PluginConfig.useProxy) {
             LunaticFamily.mode = Mode.STANDALONE;
 
             for (String command : commands) {
@@ -110,7 +124,9 @@ public final class LunaticFamily extends JavaPlugin {
             Logger.infoLog("Backend mode enabled.");
         }
 
-        Database.loadDatabase(dataDirectory);
+        if (!Database.loadDatabase(dataDirectory)) {
+            disable();
+        }
     }
 
     public static Mode getMode() {
@@ -121,7 +137,7 @@ public final class LunaticFamily extends JavaPlugin {
         LunaticFamily.dataDirectory = dataDirectory;
     }
 
-    public static void loadConfig() {
+    public static boolean loadConfig() {
 
         new PluginConfig(dataDirectory);
 
@@ -133,21 +149,40 @@ public final class LunaticFamily extends JavaPlugin {
 
 
         if (mode == Mode.STANDALONE || mode == Mode.BACKEND) {
-            if (PluginConfig.enabledCrazyAdvancementAPI) {
+            if (PluginConfig.useCrazyAdvancementAPI) {
+
+                if (!installedCrazyAdvancementsAPI) {
+                    Logger.errorLog("CrazyAdvancementsAPI is not installed! Please install CrazyAdvancementsAPI or disable it in plugin config.yml.");
+                    return false;
+                }
+
                 FamilyTree.loadAdvancementMap(instance);
                 Logger.infoLog("Loaded family tree.");
             }
 
-            if (PluginConfig.enabledVault) {
+            if (PluginConfig.useVault) {
+
+                if (!installedVault) {
+                    Logger.errorLog("Vault is not installed! Please install Vault or disable it in plugin config.yml.");
+                    return false;
+                }
+
                 new Vault();
                 Logger.infoLog("Loaded Vault.");
             }
         }
+
+        return true;
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    private static void disable() {
+        Logger.errorLog("Disabling LunaticFamily...");
+        Bukkit.getServer().getPluginManager().disablePlugin(getInstance());
     }
 
     public static void sendPluginMessage(byte[] message) {

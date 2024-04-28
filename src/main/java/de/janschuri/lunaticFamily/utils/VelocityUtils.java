@@ -4,7 +4,7 @@ package de.janschuri.lunaticFamily.utils;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.proxy.Player;
-import de.janschuri.lunaticFamily.Velocity;
+import de.janschuri.lunaticFamily.VelocityLunaticFamily;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 
@@ -26,7 +26,7 @@ public class VelocityUtils extends Utils {
 
     @Override
     public String getPlayerName(UUID uuid) {
-        Optional<Player> player = Velocity.getProxy().getPlayer(uuid);
+        Optional<Player> player = VelocityLunaticFamily.getProxy().getPlayer(uuid);
         return player.map(Player::getUsername).orElse(null);
     }
 
@@ -43,7 +43,7 @@ public class VelocityUtils extends Utils {
         out.writeUTF("UpdateFamilyTree");
         out.writeInt(id);
         out.writeUTF(uuid.toString());
-        Velocity.sendPluginMessage(out.toByteArray());
+        VelocityLunaticFamily.sendPluginMessage(out.toByteArray());
     }
 
     @Override
@@ -52,7 +52,7 @@ public class VelocityUtils extends Utils {
             return true;
         }
         List<String> servers = PluginConfig.serverWhitelist;
-        Optional<Player> player = Velocity.getProxy().getPlayer(uuid);
+        Optional<Player> player = VelocityLunaticFamily.getProxy().getPlayer(uuid);
         return player.map(value -> servers.contains(value.getCurrentServer().get().getServerInfo().getName())).orElse(false);
     }
 
@@ -63,7 +63,7 @@ public class VelocityUtils extends Utils {
 
     @Override
     public boolean hasEnoughMoney(UUID uuid, double factor, String... withdrawKeys) {
-        if (PluginConfig.enabledVault) {
+        if (PluginConfig.useVault) {
             double amount = 0.0;
             for (String key : withdrawKeys) {
                 if (PluginConfig.commandWithdraws.containsKey(key)) {
@@ -75,14 +75,14 @@ public class VelocityUtils extends Utils {
             int requestId = requestIdGenerator.incrementAndGet();
             CompletableFuture<Boolean> responseFuture = new CompletableFuture<>();
 
-            Velocity.booleanRequestMap.put(requestId, responseFuture);
+            VelocityLunaticFamily.booleanRequestMap.put(requestId, responseFuture);
 
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("HasEnoughMoneyRequest");
             out.writeInt(requestId);
             out.writeUTF(uuid.toString());
             out.writeDouble(amount);
-            Velocity.sendPluginMessage(out.toByteArray());
+            VelocityLunaticFamily.sendPluginMessage(out.toByteArray());
 
             try {
                 return responseFuture.get(timeout, unit);
@@ -105,7 +105,7 @@ public class VelocityUtils extends Utils {
 
     @Override
     public boolean withdrawMoney(UUID uuid, double factor, String... withdrawKeys) {
-        if (PluginConfig.enabledVault) {
+        if (PluginConfig.useVault) {
             double amount = 0.0;
             for (String key : withdrawKeys) {
                 if (PluginConfig.commandWithdraws.containsKey(key)) {
@@ -118,14 +118,14 @@ public class VelocityUtils extends Utils {
             int requestId = requestIdGenerator.incrementAndGet();
             CompletableFuture<Boolean> responseFuture = new CompletableFuture<>();
 
-            Velocity.booleanRequestMap.put(requestId, responseFuture);
+            VelocityLunaticFamily.booleanRequestMap.put(requestId, responseFuture);
 
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("WithdrawMoneyRequest");
             out.writeInt(requestId);
             out.writeUTF(uuid.toString());
             out.writeDouble(amount);
-            Velocity.sendPluginMessage(out.toByteArray());
+            VelocityLunaticFamily.sendPluginMessage(out.toByteArray());
 
             try {
                 return responseFuture.get(timeout, unit);
@@ -148,6 +148,6 @@ public class VelocityUtils extends Utils {
         out.writeDouble(position[1]);
         out.writeDouble(position[2]);
         out.writeUTF(particleString);
-        Velocity.sendPluginMessage(out.toByteArray());
+        VelocityLunaticFamily.sendPluginMessage(out.toByteArray());
     }
 }

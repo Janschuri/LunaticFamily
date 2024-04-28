@@ -35,12 +35,12 @@ public class MarryDenySubcommand extends Subcommand {
             } else {
                 if (LunaticFamily.marryRequests.containsKey(playerUUID)) {
                     UUID partnerUUID = LunaticFamily.marryRequests.get(playerUUID);
-                    AbstractPlayerSender partner = sender.getPlayerCommandSender(partnerUUID);
+                    AbstractPlayerSender partner = AbstractSender.getPlayerSender(partnerUUID);
                     if (!LunaticFamily.marryPriest.containsKey(partnerUUID)) {
                         partner.sendMessage(language.getPrefix() + language.getMessage("marry_deny_denied").replace("%player%", playerFam.getName()));
                     } else {
                         UUID priestUUID = LunaticFamily.marryPriest.get(partnerUUID);
-                        AbstractPlayerSender priest = sender.getPlayerCommandSender(priestUUID);
+                        AbstractPlayerSender priest = AbstractSender.getPlayerSender(priestUUID);
                         player.chat(language.getMessage("marry_deny_no"));
 
                         Runnable runnable = () -> {
@@ -57,7 +57,7 @@ public class MarryDenySubcommand extends Subcommand {
                 } else if (LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
                     player.chat(language.getMessage("marry_deny_no"));
                     UUID priestUUID = LunaticFamily.marryPriest.get(playerUUID);
-                    AbstractPlayerSender priest = sender.getPlayerCommandSender(priestUUID);
+                    AbstractPlayerSender priest = AbstractSender.getPlayerSender(priestUUID);
                     priest.chat(language.getMessage("marry_deny_cancel"));
                     LunaticFamily.marryPriestRequests.remove(playerUUID);
                     LunaticFamily.marryPriest.remove(playerUUID);

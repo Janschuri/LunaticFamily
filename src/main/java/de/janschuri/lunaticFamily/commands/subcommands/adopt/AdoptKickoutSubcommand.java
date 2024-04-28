@@ -36,7 +36,7 @@ public class AdoptKickoutSubcommand extends Subcommand {
                     player.sendMessage(language.getPrefix() + language.getMessage("adopt_kickout_specify_child"));
                 } else {
 
-                    AbstractPlayerSender child = player.getPlayerCommandSender(args[1]);
+                    AbstractPlayerSender child = AbstractSender.getPlayerSender(args[1]);
                     UUID childUUID = child.getUniqueId();
                     FamilyPlayer childFam = new FamilyPlayer(childUUID);
                     if (childFam.isChildOf(playerFam.getID())) {
@@ -105,13 +105,13 @@ public class AdoptKickoutSubcommand extends Subcommand {
                         }
                             player.sendMessage(language.getPrefix() + language.getMessage("adopt_kickout").replace("%player%", childFam.getName()));
                             if (playerFam.isMarried()) {
-                                AbstractPlayerSender partner = player.getPlayerCommandSender(playerFam.getPartner().getUniqueId());
+                                AbstractPlayerSender partner = AbstractSender.getPlayerSender(playerFam.getPartner().getUniqueId());
                                 partner.sendMessage(language.getPrefix() + language.getMessage("adopt_kickout_partner").replace("%player1%", playerFam.getName()).replace("%player2%", childFam.getName()));
                             }
 
                             if (childFam.hasSibling()) {
                                 FamilyPlayer siblingFam = childFam.getSibling();
-                                AbstractPlayerSender sibling = player.getPlayerCommandSender(siblingFam.getUniqueId());
+                                AbstractPlayerSender sibling = AbstractSender.getPlayerSender(siblingFam.getUniqueId());
                                 sibling.sendMessage(language.getPrefix() + language.getMessage("adopt_kickout_sibling").replace("%player%", playerFam.getName()));
                             }
                             child.sendMessage(language.getPrefix() + language.getMessage("adopt_kickout_child").replace("%player%", playerFam.getName()));

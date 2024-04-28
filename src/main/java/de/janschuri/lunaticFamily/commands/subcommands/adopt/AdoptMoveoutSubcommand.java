@@ -72,7 +72,7 @@ public class AdoptMoveoutSubcommand extends Subcommand {
             }
 
             UUID parent1UUID = playerFam.getParents().get(0).getUniqueId();
-            AbstractPlayerSender firstParent = player.getPlayerCommandSender(parent1UUID);
+            AbstractPlayerSender firstParent = AbstractSender.getPlayerSender(parent1UUID);
 
             if (!force && playerFam.getParents().size() == 2 && !Utils.getUtils().hasEnoughMoney(parent1UUID, 0.5, "adopt_moveout_parent")) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(1).getName()));
@@ -95,7 +95,7 @@ public class AdoptMoveoutSubcommand extends Subcommand {
             }
 
             UUID parent2UUID = playerFam.getParents().get(1).getUniqueId();
-            AbstractPlayerSender secondParent = player.getPlayerCommandSender(parent2UUID);
+            AbstractPlayerSender secondParent = AbstractSender.getPlayerSender(parent2UUID);
 
             if (!force && playerFam.getParents().size() == 2 && !Utils.getUtils().hasEnoughMoney(parent2UUID, 0.5, "adopt_moveout_parent")) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(1).getName()));
@@ -112,7 +112,7 @@ public class AdoptMoveoutSubcommand extends Subcommand {
 
                 if (playerFam.hasSibling()) {
                     FamilyPlayer siblingFam = playerFam.getSibling();
-                    AbstractSender sibling = player.getPlayerCommandSender(siblingFam.getUniqueId());
+                    AbstractSender sibling = AbstractSender.getPlayerSender(siblingFam.getUniqueId());
                     sibling.sendMessage(language.getPrefix() + language.getMessage("adopt_moveout_sibling"));
                 }
 

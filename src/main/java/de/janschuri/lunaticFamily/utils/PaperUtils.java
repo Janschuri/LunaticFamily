@@ -1,6 +1,7 @@
 package de.janschuri.lunaticFamily.utils;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
+import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.external.Vault;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
@@ -49,7 +50,13 @@ public class PaperUtils extends Utils {
 
     @Override
     public boolean hasEnoughMoney(UUID uuid, double factor, String... withdrawKeys) {
-        if (PluginConfig.enabledVault || PluginConfig.isBackend) {
+        if (PluginConfig.useVault || LunaticFamily.enabledProxy) {
+
+            if(!LunaticFamily.installedVault) {
+                Logger.errorLog("Vault is not installed! Please install Vault or disable it in plugin config.yml.");
+                return false;
+            }
+
             OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
             double amount = 0.0;
             for (String key : withdrawKeys) {
@@ -72,7 +79,13 @@ public class PaperUtils extends Utils {
 
     @Override
     public boolean withdrawMoney(UUID uuid, double factor, String... withdrawKeys) {
-        if (PluginConfig.enabledVault) {
+        if (PluginConfig.useVault || LunaticFamily.enabledProxy) {
+
+            if(!LunaticFamily.installedVault) {
+                Logger.errorLog("Vault is not installed! Please install Vault or disable vault features in plugin config.yml.");
+                return false;
+            }
+
             OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
             double amount = 0.0;
             for (String key : withdrawKeys) {
@@ -134,31 +147,4 @@ public class PaperUtils extends Utils {
     public void sendConsoleCommand(String command) {
         Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), command);
     }
-
-    public static byte[] serializeItemStack(ItemStack item) {
-        try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
-            dataOutput.writeObject(item);
-            dataOutput.close();
-            return outputStream.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static ItemStack deserializeItemStack(byte[] data) {
-        try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
-            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-            ItemStack item = (ItemStack) dataInput.readObject();
-            dataInput.close();
-            return item;
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
 }

@@ -34,9 +34,9 @@ public class SiblingUnsetSubcommand extends Subcommand {
             AbstractPlayerSender player1;
             if (Utils.isUUID(args[1])) {
                 player1UUID = UUID.fromString(args[1]);
-                player1 = sender.getPlayerCommandSender(player1UUID);
+                player1 = AbstractSender.getPlayerSender(player1UUID);
             } else {
-                player1 = sender.getPlayerCommandSender(args[1]);
+                player1 = AbstractSender.getPlayerSender(args[1]);
                 player1UUID = player1.getUniqueId();
             }
             FamilyPlayer player1Fam = new FamilyPlayer(player1UUID);

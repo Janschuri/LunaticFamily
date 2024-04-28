@@ -56,7 +56,7 @@ public class FamilyListSubcommand extends Subcommand {
                 }
                 sender.sendMessage(msg.toString());
             } else {
-                AbstractPlayerSender player1 = sender.getPlayerCommandSender(args[1]);
+                AbstractPlayerSender player1 = AbstractSender.getPlayerSender(args[1]);
                 UUID player1UUID = player1.getUniqueId();
                 if (!sender.hasPermission("lunaticFamily.family.list.others")) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));

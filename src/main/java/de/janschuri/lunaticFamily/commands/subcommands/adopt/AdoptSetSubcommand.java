@@ -44,18 +44,18 @@ public class AdoptSetSubcommand extends Subcommand {
 
             if (Utils.isUUID(args[1])) {
                 firstParentUUID = UUID.fromString(args[1]);
-                firstParent = sender.getPlayerCommandSender(firstParentUUID);
+                firstParent = AbstractSender.getPlayerSender(firstParentUUID);
             } else {
                 force = false;
-                firstParent = sender.getPlayerCommandSender(args[1]);
+                firstParent = AbstractSender.getPlayerSender(args[1]);
                 firstParentUUID = firstParent.getUniqueId();
             }
             if (Utils.isUUID(args[2])) {
                 childUUID = UUID.fromString(args[2]);
-                child = sender.getPlayerCommandSender(childUUID);
+                child = AbstractSender.getPlayerSender(childUUID);
             } else {
                 force = false;
-                child = sender.getPlayerCommandSender(args[2]);
+                child = AbstractSender.getPlayerSender(args[2]);
                 childUUID = child.getUniqueId();
             }
 

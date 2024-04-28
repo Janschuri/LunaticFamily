@@ -34,7 +34,7 @@ public class AdoptDenySubcommand extends Subcommand {
             } else {
                 UUID parentUUID = LunaticFamily.adoptRequests.get(playerUUID);
                 FamilyPlayer parentFam = new FamilyPlayer(parentUUID);
-                AbstractPlayerSender parent = player.getPlayerCommandSender(parentUUID);
+                AbstractPlayerSender parent = AbstractSender.getPlayerSender(parentUUID);
                 parent.sendMessage(language.getPrefix() + language.getMessage("adopt_deny").replace("%player%", playerFam.getName()));
                 sender.sendMessage(language.getPrefix() + language.getMessage("adopt_denied").replace("%player%", parentFam.getName()));
                 LunaticFamily.adoptRequests.remove(playerUUID);

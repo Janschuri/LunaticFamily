@@ -23,8 +23,8 @@ public class MessageListener implements PluginMessageListener {
             return;
         }
 
-        if (!LunaticFamily.isProxy) {
-            LunaticFamily.isProxy = true;
+        if (!LunaticFamily.enabledProxy) {
+            LunaticFamily.enabledProxy = true;
             Logger.infoLog("Connected to Proxy.");
         }
 
@@ -32,7 +32,7 @@ public class MessageListener implements PluginMessageListener {
         String subchannel = in.readUTF();
         Logger.debugLog( "Received Plugin Message: " + subchannel);
 
-        if (!PluginConfig.isBackend) {
+        if (!PluginConfig.useProxy) {
             Logger.warnLog("Detected Proxy Message, but Proxy is disabled in the config. Enable it to connect to the Proxy.");
             return;
         }

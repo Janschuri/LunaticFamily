@@ -42,8 +42,8 @@ public class MarryPriestSubcommand extends Subcommand {
                 player.sendMessage(language.getPrefix() + language.getMessage("marry_priest_self_request"));
             } else {
 
-                AbstractPlayerSender player1 = player.getPlayerCommandSender(args[1]);
-                AbstractPlayerSender player2 = player.getPlayerCommandSender(args[2]);
+                AbstractPlayerSender player1 = AbstractSender.getPlayerSender(args[1]);
+                AbstractPlayerSender player2 = AbstractSender.getPlayerSender(args[2]);
 
                 if (!player1.exists()) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", player1.getName()));

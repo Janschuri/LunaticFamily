@@ -43,7 +43,7 @@ public class SiblingProposeSubcommand extends Subcommand {
                 return true;
             }
 
-            AbstractPlayerSender sibling = player.getPlayerCommandSender(args[1]);
+            AbstractPlayerSender sibling = AbstractSender.getPlayerSender(args[1]);
 
             if (!sibling.exists()) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[1]));

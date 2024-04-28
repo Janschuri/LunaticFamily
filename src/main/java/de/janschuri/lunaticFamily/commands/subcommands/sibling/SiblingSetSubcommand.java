@@ -44,18 +44,18 @@ public class SiblingSetSubcommand extends Subcommand {
             AbstractPlayerSender player2;
             if (Utils.isUUID(args[1])) {
                 player1UUID = UUID.fromString(args[1]);
-                player1 = sender.getPlayerCommandSender(player1UUID);
+                player1 = AbstractSender.getPlayerSender(player1UUID);
             } else {
                 forced = false;
-                player1 = sender.getPlayerCommandSender(args[1]);
+                player1 = AbstractSender.getPlayerSender(args[1]);
                 player1UUID = player1.getUniqueId();
             }
             if (Utils.isUUID(args[2])) {
                 player2UUID = UUID.fromString(args[2]);
-                player2 = sender.getPlayerCommandSender(player2UUID);
+                player2 = AbstractSender.getPlayerSender(player2UUID);
             } else {
                 forced = false;
-                player2 = sender.getPlayerCommandSender(args[2]);
+                player2 = AbstractSender.getPlayerSender(args[2]);
                 player2UUID = player2.getUniqueId();
             }
             FamilyPlayer player1Fam = new FamilyPlayer(player1UUID);

@@ -35,7 +35,7 @@ public class SiblingDenySubcommand extends Subcommand {
 
                 }
                 UUID siblingUUID = LunaticFamily.marryRequests.get(playerUUID);
-                AbstractPlayerSender sibling = player.getPlayerCommandSender(siblingUUID);
+                AbstractPlayerSender sibling = AbstractSender.getPlayerSender(siblingUUID);
                 sibling.sendMessage(language.getPrefix() + language.getMessage("propose_deny_denied").replace("%player%", playerFam.getName()));
                 LunaticFamily.marryRequests.remove(playerUUID);
             }

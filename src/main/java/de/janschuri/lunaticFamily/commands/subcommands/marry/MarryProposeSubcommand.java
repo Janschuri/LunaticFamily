@@ -11,6 +11,7 @@ import de.janschuri.lunaticlib.senders.AbstractSender;
 import de.janschuri.lunaticlib.utils.ClickableDecisionMessage;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class MarryProposeSubcommand extends Subcommand {
     private static final String mainCommand = "marry";
@@ -42,7 +43,7 @@ public class MarryProposeSubcommand extends Subcommand {
                 return true;
             }
 
-            AbstractPlayerSender partner = player.getPlayerCommandSender(args[1]);
+            AbstractPlayerSender partner = AbstractSender.getPlayerSender(args[1]);
             UUID partnerUUID = partner.getUniqueId();
 
             if (!partner.exists())    {
@@ -100,6 +101,17 @@ public class MarryProposeSubcommand extends Subcommand {
                     LunaticFamily.marryRequests.put(partnerUUID, playerUUID);
 
                     sender.sendMessage(language.getPrefix() + language.getMessage("marry_propose_request_sent").replace("%player%", partnerFam.getName()));
+
+                    Runnable runnable = () -> {
+                        if (LunaticFamily.marryRequests.containsKey(partnerUUID)) {
+                            LunaticFamily.marryRequests.remove(partnerUUID);
+                            player.sendMessage(language.getPrefix() + language.getMessage("marry_propose_request_sent_expired").replace("%player%", player.getName()));
+                            partner.sendMessage(language.getPrefix() + language.getMessage("marry_propose_request_expired").replace("%player%", partner.getName()));
+                        }
+                    };
+
+                    Utils.scheduleTask(runnable, 30L, TimeUnit.SECONDS);
+
                 }
 
         }

@@ -6,6 +6,7 @@ import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.PaperUtils;
 import de.janschuri.lunaticFamily.utils.Utils;
 import eu.endercentral.crazy_advancements.NameKey;
@@ -25,6 +26,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -38,6 +40,11 @@ public class FamilyTree {
     private final static Map<String, Advancement> advancementMap= new HashMap<>();
 
     public static void loadAdvancementMap(LunaticFamily plugin) {
+
+        if (!LunaticFamily.installedCrazyAdvancementsAPI) {
+            Logger.errorLog("CrazyAdvancementsAPI is not installed! Please install CrazyAdvancementsAPI or disable it in plugin config.yml.");
+            return;
+        }
 
         File json = new File(plugin.getDataFolder().getAbsolutePath() + "/familyTree.json");
 

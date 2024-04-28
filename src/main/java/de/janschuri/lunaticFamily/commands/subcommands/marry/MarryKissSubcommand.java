@@ -36,7 +36,7 @@ public class MarryKissSubcommand extends Subcommand {
                 return true;
             }
 
-            AbstractPlayerSender partner = player.getPlayerCommandSender(playerFam.getPartner().getUniqueId());
+            AbstractPlayerSender partner = AbstractSender.getPlayerSender(playerFam.getPartner().getUniqueId());
 
             if (!partner.isOnline()) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_offline").replace("%player%", partner.getName()));

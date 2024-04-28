@@ -1,7 +1,7 @@
 package de.janschuri.lunaticFamily.listener.paper;
 
 import de.janschuri.lunaticFamily.listener.QuitEvent;
-import de.janschuri.lunaticlib.senders.paper.PlayerSender;
+import de.janschuri.lunaticlib.senders.bukkit.PlayerSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -12,7 +12,6 @@ public class QuitListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-
         PlayerSender playerCommandSender = new PlayerSender(event.getPlayer());
         quitEvent.execute(playerCommandSender);
     }

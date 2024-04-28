@@ -22,16 +22,18 @@ public abstract class Database {
     public String siblinghoods = "siblinghoods";
     public abstract Connection getSQLConnection();
 
-    public static void loadDatabase(Path dataDirectory) {
+    public static boolean loadDatabase(Path dataDirectory) {
         if (DatabaseConfig.useMySQL) {
             db = new MySQL();
             if (db.getSQLConnection() == null) {
                 Logger.errorLog("Error initializing MySQL database.");
                 if (LunaticFamily.getMode() == Mode.PROXY) {
-                    throw new RuntimeException("Proxy mode requires a MySQL database. Please check your configuration and try again.");
+                    Logger.errorLog("Proxy mode requires a MySQL database. Please check your configuration and try again.");
+                    return false;
                 }
                 if (LunaticFamily.getMode() == Mode.BACKEND) {
-                    throw new RuntimeException("Backend mode requires a MySQL database. Please check your configuration and try again.");
+                    Logger.errorLog("Backend mode requires a MySQL database. Please check your configuration and try again.");
+                    return false;
                 }
                 Logger.warnLog("Falling back to SQLite due to initialization error");
                 db = new SQLite(dataDirectory);
@@ -43,6 +45,7 @@ public abstract class Database {
             Logger.infoLog("Successfully initialized SQLite database");
         }
         db.load();
+        return true;
     }
 
     public static Database getDatabase() {

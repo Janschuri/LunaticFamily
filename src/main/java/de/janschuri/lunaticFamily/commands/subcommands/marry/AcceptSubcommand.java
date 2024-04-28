@@ -42,7 +42,7 @@ public class AcceptSubcommand extends Subcommand {
 
                     UUID partnerUUID = LunaticFamily.marryRequests.get(playerUUID);
                     FamilyPlayer partnerFam = new FamilyPlayer(partnerUUID);
-                    AbstractPlayerSender partner = sender.getPlayerCommandSender(partnerUUID);
+                    AbstractPlayerSender partner = AbstractSender.getPlayerSender(partnerUUID);
 
                     if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
                         int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
@@ -62,7 +62,7 @@ public class AcceptSubcommand extends Subcommand {
                     if (LunaticFamily.marryPriest.containsKey(partnerUUID)) {
                         UUID priestUUID = LunaticFamily.marryPriest.get(partnerUUID);
                         FamilyPlayer priestFam = new FamilyPlayer(priestUUID);
-                        AbstractPlayerSender priest = sender.getPlayerCommandSender(priestUUID);
+                        AbstractPlayerSender priest = AbstractSender.getPlayerSender(priestUUID);
 
                         if (!Utils.getUtils().hasEnoughMoney(priestUUID, "marry_priest")) {
                             sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money").replace("%player%", priestFam.getName()));
@@ -123,7 +123,7 @@ public class AcceptSubcommand extends Subcommand {
 
                     UUID partnerUUID = LunaticFamily.marryPriestRequests.get(playerUUID);
                     FamilyPlayer partnerFam = new FamilyPlayer(partnerUUID);
-                    AbstractPlayerSender partner = sender.getPlayerCommandSender(partnerUUID);
+                    AbstractPlayerSender partner = AbstractSender.getPlayerSender(partnerUUID);
 
                     if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
                         int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
@@ -131,7 +131,7 @@ public class AcceptSubcommand extends Subcommand {
                     } else {
 
                         UUID priestUUID = LunaticFamily.marryPriest.get(playerUUID);
-                        AbstractPlayerSender priest = sender.getPlayerCommandSender(priestUUID);
+                        AbstractPlayerSender priest = AbstractSender.getPlayerSender(priestUUID);
 
                         if (!Utils.getUtils().hasEnoughMoney(partnerUUID, "marry_proposing_player")) {
                             sender.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", partnerFam.getName()));

@@ -77,9 +77,9 @@ public class GenderSetSubcommand extends Subcommand {
             AbstractPlayerSender player1;
             if (Utils.isUUID(args[2])) {
                 player1UUID = UUID.fromString(args[2]);
-                player1 = sender.getPlayerCommandSender(player1UUID);
+                player1 = AbstractSender.getPlayerSender(player1UUID);
             } else {
-                player1 = sender.getPlayerCommandSender(args[2]);
+                player1 = AbstractSender.getPlayerSender(args[2]);
                 player1UUID = player1.getUniqueId();
             }
 

@@ -31,9 +31,9 @@ public class AdoptUnsetSubcommand extends Subcommand {
             AbstractPlayerSender child;
             if (Utils.isUUID(args[1])) {
                 childUUID = UUID.fromString(args[1]);
-                child = sender.getPlayerCommandSender(childUUID);
+                child = AbstractSender.getPlayerSender(childUUID);
             } else {
-                child = sender.getPlayerCommandSender(args[1]);
+                child = AbstractSender.getPlayerSender(args[1]);
                 childUUID = child.getUniqueId();
             }
 

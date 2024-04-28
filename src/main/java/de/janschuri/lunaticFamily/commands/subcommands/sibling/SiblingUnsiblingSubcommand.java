@@ -53,7 +53,7 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
             }
 
             UUID siblingUUID = playerFam.getSibling().getUniqueId();
-            AbstractPlayerSender sibling = player.getPlayerCommandSender(siblingUUID);
+            AbstractPlayerSender sibling = AbstractSender.getPlayerSender(siblingUUID);
 
             if (!confirm) {
                 sender.sendMessage(new ClickableDecisionMessage(

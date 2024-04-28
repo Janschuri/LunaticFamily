@@ -37,7 +37,7 @@ public class MarryGiftSubcommand extends Subcommand {
             }
 
             UUID partnerUUID = playerFam.getPartner().getUniqueId();
-            AbstractPlayerSender partner = sender.getPlayerCommandSender(partnerUUID);
+            AbstractPlayerSender partner = AbstractSender.getPlayerSender(partnerUUID);
 
             if (!partner.isOnline()) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_offline").replace("%player%", partner.getName()));
