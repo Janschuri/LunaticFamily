@@ -66,9 +66,9 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
                 sender.sendMessage(language.getPrefix() + language.getMessage("sibling_unsibling_cancel"));
             } else if (playerFam.isAdopted()) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("sibling_unsibling_adopted"));
-            } else if (!force && !Utils.getUtils().hasEnoughMoney(playerUUID, "sibling_unsibling_leaving_player")) {
+            } else if (!force && !Utils.hasEnoughMoney(playerUUID, "sibling_unsibling_leaving_player")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
-            } else if (!force && !Utils.getUtils().hasEnoughMoney(siblingUUID, "sibling_unsibling_left_player")) {
+            } else if (!force && !Utils.hasEnoughMoney(siblingUUID, "sibling_unsibling_left_player")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getSibling().getName()));
                 sender.sendMessage(new ClickableDecisionMessage(
                         language.getMessage("take_payment_confirm"),
@@ -81,15 +81,15 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
                 sibling.sendMessage(language.getPrefix() + language.getMessage("sibling_unsiblinged_complete"));
 
                 if (force) {
-                    Utils.getUtils().withdrawMoney(playerUUID, "sibling_unsibling_leaving_player", "sibling_unsibling_left_player");
+                    Utils.withdrawMoney(playerUUID, "sibling_unsibling_leaving_player", "sibling_unsibling_left_player");
                 } else {
-                    Utils.getUtils().withdrawMoney(playerUUID, "sibling_unsibling_leaving_player");
-                    Utils.getUtils().withdrawMoney(siblingUUID, "sibling_unsibling_left_player");
+                    Utils.withdrawMoney(playerUUID, "sibling_unsibling_leaving_player");
+                    Utils.withdrawMoney(siblingUUID, "sibling_unsibling_left_player");
                 }
 
                 for (String command : PluginConfig.successCommands.get("unsibling")) {
                     command = command.replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getSibling().getName());
-                    Utils.getUtils().sendConsoleCommand(command);
+                    Utils.sendConsoleCommand(command);
                 }
 
                 playerFam.removeSibling();

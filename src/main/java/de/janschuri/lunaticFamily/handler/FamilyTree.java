@@ -1,14 +1,14 @@
-package de.janschuri.lunaticFamily.external;
+package de.janschuri.lunaticFamily.handler;
 
 import com.google.common.collect.BiMap;
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.PaperLunaticFamily;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.database.Database;
-import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Logger;
-import de.janschuri.lunaticFamily.utils.PaperUtils;
 import de.janschuri.lunaticFamily.utils.Utils;
+import de.janschuri.lunaticlib.utils.ItemStackUtils;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
 import eu.endercentral.crazy_advancements.advancement.AdvancementDisplay;
@@ -39,7 +39,7 @@ public class FamilyTree {
     private static final List<NameKey> advancementNameKeys = new ArrayList<>();
     private final static Map<String, Advancement> advancementMap= new HashMap<>();
 
-    public static void loadAdvancementMap(LunaticFamily plugin) {
+    public static void loadAdvancementMap(PaperLunaticFamily plugin) {
 
         if (!LunaticFamily.installedCrazyAdvancementsAPI) {
             Logger.errorLog("CrazyAdvancementsAPI is not installed! Please install CrazyAdvancementsAPI or disable it in plugin config.yml.");
@@ -158,7 +158,7 @@ public class FamilyTree {
                 FamilyPlayer relationFam = new FamilyPlayer(familyList.get(relation));
                 advancement.getDisplay().setTitle(relationFam.getName());
                 advancement.getDisplay().setDescription(Language.getRelation(relationKey, relationFam.getGender()));
-                advancement.getDisplay().setIcon(PaperUtils.getSkull(relationFam.getSkinURL()));
+                advancement.getDisplay().setIcon(ItemStackUtils.getSkull(relationFam.getSkinURL()));
                 if (relation.equalsIgnoreCase("ego")) {
                     advancement.getDisplay().setBackgroundTexture(playerFam.getBackground());
                 }

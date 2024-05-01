@@ -2,13 +2,14 @@ package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
-import de.janschuri.lunaticFamily.config.Language;
+import de.janschuri.lunaticFamily.futurerequests.SpawnParticlesCloudRequest;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
+import de.janschuri.lunaticlib.LunaticLib;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
+import de.janschuri.lunaticlib.utils.Mode;
 
-import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -43,7 +44,7 @@ public class MarryKissSubcommand extends Subcommand {
                 return true;
             }
 
-            if (!Utils.getUtils().isPlayerOnWhitelistedServer(partner.getUniqueId())) {
+            if (!Utils.isPlayerOnRegisteredServer(partner.getUniqueId())) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_on_whitelisted_server").replace("%player%", partner.getName().replace("%server%", partner.getServerName())));
                 return true;
             }
@@ -65,7 +66,11 @@ public class MarryKissSubcommand extends Subcommand {
             for (int i = 0; i < 6; i++) {
 
                 Runnable runnable = () -> {
-                    Utils.getUtils().spawnParticleCloud(playerUUID, position, "HEART");
+                    if (LunaticLib.getMode() == Mode.PROXY) {
+                        new SpawnParticlesCloudRequest().get(playerUUID, position, "HEART");
+                    } else {
+                        Utils.spawnParticleCloud(playerUUID, position, "HEART");
+                    }
                 };
 
                 Utils.scheduleTask(runnable, i * 250L, TimeUnit.MILLISECONDS);

@@ -11,13 +11,12 @@ import java.util.Map;
 
 public class PluginConfig extends Config {
     private static final String CONFIG_FILE = "config.yml";
-    public static boolean isDebug;
     public static String language;
     public static String defaultGender;
     public static String defaultBackground;
     public static boolean allowSingleAdopt;
     public static boolean enabledServerWhitelist;
-    public static List<String> serverWhitelist;
+    public static List<String> servers;
     public static boolean useCrazyAdvancementAPI;
     public static boolean useVault;
     public static boolean useProxy;
@@ -41,6 +40,16 @@ public class PluginConfig extends Config {
     public void load() {
         super.load();
 
+        LunaticFamily.isDebug = getBoolean("debug", false);
+        useProxy = getBoolean("use_proxy", false);
+
+        if (useProxy && LunaticFamily.getMode() != Mode.PROXY) {
+            return;
+        }
+
+        useVault = getBoolean("use_vault");
+        useCrazyAdvancementAPI = getBoolean("use_crazy_advancement_api");
+
         allowSingleAdopt = getBoolean("allow_single_adopt");
         defaultBackground = "textures/block/" + getString("default_background") + ".png";
         defaultGender = getString("default_gender");
@@ -55,17 +64,14 @@ public class PluginConfig extends Config {
         adoptProposeRange = getDouble("distances.adopt_propose_range");
         siblingProposeRange = getDouble("distances.sibling_propose_range");
 
-        isDebug = getBoolean("is_debug", true);
-
-        useProxy = getBoolean("use_proxy", false);
-        useVault = getBoolean("use_vault");
-        useCrazyAdvancementAPI = getBoolean("use_crazy_advancement_api");
-
         successCommands = getStringListMap("success_commands");
         commandWithdraws = getDoubleMap("command_withdraws");
         colors = getStringMap("colors");
 
-        enabledServerWhitelist = getBoolean("server_whitelist.enabled", false);
-        serverWhitelist = getStringList("server_whitelist.list");
+        servers = getStringList("servers");
+
+        if (LunaticFamily.getMode() == Mode.PROXY) {
+
+        }
     }
 }

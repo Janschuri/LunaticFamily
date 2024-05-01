@@ -9,7 +9,6 @@ import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 import de.janschuri.lunaticlib.utils.ClickableDecisionMessage;
 
-import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -54,7 +53,7 @@ public class SiblingProposeSubcommand extends Subcommand {
                 return true;
             }
 
-            if (!Utils.getUtils().isPlayerOnWhitelistedServer(sibling.getUniqueId())) {
+            if (!Utils.isPlayerOnRegisteredServer(sibling.getUniqueId())) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_on_whitelisted_server").replace("%player%", sibling.getName().replace("%server%", sibling.getServerName())));
                 return true;
             }
@@ -71,7 +70,7 @@ public class SiblingProposeSubcommand extends Subcommand {
                     sender.sendMessage(language.getPrefix() + language.getMessage("sibling_propose_sibling_is_adopted").replace("%player%", siblingFam.getName()));
                 } else if (LunaticFamily.siblingRequests.containsKey(siblingUUID)) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("sibling_propose_open_request").replace("%player%", siblingFam.getName()));
-                } else if (!Utils.getUtils().hasEnoughMoney(playerUUID, "sibling_proposing_player")) {
+                } else if (!Utils.hasEnoughMoney(playerUUID, "sibling_proposing_player")) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
                 } else {
 

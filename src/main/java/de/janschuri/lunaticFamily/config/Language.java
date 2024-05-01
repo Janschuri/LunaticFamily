@@ -18,7 +18,7 @@ public class Language extends de.janschuri.lunaticlib.config.Language {
 
     private static final Map<String, Map<String, List<String>>> aliases = new HashMap<>();
 
-    public Language(Path dataDirectory, List<String> commands) {
+    public Language(Path dataDirectory, String[] commands) {
         super(dataDirectory, commands, PluginConfig.language);
         instance = this;
         this.load();

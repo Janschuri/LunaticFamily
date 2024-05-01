@@ -44,8 +44,8 @@ public class MarryGiftSubcommand extends Subcommand {
                 return true;
             }
 
-            if (!Utils.getUtils().isPlayerOnWhitelistedServer(partnerUUID)) {
-                player.sendMessage(language.getPrefix() + language.getMessage("player_not_on_whitelisted_server").replace("%player%", partner.getName().replace("%server%", partner.getServerName())));
+            if (!Utils.isPlayerOnRegisteredServer(partnerUUID)) {
+                player.sendMessage(language.getPrefix() + language.getMessage("player_not_on_whitelisted_server").replace("%player%", partner.getName()).replace("%server%", partner.getServerName()));
                 return true;
             }
 

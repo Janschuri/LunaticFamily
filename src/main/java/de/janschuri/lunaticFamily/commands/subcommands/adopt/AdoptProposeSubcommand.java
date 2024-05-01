@@ -3,14 +3,12 @@ package de.janschuri.lunaticFamily.commands.subcommands.adopt;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
-import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 import de.janschuri.lunaticlib.utils.ClickableDecisionMessage;
 
-import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -71,12 +69,12 @@ public class AdoptProposeSubcommand extends Subcommand {
                 return true;
             }
 
-            if (!Utils.getUtils().isPlayerOnWhitelistedServer(child.getUniqueId())) {
+            if (!Utils.isPlayerOnRegisteredServer(child.getUniqueId())) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_on_whitelisted_server").replace("%player%", child.getName().replace("%server%", child.getServerName())));
                 return true;
             }
 
-            if (!Utils.getUtils().hasEnoughMoney(playerUUID, "adopt_parent")) {
+            if (!Utils.hasEnoughMoney(playerUUID, "adopt_parent")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
             }
 

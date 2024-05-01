@@ -1,7 +1,7 @@
 package de.janschuri.lunaticFamily.listener.paper;
 
 import de.janschuri.lunaticFamily.listener.QuitEvent;
-import de.janschuri.lunaticlib.senders.bukkit.PlayerSender;
+import de.janschuri.lunaticlib.senders.paper.PlayerSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;

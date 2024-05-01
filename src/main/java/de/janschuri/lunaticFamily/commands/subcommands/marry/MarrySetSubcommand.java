@@ -52,7 +52,6 @@ public class MarrySetSubcommand extends Subcommand {
                 player1UUID = UUID.fromString(args[1]);
                 player1 = AbstractSender.getPlayerSender(player1UUID);
             } else {
-                force = false;
                 player1 = AbstractSender.getPlayerSender(args[1]);
                 player1UUID = player1.getUniqueId();
             }
@@ -60,7 +59,6 @@ public class MarrySetSubcommand extends Subcommand {
                 player2UUID = UUID.fromString(args[2]);
                 player2 = AbstractSender.getPlayerSender(player2UUID);
             } else {
-                force = false;
                 player2 = AbstractSender.getPlayerSender(args[2]);
                 player2UUID = player2.getUniqueId();
             }

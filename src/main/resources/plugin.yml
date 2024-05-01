@@ -1,6 +1,6 @@
 name: LunaticFamily
 version: '${project.version}'
-main: de.janschuri.lunaticFamily.LunaticFamily
+main: de.janschuri.lunaticFamily.PaperLunaticFamily
 commands:
   family:
     description: Get information about your family.

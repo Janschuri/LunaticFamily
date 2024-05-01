@@ -2,7 +2,6 @@ package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
@@ -56,7 +55,7 @@ public class MarryProposeSubcommand extends Subcommand {
                 return true;
             }
 
-            if (!Utils.getUtils().isPlayerOnWhitelistedServer(partner.getUniqueId())) {
+            if (!Utils.isPlayerOnRegisteredServer(partner.getUniqueId())) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_on_whitelisted_server").replace("%player%", partner.getName().replace("%server%", partner.getServerName())));
                 return true;
             }
@@ -66,7 +65,7 @@ public class MarryProposeSubcommand extends Subcommand {
                 return true;
             }
 
-            if (!Utils.getUtils().hasEnoughMoney(playerUUID, "marry_proposing_player")) {
+            if (!Utils.hasEnoughMoney(playerUUID, "marry_proposing_player")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
                 return true;
             }

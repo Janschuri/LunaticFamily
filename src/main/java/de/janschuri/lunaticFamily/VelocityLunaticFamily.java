@@ -5,20 +5,18 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import de.janschuri.lunaticFamily.commands.velocity.*;
 import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.listener.velocity.JoinListener;
-import de.janschuri.lunaticFamily.listener.velocity.MessageListener;
 import de.janschuri.lunaticFamily.listener.velocity.QuitListener;
-import de.janschuri.lunaticFamily.utils.Utils;
-import de.janschuri.lunaticFamily.utils.VelocityUtils;
 import de.janschuri.lunaticlib.utils.Mode;
 import de.janschuri.lunaticlib.utils.logger.VelocityLogger;
 import org.slf4j.Logger;
@@ -67,13 +65,13 @@ public class VelocityLunaticFamily {
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
         LunaticFamily.mode = Mode.PROXY;
-        proxy.getChannelRegistrar().register(IDENTIFIER);
-        proxy.getEventManager().register(this, new MessageListener());
-        proxy.getEventManager().register(this, new JoinListener());
-        proxy.getEventManager().register(this, new QuitListener());
 
         new de.janschuri.lunaticFamily.utils.Logger(new VelocityLogger(logger));
-        Utils.loadUtils(new VelocityUtils());
+
+        LunaticFamily.registerRequests();
+        proxy.getChannelRegistrar().register(IDENTIFIER);
+        proxy.getEventManager().register(this, new JoinListener());
+        proxy.getEventManager().register(this, new QuitListener());
 
         LunaticFamily.setDataDirectory(dataDirectory);
         LunaticFamily.loadConfig();
@@ -107,15 +105,9 @@ public class VelocityLunaticFamily {
         }
     }
 
-    public static void sendPluginMessage(byte[] message) {
-        de.janschuri.lunaticFamily.utils.Logger.debugLog("PluginMessage sent.");
-
-        if (PluginConfig.enabledServerWhitelist) {
-            proxy.getAllServers().stream()
-                    .filter(serverConnection -> PluginConfig.serverWhitelist.contains(serverConnection.getServerInfo().getName()))
-                    .forEach(serverConnection -> serverConnection.sendPluginMessage(IDENTIFIER, message));
-        } else {
-            proxy.getAllServers().forEach(serverConnection -> serverConnection.sendPluginMessage(IDENTIFIER, message));
-        }
+    @Subscribe
+    public void onProxyShutdown(ProxyShutdownEvent event) {
+        LunaticFamily.unregisterRequests();
+        de.janschuri.lunaticFamily.utils.Logger.infoLog("LunaticFamily disabled.");
     }
 }

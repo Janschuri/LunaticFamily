@@ -66,7 +66,7 @@ public class AdoptMoveoutSubcommand extends Subcommand {
                         "/family adopt moveout cancel"));
                 return true;
             }
-            if (!force && !Utils.getUtils().hasEnoughMoney(playerUUID, "adopt_moveout_child")) {
+            if (!force && !Utils.hasEnoughMoney(playerUUID, "adopt_moveout_child")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
                 return true;
             }
@@ -74,7 +74,7 @@ public class AdoptMoveoutSubcommand extends Subcommand {
             UUID parent1UUID = playerFam.getParents().get(0).getUniqueId();
             AbstractPlayerSender firstParent = AbstractSender.getPlayerSender(parent1UUID);
 
-            if (!force && playerFam.getParents().size() == 2 && !Utils.getUtils().hasEnoughMoney(parent1UUID, 0.5, "adopt_moveout_parent")) {
+            if (!force && playerFam.getParents().size() == 2 && !Utils.hasEnoughMoney(parent1UUID, 0.5, "adopt_moveout_parent")) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(1).getName()));
                 player.sendMessage(new ClickableDecisionMessage(
                         language.getMessage("take_payment_confirm"),
@@ -83,7 +83,7 @@ public class AdoptMoveoutSubcommand extends Subcommand {
                         language.getMessage("cancel"),
                         "/family adopt moveout cancel"));
                 return true;
-            } else if (!force && playerFam.getParents().size() == 1 && !Utils.getUtils().hasEnoughMoney(parent1UUID, "adopt_moveout_parent")) {
+            } else if (!force && playerFam.getParents().size() == 1 && !Utils.hasEnoughMoney(parent1UUID, "adopt_moveout_parent")) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(0).getName()));
                 player.sendMessage(new ClickableDecisionMessage(
                         language.getMessage("take_payment_confirm"),
@@ -97,7 +97,7 @@ public class AdoptMoveoutSubcommand extends Subcommand {
             UUID parent2UUID = playerFam.getParents().get(1).getUniqueId();
             AbstractPlayerSender secondParent = AbstractSender.getPlayerSender(parent2UUID);
 
-            if (!force && playerFam.getParents().size() == 2 && !Utils.getUtils().hasEnoughMoney(parent2UUID, 0.5, "adopt_moveout_parent")) {
+            if (!force && playerFam.getParents().size() == 2 && !Utils.hasEnoughMoney(parent2UUID, 0.5, "adopt_moveout_parent")) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(1).getName()));
                 player.sendMessage(new ClickableDecisionMessage(
                         language.getMessage("take_payment_confirm"),
@@ -105,7 +105,7 @@ public class AdoptMoveoutSubcommand extends Subcommand {
                         "/family adopt moveout confirm force",
                         language.getMessage("cancel"),
                         "/family adopt moveout cancel"));
-            } else if (force && !Utils.getUtils().hasEnoughMoney(playerUUID, "adopt_moveout_parent", "adopt_moveout_child")) {
+            } else if (force && !Utils.hasEnoughMoney(playerUUID, "adopt_moveout_parent", "adopt_moveout_child")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
             } else {
                 FamilyPlayer firstParentFam = playerFam.getParents().get(0);
@@ -125,28 +125,28 @@ public class AdoptMoveoutSubcommand extends Subcommand {
                 }
 
                 if (force) {
-                    Utils.getUtils().withdrawMoney(playerUUID, "moveout_child");
-                    Utils.getUtils().withdrawMoney(playerUUID, 0.5, "adopt_moveout_parent");
-                    Utils.getUtils().withdrawMoney(playerUUID, 0.5, "adopt_moveout_parent");
+                    Utils.withdrawMoney(playerUUID, "moveout_child");
+                    Utils.withdrawMoney(playerUUID, 0.5, "adopt_moveout_parent");
+                    Utils.withdrawMoney(playerUUID, 0.5, "adopt_moveout_parent");
                 } else {
                     if (firstParentFam.isMarried()) {
                         FamilyPlayer secondParentFam = firstParentFam.getPartner();
-                        Utils.getUtils().withdrawMoney(parent2UUID, 0.5, "adopt_moveout_parent");
-                        Utils.getUtils().withdrawMoney(parent1UUID, 0.5, "adopt_moveout_parent");
+                        Utils.withdrawMoney(parent2UUID, 0.5, "adopt_moveout_parent");
+                        Utils.withdrawMoney(parent1UUID, 0.5, "adopt_moveout_parent");
 
                         for (String command : PluginConfig.successCommands.get("moveout")) {
                             command = command.replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()).replace("%child%", playerFam.getName());
-                            Utils.getUtils().sendConsoleCommand(command);
+                            Utils.sendConsoleCommand(command);
                         }
                     } else {
-                        Utils.getUtils().withdrawMoney(parent1UUID, "adopt_moveout_parent");
+                        Utils.withdrawMoney(parent1UUID, "adopt_moveout_parent");
 
                         for (String command : PluginConfig.successCommands.get("moveout_single")) {
                             command = command.replace("%parent%", firstParentFam.getName()).replace("%child%", playerFam.getName());
-                            Utils.getUtils().sendConsoleCommand(command);
+                            Utils.sendConsoleCommand(command);
                         }
                     }
-                    Utils.getUtils().withdrawMoney(playerUUID, "adopt_moveout_child");
+                    Utils.withdrawMoney(playerUUID, "adopt_moveout_child");
                 }
 
                 firstParentFam.unadopt(playerFam.getID());

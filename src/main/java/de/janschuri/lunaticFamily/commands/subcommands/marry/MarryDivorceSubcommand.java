@@ -66,7 +66,7 @@ public class MarryDivorceSubcommand extends Subcommand {
                         "/family marry divorce cancel"));
                 return true;
             }
-            if (!Utils.getUtils().hasEnoughMoney(playerUUID, "marry_divorce_leaving_player")) {
+            if (!Utils.hasEnoughMoney(playerUUID, "marry_divorce_leaving_player")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
                 return true;
             }
@@ -74,7 +74,7 @@ public class MarryDivorceSubcommand extends Subcommand {
             UUID partnerUUID = playerFam.getPartner().getUniqueId();
             AbstractPlayerSender partner = AbstractSender.getPlayerSender(partnerUUID);
 
-            if (!Utils.getUtils().hasEnoughMoney(partnerUUID, "marry_divorce_left_player")) {
+            if (!Utils.hasEnoughMoney(partnerUUID, "marry_divorce_left_player")) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getPartner().getName()));
                 player.sendMessage(new ClickableDecisionMessage(
                         language.getMessage("take_payment_confirm"),
@@ -85,7 +85,7 @@ public class MarryDivorceSubcommand extends Subcommand {
                 return true;
             }
 
-            if (force && !Utils.getUtils().hasEnoughMoney(playerUUID, "marry_divorce_left_player", "marry_divorce_leaving_player")) {
+            if (force && !Utils.hasEnoughMoney(playerUUID, "marry_divorce_left_player", "marry_divorce_leaving_player")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
                 return true;
             }
@@ -96,14 +96,14 @@ public class MarryDivorceSubcommand extends Subcommand {
 
             for (String command : PluginConfig.successCommands.get("divorce")) {
                 command = command.replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName());
-                Utils.getUtils().sendConsoleCommand(command);
+                Utils.sendConsoleCommand(command);
             }
 
             if (force) {
-                Utils.getUtils().withdrawMoney(playerUUID, "marry_divorce_left_player", "marry_divorce_leaving_player");
+                Utils.withdrawMoney(playerUUID, "marry_divorce_left_player", "marry_divorce_leaving_player");
             } else {
-                Utils.getUtils().withdrawMoney(playerUUID, "marry_divorce_leaving_player");
-                Utils.getUtils().withdrawMoney(partnerUUID, "marry_divorce_leaving_player");
+                Utils.withdrawMoney(playerUUID, "marry_divorce_leaving_player");
+                Utils.withdrawMoney(partnerUUID, "marry_divorce_leaving_player");
             }
 
             playerFam.divorce();

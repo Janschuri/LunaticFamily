@@ -46,16 +46,16 @@ public class SiblingAcceptSubcommand extends Subcommand {
                     return true;
                 }
 
-                if (!Utils.getUtils().isPlayerOnWhitelistedServer(sibling.getUniqueId())) {
+                if (!Utils.isPlayerOnRegisteredServer(sibling.getUniqueId())) {
                     player.sendMessage(language.getPrefix() + language.getMessage("player_not_on_whitelisted_server").replace("%player%", sibling.getName().replace("%server%", sibling.getServerName())));
                     return true;
                 }
 
-                if (!Utils.getUtils().hasEnoughMoney(playerUUID, "sibling_proposed_player")) {
+                if (!Utils.hasEnoughMoney(playerUUID, "sibling_proposed_player")) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
                     return true;
                 }
-                if (!Utils.getUtils().hasEnoughMoney(siblingUUID, "sibling_proposing_player")) {
+                if (!Utils.hasEnoughMoney(siblingUUID, "sibling_proposing_player")) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", siblingFam.getName()));
                     return true;
                 }
@@ -70,11 +70,11 @@ public class SiblingAcceptSubcommand extends Subcommand {
 
                     for (String command : PluginConfig.successCommands.get("sibling")) {
                         command = command.replace("%player1%", playerFam.getName()).replace("%player2%", siblingFam.getName());
-                        Utils.getUtils().sendConsoleCommand(command);
+                        Utils.sendConsoleCommand(command);
                     }
 
-                    Utils.getUtils().withdrawMoney(playerUUID, "sibling_proposed_player");
-                    Utils.getUtils().withdrawMoney(siblingUUID, "sibling_proposing_player");
+                    Utils.withdrawMoney(playerUUID, "sibling_proposed_player");
+                    Utils.withdrawMoney(siblingUUID, "sibling_proposing_player");
 
             }
         }

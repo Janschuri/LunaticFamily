@@ -57,8 +57,8 @@ public class FamilyPlayer {
         parents = Database.getDatabase().getParents(id);
         children = Database.getDatabase().getChildren(id);
 
-        if (Utils.getUtils().getPlayerName(uuid) != null) {
-            name = (Utils.getUtils().getPlayerName(uuid));
+        if (Utils.getPlayerName(uuid) != null) {
+            name = (Utils.getPlayerName(uuid));
         } else {
             name = Database.getDatabase().getName(id);
         }
@@ -88,8 +88,8 @@ public class FamilyPlayer {
     }
 
     public String getName() {
-        if (Utils.getUtils().getPlayerName(uuid) != null) {
-            return Utils.getUtils().getPlayerName(uuid);
+        if (Utils.getPlayerName(uuid) != null) {
+            return Utils.getPlayerName(uuid);
         } else {
             return Database.getDatabase().getName(id);
         }
@@ -638,7 +638,7 @@ public class FamilyPlayer {
     }
 
     public void updateFamilyTree() {
-        Utils.getUtils().updateFamilyTree(this.id);
+        Utils.updateFamilyTree(this.id, this.uuid);
     }
 
 }

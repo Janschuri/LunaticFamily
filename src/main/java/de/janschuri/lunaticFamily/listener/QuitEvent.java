@@ -5,6 +5,7 @@ import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
+import de.janschuri.lunaticlib.utils.Mode;
 
 import java.util.UUID;
 
@@ -14,6 +15,10 @@ public class QuitEvent {
         Language language = Language.getInstance();
         UUID uuid = player.getUniqueId();
         FamilyPlayer playerFam = new FamilyPlayer(uuid);
+
+        if (LunaticFamily.getMode() == Mode.BACKEND) {
+            return true;
+        }
 
         if (LunaticFamily.marryRequests.containsValue(uuid) || LunaticFamily.marryRequests.containsKey(uuid) || LunaticFamily.marryPriest.containsKey(uuid)) {
 
@@ -49,17 +54,11 @@ public class QuitEvent {
             LunaticFamily.adoptRequests.inverse().remove(uuid);
         }
 
-        if (playerFam.isMarried() && !LunaticFamily.enabledProxy) {
-            UUID partnerUUID = playerFam.getPartner().getUniqueId();
-            AbstractPlayerSender partner = AbstractSender.getPlayerSender(partnerUUID);
-            partner.sendMessage(language.getPrefix() + language.getMessage("marry_partner_offline") + 7);
-        }
-
         if (playerFam.isMarried()) {
             AbstractPlayerSender partner = AbstractSender.getPlayerSender(playerFam.getPartner().getUniqueId());
-                if (partner.isOnline()) {
-                    partner.sendMessage(language.getPrefix() + language.getMessage("marry_partner_offline"));
-                }
+            if (partner.isOnline()) {
+                partner.sendMessage(language.getPrefix() + language.getMessage("marry_partner_offline"));
+            }
         }
 
 
