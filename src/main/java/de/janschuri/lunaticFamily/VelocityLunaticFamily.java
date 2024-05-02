@@ -11,14 +11,12 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
-import com.velocitypowered.api.proxy.server.RegisteredServer;
 import de.janschuri.lunaticFamily.commands.velocity.*;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.listener.velocity.JoinListener;
 import de.janschuri.lunaticFamily.listener.velocity.QuitListener;
 import de.janschuri.lunaticlib.utils.Mode;
-import de.janschuri.lunaticlib.utils.logger.VelocityLogger;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
@@ -65,8 +63,6 @@ public class VelocityLunaticFamily {
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
         LunaticFamily.mode = Mode.PROXY;
-
-        new de.janschuri.lunaticFamily.utils.Logger(new VelocityLogger(logger));
 
         LunaticFamily.registerRequests();
         proxy.getChannelRegistrar().register(IDENTIFIER);

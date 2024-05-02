@@ -1,0 +1,6 @@
+name: LunaticFamily
+version: '${project.version}'
+main: de.janschuri.lunaticFamily.BungeeLunaticFamily
+api-version: '1.20'
+depends:
+  - LunaticLib

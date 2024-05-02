@@ -2,36 +2,31 @@ package de.janschuri.lunaticFamily.utils;
 
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticlib.utils.logger.AbstractLogger;
+import de.janschuri.lunaticlib.logger.AbstractLogger;
 
-public class Logger{
+public class Logger extends AbstractLogger {
 
-    private static AbstractLogger logger;
-
-    public Logger(AbstractLogger logger) {
-        Logger.logger = logger;
-    }
+    private static org.slf4j.Logger logger = AbstractLogger.getLogger("LunaticFamily");
 
     public boolean isDebug() {
         return LunaticFamily.isDebug;
     }
 
     public static void debugLog(String msg) {
-        logger.debug(msg);
+        debug(logger, msg);
     }
 
     public static void infoLog(String msg) {
-        logger.info(msg);
+        info(logger, msg);
     }
 
     public static void warnLog(String msg) {
-        logger.warn(msg);
+        warn(logger, msg);
     }
 
     public static void errorLog(String msg) {
-        logger.error(msg);
+        error(logger, msg);
     }
-
 }
 
 

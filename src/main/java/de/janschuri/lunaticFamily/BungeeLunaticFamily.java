@@ -5,21 +5,28 @@ import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.listener.bungee.JoinListener;
 import de.janschuri.lunaticFamily.listener.bungee.QuitListener;
 import de.janschuri.lunaticlib.utils.Mode;
-import de.janschuri.lunaticlib.utils.logger.BungeeLogger;
-import de.janschuri.lunaticlib.utils.logger.Logger;
-import net.md_5.bungee.api.config.ServerInfo;
+import de.janschuri.lunaticFamily.utils.Logger;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.nio.file.Path;
 
 public class BungeeLunaticFamily extends Plugin {
+
+    private static BungeeLunaticFamily instance;
+
     @Override
     public void onEnable() {
         LunaticFamily.mode = Mode.PROXY;
+        instance = this;
 
-        new Logger(new BungeeLogger(this));
 
         LunaticFamily.registerRequests();
+
+        Path dataDirectory = getDataFolder().toPath();
+
+        LunaticFamily.setDataDirectory(dataDirectory);
+        LunaticFamily.loadConfig();
+        Database.loadDatabase(dataDirectory);
 
         getProxy().getPluginManager().registerListener(this, new QuitListener());
         getProxy().getPluginManager().registerListener(this, new JoinListener());
@@ -30,11 +37,7 @@ public class BungeeLunaticFamily extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new MarryCommand());
         getProxy().getPluginManager().registerCommand(this, new SiblingCommand());
 
-        Path dataDirectory = getDataFolder().toPath();
 
-        LunaticFamily.setDataDirectory(dataDirectory);
-        LunaticFamily.loadConfig();
-        Database.loadDatabase(dataDirectory);
 
 
         Logger.infoLog("LunaticFamily enabled.");
@@ -44,5 +47,9 @@ public class BungeeLunaticFamily extends Plugin {
     public void onDisable() {
         LunaticFamily.unregisterRequests();
         getLogger().info("LunaticFamily disabled.");
+    }
+
+    public static BungeeLunaticFamily getInstance() {
+        return instance;
     }
 }

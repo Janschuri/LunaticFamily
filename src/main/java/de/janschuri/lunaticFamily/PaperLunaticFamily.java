@@ -8,7 +8,6 @@ import de.janschuri.lunaticFamily.listener.paper.QuitListener;
 import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticlib.utils.Mode;
-import de.janschuri.lunaticlib.utils.logger.BukkitLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -24,7 +23,6 @@ public class PaperLunaticFamily extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        new Logger(new BukkitLogger(this));
         LunaticFamily.registerRequests();
         LunaticFamily.setDataDirectory(getDataFolder().toPath());
 

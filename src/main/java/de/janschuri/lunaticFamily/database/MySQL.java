@@ -4,7 +4,6 @@ import de.janschuri.lunaticFamily.config.DatabaseConfig;
 
 import java.sql.*;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class MySQL extends Database {
@@ -50,7 +49,7 @@ public class MySQL extends Database {
 
     public Connection getSQLConnection() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/", username, password);
 
             Statement stmt = conn.createStatement();
