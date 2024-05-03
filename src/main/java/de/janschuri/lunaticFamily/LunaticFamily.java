@@ -51,6 +51,10 @@ public final class LunaticFamily {
         LunaticFamily.dataDirectory = dataDirectory;
     }
 
+    public static Path getDataDirectory() {
+        return dataDirectory;
+    }
+
     public static boolean loadConfig() {
 
         new PluginConfig(dataDirectory);
@@ -67,24 +71,14 @@ public final class LunaticFamily {
 
 
         if (mode != Mode.PROXY) {
-            if (PluginConfig.useCrazyAdvancementAPI) {
-
-                if (!installedCrazyAdvancementsAPI) {
-                    Logger.errorLog("CrazyAdvancementsAPI is not installed! Please install CrazyAdvancementsAPI or disable it in plugin config.yml.");
-                    return false;
-                }
-
-                FamilyTree.loadAdvancementMap(PaperLunaticFamily.getInstance());
-                Logger.infoLog("Loaded family tree.");
+            if (PluginConfig.useCrazyAdvancementAPI || LunaticFamily.getMode() == Mode.BACKEND) {
+                Logger.infoLog("Loading family tree...");
+                loadCrazyAdvancementsAPI();
             }
 
-            if (PluginConfig.useVault) {
-
-                if (!LunaticLib.installedVault) {
-                    Logger.errorLog("Vault is not installed! Please install Vault or disable it in plugin config.yml.");
-                    return false;
-                }
-                Logger.infoLog("Vault enabled.");
+            if (PluginConfig.useVault || LunaticFamily.getMode() == Mode.BACKEND) {
+                Logger.infoLog("Loading Vault...");
+                LunaticLib.loadVault();
             }
         }
 
@@ -101,5 +95,14 @@ public final class LunaticFamily {
         for (FutureRequest request : futureRequests) {
             FutureRequestsHandler.unregisterRequest(request.getRequestName());
         }
+    }
+
+    public static void loadCrazyAdvancementsAPI() {
+        if (!installedCrazyAdvancementsAPI) {
+            Logger.errorLog("CrazyAdvancementsAPI is not installed! Please install CrazyAdvancementsAPI or disable it in plugin config.yml.");
+            return;
+        }
+        FamilyTree.loadAdvancementMap();
+        Logger.infoLog("Loaded family tree.");
     }
 }

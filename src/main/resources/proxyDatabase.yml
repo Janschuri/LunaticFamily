@@ -1,4 +1,4 @@
-# Database configuration
+# DatabaseO configuration
 MySQL:
   enabled: false
   host: localhost

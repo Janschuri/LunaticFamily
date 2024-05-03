@@ -3,12 +3,13 @@ package de.janschuri.lunaticFamily.futurerequests;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import de.janschuri.lunaticFamily.database.Database;
+import de.janschuri.lunaticFamily.database.tables.PlayerDataTable;
 import de.janschuri.lunaticFamily.handler.FamilyTree;
 import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticlib.futurerequests.FutureRequest;
 import org.bukkit.Bukkit;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,16 +29,18 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
         UUID uuid = UUID.fromString(in.readUTF());
         boolean success = false;
 
-        if (Database.getDatabase().getUUID(id) == null) {
-            Logger.warnLog("Player with ID " + id + " not found in the database. Proxy and " + Bukkit.getServer().getName() + " are not connected to the same Database.");
+        if (PlayerDataTable.getUUID(id) == null) {
+            Logger.warnLog("Player with ID " + id + " not found in the database. Proxy and " + Bukkit.getServer().getName() + " are not connected to the same DatabaseO.");
         }
-        if (!Database.getDatabase().getUUID(id).equals(uuid)) {
-            Logger.warnLog("UUID of Player with ID " + id + " does not match the database. Proxy and " + Bukkit.getServer().getName() + " are not connected to the same Database.");
+        if (!Objects.equals(PlayerDataTable.getUUID(id), uuid)) {
+            Logger.warnLog("UUID of Player with ID " + id + " does not match the database. Proxy and " + Bukkit.getServer().getName() + " are not connected to the same DatabaseO.");
         }
 
         if (Bukkit.getPlayer(uuid) == null) {
+            Logger.debugLog( "UpdateFamilyTreeRequest: Player with UUID " + uuid + " not found on the server.");
             return;
         } else {
+            Logger.debugLog( "UpdateFamilyTreeRequest: Player with UUID " + uuid + " found on the server.");
             new FamilyTree(id);
             success = true;
         }

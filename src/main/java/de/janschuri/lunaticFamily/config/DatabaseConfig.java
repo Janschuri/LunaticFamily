@@ -1,33 +1,19 @@
 package de.janschuri.lunaticFamily.config;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticlib.config.Config;
+import de.janschuri.lunaticlib.config.AbstractDatabaseConfig;
 import de.janschuri.lunaticlib.utils.Mode;
 
 import java.nio.file.Path;
 
-public class DatabaseConfig extends Config {
-//    private final File databaseConfigFile;
-    public static String host, database, username, password, filename;
-    public static int port;
-
+public class DatabaseConfig extends AbstractDatabaseConfig {
+    private static final String NAME = "lunaticfamily";
     private static final String DATABASE_FILE = "database.yml";
-    public static boolean useMySQL;
+    private static final String DEFAULT_DATABASE_FILE = "database.yml";
+    private static final String DEFAULT_PROXY_DATABASE_FILE = "proxyDatabase.yml";
 
     public DatabaseConfig(Path dataDirectory) {
-        super(dataDirectory, DATABASE_FILE, (LunaticFamily.getMode() == Mode.PROXY || LunaticFamily.getMode() == Mode.BACKEND) ? "proxyDatabase.yml" : "database.yml");
+        super(NAME, dataDirectory, DATABASE_FILE, (LunaticFamily.getMode() == Mode.PROXY || LunaticFamily.getMode() == Mode.BACKEND) ? DEFAULT_PROXY_DATABASE_FILE : DEFAULT_DATABASE_FILE);
         this.load();
-    }
-
-    @Override
-    public void load() {
-        super.load();
-        host = getString("MySQL.host", "localhost");
-        port = getInt("MySQL.port", 3306);
-        database = getString("MySQL.database", "lunaticfamily");
-        username = getString("MySQL.username", "root");
-        password = getString("MySQL.password", "");
-        filename = getString("SQLite.filename", "lunaticfamily");
-        useMySQL = getBoolean("MySQL.enabled", false);
     }
 }

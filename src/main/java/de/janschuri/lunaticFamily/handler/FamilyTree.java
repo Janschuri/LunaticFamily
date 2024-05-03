@@ -5,9 +5,8 @@ import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.PaperLunaticFamily;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.database.Database;
+import de.janschuri.lunaticFamily.database.tables.PlayerDataTable;
 import de.janschuri.lunaticFamily.utils.Logger;
-import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticlib.utils.ItemStackUtils;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
@@ -26,7 +25,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -34,12 +32,13 @@ import java.util.*;
 public class FamilyTree {
 
 
-    private final BiMap<String, Integer> familyList;
     private static final List<String> advancements = new ArrayList<>();
     private static final List<NameKey> advancementNameKeys = new ArrayList<>();
     private final static Map<String, Advancement> advancementMap= new HashMap<>();
 
-    public static void loadAdvancementMap(PaperLunaticFamily plugin) {
+    public static void loadAdvancementMap() {
+
+        PaperLunaticFamily plugin = PaperLunaticFamily.getInstance();
 
         if (!LunaticFamily.installedCrazyAdvancementsAPI) {
             Logger.errorLog("CrazyAdvancementsAPI is not installed! Please install CrazyAdvancementsAPI or disable it in plugin config.yml.");
@@ -124,10 +123,11 @@ public class FamilyTree {
     public FamilyTree(int id) {
 
         FamilyPlayer playerFam = new FamilyPlayer(id);
-        this.familyList = playerFam.getFamilyList();
-        this.familyList.put("ego", id);
+        BiMap<String, Integer> familyList = playerFam.getFamilyList();
+        familyList.put("ego", id);
 
-        UUID uuid = Database.getDatabase().getUUID(id);
+        UUID uuid = PlayerDataTable.getUUID(id);
+        Logger.debugLog("Creating FamilyTree for " + uuid);
         Player player = Bukkit.getPlayer(uuid);
 
         AdvancementsPacket packet = new AdvancementsPacket(player, false, null, advancementNameKeys);

@@ -1,8 +1,8 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.database.Database;
+import de.janschuri.lunaticFamily.database.tables.PlayerDataTable;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 
@@ -36,7 +36,7 @@ public class FamilyDeleteSubcommand extends Subcommand {
 
             if (Utils.isUUID(args[1])) {
                 if (force) {
-                    Database.getDatabase().deletePlayerData(args[1]);
+                    PlayerDataTable.deletePlayerData(args[1]);
                     sender.sendMessage(language.getPrefix() + language.getMessage("admin_delete").replace("%player%", args[1]));
                 } else {
                     sender.sendMessage(language.getPrefix() + language.getMessage("admin_delete_confirm").replace("%player%", args[1]));

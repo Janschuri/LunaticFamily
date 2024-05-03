@@ -3,7 +3,10 @@ package de.janschuri.lunaticFamily.handler;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticFamily.config.PluginConfig;
-import de.janschuri.lunaticFamily.database.Database;
+import de.janschuri.lunaticFamily.database.tables.AdoptionsTable;
+import de.janschuri.lunaticFamily.database.tables.MarriagesTable;
+import de.janschuri.lunaticFamily.database.tables.PlayerDataTable;
+import de.janschuri.lunaticFamily.database.tables.SiblinghoodsTable;
 import de.janschuri.lunaticFamily.utils.Utils;
 
 import java.sql.Timestamp;
@@ -31,8 +34,7 @@ public class FamilyPlayer {
     private final BiMap<String, Integer> familyList = HashBiMap.create();
 
     public FamilyPlayer(int id) {
-        this(Database.getDatabase().getUUID(id));
-
+        this(PlayerDataTable.getUUID(id));
     }
 
     public FamilyPlayer(String uuid) {
@@ -43,43 +45,43 @@ public class FamilyPlayer {
 
         this.uuid = uuid;
 
-        if (Database.getDatabase().getID(uuid) != 0) {
-            id = Database.getDatabase().getID(uuid);
+        if (PlayerDataTable.getID(uuid) != 0) {
+            id = PlayerDataTable.getID(uuid);
         } else {
             savePlayerData();
-            id = Database.getDatabase().getID(uuid);
+            id = PlayerDataTable.getID(uuid);
         }
 
-        partner = Database.getDatabase().getPartner(id);
-        marryDate = Database.getDatabase().getMarryDate(id);
-        priest = Database.getDatabase().getPriest(id);
-        sibling = Database.getDatabase().getSibling(id);
-        parents = Database.getDatabase().getParents(id);
-        children = Database.getDatabase().getChildren(id);
+        partner = MarriagesTable.getPartner(id);
+        marryDate = MarriagesTable.getMarryDate(id);
+        priest = MarriagesTable.getPriest(id);
+        sibling = SiblinghoodsTable.getSibling(id);
+        parents = AdoptionsTable.getParents(id);
+        children = AdoptionsTable.getChildren(id);
 
         if (Utils.getPlayerName(uuid) != null) {
             name = (Utils.getPlayerName(uuid));
         } else {
-            name = Database.getDatabase().getName(id);
+            name = PlayerDataTable.getName(id);
         }
 
-        if (Database.getDatabase().getSkinURL(id) != null) {
-            skinURL = Database.getDatabase().getSkinURL(id);
+        if (PlayerDataTable.getSkinURL(id) != null) {
+            skinURL = PlayerDataTable.getSkinURL(id);
         } else {
             skinURL = "http://textures.minecraft.net/texture/2705fd94a0c431927fb4e639b0fcfb49717e412285a02b439e0112da22b2e2ec";
         }
 
 
-        if (Database.getDatabase().getGender(id) == null) {
+        if (PlayerDataTable.getGender(id) == null) {
             gender = PluginConfig.defaultGender;
         } else {
-            gender = Database.getDatabase().getGender(id);
+            gender = PlayerDataTable.getGender(id);
         }
 
-        if (Database.getDatabase().getBackground(id) == null) {
+        if (PlayerDataTable.getBackground(id) == null) {
             background = PluginConfig.defaultBackground;
         } else {
-            background = Database.getDatabase().getBackground(id);
+            background = PlayerDataTable.getBackground(id);
         }
 
 
@@ -91,7 +93,7 @@ public class FamilyPlayer {
         if (Utils.getPlayerName(uuid) != null) {
             return Utils.getPlayerName(uuid);
         } else {
-            return Database.getDatabase().getName(id);
+            return PlayerDataTable.getName(id);
         }
     }
 
@@ -105,42 +107,42 @@ public class FamilyPlayer {
 
     private void savePlayerData() {
         if (id == 0) {
-            Database.getDatabase().savePlayerData(uuid.toString(), name, skinURL, gender, background);
+            PlayerDataTable.savePlayerData(uuid.toString(), name, skinURL, gender, background);
         } else {
-            Database.getDatabase().updatePlayerData(id, uuid.toString(), name, skinURL, gender, background);
+            PlayerDataTable.updatePlayerData(id, uuid.toString(), name, skinURL, gender, background);
         }
     }
 
     private void saveMarriage(int partnerID) {
-        Database.getDatabase().saveMarriage(this.id, partnerID);
+        MarriagesTable.saveMarriage(this.id, partnerID);
     }
 
     private void saveMarriage(int partnerID, int priest) {
-        Database.getDatabase().saveMarriage(this.id, partnerID, priest);
+        MarriagesTable.saveMarriage(this.id, partnerID, priest);
     }
 
     private void saveMarriageHeartColor(String color) {
-        Database.getDatabase().saveMarriageHeartColor(this.id, color);
+        MarriagesTable.saveMarriageHeartColor(this.id, color);
     }
 
     private void deleteMarriage() {
-        Database.getDatabase().deleteMarriage(this.id);
+        MarriagesTable.deleteMarriage(this.id);
     }
 
     private void saveSiblinghood(int siblingID) {
-        Database.getDatabase().saveSiblinghood(this.id, siblingID);
+        SiblinghoodsTable.saveSiblinghood(this.id, siblingID);
     }
 
     private void deleteSiblinghood() {
-        Database.getDatabase().deleteSiblinghood(this.id);
+        SiblinghoodsTable.deleteSiblinghood(this.id);
     }
 
     private void saveAdoption(int childID) {
-        Database.getDatabase().saveAdoption(this.id, childID);
+        AdoptionsTable.saveAdoption(this.id, childID);
     }
 
     private void deleteAdoption(int childID) {
-        Database.getDatabase().deleteAdoption(this.id, childID);
+        AdoptionsTable.deleteAdoption(this.id, childID);
     }
 
     public String getSkinURL() {
@@ -151,7 +153,7 @@ public class FamilyPlayer {
         saveMarriageHeartColor(color);
     }
     public String getHeartColor() {
-        return Database.getDatabase().getMarriageHeartColor(this.id);
+        return MarriagesTable.getMarriageHeartColor(this.id);
     }
 
     public FamilyPlayer getPartner() {
@@ -389,11 +391,10 @@ public class FamilyPlayer {
             if (partnerFam.getSibling() != null) {
                 int secondSiblingInLaw = partnerFam.getSibling().getID();
                 familyList.put("second_sibling_in_law", secondSiblingInLaw);
-                FamilyPlayer secondSiblingInLawFam = new FamilyPlayer(secondSiblingInLaw);
 
             }
 
-            if (partnerFam.getParents().size() > 0) {
+            if (!partnerFam.getParents().isEmpty()) {
                 int firstParentInLaw = partnerFam.getParents().get(0).getID();
                 familyList.put("first_parent_in_law", firstParentInLaw);
             }
@@ -414,7 +415,7 @@ public class FamilyPlayer {
                 familyList.put("first_sibling_in_law", firstSiblingInLaw);
             }
 
-            if (siblingFam.getChildren().size() > 0) {
+            if (!siblingFam.getChildren().isEmpty()) {
                 int firstNieceOrNephew = siblingFam.getChildren().get(0).getID();
                 familyList.put("first_niece_or_nephew", firstNieceOrNephew);
             }
@@ -425,7 +426,7 @@ public class FamilyPlayer {
             }
         }
 
-        if (this.getParents().size() > 0) {
+        if (!this.getParents().isEmpty()) {
             int firstParent = this.getParents().get(0).getID();
             familyList.put("first_parent", firstParent);
             FamilyPlayer firstParentFam = new FamilyPlayer(firstParent);
@@ -437,7 +438,7 @@ public class FamilyPlayer {
                     int firstAuntOrUncle = secondAuntOrUncleFam.getPartner().getID();
                     familyList.put("first_aunt_or_uncle", firstAuntOrUncle);
                 }
-                if (secondAuntOrUncleFam.getChildren().size() > 0) {
+                if (!secondAuntOrUncleFam.getChildren().isEmpty()) {
                     int firstCousin = secondAuntOrUncleFam.getChildren().get(0).getID();
                     familyList.put("first_cousin", firstCousin);
                 }
@@ -446,7 +447,7 @@ public class FamilyPlayer {
                     familyList.put("second_cousin", secondCousin);
                 }
             }
-            if (firstParentFam.getParents().size() > 0) {
+            if (!firstParentFam.getParents().isEmpty()) {
                 int firstGrandparent = firstParentFam.getParents().get(0).getID();
                 familyList.put("first_grandparent", firstGrandparent);
                 FamilyPlayer firstGrandparentFam = new FamilyPlayer(firstGrandparent);
@@ -455,7 +456,7 @@ public class FamilyPlayer {
                     int firstGreatAuntOrUncle = firstGrandparentFam.getSibling().getID();
                     familyList.put("first_great_aunt_or_uncle", firstGreatAuntOrUncle);
                 }
-                if (firstGrandparentFam.getParents().size() > 0) {
+                if (!firstGrandparentFam.getParents().isEmpty()) {
                     int firstGreatGrandparent = firstGrandparentFam.getParents().get(0).getID();
                     familyList.put("first_great_grandparent", firstGreatGrandparent);
                 }
@@ -473,7 +474,7 @@ public class FamilyPlayer {
                     int secondGreatAuntOrUncle = secondGrandparentFam.getSibling().getID();
                     familyList.put("second_great_aunt_or_uncle", secondGreatAuntOrUncle);
                 }
-                if (secondGrandparentFam.getParents().size() > 0) {
+                if (!secondGrandparentFam.getParents().isEmpty()) {
                     int thirdGreatGrandparent = secondGrandparentFam.getParents().get(0).getID();
                     familyList.put("third_great_grandparent", thirdGreatGrandparent);
                 }
@@ -497,7 +498,7 @@ public class FamilyPlayer {
                     int fourthAuntOrUncle = thirdAuntOrUncleFam.getPartner().getID();
                     familyList.put("fourth_aunt_or_uncle", fourthAuntOrUncle);
                 }
-                if (thirdAuntOrUncleFam.getChildren().size() > 0) {
+                if (!thirdAuntOrUncleFam.getChildren().isEmpty()) {
                     int thirdCousin = thirdAuntOrUncleFam.getChildren().get(0).getID();
                     familyList.put("third_cousin", thirdCousin);
                 }
@@ -506,7 +507,7 @@ public class FamilyPlayer {
                     familyList.put("fourth_cousin", fourthCousin);
                 }
             }
-            if (secondParentFam.getParents().size() > 0) {
+            if (!secondParentFam.getParents().isEmpty()) {
                 int thirdGrandparent = secondParentFam.getParents().get(0).getID();
                 familyList.put("third_grandparent", thirdGrandparent);
                 FamilyPlayer thirdGrandparentFam = new FamilyPlayer(thirdGrandparent);
@@ -515,7 +516,7 @@ public class FamilyPlayer {
                     int thirdGreatAuntOrUncle = thirdGrandparentFam.getSibling().getID();
                     familyList.put("third_great_aunt_or_uncle", thirdGreatAuntOrUncle);
                 }
-                if (thirdGrandparentFam.getParents().size() > 0) {
+                if (!thirdGrandparentFam.getParents().isEmpty()) {
                     int fifthGreatGrandparent = thirdGrandparentFam.getParents().get(0).getID();
                     familyList.put("fifth_great_grandparent", fifthGreatGrandparent);
                 }
@@ -533,7 +534,7 @@ public class FamilyPlayer {
                     int fourthGreatAuntOrUncle = fourthGrandparentFam.getSibling().getID();
                     familyList.put("fourth_great_aunt_or_uncle", fourthGreatAuntOrUncle);
                 }
-                if (fourthGrandparentFam.getParents().size() > 0) {
+                if (!fourthGrandparentFam.getParents().isEmpty()) {
                     int seventhGreatGrandparent = fourthGrandparentFam.getParents().get(0).getID();
                     familyList.put("seventh_great_grandparent", seventhGreatGrandparent);
                 }
@@ -544,7 +545,7 @@ public class FamilyPlayer {
             }
         }
 
-        if (this.getChildren().size() > 0) {
+        if (!this.getChildren().isEmpty()) {
             int firstChild = this.getChildren().get(0).getID();
             familyList.put("first_child", firstChild);
             FamilyPlayer firstChildFam = new FamilyPlayer(firstChild);
@@ -553,7 +554,7 @@ public class FamilyPlayer {
                 int firstChildInLaw = firstChildFam.getPartner().getID();
                 familyList.put("first_child_in_law", firstChildInLaw);
             }
-            if (firstChildFam.getChildren().size() > 0) {
+            if (!firstChildFam.getChildren().isEmpty()) {
                 int firstGrandchild = firstChildFam.getChildren().get(0).getID();
                 familyList.put("first_grandchild", firstGrandchild);
                 FamilyPlayer firstGrandchildFam = new FamilyPlayer(firstGrandchild);
@@ -561,7 +562,7 @@ public class FamilyPlayer {
                     int firstGrandchildInLaw = firstGrandchildFam.getPartner().getID();
                     familyList.put("first_grandchild_in_law", firstGrandchildInLaw);
                 }
-                if (firstGrandchildFam.getChildren().size() > 0) {
+                if (!firstGrandchildFam.getChildren().isEmpty()) {
                     int firstGreatGrandchild = firstGrandchildFam.getChildren().get(0).getID();
                     familyList.put("first_great_grandchild", firstGreatGrandchild);
                 }
@@ -578,7 +579,7 @@ public class FamilyPlayer {
                     int secondGrandchildInLaw = secondGrandchildFam.getPartner().getID();
                     familyList.put("second_grandchild_in_law", secondGrandchildInLaw);
                 }
-                if (secondGrandchildFam.getChildren().size() > 0) {
+                if (!secondGrandchildFam.getChildren().isEmpty()) {
                     int thirdGreatGrandchild = secondGrandchildFam.getChildren().get(0).getID();
                     familyList.put("third_great_grandchild", thirdGreatGrandchild);
                 }
@@ -598,7 +599,7 @@ public class FamilyPlayer {
                 int secondChildInLaw = secondChildFam.getPartner().getID();
                 familyList.put("second_child_in_law", secondChildInLaw);
             }
-            if (secondChildFam.getChildren().size() > 0) {
+            if (!secondChildFam.getChildren().isEmpty()) {
                 int thirdGrandchild = secondChildFam.getChildren().get(0).getID();
                 familyList.put("third_grandchild", thirdGrandchild);
                 FamilyPlayer thirdGrandchildFam = new FamilyPlayer(thirdGrandchild);
@@ -606,7 +607,7 @@ public class FamilyPlayer {
                     int thirdGrandchildInLaw = thirdGrandchildFam.getPartner().getID();
                     familyList.put("third_grandchild_in_law", thirdGrandchildInLaw);
                 }
-                if (thirdGrandchildFam.getChildren().size() > 0) {
+                if (!thirdGrandchildFam.getChildren().isEmpty()) {
                     int fifthGreatGrandchild = thirdGrandchildFam.getChildren().get(0).getID();
                     familyList.put("fifth_great_grandchild", fifthGreatGrandchild);
                 }
@@ -623,7 +624,7 @@ public class FamilyPlayer {
                     int fourthGrandchildInLaw = fourthGrandchildFam.getPartner().getID();
                     familyList.put("fourth_grandchild_in_law", fourthGrandchildInLaw);
                 }
-                if (fourthGrandchildFam.getChildren().size() > 0) {
+                if (!fourthGrandchildFam.getChildren().isEmpty()) {
                     int seventhGreatGrandchild = fourthGrandchildFam.getChildren().get(0).getID();
                     familyList.put("seventh_great_grandchild", seventhGreatGrandchild);
                 }

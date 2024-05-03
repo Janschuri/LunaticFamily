@@ -71,7 +71,7 @@ public class VelocityLunaticFamily {
 
         LunaticFamily.setDataDirectory(dataDirectory);
         LunaticFamily.loadConfig();
-        Database.loadDatabase(dataDirectory);
+        Database.loadDatabase();
 
         CommandManager commandManager = proxy.getCommandManager();
 

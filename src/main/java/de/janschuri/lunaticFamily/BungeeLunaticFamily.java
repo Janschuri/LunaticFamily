@@ -26,7 +26,7 @@ public class BungeeLunaticFamily extends Plugin {
 
         LunaticFamily.setDataDirectory(dataDirectory);
         LunaticFamily.loadConfig();
-        Database.loadDatabase(dataDirectory);
+        Database.loadDatabase();
 
         getProxy().getPluginManager().registerListener(this, new QuitListener());
         getProxy().getPluginManager().registerListener(this, new JoinListener());

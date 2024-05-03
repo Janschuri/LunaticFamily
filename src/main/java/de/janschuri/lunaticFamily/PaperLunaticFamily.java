@@ -55,9 +55,7 @@ public class PaperLunaticFamily extends JavaPlugin {
                     list.forEach(alias -> {
                         commandMap.register(alias, instance.getName(), cmd);
                     });
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
+                } catch (NoSuchFieldException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
             }
@@ -86,7 +84,7 @@ public class PaperLunaticFamily extends JavaPlugin {
             Logger.infoLog("Backend mode enabled.");
         }
 
-        if (!Database.loadDatabase(getDataFolder().toPath())) {
+        if (!Database.loadDatabase()) {
             disable();
         }
     }
