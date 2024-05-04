@@ -6,8 +6,8 @@ import de.janschuri.lunaticFamily.config.DatabaseConfig;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.futurerequests.SpawnParticlesCloudRequest;
-import de.janschuri.lunaticFamily.handler.FamilyTree;
 import de.janschuri.lunaticFamily.futurerequests.UpdateFamilyTreeRequest;
+import de.janschuri.lunaticFamily.handler.FamilyTree;
 import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticlib.LunaticLib;
 import de.janschuri.lunaticlib.futurerequests.FutureRequest;
@@ -66,8 +66,8 @@ public final class LunaticFamily {
 
         if (mode != Mode.BACKEND) {
             new Language(dataDirectory, commands);
+            new DatabaseConfig(dataDirectory);
         }
-        new DatabaseConfig(dataDirectory);
 
 
         if (mode != Mode.PROXY) {

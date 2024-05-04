@@ -5,6 +5,7 @@ import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.futurerequests.UpdateFamilyTreeRequest;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
+import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticlib.LunaticLib;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
@@ -16,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 public class JoinEvent {
 
     public boolean execute(AbstractPlayerSender sender) {
+
+        Logger.debugLog("Player joined: " + sender.getName());
 
         if (!Utils.isPlayerOnRegisteredServer(sender.getUniqueId())) {
             return true;
@@ -31,7 +34,7 @@ public class JoinEvent {
         Runnable runnable = () -> {
             if (PluginConfig.useCrazyAdvancementAPI) {
                 if (LunaticLib.getMode() == Mode.PROXY) {
-                    new UpdateFamilyTreeRequest().get(playerFam.getID(), playerFam.getUniqueId());
+                    new UpdateFamilyTreeRequest().get(playerFam.getID());
                 } else {
                     playerFam.updateFamilyTree();
                 }

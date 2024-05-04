@@ -2,11 +2,17 @@ package de.janschuri.lunaticFamily.listener.paper;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.listener.JoinEvent;
+import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticlib.senders.paper.PlayerSender;
+import de.janschuri.lunaticlib.utils.ItemStackUtils;
 import de.janschuri.lunaticlib.utils.Mode;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class JoinListener implements Listener {
 
@@ -14,9 +20,13 @@ public class JoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-
-
+        Logger.debugLog("Player joined: " + event.getPlayer().getName());
         PlayerSender playerCommandSender = new PlayerSender(event.getPlayer());
+
+
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer("HTH2009");
+        ItemStack item = ItemStackUtils.getSkullFromUUID(offlinePlayer.getUniqueId());
+        event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), item);
 
         if (LunaticFamily.getMode() == Mode.STANDALONE) {
             joinEvent.execute(playerCommandSender);

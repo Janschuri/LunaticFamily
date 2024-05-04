@@ -2,6 +2,7 @@ package de.janschuri.lunaticFamily.config;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import de.janschuri.lunaticFamily.utils.Logger;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -39,7 +40,6 @@ public class Language extends de.janschuri.lunaticlib.config.Language {
         colorsTranslations = getStringMap("color_translations");
     }
     public static String getGenderLang(String key) {
-
         if (genderLang.containsKey(key)) {
             return translateAlternateColorCodes('&', genderLang.get(key.toLowerCase()));
         } else {
@@ -90,18 +90,29 @@ public class Language extends de.janschuri.lunaticlib.config.Language {
 
 
     public static String getRelation(String relation, String gender) {
+        String relationKey = relation
+                .replace("first_", "")
+                .replace("second_", "")
+                .replace("third_", "")
+                .replace("fourth_", "")
+                .replace("fifth_", "")
+                .replace("sixth_", "")
+                .replace("seventh__", "")
+                .replace("eighth_", "");
+
+
         if (genders.contains(gender)) {
             Map<String, String> relations = relationships.get(gender);
-            if (relations.get(relation) != null) {
-                return translateAlternateColorCodes('&', relations.get(relation));
+            if (relations.get(relationKey) != null) {
+                return translateAlternateColorCodes('&', relations.get(relationKey));
             } else {
                 return "undefined";
             }
         } else {
             gender = genders.get(0);
             Map<String, String> relations = relationships.get(gender);
-            if (relations.get(relation) != null) {
-                return translateAlternateColorCodes('&', relations.get(relation));
+            if (relations.get(relationKey) != null) {
+                return translateAlternateColorCodes('&', relations.get(relationKey));
             } else {
                 return "undefined";
             }

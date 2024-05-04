@@ -1,12 +1,10 @@
 package de.janschuri.lunaticFamily.handler;
 
-import com.google.common.collect.BiMap;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.PaperLunaticFamily;
-import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.database.tables.PlayerDataTable;
 import de.janschuri.lunaticFamily.utils.Logger;
+import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.utils.ItemStackUtils;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
@@ -15,8 +13,10 @@ import eu.endercentral.crazy_advancements.advancement.AdvancementFlag;
 import eu.endercentral.crazy_advancements.advancement.AdvancementVisibility;
 import eu.endercentral.crazy_advancements.manager.AdvancementManager;
 import eu.endercentral.crazy_advancements.packet.AdvancementsPacket;
+import jdk.jshell.execution.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.json.JSONArray;
@@ -35,6 +35,7 @@ public class FamilyTree {
     private static final List<String> advancements = new ArrayList<>();
     private static final List<NameKey> advancementNameKeys = new ArrayList<>();
     private final static Map<String, Advancement> advancementMap= new HashMap<>();
+
 
     public static void loadAdvancementMap() {
 
@@ -58,11 +59,10 @@ public class FamilyTree {
         AdvancementVisibility visibility = AdvancementVisibility.ALWAYS;
 
         ItemStack icon = new ItemStack(Material.STONE);
-        String background = PluginConfig.defaultBackground;
 
 
         AdvancementDisplay display = new AdvancementDisplay(icon, title, description, frame, visibility);
-        display.setBackgroundTexture(background);
+        display.setBackgroundTexture("moss_block");
         display.setX(13.5f);
         display.setY(7.5f);
 
@@ -120,13 +120,39 @@ public class FamilyTree {
         return advancement;
     }
 
-    public FamilyTree(int id) {
+    public static void updateFamilyTree(int id) {
+        FamilyPlayer familyPlayer = new FamilyPlayer(id);
+        UUID uuid = familyPlayer.getUniqueId();
+        String background = familyPlayer.getBackground();
+        Map<String, Integer> familyMap = familyPlayer.getFamilyMap();
+        familyMap.put("ego", id);
 
-        FamilyPlayer playerFam = new FamilyPlayer(id);
-        BiMap<String, Integer> familyList = playerFam.getFamilyList();
-        familyList.put("ego", id);
+        List<String> familyList = new ArrayList<>();
+        Map<String, UUID> uuids = new HashMap<>();
+        Map<String, String> names = new HashMap<>();
+        Map<String, String> skins = new HashMap<>();
+        Map<String, String> relationLangs = new HashMap<>();
 
-        UUID uuid = PlayerDataTable.getUUID(id);
+        for (Map.Entry<String, Integer> entry : familyMap.entrySet()) {
+            FamilyPlayer relationFam = new FamilyPlayer(entry.getValue());
+            String relationLang = Language.getRelation(entry.getKey(), relationFam.getGender());
+            UUID relationUUID = relationFam.getUniqueId();
+
+            String skinURL = relationFam.getSkinURL();
+
+            familyList.add(entry.getKey());
+            uuids.put(entry.getKey(), relationUUID);
+            names.put(entry.getKey(), relationFam.getName());
+            skins.put(entry.getKey(), skinURL);
+            relationLangs.put(entry.getKey(), relationLang);
+        }
+
+        updateFamilyTree(uuid, background, familyList, uuids, names, skins, relationLangs);
+    }
+
+    public static void updateFamilyTree(UUID uuid, String background, List<String> familyList, Map<String, UUID> uuids, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
+
+
         Logger.debugLog("Creating FamilyTree for " + uuid);
         Player player = Bukkit.getPlayer(uuid);
 
@@ -143,24 +169,17 @@ public class FamilyTree {
                     .replace("_third_holder", "")
                     .replace("_holder", "");
 
-            String relationKey = relation
-                    .replace("first_", "")
-                    .replace("second_", "")
-                    .replace("third_", "")
-                    .replace("fourth_", "")
-                    .replace("fifth_", "")
-                    .replace("sixth_", "")
-                    .replace("seventh__", "")
-                    .replace("eighth_", "");
-
             Advancement advancement = advancementMap.get(advancementKey);
-            if (familyList.containsKey(relation)) {
-                FamilyPlayer relationFam = new FamilyPlayer(familyList.get(relation));
-                advancement.getDisplay().setTitle(relationFam.getName());
-                advancement.getDisplay().setDescription(Language.getRelation(relationKey, relationFam.getGender()));
-                advancement.getDisplay().setIcon(ItemStackUtils.getSkull(relationFam.getSkinURL()));
+            if (familyList.contains(relation)) {
+                String relationLang = relationLangs.get(relation);
+                String title = names.get(relation);
+                ItemStack icon = ItemStackUtils.getSkullFromURL(skins.get(relation));
+
+                advancement.getDisplay().setTitle(title);
+                advancement.getDisplay().setDescription(relationLang);
+                advancement.getDisplay().setIcon(icon);
                 if (relation.equalsIgnoreCase("ego")) {
-                    advancement.getDisplay().setBackgroundTexture(playerFam.getBackground());
+                    advancement.getDisplay().setBackgroundTexture(background);
                 }
                 manager.addAdvancement(advancement);
             }

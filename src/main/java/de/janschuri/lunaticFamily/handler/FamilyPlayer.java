@@ -7,21 +7,22 @@ import de.janschuri.lunaticFamily.database.tables.AdoptionsTable;
 import de.janschuri.lunaticFamily.database.tables.MarriagesTable;
 import de.janschuri.lunaticFamily.database.tables.PlayerDataTable;
 import de.janschuri.lunaticFamily.database.tables.SiblinghoodsTable;
+import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.Utils;
+import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
+import de.janschuri.lunaticlib.senders.AbstractSender;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class FamilyPlayer {
 
 
     private final int id;
     private final UUID uuid;
-    private final String name;
-    private final String skinURL;
+    private String name;
+    private String skinURL;
     private final int partner;
     private final Timestamp marryDate;
     private final int priest;
@@ -31,7 +32,10 @@ public class FamilyPlayer {
     private final List<Integer> children;
     private String gender;
     private String background;
+    private AbstractPlayerSender player;
     private final BiMap<String, Integer> familyList = HashBiMap.create();
+    public static final String DEFAULT_SKIN = "http://textures.minecraft.net/texture/2705fd94a0c431927fb4e639b0fcfb49717e412285a02b439e0112da22b2e2ec";
+
 
     public FamilyPlayer(int id) {
         this(PlayerDataTable.getUUID(id));
@@ -44,6 +48,8 @@ public class FamilyPlayer {
     public FamilyPlayer(UUID uuid) {
 
         this.uuid = uuid;
+
+        player = AbstractSender.getPlayerSender(uuid);
 
         if (PlayerDataTable.getID(uuid) != 0) {
             id = PlayerDataTable.getID(uuid);
@@ -58,17 +64,18 @@ public class FamilyPlayer {
         sibling = SiblinghoodsTable.getSibling(id);
         parents = AdoptionsTable.getParents(id);
         children = AdoptionsTable.getChildren(id);
+        name = player.getName();
 
-        if (Utils.getPlayerName(uuid) != null) {
-            name = (Utils.getPlayerName(uuid));
-        } else {
+        if (name == null) {
             name = PlayerDataTable.getName(id);
         }
 
-        if (PlayerDataTable.getSkinURL(id) != null) {
+        skinURL = player.getSkinURL();
+        if (skinURL == null) {
             skinURL = PlayerDataTable.getSkinURL(id);
-        } else {
-            skinURL = "http://textures.minecraft.net/texture/2705fd94a0c431927fb4e639b0fcfb49717e412285a02b439e0112da22b2e2ec";
+        }
+        if (skinURL == null) {
+            skinURL = DEFAULT_SKIN;
         }
 
 
@@ -90,11 +97,12 @@ public class FamilyPlayer {
     }
 
     public String getName() {
-        if (Utils.getPlayerName(uuid) != null) {
-            return Utils.getPlayerName(uuid);
-        } else {
-            return PlayerDataTable.getName(id);
+        String name = player.getName();
+        if (name == null) {
+            name = PlayerDataTable.getName(id);
         }
+
+        return name;
     }
 
     public int getID() {
@@ -245,10 +253,6 @@ public class FamilyPlayer {
         return children.size();
     }
 
-//    public void sendMessage(String message) {
-//        LunaticFamily.sendMessageToPlayer(this.uuid, message);
-//    }
-
 
     public void marry(int partnerID) {
         FamilyPlayer playerFam = this;
@@ -378,10 +382,10 @@ public class FamilyPlayer {
     }
 
     public boolean isFamilyMember(int id) {
-        return this.getFamilyList().containsValue(id);
+        return this.getFamilyMap().containsValue(id);
     }
 
-    public BiMap<String, Integer> getFamilyList() {
+    public Map<String, Integer> getFamilyMap() {
 
         if (this.getPartner() != null) {
             int partner = this.getPartner().getID();
@@ -639,7 +643,9 @@ public class FamilyPlayer {
     }
 
     public void updateFamilyTree() {
-        Utils.updateFamilyTree(this.id, this.uuid);
+        if (player.isOnline()) {
+            Utils.updateFamilyTree(this.id, this.uuid);
+        }
     }
 
 }

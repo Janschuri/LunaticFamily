@@ -6,7 +6,6 @@ import de.janschuri.lunaticFamily.database.tables.AdoptionsTable;
 import de.janschuri.lunaticFamily.database.tables.MarriagesTable;
 import de.janschuri.lunaticFamily.database.tables.PlayerDataTable;
 import de.janschuri.lunaticFamily.database.tables.SiblinghoodsTable;
-import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticlib.database.Table;
 
 public class Database {

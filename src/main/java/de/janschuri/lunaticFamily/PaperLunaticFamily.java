@@ -35,8 +35,6 @@ public class PaperLunaticFamily extends JavaPlugin {
             return;
         }
 
-
-
         getServer().getPluginManager().registerEvents(new JoinListener(), this);
         getServer().getPluginManager().registerEvents(new QuitListener(), this);
 
@@ -80,12 +78,11 @@ public class PaperLunaticFamily extends JavaPlugin {
             getCommand("sibling").setTabCompleter(new SiblingCommand());
             getCommand("sibling").setPermission("lunaticfamily.sibling");
 
+            if (!Database.loadDatabase()) {
+                disable();
+            }
         } else {
             Logger.infoLog("Backend mode enabled.");
-        }
-
-        if (!Database.loadDatabase()) {
-            disable();
         }
     }
     public static PaperLunaticFamily getInstance() {

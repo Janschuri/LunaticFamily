@@ -8,6 +8,7 @@ import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.futurerequests.UpdateFamilyTreeRequest;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.listener.JoinEvent;
+import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticlib.senders.velocity.PlayerSender;
 
 import java.util.UUID;

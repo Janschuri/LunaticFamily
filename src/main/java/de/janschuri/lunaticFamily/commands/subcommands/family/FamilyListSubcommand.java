@@ -1,6 +1,5 @@
 package de.janschuri.lunaticFamily.commands.subcommands.family;
 
-import com.google.common.collect.BiMap;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.config.Language;
@@ -9,6 +8,7 @@ import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class FamilyListSubcommand extends Subcommand {
@@ -36,7 +36,7 @@ public class FamilyListSubcommand extends Subcommand {
 
                 playerFam.updateFamilyTree();
 
-                BiMap<String, Integer> familyList = playerFam.getFamilyList();
+                Map<String, Integer> familyList = playerFam.getFamilyMap();
                 StringBuilder msg = new StringBuilder(language.getPrefix() + language.getMessage("family_list") + "\n");
 
                 for (String e : list) {
@@ -64,7 +64,7 @@ public class FamilyListSubcommand extends Subcommand {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[1]));
                 } else {
                     FamilyPlayer player1Fam = new FamilyPlayer(player1UUID);
-                    BiMap<String, Integer> familyList = player1Fam.getFamilyList();
+                    Map<String, Integer> familyList = player1Fam.getFamilyMap();
                     StringBuilder msg = new StringBuilder(language.getPrefix() + language.getMessage("family_others_list").replace("%player%", player1Fam.getName()) + "\n");
                     for (String e : list) {
                         if (familyList.containsKey(e)) {

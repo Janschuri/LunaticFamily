@@ -7,7 +7,6 @@ import de.janschuri.lunaticFamily.futurerequests.UpdateFamilyTreeRequest;
 import de.janschuri.lunaticFamily.handler.FamilyTree;
 import de.janschuri.lunaticlib.LunaticLib;
 import de.janschuri.lunaticlib.external.Vault;
-import de.janschuri.lunaticlib.futurerequests.requests.GetNameRequest;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 import de.janschuri.lunaticlib.utils.Mode;
@@ -25,14 +24,6 @@ public abstract class Utils extends de.janschuri.lunaticlib.utils.Utils {
             return PluginConfig.servers.contains(sender.getServerName());
         }
         return true;
-    }
-
-    public static String getPlayerName(UUID uuid) {
-        if (LunaticFamily.getMode() == Mode.PROXY) {
-            return new GetNameRequest().get(uuid);
-        } else {
-            return Bukkit.getOfflinePlayer(uuid).getName();
-        }
     }
 
     public static boolean hasEnoughMoney(UUID uuid, String... withdrawKeys) {
@@ -118,10 +109,10 @@ public abstract class Utils extends de.janschuri.lunaticlib.utils.Utils {
 
     public static void updateFamilyTree(int id, UUID uuid) {
         if (LunaticLib.getMode() == Mode.PROXY) {
-            new UpdateFamilyTreeRequest().get(id, uuid);
+            new UpdateFamilyTreeRequest().get(id);
         } else {
             if (PluginConfig.useCrazyAdvancementAPI && Bukkit.getPlayer(uuid) != null) {
-                new FamilyTree(id);
+                FamilyTree.updateFamilyTree(id);
             }
         }
     }

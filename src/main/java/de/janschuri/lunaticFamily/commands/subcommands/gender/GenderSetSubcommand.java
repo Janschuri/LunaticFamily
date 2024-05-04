@@ -40,11 +40,6 @@ public class GenderSetSubcommand extends Subcommand {
                 clickableMessage.setCommand("/family gender set " + gender);
                 clickableMessage.setHoverText(language.getMessage("gender_set_hover").replace("%gender%", language.getGenderLang(gender)));
                 msg.add(clickableMessage);
-
-                Logger.debugLog(clickableMessage.getColor());
-                Logger.debugLog(clickableMessage.getCommand());
-                Logger.debugLog(clickableMessage.getHoverText());
-                Logger.debugLog(clickableMessage.getText());
             }
             player.sendMessage(msg);
             return true;
