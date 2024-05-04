@@ -66,7 +66,7 @@ public class MarryDivorceSubcommand extends Subcommand {
                         "/family marry divorce cancel"));
                 return true;
             }
-            if (!Utils.hasEnoughMoney(playerUUID, "marry_divorce_leaving_player")) {
+            if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, "marry_divorce_leaving_player")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
                 return true;
             }
@@ -74,7 +74,7 @@ public class MarryDivorceSubcommand extends Subcommand {
             UUID partnerUUID = playerFam.getPartner().getUniqueId();
             AbstractPlayerSender partner = AbstractSender.getPlayerSender(partnerUUID);
 
-            if (!Utils.hasEnoughMoney(partnerUUID, "marry_divorce_left_player")) {
+            if (!force && !Utils.hasEnoughMoney(player.getServerName(), partnerUUID, "marry_divorce_left_player")) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getPartner().getName()));
                 player.sendMessage(new ClickableDecisionMessage(
                         language.getMessage("take_payment_confirm"),
@@ -85,7 +85,7 @@ public class MarryDivorceSubcommand extends Subcommand {
                 return true;
             }
 
-            if (force && !Utils.hasEnoughMoney(playerUUID, "marry_divorce_left_player", "marry_divorce_leaving_player")) {
+            if (force && !Utils.hasEnoughMoney(player.getServerName(), playerUUID, "marry_divorce_left_player", "marry_divorce_leaving_player")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
                 return true;
             }
@@ -100,10 +100,10 @@ public class MarryDivorceSubcommand extends Subcommand {
             }
 
             if (force) {
-                Utils.withdrawMoney(playerUUID, "marry_divorce_left_player", "marry_divorce_leaving_player");
+                Utils.withdrawMoney(player.getServerName(), playerUUID, "marry_divorce_left_player", "marry_divorce_leaving_player");
             } else {
-                Utils.withdrawMoney(playerUUID, "marry_divorce_leaving_player");
-                Utils.withdrawMoney(partnerUUID, "marry_divorce_leaving_player");
+                Utils.withdrawMoney(player.getServerName(), playerUUID, "marry_divorce_leaving_player");
+                Utils.withdrawMoney(player.getServerName(), partnerUUID, "marry_divorce_leaving_player");
             }
 
             playerFam.divorce();

@@ -63,17 +63,17 @@ public class AcceptSubcommand extends Subcommand {
                         FamilyPlayer priestFam = new FamilyPlayer(priestUUID);
                         AbstractPlayerSender priest = AbstractSender.getPlayerSender(priestUUID);
 
-                        if (!Utils.hasEnoughMoney(priestUUID, "marry_priest")) {
+                        if (!Utils.hasEnoughMoney(player.getServerName(), priestUUID, "marry_priest")) {
                             sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money").replace("%player%", priestFam.getName()));
-                        } else if (!Utils.hasEnoughMoney(playerUUID, "marry_priest_player")) {
+                        } else if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, "marry_priest_player")) {
                             sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money").replace("%player%", player.getName()));
-                        } else if (!Utils.hasEnoughMoney(partnerUUID, "marry_priest_player")) {
+                        } else if (!Utils.hasEnoughMoney(player.getServerName(), partnerUUID, "marry_priest_player")) {
                             sender.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", partnerFam.getName()));
                         } else {
 
-                            Utils.withdrawMoney(priestUUID, "marry_priest");
-                            Utils.withdrawMoney(playerUUID, "marry_priest_player");
-                            Utils.withdrawMoney(partnerUUID, "marry_priest_player");
+                            Utils.withdrawMoney(player.getServerName(), priestUUID, "marry_priest");
+                            Utils.withdrawMoney(player.getServerName(), playerUUID, "marry_priest_player");
+                            Utils.withdrawMoney(player.getServerName(), partnerUUID, "marry_priest_player");
 
                             player.chat(language.getMessage("marry_yes"));
 
@@ -92,16 +92,16 @@ public class AcceptSubcommand extends Subcommand {
                             }
                         }
                     } else {
-                        if (!Utils.hasEnoughMoney(partnerUUID, "marry_proposing_player")) {
+                        if (!Utils.hasEnoughMoney(player.getServerName(), partnerUUID, "marry_proposing_player")) {
                             sender.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", partnerFam.getName()));
-                        } else if (!Utils.hasEnoughMoney(playerUUID, "marry_proposed_player")) {
+                        } else if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, "marry_proposed_player")) {
                             sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money").replace("%player%", player.getName()));
                         } else {
                             sender.sendMessage(language.getPrefix() + language.getMessage("marry_accept_complete"));
                             partner.sendMessage(language.getPrefix() + language.getMessage("marry_accept_complete"));
 
-                            Utils.withdrawMoney(playerUUID, "marry_proposed_player");
-                            Utils.withdrawMoney(partnerUUID, "marry_proposing_player");
+                            Utils.withdrawMoney(player.getServerName(), playerUUID, "marry_proposed_player");
+                            Utils.withdrawMoney(player.getServerName(), partnerUUID, "marry_proposing_player");
 
                             LunaticFamily.marryRequests.remove(playerUUID);
                             LunaticFamily.marryPriestRequests.remove(partnerUUID);
@@ -132,9 +132,9 @@ public class AcceptSubcommand extends Subcommand {
                         UUID priestUUID = LunaticFamily.marryPriest.get(playerUUID);
                         AbstractPlayerSender priest = AbstractSender.getPlayerSender(priestUUID);
 
-                        if (!Utils.hasEnoughMoney(partnerUUID, "marry_proposing_player")) {
+                        if (!Utils.hasEnoughMoney(player.getServerName(), partnerUUID, "marry_proposing_player")) {
                             sender.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", partnerFam.getName()));
-                        } else if (!Utils.hasEnoughMoney(playerUUID, "marry_proposed_player")) {
+                        } else if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, "marry_proposed_player")) {
                             sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money").replace("%player%", player.getName()));
                         } else {
 

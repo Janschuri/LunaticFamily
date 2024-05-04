@@ -51,11 +51,11 @@ public class SiblingAcceptSubcommand extends Subcommand {
                     return true;
                 }
 
-                if (!Utils.hasEnoughMoney(playerUUID, "sibling_proposed_player")) {
+                if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, "sibling_proposed_player")) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
                     return true;
                 }
-                if (!Utils.hasEnoughMoney(siblingUUID, "sibling_proposing_player")) {
+                if (!Utils.hasEnoughMoney(player.getServerName(), siblingUUID, "sibling_proposing_player")) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", siblingFam.getName()));
                     return true;
                 }
@@ -73,8 +73,8 @@ public class SiblingAcceptSubcommand extends Subcommand {
                         Utils.sendConsoleCommand(command);
                     }
 
-                    Utils.withdrawMoney(playerUUID, "sibling_proposed_player");
-                    Utils.withdrawMoney(siblingUUID, "sibling_proposing_player");
+                    Utils.withdrawMoney(player.getServerName(), playerUUID, "sibling_proposed_player");
+                    Utils.withdrawMoney(player.getServerName(), siblingUUID, "sibling_proposing_player");
 
             }
         }

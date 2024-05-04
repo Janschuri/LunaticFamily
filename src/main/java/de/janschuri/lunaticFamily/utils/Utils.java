@@ -1,6 +1,7 @@
 package de.janschuri.lunaticFamily.utils;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
+import de.janschuri.lunaticFamily.PaperLunaticFamily;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.futurerequests.SpawnParticlesCloudRequest;
 import de.janschuri.lunaticFamily.futurerequests.UpdateFamilyTreeRequest;
@@ -10,7 +11,6 @@ import de.janschuri.lunaticlib.external.Vault;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 import de.janschuri.lunaticlib.utils.Mode;
-import org.bukkit.*;
 
 import java.util.*;
 
@@ -26,11 +26,11 @@ public abstract class Utils extends de.janschuri.lunaticlib.utils.Utils {
         return true;
     }
 
-    public static boolean hasEnoughMoney(UUID uuid, String... withdrawKeys) {
-        return hasEnoughMoney(uuid, 1.0, withdrawKeys);
+    public static boolean hasEnoughMoney(String serverName, UUID uuid, String... withdrawKeys) {
+        return hasEnoughMoney(serverName, uuid, 1.0, withdrawKeys);
     }
 
-    public static boolean hasEnoughMoney(UUID uuid, double factor, String... withdrawKeys) {
+    public static boolean hasEnoughMoney(String serverName, UUID uuid, double factor, String... withdrawKeys) {
         if (PluginConfig.useVault) {
 
             if(!LunaticLib.installedVault) {
@@ -46,16 +46,16 @@ public abstract class Utils extends de.janschuri.lunaticlib.utils.Utils {
             }
             amount *= factor;
 
-            return Vault.hasEnoughMoney(uuid, amount);
+            return Vault.hasEnoughMoney(serverName, uuid, amount);
         }
         return true;
     }
 
-    public static boolean withdrawMoney(UUID uuid, String... withdrawKeys) {
-        return withdrawMoney(uuid, 1.0, withdrawKeys);
+    public static boolean withdrawMoney(String serverName, UUID uuid, String... withdrawKeys) {
+        return withdrawMoney(serverName, uuid, 1.0, withdrawKeys);
     }
 
-    public static boolean withdrawMoney(UUID uuid, double factor, String... withdrawKeys) {
+    public static boolean withdrawMoney(String serverName, UUID uuid, double factor, String... withdrawKeys) {
         if (PluginConfig.useVault || LunaticFamily.enabledProxy) {
 
             if (!LunaticLib.installedVault) {
@@ -63,7 +63,6 @@ public abstract class Utils extends de.janschuri.lunaticlib.utils.Utils {
                 return false;
             }
 
-            OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
             double amount = 0.0;
             for (String key : withdrawKeys) {
                 if (PluginConfig.commandWithdraws.containsKey(key)) {
@@ -72,7 +71,7 @@ public abstract class Utils extends de.janschuri.lunaticlib.utils.Utils {
             }
             amount *= factor;
 
-            return Vault.withdrawMoney(uuid, amount);
+            return Vault.withdrawMoney(serverName, uuid, amount);
 
         }
         return true;
@@ -83,35 +82,19 @@ public abstract class Utils extends de.janschuri.lunaticlib.utils.Utils {
             return new SpawnParticlesCloudRequest().get(uuid, position, particleString);
         }
 
-        if (Bukkit.getPlayer(uuid) == null) {
-            return false;
-        } else {
-            Particle particle = Particle.valueOf(particleString.toUpperCase(Locale.ROOT));
-            World world = Bukkit.getPlayer(uuid).getWorld();
-            Location location = new Location(world, position[0], position[1], position[2]);
-
-            Random random = new Random();
-
-            double range = 2.0;
-
-            for (int i = 0; i < 10; i++) {
-                double offsetX = (random.nextDouble() - 0.5) * range * 2;
-                double offsetY = (random.nextDouble() - 0.5) * range * 2;
-                double offsetZ = (random.nextDouble() - 0.5) * range * 2;
-
-                Location particleLocation = location.clone().add(offsetX, offsetY, offsetZ);
-
-                world.spawnParticle(particle, particleLocation, 1);
-            }
-            return true;
-        }
+        return PaperLunaticFamily.spawnParticleCloud(uuid, position, particleString);
     }
 
     public static void updateFamilyTree(int id, UUID uuid) {
+        if (!LunaticFamily.installedCrazyAdvancementsAPI) {
+            Logger.errorLog("CrazyAdvancementsAPI is not installed! Please install CrazyAdvancementsAPI or disable it in plugin config.yml.");
+            return;
+        }
+
         if (LunaticLib.getMode() == Mode.PROXY) {
             new UpdateFamilyTreeRequest().get(id);
         } else {
-            if (PluginConfig.useCrazyAdvancementAPI && Bukkit.getPlayer(uuid) != null) {
+            if (PluginConfig.useCrazyAdvancementAPI || LunaticLib.getMode() == Mode.BACKEND) {
                 FamilyTree.updateFamilyTree(id);
             }
         }

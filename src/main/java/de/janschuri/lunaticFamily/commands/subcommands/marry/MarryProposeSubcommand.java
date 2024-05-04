@@ -65,7 +65,7 @@ public class MarryProposeSubcommand extends Subcommand {
                 return true;
             }
 
-            if (!Utils.hasEnoughMoney(playerUUID, "marry_proposing_player")) {
+            if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, "marry_proposing_player")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
                 return true;
             }

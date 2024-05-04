@@ -70,7 +70,7 @@ public class SiblingProposeSubcommand extends Subcommand {
                     sender.sendMessage(language.getPrefix() + language.getMessage("sibling_propose_sibling_is_adopted").replace("%player%", siblingFam.getName()));
                 } else if (LunaticFamily.siblingRequests.containsKey(siblingUUID)) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("sibling_propose_open_request").replace("%player%", siblingFam.getName()));
-                } else if (!Utils.hasEnoughMoney(playerUUID, "sibling_proposing_player")) {
+                } else if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, "sibling_proposing_player")) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
                 } else {
 

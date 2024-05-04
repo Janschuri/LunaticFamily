@@ -74,7 +74,7 @@ public class AdoptProposeSubcommand extends Subcommand {
                 return true;
             }
 
-            if (!Utils.hasEnoughMoney(playerUUID, "adopt_parent")) {
+            if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, "adopt_parent")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
             }
 

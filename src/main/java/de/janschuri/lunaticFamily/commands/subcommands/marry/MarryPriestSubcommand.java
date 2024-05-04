@@ -98,11 +98,11 @@ public class MarryPriestSubcommand extends Subcommand {
                 UUID player2UUID = player2.getUniqueId();
                 FamilyPlayer player2Fam = new FamilyPlayer(player2UUID);
 
-                if (!Utils.hasEnoughMoney(player1UUID, "marry_priest_player")) {
+                if (!Utils.hasEnoughMoney(player.getServerName(), player1UUID, "marry_priest_player")) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", player1.getName()));
-                } else if (!Utils.hasEnoughMoney(player2UUID, "marry_priest_player")) {
+                } else if (!Utils.hasEnoughMoney(player.getServerName(), player2UUID, "marry_priest_player")) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", player2.getName()));
-                } else if (!Utils.hasEnoughMoney(playerUUID, "marry_priest")) {
+                } else if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, "marry_priest")) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money").replace("%player%", player.getName()));
                 } else {
 

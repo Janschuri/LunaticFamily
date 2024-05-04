@@ -58,7 +58,10 @@ public class AdoptKickoutSubcommand extends Subcommand {
                             }
                         }
 
-
+                        if (cancel) {
+                            player.sendMessage(language.getPrefix() + language.getMessage("adopt_kickout_cancel"));
+                            return true;
+                        }
 
                         if (!confirm) {
                             player.sendMessage(new ClickableDecisionMessage(
@@ -68,18 +71,18 @@ public class AdoptKickoutSubcommand extends Subcommand {
                                     language.getMessage("cancel"),
                                     "/family adopt kickout " + args[1] + " cancel"));
                             return true;
-                        } else if (cancel) {
-                            player.sendMessage(language.getPrefix() + language.getMessage("adopt_kickout_cancel"));
-                            return true;
-                        } else if (!force && playerFam.isMarried() && !Utils.hasEnoughMoney(playerUUID, 0.5, "adopt_kickout_parent")) {
+                        }
+
+                        if (!force && playerFam.isMarried() && !Utils.hasEnoughMoney(player.getServerName(), playerUUID, 0.5, "adopt_kickout_parent")) {
                             player.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
                             return true;
-                        } else if (!force && !playerFam.isMarried() && !Utils.hasEnoughMoney(playerUUID, "adopt_kickout_parent")) {
+                        }
+                        if (!force && !playerFam.isMarried() && !Utils.hasEnoughMoney(player.getServerName(), playerUUID, "adopt_kickout_parent")) {
                             player.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
                             return true;
                         }
 
-                        if (!Utils.hasEnoughMoney(childUUID, "adopt_kickout_child")) {
+                        if (!Utils.hasEnoughMoney(player.getServerName(), childUUID, "adopt_kickout_child")) {
                             player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", childFam.getName()));
                             player.sendMessage(new ClickableDecisionMessage(
                                     language.getMessage("take_payment_confirm"),
@@ -92,7 +95,7 @@ public class AdoptKickoutSubcommand extends Subcommand {
 
                         if (!force && playerFam.isMarried()) {
                             UUID partnerUUID = playerFam.getPartner().getUniqueId();
-                            if (!Utils.hasEnoughMoney(partnerUUID, "adopt_kickout_parent")) {
+                            if (!Utils.hasEnoughMoney(player.getServerName(), partnerUUID, "adopt_kickout_parent")) {
                                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getPartner().getName()));
                                 player.sendMessage(new ClickableDecisionMessage(
                                         language.getMessage("take_payment_confirm"),
@@ -117,26 +120,26 @@ public class AdoptKickoutSubcommand extends Subcommand {
                             child.sendMessage(language.getPrefix() + language.getMessage("adopt_kickout_child").replace("%player%", playerFam.getName()));
 
                             if (force) {
-                                Utils.withdrawMoney(playerUUID, "adopt_kickout_parent", "adopt_kickout_child");
+                                Utils.withdrawMoney(player.getServerName(), playerUUID, "adopt_kickout_parent", "adopt_kickout_child");
                             } else {
                                 if (playerFam.isMarried()) {
                                     UUID partnerUUID = playerFam.getPartner().getUniqueId();
-                                    Utils.withdrawMoney(partnerUUID, 0.5, "adopt_kickout_parent");
-                                    Utils.withdrawMoney(playerUUID, 0.5, "adopt_kickout_parent");
+                                    Utils.withdrawMoney(player.getServerName(), partnerUUID, 0.5, "adopt_kickout_parent");
+                                    Utils.withdrawMoney(player.getServerName(), playerUUID, 0.5, "adopt_kickout_parent");
 
                                     for (String command : PluginConfig.successCommands.get("kickout")) {
                                         command = command.replace("%parent1%", playerFam.getName()).replace("%parent2%", playerFam.getPartner().getName()).replace("%child%", childFam.getName());
                                         Utils.sendConsoleCommand(command);
                                     }
                                 } else {
-                                    Utils.withdrawMoney(playerUUID, "adopt_kickout_parent");
+                                    Utils.withdrawMoney(player.getServerName(), playerUUID, "adopt_kickout_parent");
 
                                     for (String command : PluginConfig.successCommands.get("kickout_single")) {
                                         command = command.replace("%parent%", playerFam.getName()).replace("%child%", childFam.getName());
                                         Utils.sendConsoleCommand(command);
                                     }
                                 }
-                                Utils.withdrawMoney(childUUID, "adopt_kickout_child");
+                                Utils.withdrawMoney(player.getServerName(), childUUID, "adopt_kickout_child");
                             }
 
                             playerFam.unadopt(childFam.getID());

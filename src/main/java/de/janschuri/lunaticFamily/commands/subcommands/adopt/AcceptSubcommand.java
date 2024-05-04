@@ -42,9 +42,9 @@ public class AcceptSubcommand extends Subcommand {
 
                 if (parentFam.getChildrenAmount() > 1) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("adopt_accept_parent_limit").replace("%player%", parentFam.getName()));
-                } else if (!Utils.hasEnoughMoney(playerUUID, "adopt_child")) {
+                } else if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, "adopt_child")) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
-                } else if (!Utils.hasEnoughMoney(parent1UUID, "adopt_parent")) {
+                } else if (!Utils.hasEnoughMoney(player.getServerName(), parent1UUID, "adopt_parent")) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", parentFam.getName()));
                 } else {
 
@@ -52,8 +52,8 @@ public class AcceptSubcommand extends Subcommand {
                         sender.sendMessage(language.getPrefix() + language.getMessage("adopt_accept_got_adopted").replace("%player1%", parentFam.getName()).replace("%player2%", parentFam.getPartner().getName()));
                         parent.sendMessage(language.getPrefix() + language.getMessage("adopt_accept_adopted").replace("%player%", playerFam.getName()));
                         UUID parent2UUID = parentFam.getPartner().getUniqueId();
-                        Utils.withdrawMoney(parent2UUID, 0.5, "adopt_parent");
-                        Utils.withdrawMoney(parent1UUID, 0.5, "adopt_parent");
+                        Utils.withdrawMoney(player.getServerName(), parent2UUID, 0.5, "adopt_parent");
+                        Utils.withdrawMoney(player.getServerName(), parent1UUID, 0.5, "adopt_parent");
                         for (String command : PluginConfig.successCommands.get("adopt")) {
                             command = command.replace("%parent1%", parentFam.getName()).replace("%parent2%", parentFam.getPartner().getName()).replace("%child%", playerFam.getName());
 
@@ -66,7 +66,7 @@ public class AcceptSubcommand extends Subcommand {
                             Utils.sendConsoleCommand(command);
                         }
                     }
-                    Utils.withdrawMoney(playerUUID, "adopt_child");
+                    Utils.withdrawMoney(player.getServerName(), playerUUID, "adopt_child");
 
                     parent.sendMessage(language.getPrefix() + language.getMessage("adopt_accept_adopted").replace("%player%", playerFam.getName()));
                     LunaticFamily.adoptRequests.remove(playerUUID);

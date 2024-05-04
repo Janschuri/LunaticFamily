@@ -55,6 +55,16 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
             UUID siblingUUID = playerFam.getSibling().getUniqueId();
             AbstractPlayerSender sibling = AbstractSender.getPlayerSender(siblingUUID);
 
+            if (playerFam.isAdopted()) {
+                sender.sendMessage(language.getPrefix() + language.getMessage("sibling_unsibling_adopted"));
+                return true;
+            }
+
+            if (cancel) {
+                sender.sendMessage(language.getPrefix() + language.getMessage("sibling_unsibling_cancel"));
+                return true;
+            }
+
             if (!confirm) {
                 sender.sendMessage(new ClickableDecisionMessage(
                         language.getMessage("sibling_unsibling_confirm"),
@@ -62,13 +72,14 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
                         "/family sibling unsibling confirm",
                         language.getMessage("cancel"),
                         "/family sibling unsibling cancel"));
-            } else if (cancel) {
-                sender.sendMessage(language.getPrefix() + language.getMessage("sibling_unsibling_cancel"));
-            } else if (playerFam.isAdopted()) {
-                sender.sendMessage(language.getPrefix() + language.getMessage("sibling_unsibling_adopted"));
-            } else if (!force && !Utils.hasEnoughMoney(playerUUID, "sibling_unsibling_leaving_player")) {
+                return true;
+            }
+
+            if (!force && !Utils.hasEnoughMoney(player.getServerName(), playerUUID, "sibling_unsibling_leaving_player")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
-            } else if (!force && !Utils.hasEnoughMoney(siblingUUID, "sibling_unsibling_left_player")) {
+                return true;
+            }
+            if (!force && !Utils.hasEnoughMoney(player.getServerName(), siblingUUID, "sibling_unsibling_left_player")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getSibling().getName()));
                 sender.sendMessage(new ClickableDecisionMessage(
                         language.getMessage("take_payment_confirm"),
@@ -76,24 +87,25 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
                         "/family sibling unsibling confirm force",
                         language.getMessage("cancel"),
                         "/family sibling unsibling cancel"));
-            } else {
-                sender.sendMessage(language.getPrefix() + language.getMessage("sibling_unsibling_complete"));
-                sibling.sendMessage(language.getPrefix() + language.getMessage("sibling_unsiblinged_complete"));
-
-                if (force) {
-                    Utils.withdrawMoney(playerUUID, "sibling_unsibling_leaving_player", "sibling_unsibling_left_player");
-                } else {
-                    Utils.withdrawMoney(playerUUID, "sibling_unsibling_leaving_player");
-                    Utils.withdrawMoney(siblingUUID, "sibling_unsibling_left_player");
-                }
-
-                for (String command : PluginConfig.successCommands.get("unsibling")) {
-                    command = command.replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getSibling().getName());
-                    Utils.sendConsoleCommand(command);
-                }
-
-                playerFam.removeSibling();
+                return true;
             }
+
+            sender.sendMessage(language.getPrefix() + language.getMessage("sibling_unsibling_complete"));
+            sibling.sendMessage(language.getPrefix() + language.getMessage("sibling_unsiblinged_complete"));
+
+            if (force) {
+                Utils.withdrawMoney(player.getServerName(), playerUUID, "sibling_unsibling_leaving_player", "sibling_unsibling_left_player");
+            } else {
+                Utils.withdrawMoney(player.getServerName(), playerUUID, "sibling_unsibling_leaving_player");
+                Utils.withdrawMoney(player.getServerName(), siblingUUID, "sibling_unsibling_left_player");
+            }
+
+            for (String command : PluginConfig.successCommands.get("unsibling")) {
+                command = command.replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getSibling().getName());
+                Utils.sendConsoleCommand(command);
+            }
+
+            playerFam.removeSibling();
         }
         return true;
     }
