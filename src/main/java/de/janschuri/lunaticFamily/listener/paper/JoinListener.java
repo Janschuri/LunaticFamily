@@ -20,13 +20,7 @@ public class JoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Logger.debugLog("Player joined: " + event.getPlayer().getName());
         PlayerSender playerCommandSender = new PlayerSender(event.getPlayer());
-
-
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer("HTH2009");
-        ItemStack item = ItemStackUtils.getSkullFromUUID(offlinePlayer.getUniqueId());
-        event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), item);
 
         if (LunaticFamily.getMode() == Mode.STANDALONE) {
             joinEvent.execute(playerCommandSender);

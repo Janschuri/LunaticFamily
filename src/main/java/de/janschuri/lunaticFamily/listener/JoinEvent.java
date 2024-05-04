@@ -18,8 +18,6 @@ public class JoinEvent {
 
     public boolean execute(AbstractPlayerSender sender) {
 
-        Logger.debugLog("Player joined: " + sender.getName());
-
         if (!Utils.isPlayerOnRegisteredServer(sender.getUniqueId())) {
             return true;
         }

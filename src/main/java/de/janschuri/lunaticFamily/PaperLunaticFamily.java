@@ -35,10 +35,10 @@ public class PaperLunaticFamily extends JavaPlugin {
             return;
         }
 
-        getServer().getPluginManager().registerEvents(new JoinListener(), this);
-        getServer().getPluginManager().registerEvents(new QuitListener(), this);
-
         if (LunaticFamily.getMode() == Mode.STANDALONE) {
+
+            getServer().getPluginManager().registerEvents(new JoinListener(), this);
+            getServer().getPluginManager().registerEvents(new QuitListener(), this);
 
             for (String command : LunaticFamily.commands) {
                 Command cmd = getCommand(command);

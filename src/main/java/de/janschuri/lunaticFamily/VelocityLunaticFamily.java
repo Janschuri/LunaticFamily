@@ -37,27 +37,16 @@ public class VelocityLunaticFamily {
 
     private static ProxyServer proxy;
     private static Path dataDirectory;
-    private static Logger logger;
-    private static VelocityLunaticFamily instance;
     public static final MinecraftChannelIdentifier IDENTIFIER = MinecraftChannelIdentifier.from("lunaticfamily:proxy");
-    public static final ConcurrentHashMap<Integer, CompletableFuture<Boolean>> booleanRequestMap = new ConcurrentHashMap<>();
-    public static final ConcurrentHashMap<Integer, CompletableFuture<byte[]>> byteArrayRequestMap = new ConcurrentHashMap<>();
-    public static final ConcurrentHashMap<Integer, CompletableFuture<double[]>> doubleArrayRequestMap = new ConcurrentHashMap<>();
 
     @Inject
-    public VelocityLunaticFamily(ProxyServer proxy, Logger logger, @DataDirectory Path dataDirectory) {
+    public VelocityLunaticFamily(ProxyServer proxy, @DataDirectory Path dataDirectory) {
         VelocityLunaticFamily.proxy = proxy;
-        VelocityLunaticFamily.logger = logger;
         VelocityLunaticFamily.dataDirectory = dataDirectory;
-        VelocityLunaticFamily.instance = this;
     }
 
     public static ProxyServer getProxy() {
         return proxy;
-    }
-
-    public static VelocityLunaticFamily getInstance() {
-        return instance;
     }
 
     @Subscribe
