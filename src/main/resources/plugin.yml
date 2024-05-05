@@ -1,6 +1,14 @@
 name: LunaticFamily
-version: '${project.version}'
+version: 1.0.0
 main: de.janschuri.lunaticFamily.PaperLunaticFamily
+api-version: '1.20'
+author: Janschuri
+description: A plugin that allows you to create a family tree.
+depend:
+  - LunaticLib
+softdepend:
+  - CrazyAdvancementAPI
+  - Vault
 commands:
   family:
     description: Get information about your family.
@@ -48,10 +56,4 @@ permissions:
   lunaticFamily.admin.gender:
     description: Use gender admin commands
   lunaticFamily.admin.reload:
-    description: Use /family reload
-api-version: 1.20
-depend:
-  - LunaticLib
-softdepend:
-  - CrazyAdvancementAPI
-  - Vault
+    description: Use reload command
