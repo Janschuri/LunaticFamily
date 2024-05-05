@@ -48,6 +48,7 @@ public class VelocityLunaticFamily {
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
         LunaticFamily.mode = Mode.PROXY;
+        instance = this;
 
         LunaticFamily.registerRequests();
         proxy.getChannelRegistrar().register(IDENTIFIER);

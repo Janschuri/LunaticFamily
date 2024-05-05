@@ -1,6 +1,7 @@
 package de.janschuri.lunaticfamily.commands.bungee;
 
 import de.janschuri.lunaticfamily.commands.subcommands.family.SiblingSubcommand;
+import de.janschuri.lunaticfamily.config.Language;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
@@ -11,7 +12,7 @@ public class SiblingCommand extends Command implements TabExecutor {
     private final SiblingSubcommand siblingSubcommand = new SiblingSubcommand();
 
     public SiblingCommand() {
-        super("sibling", "lunaticfamily.sibling");
+        super("sibling", "lunaticfamily.sibling", Language.getLanguage().getAliases("sibling").toArray(new String[0]));
     }
 
     @Override

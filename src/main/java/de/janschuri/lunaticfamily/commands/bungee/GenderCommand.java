@@ -1,6 +1,7 @@
 package de.janschuri.lunaticfamily.commands.bungee;
 
 import de.janschuri.lunaticfamily.commands.subcommands.family.GenderSubcommand;
+import de.janschuri.lunaticfamily.config.Language;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
@@ -11,7 +12,7 @@ public class GenderCommand extends Command implements TabExecutor {
     private final GenderSubcommand genderSubcommand = new GenderSubcommand();
 
     public GenderCommand() {
-        super("gender", "lunaticfamily.gender");
+        super("gender", "lunaticfamily.gender", Language.getLanguage().getAliases("gender").toArray(new String[0]));
     }
 
     @Override
