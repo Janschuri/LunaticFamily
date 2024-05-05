@@ -50,17 +50,28 @@ distances:
   adopt_propose_range: 3
   sibling_propose_range: 3
 success_commands:
-  marry: [] #avaible placeholders: %player1%, %player2%
-  marry_priest: [] #avaible placeholders: %player1%, %player2%, %priest%
-  adopt: [] #avaible placeholders: %parent1%, %parent2%, %child%
-  adopt_single: [] #avaible placeholders: %parent%, %child%
-  sibling: [] #avaible placeholders: %player1%, %player2%
-  divorce: [] #avaible placeholders: %player1%, %player2%
-  kickout: [] #avaible placeholders: %parent1%, %parent2%, %child%
-  moveout: [] #avaible placeholders: %parent1%, %parent2%, %child%
-  kickout_single: [] #avaible placeholders: %parent%, %child%
-  moveout_single: [] #avaible placeholders: %parent%, %child%
-  unsibling: [] #avaible placeholders: %player% %player2%
+  #avaible placeholders: %player1%, %player2%
+  marry: []
+  #avaible placeholders: %player1%, %player2%, %priest%
+  marry_priest: []
+  #avaible placeholders: %parent1%, %parent2%, %child%
+  adopt: []
+  #avaible placeholders: %parent%, %child%
+  adopt_single: []
+  #avaible placeholders: %player1%, %player2%
+  sibling: []
+  #avaible placeholders: %player1%, %player2%
+  divorce: []
+  #avaible placeholders: %parent1%, %parent2%, %child%
+  kickout: []
+  #avaible placeholders: %parent1%, %parent2%, %child%
+  moveout: []
+  #avaible placeholders: %parent%, %child%
+  kickout_single: []
+  #avaible placeholders: %parent%, %child%
+  moveout_single: []
+  #avaible placeholders: %player% %player2%
+  unsibling: []
 colors: # List of all colors that can be used in /marry heart
   black: "#000000"
   dark_blue: "#0000AA"
