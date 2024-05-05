@@ -1,5 +1,5 @@
 name: LunaticFamily
-version: 1.0.0
+version: '${project.version}'
 main: de.janschuri.lunaticFamily.PaperLunaticFamily
 api-version: '1.20'
 author: Janschuri
