@@ -20,6 +20,7 @@ public class FamilyCommand extends Command implements TabExecutor {
         familySubcommand.execute(commandSender, args);
     }
 
+    @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
         String[] newArgs = new String[args.length + 1];
         newArgs[0] = "family";

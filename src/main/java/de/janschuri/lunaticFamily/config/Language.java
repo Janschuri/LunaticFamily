@@ -2,30 +2,27 @@ package de.janschuri.lunaticFamily.config;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import de.janschuri.lunaticFamily.utils.Logger;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Language extends de.janschuri.lunaticlib.config.Language {
-    private static Map<String, String> messages = new HashMap<>();
-    private static Map<String, String> genderLang = new HashMap<>();
-    public static List<String> genders = new ArrayList<>();
-    private static Map<String, String> colorsTranslations = new HashMap<>();
+    private Map<String, String> genderLang = new HashMap<>();
+    private List<String> genders = new ArrayList<>();
+    private Map<String, String> colorsTranslations = new HashMap<>();
     private static Language instance;
-
-    private static final Map<String, Map<String, String>> relationships = new HashMap<>();
-
-
-    private static final Map<String, Map<String, List<String>>> aliases = new HashMap<>();
+    private final Map<String, Map<String, String>> relationships = new HashMap<>();
 
     public Language(Path dataDirectory, String[] commands) {
-        super(dataDirectory, commands, PluginConfig.language);
+        super(dataDirectory, commands, PluginConfig.getLanguageKey());
         instance = this;
-        this.load();
+        load();
     }
 
-    public void load(){
+    public void load() {
         super.load();
 
         genderLang = getStringMap("genders");
@@ -39,22 +36,23 @@ public class Language extends de.janschuri.lunaticlib.config.Language {
 
         colorsTranslations = getStringMap("color_translations");
     }
+
+    public static Language getLanguage() {
+        return instance;
+    }
+
     public static String getGenderLang(String key) {
-        if (genderLang.containsKey(key)) {
-            return translateAlternateColorCodes('&', genderLang.get(key.toLowerCase()));
+        if (getLanguage().genderLang.containsKey(key)) {
+            return translateAlternateColorCodes('&', getLanguage().genderLang.get(key.toLowerCase()));
         } else {
             return "undefined";
         }
     }
 
-    public static Language getInstance() {
-        return instance;
-    }
-
     public static String getColorLang(String key) {
 
-        if (colorsTranslations.containsKey(key)) {
-            return translateAlternateColorCodes('&', colorsTranslations.get(key.toLowerCase()));
+        if (getLanguage().colorsTranslations.containsKey(key)) {
+            return translateAlternateColorCodes('&', getLanguage().colorsTranslations.get(key.toLowerCase()));
         } else {
             return "undefined";
         }
@@ -62,7 +60,7 @@ public class Language extends de.janschuri.lunaticlib.config.Language {
 
     public static List<String> getColorLangs() {
         List<String> list = new ArrayList<>();
-        for (String color : PluginConfig.colors.keySet()) {
+        for (String color : PluginConfig.getColors().keySet()) {
             list.add(getColorLang(color));
         }
         return list;
@@ -71,7 +69,7 @@ public class Language extends de.janschuri.lunaticlib.config.Language {
 
         for (String colorLang : getColorLangs()) {
             if (colorLang.equalsIgnoreCase(key)) {
-                BiMap<String, String> colorsTranslations = HashBiMap.create(Language.colorsTranslations);
+                BiMap<String, String> colorsTranslations = HashBiMap.create(getLanguage().colorsTranslations);
                 return colorsTranslations.inverse().get(colorLang);
             }
         }
@@ -101,21 +99,37 @@ public class Language extends de.janschuri.lunaticlib.config.Language {
                 .replace("eighth_", "");
 
 
-        if (genders.contains(gender)) {
-            Map<String, String> relations = relationships.get(gender);
+        if (getLanguage().genders.contains(gender)) {
+            Map<String, String> relations = getLanguage().relationships.get(gender);
             if (relations.get(relationKey) != null) {
                 return translateAlternateColorCodes('&', relations.get(relationKey));
             } else {
                 return "undefined";
             }
         } else {
-            gender = genders.get(0);
-            Map<String, String> relations = relationships.get(gender);
+            gender = getLanguage().genders.get(0);
+            Map<String, String> relations = getLanguage().relationships.get(gender);
             if (relations.get(relationKey) != null) {
                 return translateAlternateColorCodes('&', relations.get(relationKey));
             } else {
                 return "undefined";
             }
         }
+    }
+
+    public static Map<String, String> getGenderLang() {
+        return getLanguage().genderLang;
+    }
+
+    public static List<String> getGenders() {
+        return getLanguage().genders;
+    }
+
+    public static Map<String, String> getColorsTranslations() {
+        return getLanguage().colorsTranslations;
+    }
+
+    public static Map<String, Map<String, String>> getRelationships() {
+        return getLanguage().relationships;
     }
 }

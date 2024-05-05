@@ -9,20 +9,20 @@ import de.janschuri.lunaticlib.senders.AbstractSender;
 import java.util.UUID;
 
 public class GenderInfoSubcommand extends Subcommand {
-    private static final String mainCommand = "gender";
-    private static final String name = "info";
-    private static final String permission = "lunaticfamily.gender";
+    private static final String MAIN_COMMAND = "gender";
+    private static final String NAME = "info";
+    private static final String PERMISSION = "lunaticfamily.gender";
 
     public GenderInfoSubcommand() {
-        super(mainCommand, name, permission);
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
-        if (!sender.hasPermission(permission)) {
+        if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
             return true;
         }
-        if (args.length == 1) {
+        if (args.length == 0) {
             if (!(sender instanceof AbstractPlayerSender)) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
                 return true;
@@ -35,10 +35,10 @@ public class GenderInfoSubcommand extends Subcommand {
         }
         AbstractPlayerSender player1 = (AbstractPlayerSender) sender;
         if (!player1.exists()) {
-            sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[1]));
+            sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[0]));
             return true;
         }
-        sender.sendMessage(language.getPrefix() + language.getMessage("gender_info_others").replace("%player%", player1.getName()).replace("%gender%", language.getGenderLang(args[1])));
+        sender.sendMessage(language.getPrefix() + language.getMessage("gender_info_others").replace("%player%", player1.getName()).replace("%gender%", Language.getGenderLang(args[0])));
         return true;
     }
 }

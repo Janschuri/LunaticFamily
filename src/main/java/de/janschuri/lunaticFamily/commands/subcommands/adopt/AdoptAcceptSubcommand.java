@@ -5,19 +5,18 @@ import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
-import de.janschuri.lunaticlib.LunaticLib;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 
 import java.util.UUID;
 
-public class AcceptSubcommand extends Subcommand {
-    private static final String permission = "lunaticfamily.adopt";
-    private static final String mainCommand = "adopt";
-    private static final String name = "accept";
+public class AdoptAcceptSubcommand extends Subcommand {
+    private static final String PERMISSION = "lunaticfamily.adopt";
+    private static final String MAIN_COMMAND = "adopt";
+    private static final String NAME = "accept";
 
-    public AcceptSubcommand() {
-        super(mainCommand, name, permission);
+    public AdoptAcceptSubcommand() {
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
 
     @Override
@@ -25,7 +24,7 @@ public class AcceptSubcommand extends Subcommand {
 
         if (!(sender instanceof AbstractPlayerSender)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
-        } else if (!sender.hasPermission(permission)) {
+        } else if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
@@ -54,14 +53,14 @@ public class AcceptSubcommand extends Subcommand {
                         UUID parent2UUID = parentFam.getPartner().getUniqueId();
                         Utils.withdrawMoney(player.getServerName(), parent2UUID, 0.5, "adopt_parent");
                         Utils.withdrawMoney(player.getServerName(), parent1UUID, 0.5, "adopt_parent");
-                        for (String command : PluginConfig.successCommands.get("adopt")) {
+                        for (String command : PluginConfig.getSuccessCommands("adopt")) {
                             command = command.replace("%parent1%", parentFam.getName()).replace("%parent2%", parentFam.getPartner().getName()).replace("%child%", playerFam.getName());
 
                             Utils.sendConsoleCommand(command);
                         }
                     } else {
                         sender.sendMessage(language.getPrefix() + language.getMessage("adopt_accept_adopted_by_single").replace("%player%", parentFam.getName()));
-                        for (String command : PluginConfig.successCommands.get("adopt_single")) {
+                        for (String command : PluginConfig.getSuccessCommands("adopt_single")) {
                             command = command.replace("%parent%", parentFam.getName()).replace("%child%", playerFam.getName());
                             Utils.sendConsoleCommand(command);
                         }

@@ -13,18 +13,18 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class SiblingProposeSubcommand extends Subcommand {
-    private static final String mainCommand = "sibling";
-    private static final String name = "propose";
-    private static final String permission = "lunaticfamily.sibling";
+    private static final String MAIN_COMMAND = "sibling";
+    private static final String NAME = "propose";
+    private static final String PERMISSION = "lunaticfamily.sibling";
 
     public SiblingProposeSubcommand() {
-        super(mainCommand, name, permission);
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
         if (!(sender instanceof AbstractPlayerSender)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
-        } else if (!sender.hasPermission(permission)) {
+        } else if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
@@ -37,15 +37,15 @@ public class SiblingProposeSubcommand extends Subcommand {
             } else if (playerFam.isAdopted()) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("sibling_propose_is_adopted").replace("%player%", playerFam.getName()));
                 return true;
-            } else if (args.length < 2) {
+            } else if (args.length < 1) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
                 return true;
             }
 
-            AbstractPlayerSender sibling = AbstractSender.getPlayerSender(args[1]);
+            AbstractPlayerSender sibling = AbstractSender.getPlayerSender(args[0]);
 
             if (!sibling.exists()) {
-                sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[1]));
+                sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[0]));
                 return true;
             }
             if (sibling.isOnline()) {
@@ -74,12 +74,12 @@ public class SiblingProposeSubcommand extends Subcommand {
                     sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
                 } else {
 
-                    if (!player.isSameServer(sibling.getUniqueId()) && PluginConfig.siblingProposeRange >= 0) {
+                    if (!player.isSameServer(sibling.getUniqueId()) && PluginConfig.getSiblingProposeRange() >= 0) {
                         sender.sendMessage(language.getPrefix() + language.getMessage("player_not_same_server").replace("%player%", sibling.getName()));
                         return true;
                     }
 
-                    if (!player.isInRange(sibling.getUniqueId(), PluginConfig.siblingProposeRange)) {
+                    if (!player.isInRange(sibling.getUniqueId(), PluginConfig.getSiblingProposeRange())) {
                         player.sendMessage(language.getPrefix() + language.getMessage("player_too_far_away").replace("%player%", sibling.getName()));
                         return true;
                     }

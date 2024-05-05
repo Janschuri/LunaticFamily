@@ -2,7 +2,6 @@ package de.janschuri.lunaticFamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
-import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
@@ -12,18 +11,18 @@ import de.janschuri.lunaticlib.utils.ClickableDecisionMessage;
 import java.util.UUID;
 
 public class MarryDivorceSubcommand extends Subcommand {
-    private static final String mainCommand = "marry";
-    private static final String name = "divorce";
-    private static final String permission = "lunaticfamily.marry";
+    private static final String MAIN_COMMAND = "marry";
+    private static final String NAME = "divorce";
+    private static final String PERMISSION = "lunaticfamily.marry";
 
     public MarryDivorceSubcommand() {
-        super(mainCommand, name, permission);
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
         if (!(sender instanceof AbstractPlayerSender)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
-        } else if (!sender.hasPermission(permission)) {
+        } else if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
@@ -34,16 +33,16 @@ public class MarryDivorceSubcommand extends Subcommand {
             boolean cancel = false;
             boolean force = false;
 
-            if (args.length > 1) {
-                if (args[1].equalsIgnoreCase("confirm")) {
+            if (args.length > 0) {
+                if (args[0].equalsIgnoreCase("confirm")) {
                     confirm = true;
                 }
-                if (args[1].equalsIgnoreCase("cancel")) {
+                if (args[0].equalsIgnoreCase("cancel")) {
                     cancel = true;
                 }
             }
-            if (args.length > 2) {
-                if (args[2].equalsIgnoreCase("force")) {
+            if (args.length > 1) {
+                if (args[1].equalsIgnoreCase("force")) {
                     force = true;
                 }
             }
@@ -94,7 +93,7 @@ public class MarryDivorceSubcommand extends Subcommand {
             sender.sendMessage(language.getPrefix() + language.getMessage("marry_divorce_divorced"));
             partner.sendMessage(language.getPrefix() + language.getMessage("marry_divorce_divorced"));
 
-            for (String command : PluginConfig.successCommands.get("divorce")) {
+            for (String command : PluginConfig.getSuccessCommands("divorce")) {
                 command = command.replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName());
                 Utils.sendConsoleCommand(command);
             }

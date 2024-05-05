@@ -1,6 +1,5 @@
 package de.janschuri.lunaticFamily.commands.bungee;
 
-import de.janschuri.lunaticFamily.commands.subcommands.family.GenderSubcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.family.MarrySubcommand;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 import net.md_5.bungee.api.CommandSender;
@@ -21,6 +20,7 @@ public class MarryCommand extends Command implements TabExecutor {
         marrySubcommand.execute(commandSender, args);
     }
 
+    @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
         String[] newArgs = new String[args.length + 1];
         newArgs[0] = "marry";

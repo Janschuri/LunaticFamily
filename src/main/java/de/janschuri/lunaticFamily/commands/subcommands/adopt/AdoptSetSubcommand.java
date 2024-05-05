@@ -3,7 +3,6 @@ package de.janschuri.lunaticFamily.commands.subcommands.adopt;
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
-import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
@@ -12,27 +11,27 @@ import de.janschuri.lunaticlib.senders.AbstractSender;
 import java.util.UUID;
 
 public class AdoptSetSubcommand extends Subcommand {
-    private static final String mainCommand = "adopt";
-    private static final String name = "set";
-    private static final String permission = "lunaticfamily.admin.adopt";
+    private static final String MAIN_COMMAND = "adopt";
+    private static final String NAME = "set";
+    private static final String PERMISSION = "lunaticfamily.admin.adopt";
     public AdoptSetSubcommand() {
-        super(mainCommand, name, permission);
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
 
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
-        if (!sender.hasPermission(permission)) {
+        if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             boolean force = false;
 
-            if (args.length > 3) {
-                if (args[3].equalsIgnoreCase("force")) {
+            if (args.length > 2) {
+                if (args[2].equalsIgnoreCase("force")) {
                     force = true;
                 }
             }
 
-            if (args.length < 3) {
+            if (args.length < 2) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
                 return true;
             }
@@ -42,36 +41,36 @@ public class AdoptSetSubcommand extends Subcommand {
             UUID firstParentUUID;
             UUID childUUID;
 
-            if (Utils.isUUID(args[1])) {
-                firstParentUUID = UUID.fromString(args[1]);
+            if (Utils.isUUID(args[0])) {
+                firstParentUUID = UUID.fromString(args[0]);
                 firstParent = AbstractSender.getPlayerSender(firstParentUUID);
             } else {
                 force = false;
-                firstParent = AbstractSender.getPlayerSender(args[1]);
+                firstParent = AbstractSender.getPlayerSender(args[0]);
                 firstParentUUID = firstParent.getUniqueId();
             }
-            if (Utils.isUUID(args[2])) {
-                childUUID = UUID.fromString(args[2]);
+            if (Utils.isUUID(args[1])) {
+                childUUID = UUID.fromString(args[1]);
                 child = AbstractSender.getPlayerSender(childUUID);
             } else {
                 force = false;
-                child = AbstractSender.getPlayerSender(args[2]);
+                child = AbstractSender.getPlayerSender(args[1]);
                 childUUID = child.getUniqueId();
             }
 
 
             if (!firstParent.exists() && !force) {
-                sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[1]));
+                sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[0]));
             } else if (!child.exists() && !force) {
-                sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[2]));
-            } else if (args[1].equalsIgnoreCase(args[2])) {
+                sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[1]));
+            } else if (args[0].equalsIgnoreCase(args[1])) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("admin_adopt_set_same_player"));
             } else {
 
                 FamilyPlayer firstParentFam = new FamilyPlayer(firstParentUUID);
                 FamilyPlayer childFam = new FamilyPlayer(childUUID);
 
-                if (!firstParentFam.isMarried() && !PluginConfig.allowSingleAdopt) {
+                if (!firstParentFam.isMarried() && !PluginConfig.isAllowSingleAdopt()) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("admin_adopt_set_no_single_adopt").replace("%player%", firstParentFam.getName()));
                 } else if (childFam.isAdopted()) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("admin_adopt_set_already_adopted").replace("%child%", childFam.getName()));

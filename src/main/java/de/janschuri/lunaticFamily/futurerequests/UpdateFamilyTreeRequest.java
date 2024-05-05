@@ -3,15 +3,11 @@ package de.janschuri.lunaticFamily.futurerequests;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.database.tables.PlayerDataTable;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.handler.FamilyTree;
 import de.janschuri.lunaticFamily.utils.Logger;
-import de.janschuri.lunaticlib.config.AbstractDatabaseConfig;
 import de.janschuri.lunaticlib.futurerequests.FutureRequest;
-import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import org.bukkit.Bukkit;
 
 import java.util.*;
@@ -37,20 +33,17 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
         int size = in.readInt();
 
         List<String> familyList = new ArrayList<>();
-        Map<String, UUID> uuids = new HashMap<>();
         Map<String, String> names = new HashMap<>();
         Map<String, String> skins = new HashMap<>();
         Map<String, String> relationLangs = new HashMap<>();
 
         for (int i = 0; i < size; i++) {
             String relation = in.readUTF();
-            UUID relationUUID = UUID.fromString(in.readUTF());
             String name = in.readUTF();
             String skinURL = in.readUTF();
             String relationLang = in.readUTF();
 
             familyList.add(relation);
-            uuids.put(relation, relationUUID);
             names.put(relation, name);
             skins.put(relation, skinURL);
             relationLangs.put(relation, relationLang);
@@ -61,7 +54,7 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
             return;
         } else {
             Logger.debugLog( "UpdateFamilyTreeRequest: Player with UUID " + uuid + " found on the server.");
-            FamilyTree.updateFamilyTree(uuid, background, familyList, uuids, names, skins, relationLangs);
+            FamilyTree.updateFamilyTree(uuid, background, familyList, names, skins, relationLangs);
             success = true;
         }
 
@@ -91,13 +84,11 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
         for (Map.Entry<String, Integer> entry : familyMap.entrySet()) {
             FamilyPlayer relationFam = new FamilyPlayer(entry.getValue());
             String relationLang = Language.getRelation(entry.getKey(), relationFam.getGender());
-            UUID relationUUID = relationFam.getUniqueId();
 
 
             String skinURL = relationFam.getSkinURL();
 
             out.writeUTF(entry.getKey());
-            out.writeUTF(relationUUID.toString());
             out.writeUTF(relationFam.getName());
             out.writeUTF(skinURL);
             out.writeUTF(relationLang);

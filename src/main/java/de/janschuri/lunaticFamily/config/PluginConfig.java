@@ -11,30 +11,31 @@ import java.util.Map;
 
 public class PluginConfig extends Config {
     private static final String CONFIG_FILE = "config.yml";
-    public static String language;
-    public static String defaultGender;
-    public static String defaultBackground;
-    public static boolean allowSingleAdopt;
-    public static boolean enabledServerWhitelist;
-    public static List<String> servers;
-    public static boolean useCrazyAdvancementAPI;
-    public static boolean useVault;
-    public static boolean useProxy;
-    public static String dateFormat;
-    public static double marryKissRange;
-    public static double marryProposeRange;
-    public static double marryPriestRange;
-    public static double adoptProposeRange;
-    public static double siblingProposeRange;
-    public static Map<String, List<String>> successCommands = new HashMap<>();
-    public static List<String> familyList;
-    public static List<String> backgrounds;
-    public static Map<String, Double> commandWithdraws = new HashMap<>();
-    public static Map<String, String> colors = new HashMap<>();
+    private static PluginConfig instance;
+    private String languageKey;
+    private String defaultGender;
+    private String defaultBackground;
+    private boolean allowSingleAdopt;
+    private List<String> servers;
+    private boolean useCrazyAdvancementAPI;
+    private boolean useVault;
+    private boolean useProxy;
+    private String dateFormat;
+    private double marryKissRange;
+    private double marryProposeRange;
+    private double marryPriestRange;
+    private double adoptProposeRange;
+    private double siblingProposeRange;
+    private Map<String, List<String>> successCommands = new HashMap<>();
+    private List<String> familyList;
+    private List<String> backgrounds;
+    private Map<String, Double> commandWithdraws = new HashMap<>();
+    private Map<String, String> colors = new HashMap<>();
 
     public PluginConfig(Path dataDirectory) {
         super(dataDirectory, CONFIG_FILE, (LunaticFamily.getMode() == Mode.PROXY || LunaticFamily.getMode() == Mode.BACKEND) ? "proxyConfig.yml" : "config.yml");
-        this.load();
+        instance = this;
+        load();
     }
 
     public void load() {
@@ -55,7 +56,7 @@ public class PluginConfig extends Config {
         defaultGender = getString("default_gender");
         familyList = getStringList("family_list");
         backgrounds = getStringList("backgrounds");
-        language = getString("language");
+        languageKey = getString("language");
         dateFormat = getString("date_format");
 
         marryKissRange = getDouble("distances.marry_kiss_range");
@@ -69,9 +70,89 @@ public class PluginConfig extends Config {
         colors = getStringMap("colors");
 
         servers = getStringList("servers");
+    }
 
-        if (LunaticFamily.getMode() == Mode.PROXY) {
+    public static PluginConfig getConfig() {
+        return instance;
+    }
 
-        }
+    public static String getLanguageKey() {
+        return getConfig().languageKey;
+    }
+
+    public static String getDefaultGender() {
+        return getConfig().defaultGender;
+    }
+
+    public static String getDefaultBackground() {
+        return getConfig().defaultBackground;
+    }
+
+    public static boolean isAllowSingleAdopt() {
+        return getConfig().allowSingleAdopt;
+    }
+
+    public static List<String> getServers() {
+        return getConfig().servers;
+    }
+
+    public static boolean isUseCrazyAdvancementAPI() {
+        return getConfig().useCrazyAdvancementAPI;
+    }
+
+    public static boolean isUseVault() {
+        return getConfig().useVault;
+    }
+
+    public static boolean isUseProxy() {
+        return getConfig().useProxy;
+    }
+
+    public static String getDateFormat() {
+        return getConfig().dateFormat;
+    }
+
+    public static double getMarryKissRange() {
+        return getConfig().marryKissRange;
+    }
+
+    public static double getMarryProposeRange() {
+        return getConfig().marryProposeRange;
+    }
+
+    public static double getMarryPriestRange() {
+        return getConfig().marryPriestRange;
+    }
+
+    public static double getAdoptProposeRange() {
+        return getConfig().adoptProposeRange;
+    }
+
+    public static double getSiblingProposeRange() {
+        return getConfig().siblingProposeRange;
+    }
+
+    public static List<String> getSuccessCommands(String key) {
+        return getConfig().successCommands.get(key);
+    }
+
+    public static List<String> getFamilyList() {
+        return getConfig().familyList;
+    }
+
+    public static List<String> getBackgrounds() {
+        return getConfig().backgrounds;
+    }
+
+    public static Double getCommandWithdraw(String key) {
+        return getConfig().commandWithdraws.get(key);
+    }
+
+    public static Map<String, String> getColors() {
+        return getConfig().colors;
+    }
+
+    public static String getColor(String key) {
+        return getConfig().colors.get(key);
     }
 }

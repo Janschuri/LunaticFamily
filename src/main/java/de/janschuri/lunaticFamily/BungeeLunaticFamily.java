@@ -5,7 +5,6 @@ import de.janschuri.lunaticFamily.database.Database;
 import de.janschuri.lunaticFamily.listener.bungee.JoinListener;
 import de.janschuri.lunaticFamily.listener.bungee.QuitListener;
 import de.janschuri.lunaticlib.utils.Mode;
-import de.janschuri.lunaticFamily.utils.Logger;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.nio.file.Path;
@@ -31,25 +30,38 @@ public class BungeeLunaticFamily extends Plugin {
         getProxy().getPluginManager().registerListener(this, new QuitListener());
         getProxy().getPluginManager().registerListener(this, new JoinListener());
 
-        getProxy().getPluginManager().registerCommand(this, new FamilyCommand());
-        getProxy().getPluginManager().registerCommand(this, new AdoptCommand());
-        getProxy().getPluginManager().registerCommand(this, new GenderCommand());
-        getProxy().getPluginManager().registerCommand(this, new MarryCommand());
-        getProxy().getPluginManager().registerCommand(this, new SiblingCommand());
-
-
-
-
-        Logger.infoLog("LunaticFamily enabled.");
+        LunaticFamily.onEnable();
     }
 
     @Override
     public void onDisable() {
-        LunaticFamily.unregisterRequests();
-        getLogger().info("LunaticFamily disabled.");
+        LunaticFamily.onDisable();
     }
 
     public static BungeeLunaticFamily getInstance() {
         return instance;
+    }
+
+    static void registerCommands() {
+        for (String command : LunaticFamily.commands) {
+            switch (command) {
+                case "family":
+                    getInstance().getProxy().getPluginManager().registerCommand(getInstance(), new FamilyCommand());
+                    break;
+                case "adopt":
+                    getInstance().getProxy().getPluginManager().registerCommand(getInstance(), new AdoptCommand());
+                    break;
+                case "gender":
+                    getInstance().getProxy().getPluginManager().registerCommand(getInstance(), new GenderCommand());
+                    break;
+                case "marry":
+                    getInstance().getProxy().getPluginManager().registerCommand(getInstance(), new MarryCommand());
+                    break;
+                case "sibling":
+                    getInstance().getProxy().getPluginManager().registerCommand(getInstance(), new SiblingCommand());
+                    break;
+            }
+
+        }
     }
 }

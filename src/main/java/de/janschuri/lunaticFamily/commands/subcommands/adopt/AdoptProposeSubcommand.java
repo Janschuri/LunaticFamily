@@ -13,18 +13,18 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class AdoptProposeSubcommand extends Subcommand {
-    private static final String mainCommand = "adopt";
-    private static final String name = "propose";
-    private static final String permission = "lunaticfamily.adopt";
+    private static final String MAIN_COMMAND = "adopt";
+    private static final String NAME = "propose";
+    private static final String PERMISSION = "lunaticfamily.adopt";
     public AdoptProposeSubcommand() {
-        super(mainCommand, name, permission);
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
 
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
         if (!(sender instanceof AbstractPlayerSender)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
-        } else if (!sender.hasPermission(permission)) {
+        } else if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
@@ -34,23 +34,23 @@ public class AdoptProposeSubcommand extends Subcommand {
             boolean confirm = false;
             boolean cancel = false;
 
-            if (args.length > 3) {
-                if (args[3].equalsIgnoreCase("confirm")) {
+            if (args.length > 2) {
+                if (args[2].equalsIgnoreCase("confirm")) {
                     confirm = true;
                 }
-                if (args[3].equalsIgnoreCase("cancel")) {
+                if (args[2].equalsIgnoreCase("cancel")) {
                     cancel = true;
                 }
             }
 
 
-            if (args.length < 2) {
+            if (args.length < 1) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
                 return true;
             } else if (cancel) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("adopt_propose_cancel").replace("%player%", args[2]));
                 return true;
-            } else if (!playerFam.isMarried() && !PluginConfig.allowSingleAdopt) {
+            } else if (!playerFam.isMarried() && !PluginConfig.isAllowSingleAdopt()) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("adopt_propose_no_single_adopt"));
                 return true;
             } else if (playerFam.getChildrenAmount() > 1) {
@@ -58,14 +58,14 @@ public class AdoptProposeSubcommand extends Subcommand {
                 return true;
             }
 
-            AbstractPlayerSender child = AbstractSender.getPlayerSender(args[1]);
+            AbstractPlayerSender child = AbstractSender.getPlayerSender(args[0]);
 
             if (!child.exists()) {
-                sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[1]));
+                sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[0]));
                 return true;
             }
             if (!child.isOnline()) {
-                sender.sendMessage(language.getPrefix() + language.getMessage("player_offline").replace("%player%", args[1]));
+                sender.sendMessage(language.getPrefix() + language.getMessage("player_offline").replace("%player%", args[0]));
                 return true;
             }
 
@@ -78,12 +78,12 @@ public class AdoptProposeSubcommand extends Subcommand {
                 sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
             }
 
-                if (!player.isSameServer(child.getUniqueId()) && PluginConfig.adoptProposeRange >= 0) {
+                if (!player.isSameServer(child.getUniqueId()) && PluginConfig.getAdoptProposeRange() >= 0) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_not_same_server").replace("%player%", child.getName()));
                     return true;
                 }
 
-                if (!player.isInRange(child.getUniqueId(), PluginConfig.adoptProposeRange)) {
+                if (!player.isInRange(child.getUniqueId(), PluginConfig.getAdoptProposeRange())) {
                     player.sendMessage(language.getPrefix() + language.getMessage("player_too_far_away").replace("%player%", child.getName()));
                     return true;
                 }
@@ -91,7 +91,7 @@ public class AdoptProposeSubcommand extends Subcommand {
                 UUID childUUID = child.getUniqueId();
                 FamilyPlayer childFam = new FamilyPlayer(childUUID);
 
-                if (args[1].equalsIgnoreCase(player.getName())) {
+                if (args[0].equalsIgnoreCase(player.getName())) {
                     player.sendMessage(language.getPrefix() + language.getMessage("adopt_propose_self_request"));
                 } else if (playerFam.isFamilyMember(childFam.getID())) {
                     player.sendMessage(language.getPrefix() + language.getMessage("marry_propose_family_request").replace("%player%", childFam.getName()));
@@ -129,8 +129,8 @@ public class AdoptProposeSubcommand extends Subcommand {
                     sender.sendMessage(language.getPrefix() + language.getMessage("adopt_propose_request_sent").replace("%player%", childFam.getName()));
 
                     Runnable runnable = () -> {
-                        if (LunaticFamily.adoptRequests.containsKey(childUUID.toString())) {
-                            LunaticFamily.adoptRequests.remove(childUUID.toString());
+                        if (LunaticFamily.adoptRequests.containsKey(childUUID)) {
+                            LunaticFamily.adoptRequests.remove(childUUID);
                             if (playerFam.isMarried()) {
                                 FamilyPlayer partnerFam = playerFam.getPartner();
                                 child.sendMessage(language.getPrefix() + language.getMessage("adopt_propose_request_expired").replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()));

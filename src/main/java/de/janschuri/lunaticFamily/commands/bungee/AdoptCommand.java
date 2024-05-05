@@ -1,7 +1,6 @@
 package de.janschuri.lunaticFamily.commands.bungee;
 
 import de.janschuri.lunaticFamily.commands.subcommands.family.AdoptSubcommand;
-import de.janschuri.lunaticFamily.commands.subcommands.family.FamilySubcommand;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
@@ -21,6 +20,7 @@ public class AdoptCommand extends Command implements TabExecutor {
         adoptSubcommand.execute(commandSender, args);
     }
 
+    @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
         String[] newArgs = new String[args.length + 1];
         newArgs[0] = "adopt";

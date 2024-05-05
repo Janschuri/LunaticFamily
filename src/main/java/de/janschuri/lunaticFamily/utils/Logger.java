@@ -6,14 +6,16 @@ import de.janschuri.lunaticlib.logger.AbstractLogger;
 
 public class Logger extends AbstractLogger {
 
-    private static org.slf4j.Logger logger = AbstractLogger.getLogger("LunaticFamily");
+    private static final org.slf4j.Logger logger = AbstractLogger.getLogger("LunaticFamily");
 
-    public boolean isDebug() {
+    public static boolean isDebug() {
         return LunaticFamily.isDebug;
     }
 
     public static void debugLog(String msg) {
-        debug(logger, msg);
+        if (isDebug()) {
+            debug(logger, msg);
+        }
     }
 
     public static void infoLog(String msg) {

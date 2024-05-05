@@ -13,18 +13,18 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class MarryPriestSubcommand extends Subcommand {
-    private static final String mainCommand = "marry";
-    private static final String name = "priest";
-    private static final String permission = "lunaticfamily.marry.priest";
+    private static final String MAIN_COMMAND = "marry";
+    private static final String NAME = "priest";
+    private static final String PERMISSION = "lunaticfamily.marry.priest";
 
     public MarryPriestSubcommand() {
-        super(mainCommand, name, permission);
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
         if (!(sender instanceof AbstractPlayerSender)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
-        } else if (!sender.hasPermission(permission)) {
+        } else if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
@@ -32,16 +32,16 @@ public class MarryPriestSubcommand extends Subcommand {
 
             if (!player.hasPermission("lunaticFamily.marry.priest")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
-            } else if (args.length < 3) {
+            } else if (args.length < 2) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
             } else if (LunaticFamily.marryPriest.containsValue(playerUUID)) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("marry_priest_already_priest"));
-            } else if (args[1].equalsIgnoreCase(player.getName()) || args[2].equalsIgnoreCase(player.getName())) {
+            } else if (args[0].equalsIgnoreCase(player.getName()) || args[1].equalsIgnoreCase(player.getName())) {
                 player.sendMessage(language.getPrefix() + language.getMessage("marry_priest_self_request"));
             } else {
 
-                AbstractPlayerSender player1 = AbstractSender.getPlayerSender(args[1]);
-                AbstractPlayerSender player2 = AbstractSender.getPlayerSender(args[2]);
+                AbstractPlayerSender player1 = AbstractSender.getPlayerSender(args[0]);
+                AbstractPlayerSender player2 = AbstractSender.getPlayerSender(args[1]);
 
                 if (!player1.exists()) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", player1.getName()));
@@ -73,22 +73,22 @@ public class MarryPriestSubcommand extends Subcommand {
                     return true;
                 }
 
-                if (!player.isSameServer(player1.getUniqueId()) && PluginConfig.marryPriestRange >= 0) {
+                if (!player.isSameServer(player1.getUniqueId()) && PluginConfig.getMarryPriestRange() >= 0) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_not_same_server").replace("%player%", player1.getName()));
                     return true;
                 }
 
-                if (!player.isSameServer(player2.getUniqueId()) && PluginConfig.marryPriestRange >= 0) {
+                if (!player.isSameServer(player2.getUniqueId()) && PluginConfig.getMarryPriestRange() >= 0) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_not_same_server").replace("%player%", player2.getName()));
                     return true;
                 }
 
-                if (!player.isInRange(player1.getUniqueId(), PluginConfig.marryPriestRange)) {
+                if (!player.isInRange(player1.getUniqueId(), PluginConfig.getMarryPriestRange())) {
                     player.sendMessage(language.getPrefix() + language.getMessage("player_too_far_away").replace("%player%", player1.getName()));
                     return true;
                 }
 
-                if (!player.isInRange(player2.getUniqueId(), PluginConfig.marryPriestRange)) {
+                if (!player.isInRange(player2.getUniqueId(), PluginConfig.getMarryPriestRange())) {
                     player.sendMessage(language.getPrefix() + language.getMessage("player_too_far_away").replace("%player%", player2.getName()));
                     return true;
                 }

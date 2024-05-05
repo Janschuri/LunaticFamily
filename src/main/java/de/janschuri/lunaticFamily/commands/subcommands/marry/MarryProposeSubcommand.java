@@ -13,28 +13,28 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class MarryProposeSubcommand extends Subcommand {
-    private static final String mainCommand = "marry";
-    private static final String name = "propose";
-    private static final String permission = "lunaticfamily.marry";
+    private static final String MAIN_COMMAND = "marry";
+    private static final String NAME = "propose";
+    private static final String PERMISSION = "lunaticfamily.marry";
 
     public MarryProposeSubcommand() {
-        super(mainCommand, name, permission);
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
         if (!(sender instanceof AbstractPlayerSender)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
-        } else if (!sender.hasPermission(permission)) {
+        } else if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
-            if (args.length < 2) {
+            if (args.length < 1) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
                 return true;
-            } else if (playerFam.getName().equalsIgnoreCase(args[1])) {
+            } else if (playerFam.getName().equalsIgnoreCase(args[0])) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("marry_propose_self_request"));
                 return true;
             } else if (playerFam.isMarried()) {
@@ -42,11 +42,11 @@ public class MarryProposeSubcommand extends Subcommand {
                 return true;
             }
 
-            AbstractPlayerSender partner = AbstractSender.getPlayerSender(args[1]);
+            AbstractPlayerSender partner = AbstractSender.getPlayerSender(args[0]);
             UUID partnerUUID = partner.getUniqueId();
 
             if (!partner.exists())    {
-                sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[1]));
+                sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[0]));
                 return true;
             }
 
@@ -60,7 +60,7 @@ public class MarryProposeSubcommand extends Subcommand {
                 return true;
             }
 
-            if (!player.isSameServer(partnerUUID) && PluginConfig.marryProposeRange >= 0) {
+            if (!player.isSameServer(partnerUUID) && PluginConfig.getMarryProposeRange() >= 0) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_same_server").replace("%player%", partner.getName()));
                 return true;
             }
@@ -78,13 +78,13 @@ public class MarryProposeSubcommand extends Subcommand {
                 } else if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
                     int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
                     sender.sendMessage(language.getPrefix() + language.getMessage("marry_propose_too_many_children").replace("%player%", partnerFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
-                } else if (LunaticFamily.marryRequests.containsKey(partner.getUniqueId().toString()) || LunaticFamily.marryPriest.containsKey(partner.getUniqueId().toString())) {
+                } else if (LunaticFamily.marryRequests.containsKey(partner.getUniqueId()) || LunaticFamily.marryPriest.containsKey(partner.getUniqueId())) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("marry_propose_open_request").replace("%player%", partnerFam.getName()));
                 } else if (partnerFam.isMarried()) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("marry_propose_player_already_married").replace("%player%", partnerFam.getName()));
                 } else {
 
-                    if (!player.isInRange(partner.getUniqueId(), PluginConfig.marryProposeRange)) {
+                    if (!player.isInRange(partner.getUniqueId(), PluginConfig.getMarryProposeRange())) {
                         player.sendMessage(language.getPrefix() + language.getMessage("player_too_far_away").replace("%player%", partner.getName()));
                         return true;
                     }

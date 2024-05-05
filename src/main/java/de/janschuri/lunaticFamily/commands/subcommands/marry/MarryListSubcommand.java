@@ -10,24 +10,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MarryListSubcommand extends Subcommand {
-    private static final String mainCommand = "marry";
-    private static final String name = "list";
-    private static final String permission = "lunaticfamily.marry";
+    private static final String MAIN_COMMAND = "marry";
+    private static final String NAME = "list";
+    private static final String PERMISSION = "lunaticfamily.marry";
 
     public MarryListSubcommand() {
-        super(mainCommand, name, permission);
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
-        if (!sender.hasPermission(permission)) {
+        if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             int page = 1;
-            if (args.length > 1) {
+            if (args.length > 0) {
                 try {
-                    page = Integer.parseInt(args[1]);
+                    page = Integer.parseInt(args[0]);
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(language.getPrefix() + language.getMessage("marry_list_no_number").replace("%input%", args[1]));
+                    sender.sendMessage(language.getPrefix() + language.getMessage("marry_list_no_number").replace("%input%", args[0]));
                 }
             }
 

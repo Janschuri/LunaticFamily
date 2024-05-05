@@ -12,19 +12,19 @@ import de.janschuri.lunaticlib.utils.ClickableDecisionMessage;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class AcceptSubcommand extends Subcommand {
-    private static final String mainCommand = "marry";
-    private static final String name = "accept";
-    private static final String permission = "lunaticfamily.marry";
+public class MarryAcceptSubcommand extends Subcommand {
+    private static final String MAIN_COMMAND = "marry";
+    private static final String NAME = "accept";
+    private static final String PERMISSION = "lunaticfamily.marry";
 
-    public AcceptSubcommand() {
-        super(mainCommand, name, permission);
+    public MarryAcceptSubcommand() {
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
         if (!(sender instanceof AbstractPlayerSender)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
-        } else if (!sender.hasPermission(permission)) {
+        } else if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
@@ -86,7 +86,7 @@ public class AcceptSubcommand extends Subcommand {
 
                             playerFam.marry(partnerFam.getID(), priestFam.getID());
 
-                            for (String command : PluginConfig.successCommands.get("marry_priest")) {
+                            for (String command : PluginConfig.getSuccessCommands("marry_priest")) {
                                 command = command.replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName()).replace("%priest%", priestFam.getName());
                                 Utils.sendConsoleCommand(command);
                             }
@@ -109,7 +109,7 @@ public class AcceptSubcommand extends Subcommand {
 
                             playerFam.marry(partnerFam.getID());
 
-                            for (String command : PluginConfig.successCommands.get("marry")) {
+                            for (String command : PluginConfig.getSuccessCommands("marry")) {
                                 command = command.replace("%player1%", playerFam.getName()).replace("%player2%", partnerFam.getName());
                                 Utils.sendConsoleCommand(command);
                             }

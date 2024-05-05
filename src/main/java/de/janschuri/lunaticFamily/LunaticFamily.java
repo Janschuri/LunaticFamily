@@ -15,7 +15,7 @@ import de.janschuri.lunaticlib.futurerequests.FutureRequestsHandler;
 import de.janschuri.lunaticlib.utils.Mode;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.UUID;
 
 public final class LunaticFamily {
     public static BiMap<UUID, UUID> marryRequests = HashBiMap.create();
@@ -59,7 +59,7 @@ public final class LunaticFamily {
 
         new PluginConfig(dataDirectory);
 
-        if (PluginConfig.useProxy && mode != Mode.PROXY) {
+        if (PluginConfig.isUseProxy() && mode != Mode.PROXY) {
             enabledProxy = true;
             mode = Mode.BACKEND;
         }
@@ -71,18 +71,25 @@ public final class LunaticFamily {
 
 
         if (mode != Mode.PROXY) {
-            if (PluginConfig.useCrazyAdvancementAPI || LunaticFamily.getMode() == Mode.BACKEND) {
+            if (PluginConfig.isUseCrazyAdvancementAPI() || LunaticFamily.getMode() == Mode.BACKEND) {
                 Logger.infoLog("Loading family tree...");
                 loadCrazyAdvancementsAPI();
             }
-
-            if (PluginConfig.useVault || LunaticFamily.getMode() == Mode.BACKEND) {
-                Logger.infoLog("Loading Vault...");
-                LunaticLib.loadVault();
-            }
         }
 
+        if (mode != Mode.BACKEND) {
+            registerCommands();
+        }
         return true;
+    }
+
+    public static void onEnable() {
+        Logger.infoLog("LunaticFamily enabled.");
+    }
+
+    static void onDisable() {
+        LunaticFamily.unregisterRequests();
+        Logger.infoLog("LunaticFamily disabled.");
     }
 
     public static void registerRequests() {
@@ -104,5 +111,21 @@ public final class LunaticFamily {
         }
         FamilyTree.loadAdvancementMap();
         Logger.infoLog("Loaded family tree.");
+    }
+
+    private static void registerCommands() {
+        switch (LunaticLib.getPlatform()) {
+            case VELOCITY:
+                VelocityLunaticFamily.registerCommands();
+                break;
+            case PAPER:
+                PaperLunaticFamily.registerCommands();
+                break;
+            case BUNGEE:
+                BungeeLunaticFamily.registerCommands();
+                break;
+            default:
+                Logger.errorLog("Platform not supported");
+        }
     }
 }

@@ -2,21 +2,20 @@ package de.janschuri.lunaticFamily.commands.subcommands.family;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
-import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 
 public class FamilyReloadSubcommand extends Subcommand {
-    private static final String mainCommand = "family";
-    private static final String name = "reload";
-    private static final String permission = "lunaticfamily.admin.reload";
+    private static final String MAIN_COMMAND = "family";
+    private static final String NAME = "reload";
+    private static final String PERMISSION = "lunaticfamily.admin.reload";
 
     public FamilyReloadSubcommand() {
-        super(mainCommand, name, permission);
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
 
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
-        if (!sender.hasPermission(permission)) {
+        if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             LunaticFamily.loadConfig();

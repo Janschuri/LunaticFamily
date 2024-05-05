@@ -4,7 +4,6 @@ import de.janschuri.lunaticFamily.LunaticFamily;
 import de.janschuri.lunaticFamily.PaperLunaticFamily;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.utils.Logger;
-import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.utils.ItemStackUtils;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
@@ -13,10 +12,8 @@ import eu.endercentral.crazy_advancements.advancement.AdvancementFlag;
 import eu.endercentral.crazy_advancements.advancement.AdvancementVisibility;
 import eu.endercentral.crazy_advancements.manager.AdvancementManager;
 import eu.endercentral.crazy_advancements.packet.AdvancementsPacket;
-import jdk.jshell.execution.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.json.JSONArray;
@@ -128,7 +125,6 @@ public class FamilyTree {
         familyMap.put("ego", id);
 
         List<String> familyList = new ArrayList<>();
-        Map<String, UUID> uuids = new HashMap<>();
         Map<String, String> names = new HashMap<>();
         Map<String, String> skins = new HashMap<>();
         Map<String, String> relationLangs = new HashMap<>();
@@ -136,21 +132,19 @@ public class FamilyTree {
         for (Map.Entry<String, Integer> entry : familyMap.entrySet()) {
             FamilyPlayer relationFam = new FamilyPlayer(entry.getValue());
             String relationLang = Language.getRelation(entry.getKey(), relationFam.getGender());
-            UUID relationUUID = relationFam.getUniqueId();
 
             String skinURL = relationFam.getSkinURL();
 
             familyList.add(entry.getKey());
-            uuids.put(entry.getKey(), relationUUID);
             names.put(entry.getKey(), relationFam.getName());
             skins.put(entry.getKey(), skinURL);
             relationLangs.put(entry.getKey(), relationLang);
         }
 
-        updateFamilyTree(uuid, background, familyList, uuids, names, skins, relationLangs);
+        updateFamilyTree(uuid, background, familyList, names, skins, relationLangs);
     }
 
-    public static void updateFamilyTree(UUID uuid, String background, List<String> familyList, Map<String, UUID> uuids, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
+    public static void updateFamilyTree(UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
 
 
         Logger.debugLog("Creating FamilyTree for " + uuid);

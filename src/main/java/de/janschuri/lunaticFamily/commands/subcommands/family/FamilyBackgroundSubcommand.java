@@ -2,21 +2,17 @@ package de.janschuri.lunaticFamily.commands.subcommands.family;
 
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
-import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 
-import java.util.List;
-
 public class FamilyBackgroundSubcommand extends Subcommand {
-    private static final String mainCommand = "family";
-    private static final String name = "background";
-    private static final String permission = "lunaticfamily.family.background";
-    private static final List<String> params = PluginConfig.backgrounds;
+    private static final String MAIN_COMMAND = "family";
+    private static final String NAME = "background";
+    private static final String PERMISSION = "lunaticfamily.family.background";
 
     public FamilyBackgroundSubcommand() {
-        super(mainCommand, name, permission, params);
+        super(MAIN_COMMAND, NAME, PERMISSION, PluginConfig.getBackgrounds());
     }
 
     @Override
@@ -24,21 +20,17 @@ public class FamilyBackgroundSubcommand extends Subcommand {
 
         if (!(sender instanceof AbstractPlayerSender)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
-        } else if (!sender.hasPermission(permission)) {
+        } else if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
-        } else if (args.length == 1) {
+        } else if (args.length == 0) {
             sender.sendMessage(language.getPrefix() + language.getMessage("family_background_help"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
             FamilyPlayer playerFam = new FamilyPlayer(player.getUniqueId().toString());
 
-            if (args.length > 1) {
-                playerFam.setBackground(args[1]);
-                sender.sendMessage(language.getPrefix() + language.getMessage("family_background_set"));
-                playerFam.updateFamilyTree();
-            } else {
-                sender.sendMessage(language.getPrefix() + language.getMessage("family_background_help"));
-            }
+            playerFam.setBackground(args[0]);
+            sender.sendMessage(language.getPrefix() + language.getMessage("family_background_set"));
+            playerFam.updateFamilyTree();
         }
         return true;
     }

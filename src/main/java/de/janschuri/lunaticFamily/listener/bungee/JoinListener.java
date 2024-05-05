@@ -1,7 +1,6 @@
 package de.janschuri.lunaticFamily.listener.bungee;
 
 import de.janschuri.lunaticFamily.LunaticFamily;
-import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.listener.JoinEvent;
 import de.janschuri.lunaticlib.senders.bungee.PlayerSender;
 import de.janschuri.lunaticlib.utils.Mode;

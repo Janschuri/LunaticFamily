@@ -11,18 +11,18 @@ import de.janschuri.lunaticlib.senders.AbstractSender;
 import java.util.UUID;
 
 public class SiblingAcceptSubcommand extends Subcommand {
-    private static final String mainCommand = "sibling";
-    private static final String name = "accept";
-    private static final String permission = "lunaticfamily.sibling";
+    private static final String MAIN_COMMAND = "sibling";
+    private static final String NAME = "accept";
+    private static final String PERMISSION = "lunaticfamily.sibling";
 
     public SiblingAcceptSubcommand() {
-        super(mainCommand, name, permission);
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
         if (!(sender instanceof AbstractPlayerSender)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
-        } else if (!sender.hasPermission(permission)) {
+        } else if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
@@ -68,7 +68,7 @@ public class SiblingAcceptSubcommand extends Subcommand {
                     LunaticFamily.siblingRequests.remove(siblingUUID);
                     playerFam.addSibling(siblingFam.getID());
 
-                    for (String command : PluginConfig.successCommands.get("sibling")) {
+                    for (String command : PluginConfig.getSuccessCommands("sibling")) {
                         command = command.replace("%player1%", playerFam.getName()).replace("%player2%", siblingFam.getName());
                         Utils.sendConsoleCommand(command);
                     }

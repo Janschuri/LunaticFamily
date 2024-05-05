@@ -17,11 +17,8 @@ import java.util.*;
 public abstract class Utils extends de.janschuri.lunaticlib.utils.Utils {
     public static boolean isPlayerOnRegisteredServer(UUID uuid) {
         if (LunaticFamily.getMode() == Mode.PROXY) {
-            if (!PluginConfig.enabledServerWhitelist) {
-                return true;
-            }
             AbstractPlayerSender sender = AbstractSender.getPlayerSender(uuid);
-            return PluginConfig.servers.contains(sender.getServerName());
+            return PluginConfig.getServers().contains(sender.getServerName());
         }
         return true;
     }
@@ -31,18 +28,16 @@ public abstract class Utils extends de.janschuri.lunaticlib.utils.Utils {
     }
 
     public static boolean hasEnoughMoney(String serverName, UUID uuid, double factor, String... withdrawKeys) {
-        if (PluginConfig.useVault) {
+        if (PluginConfig.isUseVault()) {
 
-            if(!LunaticLib.installedVault) {
+            if(!LunaticLib.isInstalledVault()) {
                 Logger.errorLog("Vault is not installed! Please install Vault or disable it in plugin config.yml.");
                 return false;
             }
 
             double amount = 0.0;
             for (String key : withdrawKeys) {
-                if (PluginConfig.commandWithdraws.containsKey(key)) {
-                    amount += PluginConfig.commandWithdraws.get(key);
-                }
+                amount += PluginConfig.getCommandWithdraw(key);
             }
             amount *= factor;
 
@@ -56,18 +51,16 @@ public abstract class Utils extends de.janschuri.lunaticlib.utils.Utils {
     }
 
     public static boolean withdrawMoney(String serverName, UUID uuid, double factor, String... withdrawKeys) {
-        if (PluginConfig.useVault || LunaticFamily.enabledProxy) {
+        if (PluginConfig.isUseVault() || LunaticFamily.enabledProxy) {
 
-            if (!LunaticLib.installedVault) {
+            if (!LunaticLib.isInstalledVault()) {
                 Logger.errorLog("Vault is not installed! Please install Vault or disable vault features in plugin config.yml.");
                 return false;
             }
 
             double amount = 0.0;
             for (String key : withdrawKeys) {
-                if (PluginConfig.commandWithdraws.containsKey(key)) {
-                    amount += PluginConfig.commandWithdraws.get(key);
-                }
+                amount += PluginConfig.getCommandWithdraw(key);
             }
             amount *= factor;
 
@@ -94,7 +87,7 @@ public abstract class Utils extends de.janschuri.lunaticlib.utils.Utils {
         if (LunaticLib.getMode() == Mode.PROXY) {
             new UpdateFamilyTreeRequest().get(id);
         } else {
-            if (PluginConfig.useCrazyAdvancementAPI || LunaticLib.getMode() == Mode.BACKEND) {
+            if (PluginConfig.isUseCrazyAdvancementAPI() || LunaticLib.getMode() == Mode.BACKEND) {
                 FamilyTree.updateFamilyTree(id);
             }
         }

@@ -14,14 +14,9 @@ import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import de.janschuri.lunaticFamily.commands.velocity.*;
 import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.database.Database;
-import de.janschuri.lunaticFamily.listener.velocity.JoinListener;
-import de.janschuri.lunaticFamily.listener.velocity.QuitListener;
 import de.janschuri.lunaticlib.utils.Mode;
-import org.slf4j.Logger;
 
 import java.nio.file.Path;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Plugin(
         id = "lunaticfamily",
@@ -37,6 +32,7 @@ public class VelocityLunaticFamily {
 
     private static ProxyServer proxy;
     private static Path dataDirectory;
+    private static VelocityLunaticFamily instance;
     public static final MinecraftChannelIdentifier IDENTIFIER = MinecraftChannelIdentifier.from("lunaticfamily:proxy");
 
     @Inject
@@ -55,20 +51,35 @@ public class VelocityLunaticFamily {
 
         LunaticFamily.registerRequests();
         proxy.getChannelRegistrar().register(IDENTIFIER);
-        proxy.getEventManager().register(this, new JoinListener());
-        proxy.getEventManager().register(this, new QuitListener());
 
         LunaticFamily.setDataDirectory(dataDirectory);
         LunaticFamily.loadConfig();
         Database.loadDatabase();
 
+        LunaticFamily.onEnable();
+    }
+
+    @Subscribe
+    public void onProxyShutdown(ProxyShutdownEvent event) {
+        LunaticFamily.onDisable();
+    }
+
+    public static VelocityLunaticFamily getInstance() {
+        return instance;
+    }
+
+    static void registerCommands() {
         CommandManager commandManager = proxy.getCommandManager();
 
         for (String command : LunaticFamily.commands) {
             CommandMeta commandMeta = commandManager.metaBuilder(command)
-                    .aliases(Language.getInstance().getAliases(command).toArray(new String[0]))
-                    .plugin(this)
+                    .aliases(Language.getLanguage().getAliases(command).toArray(new String[0]))
+                    .plugin(getInstance())
                     .build();
+
+            if (commandManager.hasCommand(command)) {
+                commandManager.unregister(command);
+            }
 
             switch (command) {
                 case "family":
@@ -88,11 +99,5 @@ public class VelocityLunaticFamily {
                     break;
             }
         }
-    }
-
-    @Subscribe
-    public void onProxyShutdown(ProxyShutdownEvent event) {
-        LunaticFamily.unregisterRequests();
-        de.janschuri.lunaticFamily.utils.Logger.infoLog("LunaticFamily disabled.");
     }
 }

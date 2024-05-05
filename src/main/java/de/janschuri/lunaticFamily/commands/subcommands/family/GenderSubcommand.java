@@ -4,45 +4,39 @@ import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.gender.GenderHelpSubcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.gender.GenderInfoSubcommand;
 import de.janschuri.lunaticFamily.commands.subcommands.gender.GenderSetSubcommand;
-import de.janschuri.lunaticFamily.config.Language;
-import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticlib.commands.AbstractSubcommand;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 
 public class GenderSubcommand extends Subcommand {
-    private static final String mainCommand = "family";
-    private static final String name = "gender";
-    private static final String permission = "lunaticfamily.gender";
-    private static final GenderHelpSubcommand genderHelpSubcommand = new GenderHelpSubcommand();
-    private static final GenderInfoSubcommand genderInfoSubcommand = new GenderInfoSubcommand();
-    private static final GenderSetSubcommand genderSetSubcommand = new GenderSetSubcommand();
-    public static final AbstractSubcommand[] subcommands = {
-        genderHelpSubcommand,
-        genderInfoSubcommand,
-        genderSetSubcommand
-    };
+    private static final String MAIN_COMMAND = "family";
+    private static final String NAME = "gender";
+    private static final String PERMISSION = "lunaticfamily.gender";
 
     public GenderSubcommand() {
-        super(mainCommand, name, permission, subcommands);
+        super(MAIN_COMMAND, NAME, PERMISSION, new AbstractSubcommand[]{
+                new GenderHelpSubcommand(),
+                new GenderInfoSubcommand(),
+                new GenderSetSubcommand(),
+        });
     }
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
-        if (!sender.hasPermission(permission)) {
+        if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             if (args.length == 0) {
-                genderHelpSubcommand.execute(sender, args);
+                new GenderHelpSubcommand().execute(sender, args);
             } else {
                 final String subcommand = args[0];
-                if (language.checkIsSubcommand(name, "set", subcommand)) {
-                    genderSetSubcommand.execute(sender, args);
-                } else if (language.checkIsSubcommand(name, "info", subcommand)) {
-                    genderInfoSubcommand.execute(sender, args);
-                } else if (language.checkIsSubcommand(name, "help", subcommand)) {
-                    genderHelpSubcommand.execute(sender, args);
-                } else {
-                    sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
+
+                for (AbstractSubcommand sc : subcommands) {
+                    if (language.checkIsSubcommand(NAME, sc.getName(), subcommand)) {
+                        String[] newArgs = new String[args.length - 1];
+                        System.arraycopy(args, 1, newArgs, 0, args.length - 1);
+                        return sc.execute(sender, newArgs);
+                    }
                 }
+                sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
             }
         }
         return true;

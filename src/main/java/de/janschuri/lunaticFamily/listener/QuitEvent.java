@@ -12,7 +12,7 @@ import java.util.UUID;
 public class QuitEvent {
 
     public boolean execute(AbstractPlayerSender player) {
-        Language language = Language.getInstance();
+        Language language = Language.getLanguage();
         UUID uuid = player.getUniqueId();
         FamilyPlayer playerFam = new FamilyPlayer(uuid);
 

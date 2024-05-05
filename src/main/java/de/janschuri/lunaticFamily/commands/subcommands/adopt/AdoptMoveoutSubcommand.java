@@ -2,7 +2,6 @@ package de.janschuri.lunaticFamily.commands.subcommands.adopt;
 
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
-import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
@@ -12,18 +11,18 @@ import de.janschuri.lunaticlib.utils.ClickableDecisionMessage;
 import java.util.UUID;
 
 public class AdoptMoveoutSubcommand extends Subcommand {
-    private static final String mainCommand = "adopt";
-    private static final String name = "moveout";
-    private static final String permission = "lunaticfamily.adopt";
+    private static final String MAIN_COMMAND = "adopt";
+    private static final String NAME = "moveout";
+    private static final String PERMISSION = "lunaticfamily.adopt";
     public AdoptMoveoutSubcommand() {
-        super(mainCommand, name, permission);
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
 
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
         if (!(sender instanceof AbstractPlayerSender)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
-        } else if (!sender.hasPermission(permission)) {
+        } else if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
@@ -34,16 +33,16 @@ public class AdoptMoveoutSubcommand extends Subcommand {
             boolean cancel = false;
             boolean force = false;
 
-            if (args.length > 1) {
-                if (args[1].equalsIgnoreCase("confirm")) {
+            if (args.length > 0) {
+                if (args[0].equalsIgnoreCase("confirm")) {
                     confirm = true;
                 }
-                if (args[1].equalsIgnoreCase("cancel")) {
+                if (args[0].equalsIgnoreCase("cancel")) {
                     cancel = true;
                 }
             }
-            if (args.length > 2) {
-                if (args[2].equalsIgnoreCase("force")) {
+            if (args.length > 1) {
+                if (args[1].equalsIgnoreCase("force")) {
                     force = true;
                 }
             }
@@ -134,14 +133,14 @@ public class AdoptMoveoutSubcommand extends Subcommand {
                         Utils.withdrawMoney(player.getServerName(), parent2UUID, 0.5, "adopt_moveout_parent");
                         Utils.withdrawMoney(player.getServerName(), parent1UUID, 0.5, "adopt_moveout_parent");
 
-                        for (String command : PluginConfig.successCommands.get("moveout")) {
+                        for (String command : PluginConfig.getSuccessCommands("moveout")) {
                             command = command.replace("%parent1%", firstParentFam.getName()).replace("%parent2%", secondParentFam.getName()).replace("%child%", playerFam.getName());
                             Utils.sendConsoleCommand(command);
                         }
                     } else {
                         Utils.withdrawMoney(player.getServerName(), parent1UUID, "adopt_moveout_parent");
 
-                        for (String command : PluginConfig.successCommands.get("moveout_single")) {
+                        for (String command : PluginConfig.getSuccessCommands("moveout_single")) {
                             command = command.replace("%parent%", firstParentFam.getName()).replace("%child%", playerFam.getName());
                             Utils.sendConsoleCommand(command);
                         }

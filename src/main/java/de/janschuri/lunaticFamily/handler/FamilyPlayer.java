@@ -7,14 +7,16 @@ import de.janschuri.lunaticFamily.database.tables.AdoptionsTable;
 import de.janschuri.lunaticFamily.database.tables.MarriagesTable;
 import de.janschuri.lunaticFamily.database.tables.PlayerDataTable;
 import de.janschuri.lunaticFamily.database.tables.SiblinghoodsTable;
-import de.janschuri.lunaticFamily.utils.Logger;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class FamilyPlayer {
 
@@ -32,7 +34,7 @@ public class FamilyPlayer {
     private final List<Integer> children;
     private String gender;
     private String background;
-    private AbstractPlayerSender player;
+    private final AbstractPlayerSender player;
     private final BiMap<String, Integer> familyList = HashBiMap.create();
     public static final String DEFAULT_SKIN = "http://textures.minecraft.net/texture/2705fd94a0c431927fb4e639b0fcfb49717e412285a02b439e0112da22b2e2ec";
 
@@ -80,13 +82,13 @@ public class FamilyPlayer {
 
 
         if (PlayerDataTable.getGender(id) == null) {
-            gender = PluginConfig.defaultGender;
+            gender = PluginConfig.getDefaultGender();
         } else {
             gender = PlayerDataTable.getGender(id);
         }
 
         if (PlayerDataTable.getBackground(id) == null) {
-            background = PluginConfig.defaultBackground;
+            background = PluginConfig.getDefaultBackground();
         } else {
             background = PlayerDataTable.getBackground(id);
         }
@@ -178,7 +180,7 @@ public class FamilyPlayer {
 
     public String getMarriageDate() {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PluginConfig.dateFormat);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PluginConfig.getDateFormat());
 
         return formatter.format(this.marryDate.toLocalDateTime());
     }
@@ -312,7 +314,7 @@ public class FamilyPlayer {
 
         playerFam.deleteMarriage();
 
-        if (!PluginConfig.allowSingleAdopt) {
+        if (!PluginConfig.isAllowSingleAdopt()) {
             for (FamilyPlayer child : playerChildren) {
                 partnerFam.deleteAdoption(child.getID());
             }

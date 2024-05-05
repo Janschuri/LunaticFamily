@@ -14,18 +14,18 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class MarryKissSubcommand extends Subcommand {
-    private static final String mainCommand = "marry";
-    private static final String name = "kiss";
-    private static final String permission = "lunaticfamily.marry";
+    private static final String MAIN_COMMAND = "marry";
+    private static final String NAME = "kiss";
+    private static final String PERMISSION = "lunaticfamily.marry";
 
     public MarryKissSubcommand() {
-        super(mainCommand, name, permission);
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
         if (!(sender instanceof AbstractPlayerSender)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
-        } else if (!sender.hasPermission(permission)) {
+        } else if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
@@ -54,7 +54,7 @@ public class MarryKissSubcommand extends Subcommand {
                 return true;
             }
 
-            if (!player.isInRange(partner.getUniqueId(), PluginConfig.marryKissRange)) {
+            if (!player.isInRange(partner.getUniqueId(), PluginConfig.getMarryKissRange())) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_too_far_away").replace("%player%", partner.getName()));
                 return true;
             }

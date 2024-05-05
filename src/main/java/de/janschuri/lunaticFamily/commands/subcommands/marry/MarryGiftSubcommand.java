@@ -10,18 +10,18 @@ import de.janschuri.lunaticlib.senders.AbstractSender;
 import java.util.UUID;
 
 public class MarryGiftSubcommand extends Subcommand {
-    private static final String mainCommand = "marry";
-    private static final String name = "gift";
-    private static final String permission = "lunaticfamily.marry.gift";
+    private static final String MAIN_COMMAND = "marry";
+    private static final String NAME = "gift";
+    private static final String PERMISSION = "lunaticfamily.marry.gift";
 
     public MarryGiftSubcommand() {
-        super(mainCommand, name, permission);
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
         if (!(sender instanceof AbstractPlayerSender)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
-        } else if (!sender.hasPermission(permission)) {
+        } else if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;

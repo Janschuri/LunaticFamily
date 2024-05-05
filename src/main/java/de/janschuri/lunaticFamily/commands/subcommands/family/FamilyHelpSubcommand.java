@@ -2,14 +2,13 @@ package de.janschuri.lunaticFamily.commands.subcommands.family;
 
 
 import de.janschuri.lunaticFamily.commands.subcommands.HelpSubcommand;
-import de.janschuri.lunaticFamily.config.Language;
 
 public class FamilyHelpSubcommand extends HelpSubcommand {
-    private static final String mainCommand = "family";
-    private static final String name = "help";
-    private static final String permission = "lunaticfamily.family";
+    private static final String MAIN_COMMAND = "family";
+    private static final String NAME = "help";
+    private static final String PERMISSION = "lunaticfamily.family";
 
     public FamilyHelpSubcommand() {
-        super(mainCommand, name, permission, FamilySubcommand.class);
+        super(MAIN_COMMAND, NAME, PERMISSION, FamilySubcommand.class);
     }
 }

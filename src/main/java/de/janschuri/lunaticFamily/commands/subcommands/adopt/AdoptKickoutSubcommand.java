@@ -2,7 +2,6 @@ package de.janschuri.lunaticFamily.commands.subcommands.adopt;
 
 import de.janschuri.lunaticFamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticFamily.config.PluginConfig;
-import de.janschuri.lunaticFamily.config.Language;
 import de.janschuri.lunaticFamily.handler.FamilyPlayer;
 import de.janschuri.lunaticFamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
@@ -12,19 +11,19 @@ import de.janschuri.lunaticlib.utils.ClickableDecisionMessage;
 import java.util.UUID;
 
 public class AdoptKickoutSubcommand extends Subcommand {
-    private static final String mainCommand = "adopt";
-    private static final String name = "kickout";
-    private static final String permission = "lunaticfamily.adopt";
+    private static final String MAIN_COMMAND = "adopt";
+    private static final String NAME = "kickout";
+    private static final String PERMISSION = "lunaticfamily.adopt";
 
     public AdoptKickoutSubcommand() {
-        super(mainCommand, name, permission);
+        super(MAIN_COMMAND, NAME, PERMISSION);
     }
 
     @Override
     public boolean execute(AbstractSender sender, String[] args) {
         if (!(sender instanceof AbstractPlayerSender)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
-        } else if (!sender.hasPermission(permission)) {
+        } else if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
@@ -32,11 +31,11 @@ public class AdoptKickoutSubcommand extends Subcommand {
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
             if (playerFam.getChildren().get(0) != null || playerFam.getChildren().get(1) != null) {
-                if (args.length == 1) {
+                if (args.length == 0) {
                     player.sendMessage(language.getPrefix() + language.getMessage("adopt_kickout_specify_child"));
                 } else {
 
-                    AbstractPlayerSender child = AbstractSender.getPlayerSender(args[1]);
+                    AbstractPlayerSender child = AbstractSender.getPlayerSender(args[0]);
                     UUID childUUID = child.getUniqueId();
                     FamilyPlayer childFam = new FamilyPlayer(childUUID);
                     if (childFam.isChildOf(playerFam.getID())) {
@@ -44,16 +43,16 @@ public class AdoptKickoutSubcommand extends Subcommand {
                         boolean confirm = false;
                         boolean cancel = false;
                         boolean force = false;
-                        if (args.length > 2) {
-                            if (args[2].equalsIgnoreCase("confirm")) {
+                        if (args.length > 1) {
+                            if (args[1].equalsIgnoreCase("confirm")) {
                                 confirm = true;
                             }
-                            if (args[2].equalsIgnoreCase("cancel")) {
+                            if (args[1].equalsIgnoreCase("cancel")) {
                                 cancel = true;
                             }
                         }
-                        if (args.length > 3) {
-                            if (args[3].equalsIgnoreCase("force")) {
+                        if (args.length > 2) {
+                            if (args[2].equalsIgnoreCase("force")) {
                                 force = true;
                             }
                         }
@@ -67,9 +66,9 @@ public class AdoptKickoutSubcommand extends Subcommand {
                             player.sendMessage(new ClickableDecisionMessage(
                                     language.getMessage("adopt_kickout_confirm").replace("%player%", child.getName()),
                                     language.getMessage("confirm"),
-                                    "/family adopt kickout " + args[1] + " confirm",
+                                    "/family adopt kickout " + args[0] + " confirm",
                                     language.getMessage("cancel"),
-                                    "/family adopt kickout " + args[1] + " cancel"));
+                                    "/family adopt kickout " + args[0] + " cancel"));
                             return true;
                         }
 
@@ -127,14 +126,14 @@ public class AdoptKickoutSubcommand extends Subcommand {
                                     Utils.withdrawMoney(player.getServerName(), partnerUUID, 0.5, "adopt_kickout_parent");
                                     Utils.withdrawMoney(player.getServerName(), playerUUID, 0.5, "adopt_kickout_parent");
 
-                                    for (String command : PluginConfig.successCommands.get("kickout")) {
+                                    for (String command : PluginConfig.getSuccessCommands("kickout")) {
                                         command = command.replace("%parent1%", playerFam.getName()).replace("%parent2%", playerFam.getPartner().getName()).replace("%child%", childFam.getName());
                                         Utils.sendConsoleCommand(command);
                                     }
                                 } else {
                                     Utils.withdrawMoney(player.getServerName(), playerUUID, "adopt_kickout_parent");
 
-                                    for (String command : PluginConfig.successCommands.get("kickout_single")) {
+                                    for (String command : PluginConfig.getSuccessCommands("kickout_single")) {
                                         command = command.replace("%parent%", playerFam.getName()).replace("%child%", childFam.getName());
                                         Utils.sendConsoleCommand(command);
                                     }
