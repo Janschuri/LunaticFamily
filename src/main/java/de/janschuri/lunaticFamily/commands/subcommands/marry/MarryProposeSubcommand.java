@@ -90,7 +90,7 @@ public class MarryProposeSubcommand extends Subcommand {
                     }
 
                     partner.sendMessage(new ClickableDecisionMessage(language.getPrefix() +
-                            language.getMessage("marry_propose_request").replace("%player1%", partnerFam.getName()).replace("%player2%", playerFam.getName()),
+                            language.getPrefix() + language.getMessage("marry_propose_request").replace("%player1%", partnerFam.getName()).replace("%player2%", playerFam.getName()),
                             language.getMessage("marry_yes"),
                             "/family marry accept",
                             language.getMessage("marry_no"),

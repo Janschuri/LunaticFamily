@@ -122,7 +122,7 @@ public class MarryPriestSubcommand extends Subcommand {
                         player.chat(language.getMessage("marry_priest_request").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
 
                         player1.sendMessage(new ClickableDecisionMessage(
-                                "",
+                                language.getPrefix(),
                                 language.getMessage("marry_yes"),
                                 "/family marry accept",
                                 language.getMessage("marry_no"),

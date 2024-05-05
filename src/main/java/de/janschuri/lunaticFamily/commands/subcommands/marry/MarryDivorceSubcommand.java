@@ -58,7 +58,7 @@ public class MarryDivorceSubcommand extends Subcommand {
             }
             if (!confirm) {
                 player.sendMessage(new ClickableDecisionMessage(
-                        language.getMessage("marry_divorce_confirm"),
+                        language.getPrefix() + language.getMessage("marry_divorce_confirm"),
                         language.getMessage("confirm"),
                         "/family marry divorce confirm",
                         language.getMessage("cancel"),
@@ -76,7 +76,7 @@ public class MarryDivorceSubcommand extends Subcommand {
             if (!force && !Utils.hasEnoughMoney(player.getServerName(), partnerUUID, "marry_divorce_left_player")) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getPartner().getName()));
                 player.sendMessage(new ClickableDecisionMessage(
-                        language.getMessage("take_payment_confirm"),
+                        language.getPrefix() + language.getMessage("take_payment_confirm"),
                         language.getMessage("confirm"),
                         "/family marry divorce confirm force",
                         language.getMessage("cancel"),

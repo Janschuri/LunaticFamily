@@ -64,7 +64,7 @@ public class AdoptKickoutSubcommand extends Subcommand {
 
                         if (!confirm) {
                             player.sendMessage(new ClickableDecisionMessage(
-                                    language.getMessage("adopt_kickout_confirm").replace("%player%", child.getName()),
+                                    language.getPrefix() + language.getMessage("adopt_kickout_confirm").replace("%player%", child.getName()),
                                     language.getMessage("confirm"),
                                     "/family adopt kickout " + args[0] + " confirm",
                                     language.getMessage("cancel"),
@@ -84,7 +84,7 @@ public class AdoptKickoutSubcommand extends Subcommand {
                         if (!Utils.hasEnoughMoney(player.getServerName(), childUUID, "adopt_kickout_child")) {
                             player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", childFam.getName()));
                             player.sendMessage(new ClickableDecisionMessage(
-                                    language.getMessage("take_payment_confirm"),
+                                    language.getPrefix()+ language.getMessage("take_payment_confirm"),
                                     language.getMessage("confirm"),
                                     "/family adopt kickout confirm force",
                                     language.getMessage("cancel"),
@@ -97,7 +97,7 @@ public class AdoptKickoutSubcommand extends Subcommand {
                             if (!Utils.hasEnoughMoney(player.getServerName(), partnerUUID, "adopt_kickout_parent")) {
                                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getPartner().getName()));
                                 player.sendMessage(new ClickableDecisionMessage(
-                                        language.getMessage("take_payment_confirm"),
+                                        language.getPrefix()+ language.getMessage("take_payment_confirm"),
                                         language.getMessage("confirm"),
                                         "/family adopt kickout confirm force",
                                         language.getMessage("cancel"),

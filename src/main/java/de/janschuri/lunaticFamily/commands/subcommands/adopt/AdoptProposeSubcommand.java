@@ -76,6 +76,7 @@ public class AdoptProposeSubcommand extends Subcommand {
 
             if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, "adopt_parent")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("not_enough_money"));
+                return true;
             }
 
                 if (!player.isSameServer(child.getUniqueId()) && PluginConfig.getAdoptProposeRange() >= 0) {
@@ -101,7 +102,7 @@ public class AdoptProposeSubcommand extends Subcommand {
                     player.sendMessage(language.getPrefix() + language.getMessage("adopt_propose_already_adopted").replace("%player%", childFam.getName()));
                 } else if (childFam.hasSibling() && !confirm) {
                     player.sendMessage(new ClickableDecisionMessage(
-                            language.getMessage("adopt_propose_has_sibling").replace("%player1%", childFam.getName()).replace("%player2%", childFam.getSibling().getName()),
+                            language.getPrefix() + language.getMessage("adopt_propose_has_sibling").replace("%player1%", childFam.getName()).replace("%player2%", childFam.getSibling().getName()),
                             language.getMessage("confirm"),
                             "/family adopt propose " + child.getName() + " confirm",
                             language.getMessage("cancel"),
@@ -112,14 +113,14 @@ public class AdoptProposeSubcommand extends Subcommand {
                 } else {
                     if (playerFam.isMarried()) {
                         child.sendMessage(new ClickableDecisionMessage(
-                                language.getMessage("adopt_propose_request").replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName()),
+                                language.getPrefix() + language.getMessage("adopt_propose_request").replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName()),
                                 language.getMessage("accept"),
                                 "/family adopt accept",
                                 language.getMessage("deny"),
                                 "/family adopt deny"));
                     } else {
                         child.sendMessage(new ClickableDecisionMessage(
-                                language.getMessage("adopt_propose_request_by_single").replace("%player%", playerFam.getName()),
+                                language.getPrefix() + language.getMessage("adopt_propose_request_by_single").replace("%player%", playerFam.getName()),
                                 language.getMessage("accept"),
                                 "/family adopt accept",
                                 language.getMessage("deny"),

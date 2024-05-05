@@ -85,7 +85,7 @@ public class SiblingProposeSubcommand extends Subcommand {
                     }
 
                     sibling.sendMessage(new ClickableDecisionMessage(
-                            language.getMessage("sibling_propose_request").replace("%player%", siblingFam.getName()),
+                            language.getPrefix() + language.getMessage("sibling_propose_request").replace("%player%", siblingFam.getName()),
                             language.getMessage("accept"),
                             "/family sibling accept",
                             language.getMessage("deny"),

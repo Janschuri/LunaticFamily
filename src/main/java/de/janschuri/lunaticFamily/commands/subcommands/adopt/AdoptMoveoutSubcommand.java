@@ -58,7 +58,7 @@ public class AdoptMoveoutSubcommand extends Subcommand {
             }
             if (!confirm) {
                 player.sendMessage(new ClickableDecisionMessage(
-                        language.getMessage("adopt_moveout_confirm"),
+                        language.getPrefix()+ language.getMessage("adopt_moveout_confirm"),
                         language.getMessage("confirm"),
                         "/family adopt moveout confirm",
                         language.getMessage("cancel"),
@@ -76,7 +76,7 @@ public class AdoptMoveoutSubcommand extends Subcommand {
             if (!force && playerFam.getParents().size() == 2 && !Utils.hasEnoughMoney(player.getServerName(), parent1UUID, 0.5, "adopt_moveout_parent")) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(1).getName()));
                 player.sendMessage(new ClickableDecisionMessage(
-                        language.getMessage("take_payment_confirm"),
+                        language.getPrefix()+ language.getMessage("take_payment_confirm"),
                         language.getMessage("confirm"),
                         "/family adopt moveout confirm force",
                         language.getMessage("cancel"),
@@ -85,7 +85,7 @@ public class AdoptMoveoutSubcommand extends Subcommand {
             } else if (!force && playerFam.getParents().size() == 1 && !Utils.hasEnoughMoney(player.getServerName(), parent1UUID, "adopt_moveout_parent")) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(0).getName()));
                 player.sendMessage(new ClickableDecisionMessage(
-                        language.getMessage("take_payment_confirm"),
+                        language.getPrefix()+ language.getMessage("take_payment_confirm"),
                         language.getMessage("confirm"),
                         "/family adopt moveout confirm force",
                         language.getMessage("cancel"),
@@ -99,7 +99,7 @@ public class AdoptMoveoutSubcommand extends Subcommand {
             if (!force && playerFam.getParents().size() == 2 && !Utils.hasEnoughMoney(player.getServerName(), parent2UUID, 0.5, "adopt_moveout_parent")) {
                 player.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getParents().get(1).getName()));
                 player.sendMessage(new ClickableDecisionMessage(
-                        language.getMessage("take_payment_confirm"),
+                        language.getPrefix()+ language.getMessage("take_payment_confirm"),
                         language.getMessage("confirm"),
                         "/family adopt moveout confirm force",
                         language.getMessage("cancel"),

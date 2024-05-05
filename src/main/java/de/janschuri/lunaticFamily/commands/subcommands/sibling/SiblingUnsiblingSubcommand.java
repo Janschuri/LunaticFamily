@@ -66,7 +66,7 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
 
             if (!confirm) {
                 sender.sendMessage(new ClickableDecisionMessage(
-                        language.getMessage("sibling_unsibling_confirm"),
+                        language.getPrefix() + language.getMessage("sibling_unsibling_confirm"),
                         language.getMessage("confirm"),
                         "/family sibling unsibling confirm",
                         language.getMessage("cancel"),
@@ -81,7 +81,7 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
             if (!force && !Utils.hasEnoughMoney(player.getServerName(), siblingUUID, "sibling_unsibling_left_player")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_enough_money").replace("%player%", playerFam.getSibling().getName()));
                 sender.sendMessage(new ClickableDecisionMessage(
-                        language.getMessage("take_payment_confirm"),
+                        language.getPrefix() + language.getMessage("take_payment_confirm"),
                         language.getMessage("confirm"),
                         "/family sibling unsibling confirm force",
                         language.getMessage("cancel"),

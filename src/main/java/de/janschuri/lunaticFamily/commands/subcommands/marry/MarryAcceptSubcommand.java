@@ -148,7 +148,7 @@ public class MarryAcceptSubcommand extends Subcommand {
 
 
                             partner.sendMessage(new ClickableDecisionMessage(
-                                    "",
+                                    language.getPrefix(),
                                     language.getMessage("marry_yes"),
                                     "/family marry accept",
                                     language.getMessage("marry_no"),
