@@ -39,7 +39,7 @@ backgrounds:
   - "diamond_block"
   - "gold_block"
 allow_single_adopt: true
-language: "DE"
+language: "EN"
 use_crazy_advancement_api: true
 date_format: "yyyy-MM-dd HH:mm:ss"
 distances:
