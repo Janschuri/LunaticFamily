@@ -5,6 +5,7 @@ import de.janschuri.lunaticfamily.database.Database;
 import de.janschuri.lunaticfamily.listener.bungee.JoinListener;
 import de.janschuri.lunaticfamily.listener.bungee.QuitListener;
 import de.janschuri.lunaticlib.utils.Mode;
+import de.janschuri.lunaticlib.utils.Platform;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.nio.file.Path;
@@ -15,6 +16,7 @@ public class BungeeLunaticFamily extends Plugin {
 
     @Override
     public void onEnable() {
+        LunaticFamily.platform = Platform.BUNGEE;
         LunaticFamily.mode = Mode.PROXY;
         instance = this;
 

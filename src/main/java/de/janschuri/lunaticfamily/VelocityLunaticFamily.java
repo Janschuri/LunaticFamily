@@ -15,6 +15,7 @@ import de.janschuri.lunaticfamily.commands.velocity.*;
 import de.janschuri.lunaticfamily.config.Language;
 import de.janschuri.lunaticfamily.database.Database;
 import de.janschuri.lunaticlib.utils.Mode;
+import de.janschuri.lunaticlib.utils.Platform;
 
 import java.nio.file.Path;
 
@@ -24,7 +25,7 @@ import java.nio.file.Path;
         version = "1.0.0",
         authors = "janschuri",
         dependencies = {
-        @Dependency(id = "lunaticlib")
+        @Dependency(id = "lunaticlib", optional = true)
 
         }
 )
@@ -47,6 +48,7 @@ public class VelocityLunaticFamily {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
+        LunaticFamily.platform = Platform.VELOCITY;
         LunaticFamily.mode = Mode.PROXY;
         instance = this;
 

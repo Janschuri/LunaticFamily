@@ -2,17 +2,16 @@ package de.janschuri.lunaticfamily;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import de.janschuri.lunaticfamily.config.DatabaseConfig;
 import de.janschuri.lunaticfamily.config.Language;
 import de.janschuri.lunaticfamily.config.PluginConfig;
 import de.janschuri.lunaticfamily.futurerequests.SpawnParticlesCloudRequest;
 import de.janschuri.lunaticfamily.futurerequests.UpdateFamilyTreeRequest;
 import de.janschuri.lunaticfamily.handler.FamilyTree;
 import de.janschuri.lunaticfamily.utils.Logger;
-import de.janschuri.lunaticlib.LunaticLib;
 import de.janschuri.lunaticlib.futurerequests.FutureRequest;
 import de.janschuri.lunaticlib.futurerequests.FutureRequestsHandler;
 import de.janschuri.lunaticlib.utils.Mode;
+import de.janschuri.lunaticlib.utils.Platform;
 
 import java.nio.file.Path;
 import java.util.UUID;
@@ -42,6 +41,7 @@ public final class LunaticFamily {
 
     private static Path dataDirectory;
     static Mode mode = Mode.STANDALONE;
+    static Platform platform;
 
     public static Mode getMode() {
         return mode;
@@ -66,7 +66,6 @@ public final class LunaticFamily {
 
         if (mode != Mode.BACKEND) {
             new Language(dataDirectory, commands);
-            new DatabaseConfig(dataDirectory);
         }
 
 
@@ -114,7 +113,7 @@ public final class LunaticFamily {
     }
 
     private static void registerCommands() {
-        switch (LunaticLib.getPlatform()) {
+        switch (platform) {
             case VELOCITY:
                 VelocityLunaticFamily.registerCommands();
                 break;

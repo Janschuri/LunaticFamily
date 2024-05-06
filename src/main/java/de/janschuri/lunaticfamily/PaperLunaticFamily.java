@@ -8,6 +8,7 @@ import de.janschuri.lunaticfamily.listener.paper.QuitListener;
 import de.janschuri.lunaticfamily.utils.Logger;
 import de.janschuri.lunaticfamily.utils.Utils;
 import de.janschuri.lunaticlib.utils.Mode;
+import de.janschuri.lunaticlib.utils.Platform;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -28,6 +29,7 @@ public class PaperLunaticFamily extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        LunaticFamily.platform = Platform.PAPER;
         instance = this;
         LunaticFamily.registerRequests();
         LunaticFamily.setDataDirectory(getDataFolder().toPath());
@@ -94,13 +96,11 @@ public class PaperLunaticFamily extends JavaPlugin {
     }
 
     static void registerCommands() {
-        Logger.warnLog("Registering commands...");
         for (String command : LunaticFamily.commands) {
 
             PluginCommand cmd = getInstance().getCommand(command);
             assert cmd != null;
             try {
-                Logger.warnLog("Registering command: " + command);
                 final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
                 bukkitCommandMap.setAccessible(true);
                 CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
@@ -113,8 +113,6 @@ public class PaperLunaticFamily extends JavaPlugin {
             }
 
             getInstance().getCommand(command).setPermission("lunaticfamily." + command);
-
-            Logger.warnLog(Language.getLanguage().getAliases(command).toString());
 
             switch (command) {
                 case "family":
