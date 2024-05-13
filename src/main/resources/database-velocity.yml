@@ -1,9 +1,6 @@
 MySQL:
-  enabled: false
   host: localhost
   port: 3306
   database: lunaticfamily
   username: root
   password:
-SQLite:
-  Filename: lunaticfamily
