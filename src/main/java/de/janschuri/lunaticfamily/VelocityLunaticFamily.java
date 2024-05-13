@@ -14,6 +14,7 @@ import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import de.janschuri.lunaticfamily.commands.velocity.*;
 import de.janschuri.lunaticfamily.config.Language;
 import de.janschuri.lunaticfamily.database.Database;
+import de.janschuri.lunaticlib.bstats.MetricsVelocity;
 import de.janschuri.lunaticlib.utils.Mode;
 import de.janschuri.lunaticlib.utils.Platform;
 
@@ -35,11 +36,12 @@ public class VelocityLunaticFamily {
     private static Path dataDirectory;
     private static VelocityLunaticFamily instance;
     public static final MinecraftChannelIdentifier IDENTIFIER = MinecraftChannelIdentifier.from("lunaticfamily:proxy");
-
+    private final MetricsVelocity.Factory metricsFactory;
     @Inject
-    public VelocityLunaticFamily(ProxyServer proxy, @DataDirectory Path dataDirectory) {
+    public VelocityLunaticFamily(ProxyServer proxy, @DataDirectory Path dataDirectory, MetricsVelocity.Factory metricsFactory) {
         VelocityLunaticFamily.proxy = proxy;
         VelocityLunaticFamily.dataDirectory = dataDirectory;
+        this.metricsFactory = metricsFactory;
     }
 
     public static ProxyServer getProxy() {
@@ -58,6 +60,9 @@ public class VelocityLunaticFamily {
         LunaticFamily.setDataDirectory(dataDirectory);
         LunaticFamily.loadConfig();
         Database.loadDatabase();
+
+        int pluginId = 21914;
+        MetricsVelocity metrics = metricsFactory.make(this, pluginId);
 
         LunaticFamily.onEnable();
     }

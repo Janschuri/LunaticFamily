@@ -7,6 +7,7 @@ import de.janschuri.lunaticfamily.listener.paper.JoinListener;
 import de.janschuri.lunaticfamily.listener.paper.QuitListener;
 import de.janschuri.lunaticfamily.utils.Logger;
 import de.janschuri.lunaticfamily.utils.Utils;
+import de.janschuri.lunaticlib.bstats.MetricsBukkit;
 import de.janschuri.lunaticlib.utils.Mode;
 import de.janschuri.lunaticlib.utils.Platform;
 import org.bukkit.Bukkit;
@@ -54,6 +55,10 @@ public class PaperLunaticFamily extends JavaPlugin {
         } else {
             Logger.infoLog("Backend mode enabled.");
         }
+
+        int pluginId = 21912; // <-- Replace with the id of your plugin!
+        MetricsBukkit metrics = new MetricsBukkit(this, pluginId);
+
         LunaticFamily.onEnable();
     }
     public static PaperLunaticFamily getInstance() {

@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.commands.bungee.*;
 import de.janschuri.lunaticfamily.database.Database;
 import de.janschuri.lunaticfamily.listener.bungee.JoinListener;
 import de.janschuri.lunaticfamily.listener.bungee.QuitListener;
+import de.janschuri.lunaticlib.bstats.MetricsBungeecoord;
 import de.janschuri.lunaticlib.utils.Mode;
 import de.janschuri.lunaticlib.utils.Platform;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -31,6 +32,9 @@ public class BungeeLunaticFamily extends Plugin {
 
         getProxy().getPluginManager().registerListener(this, new QuitListener());
         getProxy().getPluginManager().registerListener(this, new JoinListener());
+
+        int pluginId = 21918;
+        MetricsBungeecoord metrics = new MetricsBungeecoord(this, pluginId);
 
         LunaticFamily.onEnable();
     }
