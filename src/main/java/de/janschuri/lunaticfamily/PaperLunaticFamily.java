@@ -121,22 +121,27 @@ public class PaperLunaticFamily extends JavaPlugin {
 
             switch (command) {
                 case "family":
+                    getInstance().getCommand(command).setPermission("lunaticfamily.family");
                     getInstance().getCommand(command).setExecutor(new FamilyCommand());
                     getInstance().getCommand(command).setTabCompleter(new FamilyCommand());
                     break;
                 case "adopt":
+                    getInstance().getCommand(command).setPermission("lunaticfamily.adopt");
                     getInstance().getCommand(command).setExecutor(new AdoptCommand());
                     getInstance().getCommand(command).setTabCompleter(new AdoptCommand());
                     break;
                 case "gender":
+                    getInstance().getCommand(command).setPermission("lunaticfamily.gender");
                     getInstance().getCommand(command).setExecutor(new GenderCommand());
                     getInstance().getCommand(command).setTabCompleter(new GenderCommand());
                     break;
                 case "marry":
+                    getInstance().getCommand(command).setPermission("lunaticfamily.marry");
                     getInstance().getCommand(command).setExecutor(new MarryCommand());
                     getInstance().getCommand(command).setTabCompleter(new MarryCommand());
                     break;
                 case "sibling":
+                    getInstance().getCommand(command).setPermission("lunaticfamily.sibling");
                     getInstance().getCommand(command).setExecutor(new SiblingCommand());
                     getInstance().getCommand(command).setTabCompleter(new SiblingCommand());
                     break;
