@@ -10,14 +10,12 @@ import net.md_5.bungee.event.EventHandler;
 
 public class JoinListener implements Listener {
 
-    JoinEvent joinEvent = new JoinEvent();
-
     @EventHandler
     public void onPlayerJoin(PostLoginEvent event) {
         PlayerSender playerCommandSender = new PlayerSender(event.getPlayer());
 
         if (LunaticFamily.getMode() == Mode.STANDALONE) {
-            joinEvent.execute(playerCommandSender);
+            new JoinEvent().execute(playerCommandSender);
         }
     }
 }

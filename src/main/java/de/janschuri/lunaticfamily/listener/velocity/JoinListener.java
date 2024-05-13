@@ -16,8 +16,7 @@ public class JoinListener {
         if (event.getPreviousServer() != null) {
 
         } else {
-            JoinEvent joinSubevent = new JoinEvent();
-            joinSubevent.execute(new PlayerSender(uuid));
+            new JoinEvent().execute(new PlayerSender(uuid));
         }
     }
 }

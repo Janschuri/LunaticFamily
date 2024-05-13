@@ -14,6 +14,8 @@ import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import de.janschuri.lunaticfamily.commands.velocity.*;
 import de.janschuri.lunaticfamily.config.Language;
 import de.janschuri.lunaticfamily.database.Database;
+import de.janschuri.lunaticfamily.listener.velocity.JoinListener;
+import de.janschuri.lunaticfamily.listener.velocity.QuitListener;
 import de.janschuri.lunaticlib.bstats.MetricsVelocity;
 import de.janschuri.lunaticlib.utils.Mode;
 import de.janschuri.lunaticlib.utils.Platform;
@@ -60,6 +62,9 @@ public class VelocityLunaticFamily {
         LunaticFamily.setDataDirectory(dataDirectory);
         LunaticFamily.loadConfig();
         Database.loadDatabase();
+
+        proxy.getEventManager().register(this, new QuitListener());
+        proxy.getEventManager().register(this, new JoinListener());
 
         int pluginId = 21914;
         MetricsVelocity metrics = metricsFactory.make(this, pluginId);

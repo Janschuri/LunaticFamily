@@ -5,7 +5,6 @@ import de.janschuri.lunaticfamily.config.Language;
 import de.janschuri.lunaticfamily.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
-import de.janschuri.lunaticlib.utils.Mode;
 
 import java.util.UUID;
 
@@ -15,10 +14,6 @@ public class QuitEvent {
         Language language = Language.getLanguage();
         UUID uuid = player.getUniqueId();
         FamilyPlayer playerFam = new FamilyPlayer(uuid);
-
-        if (LunaticFamily.getMode() == Mode.BACKEND) {
-            return true;
-        }
 
         if (LunaticFamily.marryRequests.containsValue(uuid) || LunaticFamily.marryRequests.containsKey(uuid) || LunaticFamily.marryPriest.containsKey(uuid)) {
 

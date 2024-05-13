@@ -79,15 +79,14 @@ public abstract class Utils extends de.janschuri.lunaticlib.utils.Utils {
     }
 
     public static void updateFamilyTree(int id, UUID uuid) {
-        if (!LunaticFamily.installedCrazyAdvancementsAPI) {
-            Logger.errorLog("CrazyAdvancementsAPI is not installed! Please install CrazyAdvancementsAPI or disable it in plugin config.yml.");
-            return;
-        }
-
         if (LunaticLib.getMode() == Mode.PROXY) {
             new UpdateFamilyTreeRequest().get(id);
         } else {
             if (PluginConfig.isUseCrazyAdvancementAPI() || LunaticLib.getMode() == Mode.BACKEND) {
+                if (!LunaticFamily.installedCrazyAdvancementsAPI) {
+                    Logger.errorLog("CrazyAdvancementsAPI is not installed! Please install CrazyAdvancementsAPI or disable it in plugin config.yml. 1");
+                    return;
+                }
                 FamilyTree.updateFamilyTree(id);
             }
         }

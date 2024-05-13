@@ -24,10 +24,6 @@ public class JoinEvent {
         Language language = Language.getLanguage();
         FamilyPlayer playerFam = new FamilyPlayer(sender.getUniqueId());
 
-        if (LunaticFamily.getMode() == Mode.BACKEND) {
-            return true;
-        }
-
         Runnable runnable = () -> {
             if (PluginConfig.isUseCrazyAdvancementAPI()) {
                 if (LunaticLib.getMode() == Mode.PROXY) {

@@ -105,7 +105,7 @@ public final class LunaticFamily {
 
     public static void loadCrazyAdvancementsAPI() {
         if (!installedCrazyAdvancementsAPI) {
-            Logger.errorLog("CrazyAdvancementsAPI is not installed! Please install CrazyAdvancementsAPI or disable it in plugin config.yml.");
+            Logger.errorLog("CrazyAdvancementsAPI is not installed! Please install CrazyAdvancementsAPI or disable it in plugin config.yml. 2");
             return;
         }
         FamilyTree.loadAdvancementMap();

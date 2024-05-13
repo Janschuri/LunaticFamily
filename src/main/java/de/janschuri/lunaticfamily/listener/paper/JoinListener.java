@@ -10,14 +10,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class JoinListener implements Listener {
 
-    JoinEvent joinEvent = new JoinEvent();
-
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         PlayerSender playerCommandSender = new PlayerSender(event.getPlayer());
 
         if (LunaticFamily.getMode() == Mode.STANDALONE) {
-            joinEvent.execute(playerCommandSender);
+            new JoinEvent().execute(playerCommandSender);
         }
     }
 }
