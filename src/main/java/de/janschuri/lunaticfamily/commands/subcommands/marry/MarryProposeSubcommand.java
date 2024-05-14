@@ -45,7 +45,7 @@ public class MarryProposeSubcommand extends Subcommand {
             AbstractPlayerSender partner = AbstractSender.getPlayerSender(args[0]);
             UUID partnerUUID = partner.getUniqueId();
 
-            if (!partner.exists())    {
+            if (!Utils.playerExists(partner))    {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[0]));
                 return true;
             }

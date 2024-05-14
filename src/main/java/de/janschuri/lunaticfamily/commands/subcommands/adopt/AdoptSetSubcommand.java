@@ -7,6 +7,7 @@ import de.janschuri.lunaticfamily.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
+import de.janschuri.lunaticlib.utils.ClickableDecisionMessage;
 
 import java.util.UUID;
 
@@ -24,6 +25,8 @@ public class AdoptSetSubcommand extends Subcommand {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             boolean force = false;
+            boolean confirm = false;
+            boolean cancel = false;
 
             if (args.length > 2) {
                 if (args[2].equalsIgnoreCase("force")) {
@@ -31,8 +34,22 @@ public class AdoptSetSubcommand extends Subcommand {
                 }
             }
 
+            if (args.length > 3) {
+                if (args[3].equalsIgnoreCase("confirm")) {
+                    confirm = true;
+                }
+                if (args[3].equalsIgnoreCase("cancel")) {
+                    cancel = true;
+                }
+            }
+
             if (args.length < 2) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
+                return true;
+            }
+
+            if (cancel) {
+                sender.sendMessage(language.getPrefix() + language.getMessage("admin_adopt_set_cancel").replace("%parent%", args[0]).replace("%child%", args[1]));
                 return true;
             }
 
@@ -45,7 +62,6 @@ public class AdoptSetSubcommand extends Subcommand {
                 firstParentUUID = UUID.fromString(args[0]);
                 firstParent = AbstractSender.getPlayerSender(firstParentUUID);
             } else {
-                force = false;
                 firstParent = AbstractSender.getPlayerSender(args[0]);
                 firstParentUUID = firstParent.getUniqueId();
             }
@@ -53,15 +69,14 @@ public class AdoptSetSubcommand extends Subcommand {
                 childUUID = UUID.fromString(args[1]);
                 child = AbstractSender.getPlayerSender(childUUID);
             } else {
-                force = false;
                 child = AbstractSender.getPlayerSender(args[1]);
                 childUUID = child.getUniqueId();
             }
 
 
-            if (!firstParent.exists() && !force) {
+            if (!Utils.playerExists(firstParent) && !force) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[0]));
-            } else if (!child.exists() && !force) {
+            } else if (!Utils.playerExists(child) && !force) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[1]));
             } else if (args[0].equalsIgnoreCase(args[1])) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("admin_adopt_set_same_player"));
@@ -70,14 +85,26 @@ public class AdoptSetSubcommand extends Subcommand {
                 FamilyPlayer firstParentFam = new FamilyPlayer(firstParentUUID);
                 FamilyPlayer childFam = new FamilyPlayer(childUUID);
 
+                if (firstParentFam.isFamilyMember(childFam.getID())) {
+                    sender.sendMessage(language.getPrefix() + language.getMessage("admin_already_family").replace("%player1%", firstParentFam.getName()).replace("%player2%", child.getName()));
+                    return true;
+                }
+
                 if (!firstParentFam.isMarried() && !PluginConfig.isAllowSingleAdopt()) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("admin_adopt_set_no_single_adopt").replace("%player%", firstParentFam.getName()));
                 } else if (childFam.isAdopted()) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("admin_adopt_set_already_adopted").replace("%child%", childFam.getName()));
                 } else if (firstParentFam.getChildrenAmount() > 1) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("admin_adopt_limit").replace("%player%", firstParentFam.getName()));
-                } else if (childFam.hasSibling()) {
-                    sender.sendMessage(language.getPrefix() + language.getMessage("admin_adopt_set_has_sibling").replace("%player%", childFam.getName()));
+                } else if (childFam.hasSibling() && !confirm) {
+
+                    sender.sendMessage(new ClickableDecisionMessage(
+                            language.getPrefix() + language.getMessage("admin_adopt_set_has_sibling").replace("%player%", childFam.getName()),
+                            language.getMessage("confirm"),
+                            "/family adopt set " + firstParentFam.getName() + " " + childFam.getName() + " force confirm",
+                            language.getMessage("cancel"),
+                            "/family adopt set " + firstParentFam.getName() + " " + child.getName() + "force cancel"));
+
                 } else if (childFam.hasSibling() && firstParentFam.getChildrenAmount() > 0) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("admin_adopt_set_has_sibling_limit").replace("%player1%", childFam.getName()).replace("%player2%", firstParentFam.getName()));
                 } else {

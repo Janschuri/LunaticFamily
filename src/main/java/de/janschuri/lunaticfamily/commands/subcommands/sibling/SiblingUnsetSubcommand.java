@@ -40,7 +40,7 @@ public class SiblingUnsetSubcommand extends Subcommand {
             }
             FamilyPlayer player1Fam = new FamilyPlayer(player1UUID);
 
-            if (!player1.exists()) {
+            if (!Utils.playerExists(player1)) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", player1.getName()));
             } else {
 

@@ -43,7 +43,7 @@ public class MarryPriestSubcommand extends Subcommand {
                 AbstractPlayerSender player1 = AbstractSender.getPlayerSender(args[0]);
                 AbstractPlayerSender player2 = AbstractSender.getPlayerSender(args[1]);
 
-                if (!player1.exists()) {
+                if (!Utils.playerExists(player1)) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", player1.getName()));
                     return true;
                 }
@@ -58,7 +58,7 @@ public class MarryPriestSubcommand extends Subcommand {
                     return true;
                 }
 
-                if (!player2.exists()) {
+                if (!Utils.playerExists(player2)) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", player2.getName()));
                     return true;
                 }

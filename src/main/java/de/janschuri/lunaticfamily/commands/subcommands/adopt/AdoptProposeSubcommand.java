@@ -60,7 +60,7 @@ public class AdoptProposeSubcommand extends Subcommand {
 
             AbstractPlayerSender child = AbstractSender.getPlayerSender(args[0]);
 
-            if (!child.exists()) {
+            if (!Utils.playerExists(child)) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[0]));
                 return true;
             }

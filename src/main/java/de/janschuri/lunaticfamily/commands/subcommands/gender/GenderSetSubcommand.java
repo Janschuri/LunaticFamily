@@ -80,7 +80,7 @@ public class GenderSetSubcommand extends Subcommand {
                 player1UUID = player1.getUniqueId();
             }
 
-            if (!player1.exists()) {
+            if (!Utils.playerExists(player1)) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[0]));
                 return true;
             }

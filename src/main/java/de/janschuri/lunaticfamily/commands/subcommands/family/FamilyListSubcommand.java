@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticfamily.config.Language;
 import de.janschuri.lunaticfamily.config.PluginConfig;
 import de.janschuri.lunaticfamily.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 
@@ -60,7 +61,7 @@ public class FamilyListSubcommand extends Subcommand {
                 UUID player1UUID = player1.getUniqueId();
                 if (!sender.hasPermission("lunaticFamily.family.list.others")) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
-                } else if (!player1.exists()) {
+                } else if (!Utils.playerExists(player1)) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[0]));
                 } else {
                     FamilyPlayer player1Fam = new FamilyPlayer(player1UUID);

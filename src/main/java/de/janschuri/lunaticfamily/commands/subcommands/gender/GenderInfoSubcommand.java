@@ -3,6 +3,7 @@ package de.janschuri.lunaticfamily.commands.subcommands.gender;
 import de.janschuri.lunaticfamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticfamily.config.Language;
 import de.janschuri.lunaticfamily.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 
@@ -34,7 +35,7 @@ public class GenderInfoSubcommand extends Subcommand {
             return true;
         }
         AbstractPlayerSender player1 = (AbstractPlayerSender) sender;
-        if (!player1.exists()) {
+        if (!Utils.playerExists(player1)) {
             sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[0]));
             return true;
         }

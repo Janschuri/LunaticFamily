@@ -3,6 +3,7 @@ package de.janschuri.lunaticfamily.utils;
 import de.janschuri.lunaticfamily.LunaticFamily;
 import de.janschuri.lunaticfamily.PaperLunaticFamily;
 import de.janschuri.lunaticfamily.config.PluginConfig;
+import de.janschuri.lunaticfamily.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.futurerequests.SpawnParticlesCloudRequest;
 import de.janschuri.lunaticfamily.futurerequests.UpdateFamilyTreeRequest;
 import de.janschuri.lunaticfamily.handler.FamilyTree;
@@ -90,5 +91,12 @@ public abstract class Utils extends de.janschuri.lunaticlib.utils.Utils {
                 FamilyTree.updateFamilyTree(id);
             }
         }
+    }
+
+    public static boolean playerExists(AbstractPlayerSender sender) {
+        if (PlayerDataTable.getID(sender.getUniqueId()) == 0) {
+            return sender.exists();
+        }
+        return true;
     }
 }

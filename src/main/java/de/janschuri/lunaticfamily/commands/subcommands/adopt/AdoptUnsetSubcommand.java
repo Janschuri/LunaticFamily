@@ -36,7 +36,7 @@ public class AdoptUnsetSubcommand extends Subcommand {
                 childUUID = child.getUniqueId();
             }
 
-            if (!child.exists()) {
+            if (!Utils.playerExists(child)) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[0]));
             } else {
 

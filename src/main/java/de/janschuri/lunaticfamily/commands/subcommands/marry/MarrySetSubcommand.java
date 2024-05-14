@@ -63,9 +63,9 @@ public class MarrySetSubcommand extends Subcommand {
 
 
 
-            if (!player1.exists() && !force) {
+            if (!Utils.playerExists(player1) && !force) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[0]));
-            } else if (!player2.exists() && !force) {
+            } else if (!Utils.playerExists(player2) && !force) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[1]));
             } else if (args[0].equalsIgnoreCase(args[1])) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("admin_marry_set_same_player"));
@@ -74,6 +74,11 @@ public class MarrySetSubcommand extends Subcommand {
 
                 FamilyPlayer player2Fam = new FamilyPlayer(player2UUID);
                 FamilyPlayer player1Fam = new FamilyPlayer(player1UUID);
+
+                if (player1Fam.isFamilyMember(player2Fam.getID())) {
+                    sender.sendMessage(language.getPrefix() + language.getMessage("admin_already_family").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
+                    return true;
+                }
 
                 if (player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() > 2) {
                     int amountDiff = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() - 2;

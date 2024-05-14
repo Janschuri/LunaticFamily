@@ -335,10 +335,11 @@ public class FamilyPlayer {
         }
 
         if (childFam.hasSibling()) {
-            playerFam.adopt(childID);
+            FamilyPlayer siblingFam = childFam.getSibling();
+            playerFam.saveAdoption(siblingFam.getID());
             if (playerFam.isMarried()) {
                 FamilyPlayer partnerFam = playerFam.getPartner();
-                partnerFam.saveAdoption(childID);
+                partnerFam.saveAdoption(siblingFam.getID());
             }
         }
 

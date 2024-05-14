@@ -45,7 +45,6 @@ public class SiblingSetSubcommand extends Subcommand {
                 player1UUID = UUID.fromString(args[0]);
                 player1 = AbstractSender.getPlayerSender(player1UUID);
             } else {
-                forced = false;
                 player1 = AbstractSender.getPlayerSender(args[0]);
                 player1UUID = player1.getUniqueId();
             }
@@ -53,16 +52,20 @@ public class SiblingSetSubcommand extends Subcommand {
                 player2UUID = UUID.fromString(args[1]);
                 player2 = AbstractSender.getPlayerSender(player2UUID);
             } else {
-                forced = false;
                 player2 = AbstractSender.getPlayerSender(args[1]);
                 player2UUID = player2.getUniqueId();
             }
             FamilyPlayer player1Fam = new FamilyPlayer(player1UUID);
             FamilyPlayer player2Fam = new FamilyPlayer(player2UUID);
 
-            if (!player1.exists() && !forced) {
+            if (player1Fam.isFamilyMember(player2Fam.getID())) {
+                sender.sendMessage(language.getPrefix() + language.getMessage("admin_already_family").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
+                return true;
+            }
+
+            if (!Utils.playerExists(player1) && !forced) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[0]));
-            } else if (!player2.exists() && !forced) {
+            } else if (!Utils.playerExists(player2) && !forced) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("player_not_exist").replace("%player%", args[1]));
             } else if (args[0].equalsIgnoreCase(args[1])) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("admin_marry_set_same_player"));

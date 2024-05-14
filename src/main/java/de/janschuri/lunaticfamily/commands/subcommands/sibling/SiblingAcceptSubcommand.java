@@ -41,7 +41,7 @@ public class SiblingAcceptSubcommand extends Subcommand {
                     sender.sendMessage(language.getPrefix() + language.getMessage("marry_accept_too_many_children").replace("%partner%", siblingFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
                     return true;
                 }
-                if (sibling.isOnline()) {
+                if (!sibling.isOnline()) {
                     sender.sendMessage(language.getPrefix() + language.getMessage("player_offline").replace("%player%", siblingFam.getName()));
                     return true;
                 }
