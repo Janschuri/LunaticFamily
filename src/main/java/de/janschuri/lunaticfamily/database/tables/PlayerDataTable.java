@@ -1,6 +1,7 @@
 package de.janschuri.lunaticfamily.database.tables;
 
 import de.janschuri.lunaticfamily.database.Database;
+import de.janschuri.lunaticfamily.utils.Logger;
 import de.janschuri.lunaticlib.database.Datatype;
 import de.janschuri.lunaticlib.database.Error;
 import de.janschuri.lunaticlib.database.Table;
@@ -44,7 +45,8 @@ public class PlayerDataTable {
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE uuid = '" + uuid.toString() + "';");
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE uuid = ?;");
+            ps.setString(1, uuid.toString());
 
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -73,13 +75,16 @@ public class PlayerDataTable {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+        Logger.debugLog("ID: " + id);
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE id = '" + id + "';");
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE id = ?;");
+            ps.setInt(1, id);
 
             rs = ps.executeQuery();
             while (rs.next()) {
                 if (rs.getInt("id") == id) {
+                    Logger.debugLog("UUID: " + rs.getString("uuid"));
                     return UUID.fromString(rs.getString("uuid"));
                 }
             }
@@ -106,7 +111,8 @@ public class PlayerDataTable {
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE id = '" + id + "';");
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE id = ?;");
+            ps.setInt(1, id);
 
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -169,7 +175,8 @@ public class PlayerDataTable {
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE id = '" + id + "';");
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE id = ?;");
+            ps.setInt(1, id);
 
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -200,7 +207,8 @@ public class PlayerDataTable {
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE id = '" + id + "';");
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE id = ?;");
+            ps.setInt(1, id);
 
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -231,7 +239,8 @@ public class PlayerDataTable {
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE id = '" + id + "';");
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE id = ?;");
+            ps.setInt(1, id);
 
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -261,7 +270,7 @@ public class PlayerDataTable {
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("UPDATE `" + NAME + "` SET uuid=?, name=?, skinURL=?, gender=?, background=? WHERE id=?");
+            ps = conn.prepareStatement("UPDATE `" + NAME + "` SET uuid = ?, name = ?, skinURL = ?, gender = ?, background = ? WHERE id = ?");
             ps.setString(1, uuid);
             ps.setString(2, name);
             ps.setString(3, skinURL);

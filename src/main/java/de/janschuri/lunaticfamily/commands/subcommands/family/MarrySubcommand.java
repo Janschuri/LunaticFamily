@@ -43,7 +43,7 @@ public class MarrySubcommand extends Subcommand {
                         return sc.execute(sender, newArgs);
                     }
                 }
-                sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
+                sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage") + 1);
             }
         }
         return true;

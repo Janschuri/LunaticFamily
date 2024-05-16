@@ -306,7 +306,7 @@ aliases:
     propose:
       - propose
     priest:
-      - propose
+      - priest
     accept:
       - accept
     deny:

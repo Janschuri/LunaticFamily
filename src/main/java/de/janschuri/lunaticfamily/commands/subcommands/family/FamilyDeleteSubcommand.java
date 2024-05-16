@@ -2,6 +2,7 @@ package de.janschuri.lunaticfamily.commands.subcommands.family;
 
 import de.janschuri.lunaticfamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticfamily.database.tables.PlayerDataTable;
+import de.janschuri.lunaticfamily.utils.Logger;
 import de.janschuri.lunaticfamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 
@@ -21,6 +22,7 @@ public class FamilyDeleteSubcommand extends Subcommand {
         } else {
             if (args.length < 1) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
+                Logger.debugLog("FamilyDeleteSubcommand: Wrong usage");
                 return true;
             }
 

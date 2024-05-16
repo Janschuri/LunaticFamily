@@ -25,7 +25,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "lunaticfamily",
         name = "LunaticFamily",
-        version = "1.0.4",
+        version = "1.0.5",
         authors = "janschuri",
         dependencies = {
         @Dependency(id = "lunaticlib", optional = true)

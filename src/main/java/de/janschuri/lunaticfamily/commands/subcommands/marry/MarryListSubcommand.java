@@ -3,6 +3,7 @@ package de.janschuri.lunaticfamily.commands.subcommands.marry;
 import de.janschuri.lunaticfamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticfamily.database.tables.MarriagesTable;
 import de.janschuri.lunaticfamily.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.utils.Logger;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 import de.janschuri.lunaticlib.utils.ClickableMessage;
 
@@ -35,6 +36,7 @@ public class MarryListSubcommand extends Subcommand {
             List<ClickableMessage> msg = new ArrayList<>();
             msg.add(new ClickableMessage(language.getPrefix() + language.getMessage("marry_list") + "\n"));
             int index = 1 + (10*(page-1));
+            Logger.debugLog("MarryList: " + marryList.toString());
             for (Integer e : marryList) {
                 FamilyPlayer player1Fam = new FamilyPlayer(e);
                 FamilyPlayer player2Fam = new FamilyPlayer(player1Fam.getPartner().getID());

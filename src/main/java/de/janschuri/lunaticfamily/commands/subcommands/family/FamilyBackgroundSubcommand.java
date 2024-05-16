@@ -26,7 +26,7 @@ public class FamilyBackgroundSubcommand extends Subcommand {
             sender.sendMessage(language.getPrefix() + language.getMessage("family_background_help"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
-            FamilyPlayer playerFam = new FamilyPlayer(player.getUniqueId().toString());
+            FamilyPlayer playerFam = new FamilyPlayer(player.getUniqueId());
 
             playerFam.setBackground(args[0]);
             sender.sendMessage(language.getPrefix() + language.getMessage("family_background_set"));

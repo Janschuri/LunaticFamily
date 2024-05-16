@@ -2,6 +2,7 @@ package de.janschuri.lunaticfamily.commands.subcommands.marry;
 
 import de.janschuri.lunaticfamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticfamily.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.utils.Logger;
 import de.janschuri.lunaticfamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
@@ -23,6 +24,7 @@ public class MarryUnsetSubcommand extends Subcommand {
         } else {
             if (args.length < 1) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
+                Logger.debugLog("MarryUnsetSubcommand: Wrong usage");
             }
 
             UUID player1UUID;

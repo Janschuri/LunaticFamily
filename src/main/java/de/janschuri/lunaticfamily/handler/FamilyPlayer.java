@@ -13,10 +13,7 @@ import de.janschuri.lunaticlib.senders.AbstractSender;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class FamilyPlayer {
 
@@ -40,15 +37,10 @@ public class FamilyPlayer {
 
 
     public FamilyPlayer(int id) {
-        this(PlayerDataTable.getUUID(id));
-    }
-
-    public FamilyPlayer(String uuid) {
-        this(UUID.fromString(uuid));
+        this(Objects.requireNonNull(PlayerDataTable.getUUID(id)));
     }
 
     public FamilyPlayer(UUID uuid) {
-
         this.uuid = uuid;
 
         player = AbstractSender.getPlayerSender(uuid);

@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticfamily.config.Language;
 import de.janschuri.lunaticfamily.config.PluginConfig;
 import de.janschuri.lunaticfamily.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.utils.Logger;
 import de.janschuri.lunaticfamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
@@ -11,6 +12,7 @@ import de.janschuri.lunaticlib.utils.ClickableMessage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MarryHeartSubcommand extends Subcommand {
     private static final String MAIN_COMMAND = "marry";
@@ -27,11 +29,12 @@ public class MarryHeartSubcommand extends Subcommand {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
-            String playerUUID = player.getUniqueId().toString();
+            UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
 
             if (args.length < 1) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
+                Logger.debugLog("MarryHeartSubcommand: Wrong usage");
             } else if (!Language.isColorLang(args[0]) && !Utils.isValidHexCode(args[0])) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("marry_heart_no_color"));
             } else {

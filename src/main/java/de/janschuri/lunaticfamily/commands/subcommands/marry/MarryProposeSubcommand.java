@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.LunaticFamily;
 import de.janschuri.lunaticfamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticfamily.config.PluginConfig;
 import de.janschuri.lunaticfamily.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.utils.Logger;
 import de.janschuri.lunaticfamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
@@ -33,6 +34,7 @@ public class MarryProposeSubcommand extends Subcommand {
 
             if (args.length < 1) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
+                Logger.debugLog("MarryProposeSubcommand: Wrong usage");
                 return true;
             } else if (playerFam.getName().equalsIgnoreCase(args[0])) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("marry_propose_self_request"));
@@ -104,8 +106,8 @@ public class MarryProposeSubcommand extends Subcommand {
                     Runnable runnable = () -> {
                         if (LunaticFamily.marryRequests.containsKey(partnerUUID)) {
                             LunaticFamily.marryRequests.remove(partnerUUID);
-                            player.sendMessage(language.getPrefix() + language.getMessage("marry_propose_request_sent_expired").replace("%player%", player.getName()));
-                            partner.sendMessage(language.getPrefix() + language.getMessage("marry_propose_request_expired").replace("%player%", partner.getName()));
+                            player.sendMessage(language.getPrefix() + language.getMessage("marry_propose_request_sent_expired").replace("%player%", partner.getName()));
+                            partner.sendMessage(language.getPrefix() + language.getMessage("marry_propose_request_expired").replace("%player%", player.getName()));
                         }
                     };
 

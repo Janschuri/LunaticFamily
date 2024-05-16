@@ -3,6 +3,7 @@ package de.janschuri.lunaticfamily.commands.subcommands.marry;
 import de.janschuri.lunaticfamily.LunaticFamily;
 import de.janschuri.lunaticfamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticfamily.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.utils.Logger;
 import de.janschuri.lunaticfamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
@@ -32,12 +33,14 @@ public class MarrySetSubcommand extends Subcommand {
 
             if (args.length < 1) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
+                Logger.debugLog("MarrySetSubcommand: Wrong usage");
                 return true;
             } else if (args[0].equalsIgnoreCase("deny")) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("admin_marry_set_denied"));
                 return true;
             } else if (args.length < 2) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
+                Logger.debugLog("MarrySetSubcommand: Wrong usage");
                 return true;
             }
 

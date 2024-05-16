@@ -5,6 +5,8 @@ import de.janschuri.lunaticfamily.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 
+import java.util.UUID;
+
 public class FamilyTreeSubcommand extends Subcommand {
     private static final String MAIN_COMMAND = "family";
     private static final String NAME = "tree";
@@ -22,7 +24,7 @@ public class FamilyTreeSubcommand extends Subcommand {
             sender.sendMessage(language.getPrefix() + language.getMessage("no_permission"));
         } else {
             AbstractPlayerSender player = (AbstractPlayerSender) sender;
-            String playerUUID = player.getUniqueId().toString();
+            UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = new FamilyPlayer(playerUUID);
             playerFam.updateFamilyTree();
             player.sendMessage(language.getPrefix() + language.getMessage("family_tree_reloaded"));

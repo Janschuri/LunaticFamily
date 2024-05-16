@@ -32,7 +32,7 @@ public class FamilyListSubcommand extends Subcommand {
                 sender.sendMessage(language.getPrefix() + language.getMessage("no_console_command"));
             } else if (args.length == 0) {
                 AbstractPlayerSender player = (AbstractPlayerSender) sender;
-                String uuid = player.getUniqueId().toString();
+                UUID uuid = player.getUniqueId();
                 FamilyPlayer playerFam = new FamilyPlayer(uuid);
 
                 playerFam.updateFamilyTree();

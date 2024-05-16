@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.LunaticFamily;
 import de.janschuri.lunaticfamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticfamily.config.PluginConfig;
 import de.janschuri.lunaticfamily.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.utils.Logger;
 import de.janschuri.lunaticfamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
@@ -46,6 +47,7 @@ public class AdoptProposeSubcommand extends Subcommand {
 
             if (args.length < 1) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
+                Logger.debugLog("AdoptProposeSubcommand: Wrong usage");
                 return true;
             } else if (cancel) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("adopt_propose_cancel").replace("%player%", args[2]));

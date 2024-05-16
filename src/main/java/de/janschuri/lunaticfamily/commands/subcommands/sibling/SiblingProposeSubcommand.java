@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.LunaticFamily;
 import de.janschuri.lunaticfamily.commands.subcommands.Subcommand;
 import de.janschuri.lunaticfamily.config.PluginConfig;
 import de.janschuri.lunaticfamily.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.utils.Logger;
 import de.janschuri.lunaticfamily.utils.Utils;
 import de.janschuri.lunaticlib.senders.AbstractPlayerSender;
 import de.janschuri.lunaticlib.senders.AbstractSender;
@@ -39,6 +40,7 @@ public class SiblingProposeSubcommand extends Subcommand {
                 return true;
             } else if (args.length < 1) {
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
+                Logger.debugLog("SiblingProposeSubcommand: Wrong usage");
                 return true;
             }
 

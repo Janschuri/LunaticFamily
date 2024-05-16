@@ -1,6 +1,7 @@
 package de.janschuri.lunaticfamily.commands.subcommands.family;
 
 import de.janschuri.lunaticfamily.commands.subcommands.Subcommand;
+import de.janschuri.lunaticfamily.utils.Logger;
 import de.janschuri.lunaticlib.commands.AbstractSubcommand;
 import de.janschuri.lunaticlib.senders.AbstractSender;
 
@@ -41,6 +42,7 @@ public class FamilySubcommand extends Subcommand {
                     }
                 }
                 sender.sendMessage(language.getPrefix() + language.getMessage("wrong_usage"));
+                Logger.debugLog("FamilySubcommand: Wrong usage");
             }
         }
         return true;
