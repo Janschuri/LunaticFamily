@@ -30,7 +30,7 @@ public class PaperLunaticFamily extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        LunaticFamily.platform = Platform.PAPER;
+        LunaticFamily.platform = Platform.BUKKIT;
         instance = this;
         LunaticFamily.registerRequests();
         LunaticFamily.setDataDirectory(getDataFolder().toPath());

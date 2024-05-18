@@ -117,7 +117,7 @@ public final class LunaticFamily {
             case VELOCITY:
                 VelocityLunaticFamily.registerCommands();
                 break;
-            case PAPER:
+            case BUKKIT:
                 PaperLunaticFamily.registerCommands();
                 break;
             case BUNGEE:

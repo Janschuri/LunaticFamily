@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.listener.paper;
 
 import de.janschuri.lunaticfamily.LunaticFamily;
 import de.janschuri.lunaticfamily.listener.JoinEvent;
-import de.janschuri.lunaticlib.senders.paper.PlayerSender;
+import de.janschuri.lunaticlib.senders.bukkit.PlayerSender;
 import de.janschuri.lunaticlib.utils.Mode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
