@@ -1,0 +1,63 @@
+name: LunaticFamily
+version: '${project.version}'
+main: de.janschuri.lunaticfamily.platform.bukkit.BukkitLunaticFamily
+api-version: '1.20'
+author: Janschuri
+description: A plugin that allows you to create a family tree.
+softdepend:
+  - LunaticLib
+  - CrazyAdvancementAPI
+  - Vault
+commands:
+  family:
+    description: Get information about your family.
+    permission: lunaticfamily.family
+  marry:
+    description: Get married.
+    permission: lunaticfamily.marry
+  adopt:
+    description: Adopt a child.
+    permission: lunaticfamily.adopt
+  gender:
+    description: Change your gender.
+    permission: lunaticfamily.gender
+  sibling:
+    description: Get yourself a sibling without having parents.
+    permission: lunaticfamily.sibling
+permissions:
+  lunaticfamily.adopt:
+    description: Use /adopt
+  lunaticfamily.marry:
+    description: Use /marry
+  lunaticfamily.sibling:
+    description: Use /marry
+  lunaticfamily.gender:
+    description: Use /gender
+  lunaticfamily.family:
+    description: Use /family
+  lunaticfamily.family.background:
+    description: Use /family background
+  lunaticfamily.marry.priest:
+    description: Use /marry priest
+  lunaticfamily.marry.gift:
+    description: Use /marry gift
+  lunaticfamily.marry.heart:
+    description: Use /marry heart
+  lunaticfamily.marry.heart.color.*:
+    description: Use /marry heart <color>
+  lunaticfamily.marry.heart.hex:
+    description: Use /marry heart <hex>
+  lunaticfamily.family.list:
+    description: Use /family list
+  lunaticfamily.family.list.others:
+    description: Use /family list <player>
+  lunaticfamily.admin.adopt:
+    description: Use adopt admin commands
+  lunaticfamily.admin.marry:
+    description: Use marry admin commands
+  lunaticfamily.admin.sibling:
+    description: Use sibling admin commands
+  lunaticfamily.admin.gender:
+    description: Use gender admin commands
+  lunaticfamily.admin.reload:
+    description: Use reload command
