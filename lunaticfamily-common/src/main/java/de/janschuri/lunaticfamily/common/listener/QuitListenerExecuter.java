@@ -6,6 +6,7 @@ import de.janschuri.lunaticfamily.common.commands.family.MarrySubcommand;
 import de.janschuri.lunaticfamily.common.commands.marry.MarryDenySubcommand;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
@@ -24,6 +25,9 @@ public class QuitListenerExecuter {
 
 
     public static boolean execute(PlayerSender player) {
+
+        Logger.debugLog("QuitListenerExecuter: " + player.getName() + " quit");
+
         LanguageConfigImpl languageConfig = LunaticFamily.getLanguageConfig();
         UUID uuid = player.getUniqueId();
         FamilyPlayerImpl playerFam = new FamilyPlayerImpl(uuid);

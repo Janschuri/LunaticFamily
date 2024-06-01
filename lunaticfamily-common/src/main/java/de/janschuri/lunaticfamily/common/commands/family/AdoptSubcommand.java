@@ -40,7 +40,8 @@ public class AdoptSubcommand extends Subcommand {
                 new AdoptMoveoutSubcommand(),
                 new AdoptProposeSubcommand(),
                 new AdoptSetSubcommand(),
-                new AdoptUnsetSubcommand()
+                new AdoptUnsetSubcommand(),
+                getHelpCommand()
         );
     }
 
@@ -50,7 +51,7 @@ public class AdoptSubcommand extends Subcommand {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else {
             if (args.length == 0) {
-
+                getHelpCommand().execute(sender, args);
             } else {
                 final String subcommand = args[0];
 
@@ -61,7 +62,7 @@ public class AdoptSubcommand extends Subcommand {
                         return sc.execute(sender, newArgs);
                     }
                 }
-                sender.sendMessage(getMessage(NO_PERMISSION_MK));
+                sender.sendMessage(getMessage(WRONG_USAGE_MK));
                 Logger.debugLog("AdoptSubcommand: Wrong usage");
             }
         }
@@ -71,5 +72,10 @@ public class AdoptSubcommand extends Subcommand {
     @Override
     public boolean isPrimaryCommand() {
         return true;
+    }
+
+    @Override
+    public String getFullCommand() {
+        return new FamilySubcommand().getName() + " " + getName();
     }
 }

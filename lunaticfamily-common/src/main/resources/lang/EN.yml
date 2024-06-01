@@ -22,7 +22,7 @@ messages:
   player_name: "player"
   no_uuid: "%input% is not a valid UUID."
 help_header: "--- --- --- ---[%header%]--- --- --- ---"
-help_footer: "--- --- -[Seite %page%/%pages%]- --- ---"
+help_footer: "--- --- -[Page %page%/%pages%]- --- ---"
 commands:
   adopt:
     aliases:
@@ -147,6 +147,7 @@ commands:
           help_others: "&6%command% %subcommand% &b<%param%> &7- Show a list of all the family members of a player."
           header: "Your family:"
           others_header: "%player%'s family:"
+          relations: "&6%relation%: &b%player%"
       tree:
         aliases:
           - tree
@@ -259,7 +260,7 @@ commands:
           - divorce
         messages:
           help: "&6%command% %subcommand% &7- Get divorced."
-          no_partner: "You are not married! If you want to marry someone, please use /family marry propose <Name>"
+          no_partner: "You are not married!"
           divorced: "You are now divorced!"
           confirm: "Please confirm that you want to divorce."
           cancel: "You have cancelled the divorce!"
@@ -291,7 +292,7 @@ commands:
           color: "color"
       list:
         aliases:
-          - set
+          - list
         messages:
           help: "&6%command% %subcommand% &7- List all married couples."
           header: "All married couples on this server: "

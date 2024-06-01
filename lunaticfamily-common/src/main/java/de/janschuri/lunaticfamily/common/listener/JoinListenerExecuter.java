@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.family.MarrySubcommand;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
@@ -19,7 +20,10 @@ public class JoinListenerExecuter {
 
     public static boolean execute(PlayerSender sender) {
 
+        Logger.debugLog("JoinListenerExecuter: " + sender.getName() + " joined");
+
         if (!Utils.isPlayerOnRegisteredServer(sender.getUniqueId())) {
+            Logger.debugLog("JoinListenerExecuter: " + sender.getName() + " is not on a registered server");
             return true;
         }
 

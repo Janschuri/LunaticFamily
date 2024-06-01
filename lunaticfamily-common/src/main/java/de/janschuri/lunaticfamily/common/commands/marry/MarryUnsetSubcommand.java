@@ -8,7 +8,10 @@ import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
+import net.kyori.adventure.text.Component;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class MarryUnsetSubcommand extends Subcommand {
@@ -78,5 +81,15 @@ public class MarryUnsetSubcommand extends Subcommand {
                 }
         }
         return true;
+    }
+
+    @Override
+    public Component getParamsName() {
+        return getMessage(PLAYER_NAME_MK, false);
+    }
+
+    @Override
+    public List<Map<String, String>> getParams() {
+        return List.of(getOnlinePlayersParam());
     }
 }

@@ -94,6 +94,6 @@ public class MarryHeartSubcommand extends Subcommand {
 
     @Override
     public Component getParamsName() {
-        return getMessage(colorMK);
+        return getMessage(colorMK, false);
     }
 }

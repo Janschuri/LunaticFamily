@@ -143,10 +143,11 @@ commands:
         aliases:
           - list
         messages:
-          help: "&6/family list &7- Zeige eine Liste aller Familienmitglieder."
+          help: "&6%command% %subcommand% &7- Zeige eine Liste aller Familienmitglieder."
           help_others: "&6%command% %subcommand% &b<%param%> &7- Zeige eine Liste aller Familienmitglieder von einem Spieler."
           header: "Deine Familie:"
           others_header: "%player%'s Familie:"
+          relations: "&6%relation%: &b%player%"
       tree:
         aliases:
           - tree
@@ -291,7 +292,7 @@ commands:
           color: "Farbe"
       list:
         aliases:
-          - set
+          - list
         messages:
           help: "&6%command% %subcommand% <%param%> &7- Zeige alle Ehepaare auf diesem Server."
           header: "Alle Ehepaare auf diesem Server: "

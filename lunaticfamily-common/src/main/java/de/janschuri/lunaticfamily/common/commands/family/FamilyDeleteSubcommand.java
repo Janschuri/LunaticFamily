@@ -6,6 +6,7 @@ import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
+import net.kyori.adventure.text.Component;
 
 public class FamilyDeleteSubcommand extends Subcommand {
 
@@ -81,5 +82,10 @@ public class FamilyDeleteSubcommand extends Subcommand {
 
         }
         return true;
+    }
+
+    @Override
+    public Component getParamsName() {
+        return Component.text("UUID");
     }
 }

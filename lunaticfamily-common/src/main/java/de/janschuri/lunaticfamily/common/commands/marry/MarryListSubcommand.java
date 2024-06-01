@@ -13,6 +13,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 
 import java.util.List;
+import java.util.Map;
 
 public class MarryListSubcommand extends Subcommand {
 
@@ -72,7 +73,7 @@ public class MarryListSubcommand extends Subcommand {
                 TextReplacementConfig indexRpl = getTextReplacementConfig("%index%", String.valueOf(index));
                 TextReplacementConfig player1Rpl = getTextReplacementConfig("%player1%", player1Fam.getName());
                 TextReplacementConfig player2Rpl = getTextReplacementConfig("%player2%", player2Fam.getName());
-                TextReplacementConfig heartRpl = TextReplacementConfig.builder().match("%heart%").replacement(heart).build();
+                TextReplacementConfig heartRpl = TextReplacementConfig.builder().match("%emoji%").replacement(heart).build();
 
                 msg = msg.append(Component.newline())
                         .append(getMessage(pairsMK)
@@ -88,5 +89,15 @@ public class MarryListSubcommand extends Subcommand {
             sender.sendMessage(msg);
         }
         return true;
+    }
+
+    @Override
+    public Component getParamsName() {
+        return getMessage(PLAYER_NAME_MK, false);
+    }
+
+    @Override
+    public List<Map<String, String>> getParams() {
+        return List.of(getOnlinePlayersParam());
     }
 }

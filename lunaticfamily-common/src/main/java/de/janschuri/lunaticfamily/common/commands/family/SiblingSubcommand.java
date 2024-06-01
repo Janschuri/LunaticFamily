@@ -72,4 +72,9 @@ public class SiblingSubcommand extends Subcommand {
     public boolean isPrimaryCommand() {
         return true;
     }
+
+    @Override
+    public String getFullCommand() {
+        return new FamilySubcommand().getName() + " " + getName();
+    }
 }

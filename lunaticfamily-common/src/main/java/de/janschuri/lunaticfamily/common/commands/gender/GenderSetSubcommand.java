@@ -14,6 +14,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class GenderSetSubcommand extends Subcommand {
@@ -27,6 +30,7 @@ public class GenderSetSubcommand extends Subcommand {
     private final CommandMessageKey adminHelpMK = new CommandMessageKey(this,"admin_help");
     private final CommandMessageKey adminSetMK = new CommandMessageKey(this,"admin_set");
     private final CommandMessageKey adminAlreadyMK = new CommandMessageKey(this,"admin_already");
+    private final CommandMessageKey genderMK = new CommandMessageKey(this,"gender");
 
 
     @Override
@@ -133,5 +137,23 @@ public class GenderSetSubcommand extends Subcommand {
         }
         return true;
 
+    }
+
+    @Override
+    public Component getParamsName() {
+        return getMessage(genderMK);
+    }
+
+    @Override
+    public List<Map<String, String>> getParams() {
+        List<String> genders = LunaticFamily.getLanguageConfig().getGenders();
+
+        Map<String, String> genderParams = new HashMap<>();
+
+        for (String gender : genders) {
+            genderParams.put(gender, getPermission());
+        }
+
+        return List.of(genderParams);
     }
 }

@@ -7,6 +7,10 @@ import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentBuilder;
+import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +22,7 @@ public class FamilyListSubcommand extends Subcommand {
     private final CommandMessageKey helpOthersMK = new CommandMessageKey(this,"help_others");
     private final CommandMessageKey headerMK = new CommandMessageKey(this,"header");
     private final CommandMessageKey othersHeaderMK = new CommandMessageKey(this,"others_header");
+    private final CommandMessageKey relationsMK = new CommandMessageKey(this,"relations");
 
     @Override
     public String getPermission() {
@@ -59,7 +64,7 @@ public class FamilyListSubcommand extends Subcommand {
                 playerFam.updateFamilyTree();
 
                 Map<String, Integer> familyList = playerFam.getFamilyMap();
-                StringBuilder msg = new StringBuilder(getMessage(headerMK) + "\n");
+                ComponentBuilder msg = Component.text().append(getMessage(headerMK));
 
                 sender.sendMessage(getFamilyListMessage(list, familyList, msg));
             } else {
@@ -81,8 +86,9 @@ public class FamilyListSubcommand extends Subcommand {
 
                     FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
                     Map<String, Integer> familyList = player1Fam.getFamilyMap();
-                    StringBuilder msg = new StringBuilder(getMessage(othersHeaderMK)
-                            .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())) + "\n");
+                    ComponentBuilder msg = Component.text();
+                    msg.append(getMessage(othersHeaderMK)
+                            .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
 
                     sender.sendMessage(getFamilyListMessage(list, familyList, msg));
 
@@ -91,7 +97,18 @@ public class FamilyListSubcommand extends Subcommand {
         return true;
     }
 
-    private String getFamilyListMessage(List<String> list, Map<String, Integer> familyList, StringBuilder msg) {
+    @Override
+    public Component getParamsName() {
+        return getMessage(PLAYER_NAME_MK, false);
+    }
+
+    @Override
+    public List<Map<String, String>> getParams() {
+        return List.of(getOnlinePlayersParam());
+    }
+
+    private Component getFamilyListMessage(List<String> list, Map<String, Integer> familyList, ComponentBuilder msg) {
+
         for (String e : list) {
             if (familyList.containsKey(e)) {
                 int relationID = familyList.get(e);
@@ -104,9 +121,27 @@ public class FamilyListSubcommand extends Subcommand {
                         .replace("sixth_", "")
                         .replace("seventh_", "")
                         .replace("eighth_", "");
-                msg.append(getRelation(relationKey, relationFam.getGender())).append(": ").append(relationFam.getName()).append("\n");
+
+                Component relation = LegacyComponentSerializer.legacyAmpersand().deserialize(getRelation(relationKey, relationFam.getGender()));
+                Component name = Component.text(relationFam.getName());
+
+                TextReplacementConfig relationRpl = TextReplacementConfig.builder()
+                        .match("%relation%")
+                        .replacement(relation).build();
+
+                TextReplacementConfig nameRpl = TextReplacementConfig.builder()
+                        .match("%player%")
+                        .replacement(name).build();
+
+                Component component = getMessage(relationsMK)
+                        .replaceText(relationRpl)
+                        .replaceText(nameRpl);
+
+                msg.append(Component.newline())
+                        .append(component);
             }
         }
-        return msg.toString();
+
+        return msg.build();
     }
 }
