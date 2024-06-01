@@ -1,29 +1,45 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.family.MarrySubcommand;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
+import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
 
 import java.util.UUID;
 
 public class MarryUnsetSubcommand extends Subcommand {
-    private static final String MAIN_COMMAND = "marry";
-    private static final String NAME = "unset";
-    private static final String PERMISSION = "lunaticfamily.admin.marry";
 
-    public MarryUnsetSubcommand() {
-        super(MAIN_COMMAND, NAME, PERMISSION);
+    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
+    private final CommandMessageKey noPartnerMK = new CommandMessageKey(this,"no_partner");
+    private final CommandMessageKey divorcedMK = new CommandMessageKey(this,"divorced");
+
+
+    @Override
+    public String getPermission() {
+        return "lunaticfamily.admin.marry";
     }
+
+    @Override
+    public String getName() {
+        return "unset";
+    }
+
+    @Override
+    public MarrySubcommand getParentCommand() {
+        return new MarrySubcommand();
+    }
+
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(getPrefix() + getMessage("no_permission"));
+        if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else {
             if (args.length < 1) {
-                sender.sendMessage(getPrefix() + getMessage("wrong_usage"));
+                sender.sendMessage(getMessage(WRONG_USAGE_MK));
                 Logger.debugLog("MarryUnsetSubcommand: Wrong usage");
             }
 
@@ -34,14 +50,16 @@ public class MarryUnsetSubcommand extends Subcommand {
                 player1UUID = UUID.fromString(player1Arg);
 
                 if (PlayerDataTable.getID(player1UUID) < 0) {
-                    sender.sendMessage(getPrefix() + getMessage("player_not_exist").replace("%player%", player1Arg));
+                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                            .replaceText(getTextReplacementConfig("%player%", player1Arg)));
                     return true;
                 }
             } else {
                 player1UUID = PlayerDataTable.getUUID(player1Arg);
 
                 if (player1UUID == null) {
-                    sender.sendMessage(getPrefix() + getMessage("player_not_exist").replace("%player%", player1Arg));
+                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                            .replaceText(getTextReplacementConfig("%player%", player1Arg)));
                     return true;
                 }
             }
@@ -49,11 +67,14 @@ public class MarryUnsetSubcommand extends Subcommand {
                 FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
 
                 if (!player1Fam.isMarried()) {
-                    sender.sendMessage(getPrefix() + getMessage("admin_marry_unset_no_partner").replace("%player%", player1Fam.getName()));
+                    sender.sendMessage(getMessage(noPartnerMK)
+                            .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
                 } else {
                     FamilyPlayerImpl partnerFam = player1Fam.getPartner();
                     player1Fam.divorce();
-                    sender.sendMessage(getPrefix() + getMessage("admin_marry_unset_divorced").replace("%player1%", player1Fam.getName()).replace("%player2%", partnerFam.getName()));
+                    sender.sendMessage(getMessage(divorcedMK)
+                            .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
+                            .replaceText(getTextReplacementConfig("%player2%", partnerFam.getName())));
                 }
         }
         return true;

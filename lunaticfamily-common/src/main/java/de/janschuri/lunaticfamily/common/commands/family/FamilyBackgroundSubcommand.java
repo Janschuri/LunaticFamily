@@ -1,35 +1,47 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
-import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 
 public class FamilyBackgroundSubcommand extends Subcommand {
-    private static final String MAIN_COMMAND = "family";
-    private static final String NAME = "background";
-    private static final String PERMISSION = "lunaticfamily.family.background";
 
-    public FamilyBackgroundSubcommand() {
-        super(MAIN_COMMAND, NAME, PERMISSION, LunaticFamily.getConfig().getBackgrounds());
+    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
+    private final CommandMessageKey setMK = new CommandMessageKey(this,"set");
+
+
+    @Override
+    public String getPermission() {
+        return "lunaticfamily.family.background";
+    }
+
+    @Override
+    public String getName() {
+        return "background";
+    }
+
+    @Override
+    public FamilySubcommand getParentCommand() {
+        return new FamilySubcommand();
     }
 
     @Override
     public boolean execute(Sender sender, String[] args) {
 
         if (!(sender instanceof PlayerSender)) {
-            sender.sendMessage(getPrefix() + getMessage("no_console_command"));
-        } else if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(getPrefix() + getMessage("no_permission"));
+            sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
+        } else if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else if (args.length == 0) {
-            sender.sendMessage(getPrefix() + getMessage("family_background_help"));
+            sender.sendMessage(getMessage(helpMK));
         } else {
             PlayerSender player = (PlayerSender) sender;
             FamilyPlayerImpl playerFam = new FamilyPlayerImpl(player.getUniqueId());
 
             playerFam.setBackground(args[0]);
-            sender.sendMessage(getPrefix() + getMessage("family_background_set"));
+            sender.sendMessage(getMessage(setMK));
             playerFam.updateFamilyTree();
         }
         return true;

@@ -2,8 +2,11 @@ package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.family.SiblingSubcommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Utils;
+import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
+import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
@@ -11,58 +14,73 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 import java.util.UUID;
 
 public class SiblingAcceptSubcommand extends Subcommand {
-    private static final String MAIN_COMMAND = "sibling";
-    private static final String NAME = "accept";
-    private static final String PERMISSION = "lunaticfamily.sibling";
 
-    public SiblingAcceptSubcommand() {
-        super(MAIN_COMMAND, NAME, PERMISSION);
+    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
+    private final CommandMessageKey noRequestMK = new CommandMessageKey(this,"no_request");
+    private final CommandMessageKey completeMK = new CommandMessageKey(this,"complete");
+
+
+    @Override
+    public String getPermission() {
+        return "lunaticfamily.sibling";
     }
+
+    @Override
+    public String getName() {
+        return "accept";
+    }
+
+    @Override
+    public SiblingSubcommand getParentCommand() {
+        return new SiblingSubcommand();
+    }
+
     @Override
     public boolean execute(Sender sender, String[] args) {
         if (!(sender instanceof PlayerSender)) {
-            sender.sendMessage(getPrefix() + getMessage("no_console_command"));
-        } else if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(getPrefix() + getMessage("no_permission"));
+            sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
+        } else if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else {
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
 
             if (!LunaticFamily.siblingRequests.containsKey(playerUUID)) {
-                sender.sendMessage(getPrefix() + getMessage("sibling_accept_no_request"));
+                sender.sendMessage(getMessage(noRequestMK));
             } else {
                 UUID siblingUUID = LunaticFamily.siblingRequests.get(playerUUID);
                 PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
                 FamilyPlayerImpl siblingFam = new FamilyPlayerImpl(siblingUUID);
 
-                if (playerFam.getChildrenAmount() + siblingFam.getChildrenAmount() > 2) {
-                    int amountDiff = playerFam.getChildrenAmount() + siblingFam.getChildrenAmount() - 2;
-                    sender.sendMessage(getPrefix() + getMessage("marry_accept_too_many_children").replace("%partner%", siblingFam.getName()).replace("%amount%", Integer.toString(amountDiff)));
-                    return true;
-                }
                 if (!sibling.isOnline()) {
-                    sender.sendMessage(getPrefix() + getMessage("player_offline").replace("%player%", siblingFam.getName()));
+                    sender.sendMessage(getMessage(PLAYER_OFFLINE_MK)
+                            .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
                     return true;
                 }
 
                 if (!Utils.isPlayerOnRegisteredServer(sibling.getUniqueId())) {
-                    player.sendMessage(getPrefix() + getMessage("player_not_on_whitelisted_server").replace("%player%", sibling.getName().replace("%server%", sibling.getServerName())));
+                    player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
+                            .replaceText(getTextReplacementConfig("%player%", sibling.getName()))
+                            .replaceText(getTextReplacementConfig("%server%", sibling.getServerName())));
                     return true;
                 }
 
-                if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, "sibling_proposed_player")) {
-                    sender.sendMessage(getPrefix() + getMessage("not_enough_money"));
+                if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.SIBLING_PROPOSED_PLAYER)) {
+                    sender.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK));
                     return true;
                 }
-                if (!Utils.hasEnoughMoney(player.getServerName(), siblingUUID, "sibling_proposing_player")) {
-                    sender.sendMessage(getPrefix() + getMessage("player_not_enough_money").replace("%player%", siblingFam.getName()));
+                if (!Utils.hasEnoughMoney(player.getServerName(), siblingUUID, WithdrawKey.SIBLING_PROPOSING_PLAYER)) {
+                    sender.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
+                            .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
                     return true;
                 }
 
 
-                    sender.sendMessage(getPrefix() + getMessage("sibling_accept_complete").replace("%player%", siblingFam.getName()));
-                    sibling.sendMessage(getPrefix() + getMessage("sibling_accept_complete").replace("%player%", playerFam.getName()));
+                    sender.sendMessage(getMessage(completeMK)
+                            .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
+                    sibling.sendMessage(getMessage(completeMK)
+                            .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
 
                     LunaticFamily.siblingRequests.remove(playerUUID);
                     LunaticFamily.siblingRequests.remove(siblingUUID);
@@ -73,8 +91,8 @@ public class SiblingAcceptSubcommand extends Subcommand {
                         LunaticLib.getPlatform().sendConsoleCommand(command);
                     }
 
-                    Utils.withdrawMoney(player.getServerName(), playerUUID, "sibling_proposed_player");
-                    Utils.withdrawMoney(player.getServerName(), siblingUUID, "sibling_proposing_player");
+                    Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.SIBLING_PROPOSED_PLAYER);
+                    Utils.withdrawMoney(player.getServerName(), siblingUUID, WithdrawKey.MARRY_PROPOSING_PLAYER);
 
             }
         }

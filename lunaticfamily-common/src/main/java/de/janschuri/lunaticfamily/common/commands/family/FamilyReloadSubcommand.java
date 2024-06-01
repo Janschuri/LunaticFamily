@@ -2,24 +2,36 @@ package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
 
 public class FamilyReloadSubcommand extends Subcommand {
-    private static final String MAIN_COMMAND = "family";
-    private static final String NAME = "reload";
-    private static final String PERMISSION = "lunaticfamily.admin.reload";
 
-    public FamilyReloadSubcommand() {
-        super(MAIN_COMMAND, NAME, PERMISSION);
+    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
+    private final CommandMessageKey reloadedMK = new CommandMessageKey(this,"reloaded");
+
+    @Override
+    public String getPermission() {
+        return "lunaticfamily.admin.reload";
+    }
+
+    @Override
+    public String getName() {
+        return "reload";
+    }
+
+    @Override
+    public FamilySubcommand getParentCommand() {
+        return new FamilySubcommand();
     }
 
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(getPrefix() + getMessage("no_permission"));
+        if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else {
             LunaticFamily.loadConfig();
-            sender.sendMessage(getPrefix() + getMessage("admin_reload"));
+            sender.sendMessage(getMessage(reloadedMK));
         }
         return true;
     }

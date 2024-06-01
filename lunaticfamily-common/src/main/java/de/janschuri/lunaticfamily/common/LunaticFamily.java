@@ -3,7 +3,6 @@ package de.janschuri.lunaticfamily.common;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticfamily.Config;
-import de.janschuri.lunaticfamily.LanguageConfig;
 import de.janschuri.lunaticfamily.common.commands.family.*;
 import de.janschuri.lunaticfamily.common.config.ConfigImpl;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
@@ -28,7 +27,7 @@ public final class LunaticFamily {
     public static BiMap<UUID, UUID> siblingRequests = HashBiMap.create();
     public static boolean isDebug;
 
-    private static LanguageConfig languageConfig;
+    private static LanguageConfigImpl languageConfig;
     private static Config config;
 
     static final String[] commands = {
@@ -118,7 +117,7 @@ public final class LunaticFamily {
         LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new GenderSubcommand());
     }
 
-    public static LanguageConfig getLanguageConfig() {
+    public static LanguageConfigImpl getLanguageConfig() {
         return languageConfig;
     }
 

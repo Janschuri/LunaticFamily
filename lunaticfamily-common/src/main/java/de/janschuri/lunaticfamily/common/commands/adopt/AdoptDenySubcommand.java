@@ -2,7 +2,9 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.family.AdoptSubcommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
@@ -10,33 +12,47 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 import java.util.UUID;
 
 public class AdoptDenySubcommand extends Subcommand {
-    private static final String MAIN_COMMAND = "adopt";
-    private static final String NAME = "deny";
-    private static final String PERMISSION = "lunaticfamily.adopt";
 
-    public AdoptDenySubcommand() {
-        super(MAIN_COMMAND, NAME, PERMISSION);
+    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
+    private final CommandMessageKey denyMK = new CommandMessageKey(this,"deny");
+    private final CommandMessageKey deniedMK = new CommandMessageKey(this,"denied");
+    private final CommandMessageKey noRequestMK = new CommandMessageKey(this,"no_request");
+
+
+    @Override
+    public String getPermission() {
+        return "lunaticfamily.adopt";
+    }
+
+    @Override
+    public String getName() {
+        return "deny";
+    }
+
+    @Override
+    public AdoptSubcommand getParentCommand() {
+        return new AdoptSubcommand();
     }
 
     @Override
     public boolean execute(Sender sender, String[] args) {
         if (!(sender instanceof PlayerSender)) {
-            sender.sendMessage(getPrefix() + getMessage("no_console_command"));
-        } else if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(getPrefix() + getMessage("no_permission"));
+            sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
+        } else if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else {
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
 
             if (!LunaticFamily.adoptRequests.containsKey(playerUUID)) {
-                sender.sendMessage(getPrefix() + getMessage("adopt_deny_no_request"));
+                sender.sendMessage(getMessage(noRequestMK));
             } else {
                 UUID parentUUID = LunaticFamily.adoptRequests.get(playerUUID);
                 FamilyPlayerImpl parentFam = new FamilyPlayerImpl(parentUUID);
                 PlayerSender parent = LunaticLib.getPlatform().getPlayerSender(parentUUID);
-                parent.sendMessage(getPrefix() + getMessage("adopt_deny").replace("%player%", playerFam.getName()));
-                sender.sendMessage(getPrefix() + getMessage("adopt_denied").replace("%player%", parentFam.getName()));
+                parent.sendMessage(getMessage(denyMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+                sender.sendMessage(getMessage(deniedMK).replaceText(getTextReplacementConfig("%player%", parentFam.getName())));
                 LunaticFamily.adoptRequests.remove(playerUUID);
             }
         }

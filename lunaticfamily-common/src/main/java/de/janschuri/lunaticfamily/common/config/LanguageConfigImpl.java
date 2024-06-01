@@ -2,9 +2,8 @@ package de.janschuri.lunaticfamily.common.config;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import de.janschuri.lunaticfamily.LanguageConfig;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticlib.common.config.AbstractLanguageConfig;
+import de.janschuri.lunaticlib.common.config.LanguageConfig;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -12,14 +11,39 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LanguageConfigImpl extends AbstractLanguageConfig implements LanguageConfig {
+public class LanguageConfigImpl extends LanguageConfig {
     private Map<String, String> genderLang = new HashMap<>();
     private List<String> genders = new ArrayList<>();
     private Map<String, String> colorsTranslations = new HashMap<>();
     private final Map<String, Map<String, String>> relationships = new HashMap<>();
 
+    protected static final String NO_NUMBER = "no_number";
+    protected static final String WRONG_USAGE = "wrong_usage";
+    protected static final String PLAYER_NOT_EXIST = "player_not_exist";
+    protected static final String NOT_ENOUGH_MONEY = "not_enough_money";
+    protected static final String PLAYER_NOT_ENOUGH_MONEY = "player_not_enough_money";
+    protected static final String WITHDRAW = "withdraw";
+    protected static final String PLAYER_QUIT = "player_quit";
+    protected static final String NO_CONSOLE_COMMAND = "no_console_command";
+    protected static final String PLAYER_TOO_FAR_AWAY = "player_too_far_away";
+    protected static final String PLAYER_OFFLINE = "player_offline";
+    protected static final String PLAYER_NOT_SAME_SERVER = "player_not_same_server";
+    protected static final String NO_PERMISSION = "no_permission";
+    protected static final String DISABLED_FEATURE = "disabled_feature";
+    protected static final String TAKE_PAYMENT_CONFIRM = "take_payment_confirm";
+    protected static final String PLAYER_NOT_ON_WHITELISTED_SERVER = "player_not_on_whitelisted_server";
+    protected static final String YES = "yes";
+    protected static final String NO = "no";
+    protected static final String ACCEPT = "accept";
+    protected static final String DENY = "deny";
+    protected static final String CONFIRM = "confirm";
+    protected static final String CANCEL = "cancel";
+    protected static final String GENDER = "gender";
+    protected static final String PLAYER_NAME = "player_name";
+    protected static final String COLOR = "color";
+
     public LanguageConfigImpl(Path dataDirectory, String[] commands) {
-        super(dataDirectory, commands, LunaticFamily.getConfig().getLanguageKey());
+        super(dataDirectory, LunaticFamily.getConfig().getLanguageKey());
     }
 
     public void load() {

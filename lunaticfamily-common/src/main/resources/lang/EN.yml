@@ -1,6 +1,6 @@
 prefix: "&9[LunaticFamily]&r "
 messages:
-  #general messages
+  no_number: "%input% is not a full positive number."
   wrong_usage: "Incorrect usage of this command!"
   player_not_exist: "%player% does not exist."
   not_enough_money: "You don't have enough money to do that!"
@@ -15,213 +15,378 @@ messages:
   disabled_feature: "Disabled feature."
   take_payment_confirm: "Do you want to cover the entire cost?"
   player_not_on_whitelisted_server: "%player% is not on a server where LunaticFamily is enabled. (%server%)"
-  yes: "Yes"
-  no: "No"
   accept: "Accept"
   deny: "Deny"
   confirm: "Confirm"
   cancel: "Cancel"
-  #help messages
-  adopt_help: "---------Adopt-Help---------"
-  adopt_accept_help: "&6/adopt accept&r - Accept an adoption request."
-  adopt_deny_help: "&6/adopt deny&r - Deny an adoption request."
-  adopt_kickout_help: "&6/adopt kickout <playername>&r - Kick your child out of the family."
-  adopt_moveout_help: "&6/adopt moveout&r - Move out from home and leave your parents."
-  adopt_propose_help: "&6/adopt propose <playername>&r - Propose adoption to a player."
-  adopt_set_help: "&6/adopt set <playername> <playername>&r - Set the adoption of a child by a player."
-  adopt_unset_help: "&6/adopt unset <playername>&r - Unset the adoption of a child by a player."
-  family_help: "---------Family-Help---------"
-  family_adopt_help: "&6/adopt help&r - Show the help page for /adopt."
-  family_background_help: "&6/family background <texture>&r - Change the background of your family tree."
-  family_gender_help: "&6/gender help&r - Show the help page for /gender."
-  family_list_help: "&6/family list&r - Show a list of all your family members."
-  family_list_others_help: "&6/family list (playername)&r - Show a list of all the family members of a player."
-  family_marry_help: "&6/marry help&r - Show the help page for /marry."
-  family_reload_help: "&6/family reload&r - Reload the configuration."
-  family_delete_help: "&6/family delete <playername>&r - Delete a player from the database."
-  family_sibling_help: "&6/sibling help&r - Show the help page for /sibling."
-  family_tree_help: "&6/family tree&r - Update your family tree."
-  gender_help: "---------Gender-Help---------"
-  gender_set_help: "&6/gender set&r - Choose your gender."
-  gender_info_help: "&6/gender info&r - See what gender you have."
-  marry_help: "---------Marry-Help---------"
-  marry_accept_help: "&6/marry accept&r - Accept a marriage proposal."
-  marry_deny_help: "&6/marry deny&r - Deny a marriage proposal."
-  marry_divorce_help: "&6/marry divorce&r - Get divorced."
-  marry_gift_help: "&6/marry gift&r - Gift the item in your hand to your partner."
-  marry_kiss_help: "&6/marry kiss&r - Kiss your partner."
-  marry_list_help: "&6/marry list (page)&r - List all married couples."
-  marry_priest_help: "&6/marry priest <playername> <playername>&r - Marry two players."
-  marry_propose_help: "&6/marry propose <playername>&r - Propose marriage to a player."
-  marry_heart_help: "&6/marry heart <color>&r - Change the color of your heart in the marriage list."
-  marry_set_help: "&6/marry set <playername> <playername>&r - Set the marriage between a couple."
-  marry_unset_help: "&6/marry unset <playername>&r - Unset the marriage between a couple."
-  sibling_accept_help: "&6/sibling accept&r - Accept a sibling request."
-  sibling_deny_help: "&6/sibling deny&r - Deny a sibling request."
-  sibling_propose_help: "&6/sibling propose <playername>&r - Propose siblinghood to a player."
-  sibling_set_help: "&6/sibling set <playername>&r - Set the siblinghood between two players."
-  sibling_unset_help: "&6/sibling unset&r - Unset the siblinghood between two players."
-  sibling_unsibling_help: "&6/sibling unsibling&r - Un-sibling with your sibling."
-  #family command
-  family_list: "Your family:"
-  family_others_list: "%player%'s family:"
-  family_others_list_help: "%player%'s family:"
-  family_background_set: "Background has been reset."
-  family_tree_reloaded: "Your family tree has been reloaded."
-  #gender command
-  gender_set: "Choose your gender: "
-  gender_set_hover: "Set your gender to %gender%."
-  gender_changed: "You have changed your gender to %gender%."
-  gender_already: "Your gender is already %gender%."
-  gender_not_exist: "This gender does not exist."
-  gender_info: "Your gender is %gender%."
-  gender_info_others: "%player%'s gender is %gender%."
-  #marry command
-  marry_yes: "Yes, i do!"
-  marry_no: "No, i don't want to."
-  marry_partner_online: "Your partner is online."
-  marry_partner_offline: "Your partner is offline."
-  marry_propose_already_married: "You are already married to %player%."
-  marry_propose_player_already_married: "%player% is already married."
-  marry_propose_request: "%player1%, would you like to marry %player2% on this Minecraft server?"
-  marry_propose_request_sent: "You have proposed marriage to %player%."
-  marry_propose_request_expired: "The marriage proposal from %player% has expired."
-  marry_propose_request_sent_expired: "Your marriage proposal to %player% has expired."
-  marry_propose_open_request: "%player% already has an open proposal."
-  marry_propose_family_request: "You cannot marry %player%. This player already belongs to your family."
-  marry_propose_too_many_children: "You and %player% have more than two children together. You must remove %amount% children before you and %player% can marry."
-  marry_propose_self_request: "You cannot marry yourself!"
-  marry_priest_already_priest: "You are already marrying two players."
-  marry_priest_request: "%player1%, would you like to marry %player2% on this Minecraft server?"
-  marry_priest_player_already_married: "%player% is already married."
-  marry_priest_too_many_children: "%player1% and %player2% have more than 2 children together. %player1% and %player2% must remove %amount% children before they can marry."
-  marry_priest_self_request: "You cannot marry yourself!"
-  marry_priest_open_request: "%player% already has an open proposal."
-  marry_priest_complete: "You are married! You may now kiss!"
-  marry_priest_request_expired_priest: "The wedding between %player1% and %player2% has been canceled."
-  marry_priest_request_expired_player: "Your wedding with %player% has been canceled."
-  marry_accept_open_request_partner: "You must wait for your future partner's response!"
-  marry_accept_no_request: "You have no marriage proposal."
-  marry_accept_too_many_children: "%player1% and %player2% have more than 2 children together. %player1% and %player2% must remove %amount% children before they can marry."
-  marry_accept_complete: "You are married! You may now kiss!"
-  marry_accept_request: "%player1%, would you like to marry %player2% on this Minecraft server?"
-  marry_deny_no_request: "You have no marriage proposal."
-  marry_deny_denied: "Sorry, %player% does not want to marry you."
-  marry_deny_cancel: "The wedding has been canceled."
-  marry_divorce_no_partner: "You are not married! If you want to marry someone, please use /family marry propose <Name>"
-  marry_divorce_divorced: "You are now divorced!"
-  marry_divorce_confirm: "Please confirm that you want to divorce."
-  marry_divorce_cancel: "You have cancelled the divorce!"
-  marry_kiss_no_partner: "You are not married! If you want to marry someone, please use /family marry propose <Name>"
-  marry_gift_no_partner: "You are not married! If you want to marry someone, please use /family marry propose <Name>"
-  marry_gift_empty_hand: "You must be holding an item in your hand."
-  marry_gift_partner_full_inv: "Your partner has no space in their inventory."
-  marry_gift_sent: "You have gifted something to your partner."
-  marry_gift_got: "Your partner has gifted you something."
-  marry_heart_no_color: "You must specify a color."
-  marry_heart_color: "You have chosen the color %color%."
-  marry_list: "All married couples on this server: "
-  marry_list_no_number: "%input% is not a whole number!"
-  marry_list_emoji: "&4❤"
-  marry_list_pairs: "&6%index%: &b%player1% %emoji% &b%player2%"
-  #adopt command
-  adopt_propose_limit: "You cannot adopt another child. You have already reached the limit of two children."
-  adopt_propose_open_request: "%player% already has an open adoption request."
-  adopt_propose_request: "%player1% and %player2% would like to adopt you. Are you okay with it?"
-  adopt_propose_request_by_single: "%player% would like to adopt you. Are you okay with it?"
-  adopt_propose_request_sent: "You have offered adoption to %player%."
-  adopt_propose_request_expired: "The adoption request from %player1% and %player2% has expired."
-  adopt_propose_request_sent_expired: "The adoption request for %player% has expired."
-  adopt_propose_request_by_single_expired: "The adoption request from %player% has expired."
-  adopt_propose_self_request: "You cannot adopt yourself."
-  adopt_propose_has_sibling: "%playeer1% and %player2% are siblings. Would you like to adopt both?"
-  adopt_propose_has_sibling_limit: "%player1% and %player2% are siblings. You already have 1 child and can only have a total of 2 children."
-  adopt_propose_no_single_adopt: "You must be married to adopt a child."
-  adopt_propose_already_adopted: "%player% is already adopted."
-  adopt_propose_family_request: "You cannot adopt %player%. This player already belongs to your family."
-  adopt_propose_cancel: "You have canceled the adoption request to %player%."
-  adopt_accept_got_adopted: "You have been adopted by %player1% and %player2%!"
-  adopt_accept_adopted_by_single: "You have been adopted by %player%!"
-  adopt_accept_adopted: "You have adopted %player%."
-  adopt_accept_parent_limit: "%player% cannot adopt another child. %player% has already reached the limit of two children."
-  adopt_accept_no_request: "You have no adoption requests."
-  adopt_deny: "Sorry, %player% does not want to be adopted by you."
-  adopt_denied: "You have declined the adoption request from %player%."
-  adopt_deny_no_request: "You have no adoption requests."
-  adopt_moveout: "You have moved out. You are no longer adopted."
-  adopt_moveout_confirm: "Please confirm that you want to move out!"
-  adopt_moveout_child: "%player% has moved out. This player is no longer adopted by you."
-  adopt_moveout_no_parents: "You are not adopted."
-  adopt_moveout_sibling: "Your sibling has moved out. You are now an only child."
-  adopt_moveout_cancel: "You have canceled your move-out."
-  adopt_kickout_specify_child: "Please specify a child."
-  adopt_kickout: "You have kicked %player% out of the house. This player is no longer adopted by you."
-  adopt_kickout_child: "%player% has kicked you out of the house. You are no longer adopted."
-  adopt_kickout_sibling: "%player% has kicked out your sibling from the house. You are now an only child."
-  adopt_kickout_partner: "%player1% has kicked out %player2% from the house. %player2% is no longer adopted by you."
-  adopt_kickout_confirm: "Please confirm that you want to kick out %player%!"
-  adopt_kickout_not_your_child: "%player% is not your child."
-  adopt_kickout_no_child: "You have no child."
-  adopt_kickout_cancel: "You haven't kicked out %player% after all."
-  #sibling command
-  sibling_propose_has_sibling: "You already have a sibling."
-  sibling_propose_is_adopted: "You are adopted. Your parents can adopt a sibling for you."
-  sibling_propose_self_request: "You cannot be your own sibling."
-  sibling_propose_family_request: "%player% is already part of your family."
-  sibling_propose_sibling_is_adopted: "%player% is already adopted. Their parents can adopt you to become your sibling."
-  sibling_propose_open_request: "%player% already has an open sibling request."
-  sibling_propose_request: "%player% wants you to be their sibling. Are you okay with it?"
-  sibling_propose_request_sent: "You have offered to be siblings with %player%."
-  sibling_propose_request_expired: "The sibling request from %player% has expired."
-  sibling_propose_request_sent_expired: "The sibling request to %player% has expired."
-  sibling_accept_no_request: "You have no sibling request."
-  sibling_accept_complete: "You and %player% are now siblings!"
-  sibling_deny_no_request: "You have no sibling request."
-  sibling_propose_deny_denied: "You have denied the sibling request from %player%."
-  sibling_unsibling_no_sibling: "You have no sibling."
-  sibling_unsibling_adopted: "You cannot unsibling your sibling, cause you an your sibling are adopted."
-  sibling_unsibling_confirm: "Please confirm that you want to unsibling your sibling."
-  sibling_unsibling_cancel: "You haven't unsiblinged your sibling after all."
-  sibling_unsibling_complete: "You have unsiblinged your sibling."
-  sibling_unsiblinged_complete: "You have been unsiblinged by your sibling."
-  #admin commands
-  #admin gender commands
-  admin_gender_changed: "You have changed %player%'s gender to %gender%."
-  admin_gender_already: "%player%'s gender is already %gender%."
-  #admin marry commands
-  admin_marry_divorced: "You have divorced the marriage between %player1% and %player2%."
-  admin_marry_set_same_player: "You cannot marry someone to themselves!"
-  admin_marry_set_already_married: "%player% is already married."
-  admin_marry_set_too_many_children: "%player1% and %player2% have more than 2 children together. %amount% children must be removed before %player1% and %player2% can marry."
-  admin_marry_unset_no_partner: "%player% is not married."
-  admin_marry_set_denied: "You have cancelled the marriage setting."
-  admin_marry_set_confirm: "Do you still want to set the marriage?"
-  admin_marry_set_married: "You have married %player1% and %player2%."
-  admin_marry_unset_divorced: "You have dissolved the marriage between %player1% and %player2%."
-  #admin family commands
-  admin_reload: "The configuration has been reloaded."
-  admin_delete_confirm: "Do you really want to delete %player% from the database?"
-  admin_delete: "You have deleted %player% from the database."
-  admin_already_family: "%player1% and %player2% are already family."
-  #admin sibling commands
-  admin_sibling_added: "The siblings %player1% and %player2% have been successfully added!"
-  admin_sibling_is_adopted: "%player% is adopted. Set the adoption by the parents to make %player% a sibling."
-  admin_sibling_set_both_adopted: "%player1% and %player2% are adopted. Set the adoption by the parents or marry the parents to make %player1% and %player2% siblings."
-  admin_sibling_unset_no_sibling: "%player% has no sibling."
-  admin_sibling_unset_sibling: "You have unset the sibling relationship between %player1% and %player2%."
-  #admin adopt commands
-  admin_adopt_set_no_single_adopt: "%player% is not married. You must be married to adopt a child."
-  admin_adopt_limit: "%player% already has two children."
-  admin_adopt_set_same_player: "A player cannot be their own child."
-  admin_adopt_set_already_adopted: "%player% is already adopted."
-  admin_adopt_set_has_sibling: "%player% already has a sibling. Should that also be adopted?"
-  admin_adopt_set_has_sibling_limit: "%player% already has a sibling. %player2% cannot adopt both as one child has already been adopted."
-  admin_adopt_set_cancel: "You have canceled the adoption of %child% by %parent%."
-  admin_adopt_set: "You have set the adoption of %child% by %parent1% and %parent2%."
-  admin_adopt_set_by_single: "You have set the adoption of %child% by %parent%."
-  admin_adopt_unset_not_adopted: "%player% is not adopted."
-  admin_adopt_unset: "You have dissolved the adoption of %child% by %parent1% and %parent2%."
-  admin_adopt_unset_by_single: "You have dissolved the adoption of %child% by %parent%."
+  player_name: "player"
+  no_uuid: "%input% is not a valid UUID."
+help_header: "--- --- --- ---[%header%]--- --- --- ---"
+help_footer: "--- --- -[Seite %page%/%pages%]- --- ---"
+commands:
+  adopt:
+    aliases:
+      - adopt
+    help_header: "Adopt-Help"
+    subcommands:
+      accept:
+        aliases:
+          - accept
+        messages:
+          help: "&6%command% %subcommand% &7- Accept an adoption request."
+          got_adopted: "You have been adopted by %player1% and %player2%!"
+          adopted_by_single: "You have been adopted by %player%!"
+          adopted: "You have adopted %player%."
+          parent_limit: "%player% cannot adopt another child. %player% has already reached the limit of two children."
+          no_request: "You have no adoption requests."
+      deny:
+        aliases:
+          - deny
+        messages:
+          help: "&6%command% %subcommand% &7- Deny an adoption request."
+          deny: "You have denied the adoption request from %player%."
+          denied: "Sorry, %player% does not want to be adopted by you."
+          no_request: "You have no adoption requests."
+      kickout:
+        aliases:
+          - kickout
+        messages:
+          help: "&6%command% %subcommand% &b<%param%> &7- Kick your child out of the family."
+          specify_child: "Please specify a child."
+          kickout: "You have kicked %player% out of the house. This player is no longer adopted by you."
+          child: "%player% has kicked you out of the house. You are no longer adopted."
+          sibling: "%player% has kicked out your sibling from the house. You are now an only child."
+          partner: "%player1% has kicked out %player2% from the house. %player2% is no longer adopted by you."
+          confirm: "Please confirm that you want to kick out %player%!"
+          not_your_child: "%player% is not your child."
+          no_child: "You have no child."
+          cancel: "You haven't kicked out %player% after all."
+      moveout:
+        aliases:
+          - moveout
+        messages:
+          help: "&6%command% %subcommand% &7- Move out from home and leave your parents."
+          moveout: "You have moved out. You are no longer adopted."
+          confirm: "Please confirm that you want to move out!"
+          child: "%player% has moved out. This player is no longer adopted by you."
+          no_parents: "You are not adopted."
+          sibling: "Your sibling has moved out. You are now an only child."
+          cancel: "You have canceled your move-out."
+      propose:
+        aliases:
+          - propose
+        messages:
+          help: "&6%command% %subcommand% &b<%param%> &7- Propose adoption to a player."
+          limit: "You cannot adopt another child. You have already reached the limit of two children."
+          open_request: "%player% already has an open adoption request."
+          request: "%player1% and %player2% would like to adopt you. Are you okay with it?"
+          request_by_single: "%player% would like to adopt you. Are you okay with it?"
+          request_sent: "You have offered adoption to %player%."
+          request_expired: "The adoption request from %player1% and %player2% has expired."
+          request_sent_expired: "The adoption request for %player% has expired."
+          request_by_single_expired: "The adoption request from %player% has expired."
+          self_request: "You cannot adopt yourself."
+          has_sibling: "%player1% and %player2% are siblings. Would you like to adopt both?"
+          has_sibling_limit: "%player1% and %player2% are siblings. You already have 1 child and can only have a total of 2 children."
+          no_single_adopt: "You must be married to adopt a child."
+          already_adopted: "%player% is already adopted."
+          family_request: "You cannot adopt %player%. This player already belongs to your family."
+          cancel: "You have canceled the adoption request to %player%."
+      set:
+        aliases:
+          - set
+        messages:
+          help: "&6%command% %subcommand% &b<%param%> &b<%param%> &7- Set the adoption of a child by a player."
+          no_single_adopt: "%player% is not married. You must be married to adopt a child."
+          adopt_limit: "%player% already has two children."
+          same_player: "A player cannot be their own child."
+          already_adopted: "%player% is already adopted."
+          has_sibling: "%player% already has a sibling. Should that also be adopted?"
+          has_sibling_limit: "%player% already has a sibling. %player2% cannot adopt both as one child has already been adopted."
+          cancel: "You have canceled the adoption of %child% by %parent%."
+          set: "You have set the adoption of %child% by %parent1% and %parent2%."
+          set_by_single: "You have set the adoption of %child% by %parent%."
+          same_family: "%player1% and %player2% are already family."
+      unset:
+        aliases:
+          - unset
+        messages:
+          help: "&6%command% %subcommand% &b<%param%> &7- Unset the adoption of a child by a player."
+          not_adopted: "%player% is not adopted."
+          unset: "You have dissolved the adoption of %child% by %parent1% and %parent2%."
+          unset_by_single: "You have dissolved the adoption of %child% by %parent%."
+      help:
+        aliases:
+          - help
+        messages:
+          help: "&6%command% %subcommand% &7- Show the help page for %command%."
+  family:
+    aliases:
+      - family
+    help_header: "Family-Help"
+    subcommands:
+      background:
+        aliases:
+          - background
+        messages:
+          help: "&6%command% %subcommand% &b<%param%> &7- Change the background of your family tree."
+          set: "Background has been reset."
+      delete:
+        aliases:
+          - delete
+        messages:
+          help: "&6%command% %subcommand% &b<%param%> &7- Delete a player from the database."
+          confirm: "Do you really want to delete %uuid% from the database?"
+          deleted: "You have deleted %uuid% from the database."
+          cancel: "You have canceled the deletion of %uuid%."
+      list:
+        aliases:
+          - list
+        messages:
+          help: "&6%command% %subcommand% &7- Show a list of all your family members."
+          help_others: "&6%command% %subcommand% &b<%param%> &7- Show a list of all the family members of a player."
+          header: "Your family:"
+          others_header: "%player%'s family:"
+      tree:
+        aliases:
+          - tree
+        messages:
+          help: "&6%command% %subcommand% &7- Update your family tree."
+          reloaded: "Your family tree has been reloaded."
+      reload:
+        aliases:
+          - reload
+        messages:
+          help: "&6%command% %subcommand% &7- Reload the configuration."
+          reloaded: "The configuration has been reloaded."
+      help:
+        aliases:
+          - help
+        messages:
+          help: "&6%command% %subcommand% &7- Show the help page for %command%."
+  gender:
+    aliases:
+      - gender
+    help_header: "Gender-Help"
+    subcommands:
+      set:
+        aliases:
+          - set
+        messages:
+          help: "&6%command% %subcommand% &3(<%param%>) &7- Set your gender."
+          set: "Choose your gender: "
+          set_hover: "Set cour gender to %gender%."
+          changed: "You have changed your gender to %gender%."
+          not_exist: "This gender does not exist."
+          already: "Your gender is already %gender%."
+          admin_help: "%command% %subcommand% <%param%> <%param%> - Set the gender of a player."
+          admin_set: "You have changed the gender of %player% to %gender%."
+          admin_already: "The gender of %player% is already %gender%."
+          gender: "gender"
+      info:
+        aliases:
+          - info
+        messages:
+          help: "&6%command% %subcommand% &7- Show your gender."
+          help_others: "&6%command% %subcommand% &b<%param%> &7- Show the gender of a player."
+          info: "Your gender is %gender%."
+          info_others: "%player%'s gender is %gender%."
+      help:
+        aliases:
+          - help
+        messages:
+          help: "&6%command% %subcommand% &7- Show the help page for %command%."
+  marry:
+    aliases:
+      - marry
+    help_header: "Marry-Help"
+    messages:
+      yes: "Yes. I do!"
+      no: "No. I don't want to."
+      partner_online: "Your partner is online."
+      partner_offline: "Your partner is offline."
+    subcommands:
+      propose:
+        aliases:
+          - propose
+        messages:
+          help: "&6%command% %subcommand% &b<%param%> &7- Propose marriage to a player."
+          already_married: "You are already married to %player%."
+          player_already_married: "%player% is already married."
+          request: "%player1%, would you like to marry %player2% on this Minecraft server?"
+          request_sent: "You have proposed marriage to %player%."
+          request_expired: "The marriage proposal from %player% has expired."
+          request_sent_expired: "Your marriage proposal to %player% has expired."
+          open_request: "%player% already has an open proposal."
+          family_request: "You cannot marry %player%. This player already belongs to your family."
+          too_many_children: "You and %player% have more than two children together. You must remove %amount% children before you and %player% can marry."
+          self_request: "You cannot marry yourself!"
+      priest:
+        aliases:
+          - priest
+        messages:
+          help: "&6%command% %subcommand% <%param%> <%param%> &7- Marry two players."
+          already_priest: "You are already marrying two players."
+          request: "%player1%, would you like to marry %player2% on this Minecraft server?"
+          player_already_married: "%player% is already married."
+          too_many_children: "%player1% and %player2% have more than 2 children together. %player1% and %player2% must remove %amount% children before they can marry."
+          self_request: "You cannot marry yourself!"
+          open_request: "%player% already has an open proposal."
+          same_player: "You cannot marry someone to themselves!"
+          request_expired_priest: "The wedding between %player1% and %player2% has been canceled."
+          request_expired_player: "Your wedding with %player% has been canceled."
+      accept:
+        aliases:
+          - accept
+        messages:
+          help: "&6%command% %subcommand% &7- Accept a marriage proposal."
+          open_request_partner: "You must wait for your future partner's response!"
+          no_request: "You have no marriage proposal."
+          too_many_children: "%player1% and %player2% have more than 2 children together. %player1% and %player2% must remove %amount% children before they can marry."
+          complete: "You are married! You may now kiss!"
+          request: "%player1%, would you like to marry %player2% on this Minecraft server?"
+          priest_complete: "You are married! You may now kiss!"
+      deny:
+        aliases:
+          - deny
+        messages:
+          help: "&6%command% %subcommand% &7- Deny a marriage proposal."
+          no_request: "You have no marriage proposal."
+          denied: "Sorry, %player% does not want to marry you."
+          cancel: "The wedding has been canceled."
+      divorce:
+        aliases:
+          - divorce
+        messages:
+          help: "&6%command% %subcommand% &7- Get divorced."
+          no_partner: "You are not married! If you want to marry someone, please use /family marry propose <Name>"
+          divorced: "You are now divorced!"
+          confirm: "Please confirm that you want to divorce."
+          cancel: "You have cancelled the divorce!"
+      kiss:
+        aliases:
+          - kiss
+        messages:
+          help: "&6%command% %subcommand% &7- Kiss your partner."
+          no_partner: "You are not married!"
+          kiss: "You have kissed %player%."
+          got_kissed: "%player% has kissed you."
+      gift:
+        aliases:
+          - gift
+        messages:
+          help: "&6%command% %subcommand% &7- Gift the item in your hand to your partner."
+          no_partner: "You are not married!"
+          empty_hand: "You must be holding an item in your hand."
+          partner_full_inv: "Your partner has no space in their inventory."
+          sent: "You have gifted something to your partner."
+          got: "Your partner has gifted you something."
+      heart:
+        aliases:
+          - heart
+        messages:
+          help: "&6%command% %subcommand% <%param%> &7- Change the color of your heart in the marriage list."
+          no_color: "You must specify a color."
+          color_set: "You have chosen the color %color%."
+          color: "color"
+      list:
+        aliases:
+          - set
+        messages:
+          help: "&6%command% %subcommand% &7- List all married couples."
+          header: "All married couples on this server: "
+          pairs: "&6%index%: &b%player1% %emoji% &b%player2%"
+      set:
+        aliases:
+          - set
+        messages:
+          help: "&6%command% %subcommand% &b<%param%> <%param%> &7- Set the marriage between a couple."
+          same_player: "A player cannot be their own partner."
+          already_married: "%player% is already married."
+          too_many_children: "%player1% and %player2% have more than 2 children together. %amount% children must be removed before %player1% and %player2% can marry."
+          denied: "You have cancelled the marriage setting."
+          confirm: "Do you still want to set the marriage?"
+          married: "You have married %player1% and %player2%."
+          same_family: "%player1% and %player2% are already family."
+      unset:
+        aliases:
+          - set
+        messages:
+          help: "&6%command% %subcommand% &b<%param%> &7- Unset the marriage between a couple."
+          no_partner: "%player% is not married."
+          divorced: "You have dissolved the marriage between %player1% and %player2%."
+      help:
+        aliases:
+          - help
+        messages:
+          help: "&6%command% %subcommand% &7- Show the help page for %command%."
+  sibling:
+    aliases:
+      - sibling
+    help_header: "Sibling-Help"
+    subcommands:
+      propose:
+        aliases:
+          - propose
+        messages:
+          help: "&6%command% %subcommand% &b<%param%> &7- Propose siblinghood to a player."
+          has_sibling: "You already have a sibling."
+          is_adopted: "You are adopted. Your parents can adopt a sibling for you."
+          self_request: "You cannot be your own sibling."
+          family_request: "%player% is already part of your family."
+          sibling_is_adopted: "%player% is already adopted. Their parents can adopt you to become your sibling."
+          open_request: "%player% already has an open sibling request."
+          request: "%player% wants you to be their sibling. Are you okay with it?"
+          request_sent: "You have offered to be siblings with %player%."
+          request_expired: "The sibling request from %player% has expired."
+          request_sent_expired: "The sibling request to %player% has expired."
+      accept:
+        aliases:
+          - accept
+        messages:
+          help: "&6%command% %subcommand% &7- Accept a sibling request."
+          no_request: "You have no sibling request."
+          complete: "You and %player% are now siblings!"
+      deny:
+        aliases:
+          - deny
+        messages:
+          help: "&6%command% %subcommand% &7- Deny a sibling request."
+          no_request: "You have no sibling request."
+          deny: "You have denied the sibling request from %player%."
+      unsibling:
+        aliases:
+          - unsibling
+        messages:
+          help: "&6%command% %subcommand% &7- Un-sibling with your sibling."
+          no_sibling: "You have no sibling."
+          adopted: "You cannot unsibling your sibling, cause you an your sibling are adopted."
+          confirm: "Please confirm that you want to unsibling your sibling."
+          cancel: "You haven't unsiblinged your sibling after all."
+          complete: "You have unsiblinged your sibling."
+          unsiblinged_complete: "You have been unsiblinged by your sibling."
+      set:
+        aliases:
+          - set
+        messages:
+          same_player: "You cannot be your own sibling."
+          same_family: "%player1% and %player2% are already family."
+          help: "&6%command% %subcommand% &b<%param%> &7- Set the siblinghood between two players."
+          added: "The siblings %player1% and %player2% have been successfully added!"
+          is_adopted: "%player% is adopted. Set the adoption by the parents to make %player% a sibling."
+          set_both_adopted: "%player1% and %player2% are adopted. Set the adoption by the parents or marry the parents to make %player1% and %player2% siblings."
+      unset:
+        aliases:
+          - unset
+        messages:
+          help: "&6%command% %subcommand% &7- Unset the siblinghood between two players."
+          no_sibling: "%player% has no sibling."
+          unset: "You have unset the sibling relationship between %player1% and %player2%."
+      help:
+        aliases:
+          - help
+        messages:
+          help: "&6%command% %subcommand% &7- Show the help page for %command%."
 genders:
   fe: "feminine"
   ma: "masculine"
@@ -279,79 +444,3 @@ color_translations:
   light_purple: "Light Purple"
   yellow: "Yellow"
   white: "White"
-aliases:
-  family:
-    base_command:
-      - family
-    background:
-      - background
-    tree:
-      - tree
-    list:
-      - list
-    reload:
-      - reload
-    delete:
-      - delete
-  gender:
-    base_command:
-      - gender
-    set:
-      - set
-    info:
-      - info
-  marry:
-    base_command:
-      - marry
-    propose:
-      - propose
-    priest:
-      - priest
-    accept:
-      - accept
-    deny:
-      - deny
-    divorce:
-      - divorce
-    list:
-      - list
-    kiss:
-      - kiss
-    gift:
-      - gift
-    set:
-      - set
-    unset:
-      - unset
-  adopt:
-    base_command:
-      - adopt
-    propose:
-      - propose
-    accept:
-      - accept
-    deny:
-      - deny
-    kickout:
-      - kickout
-    moveout:
-      - moveout
-    set:
-      - set
-    unset:
-      - unset
-  sibling:
-    base_command:
-      - sibling
-    propose:
-      - propose
-    accept:
-      - accept
-    deny:
-      - deny
-    unsibling:
-      - unsibling
-    set:
-      - set
-    unset:
-      - unset

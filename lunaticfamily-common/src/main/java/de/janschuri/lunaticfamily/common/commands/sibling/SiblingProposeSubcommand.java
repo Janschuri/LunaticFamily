@@ -2,10 +2,13 @@ package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.family.SiblingSubcommand;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
+import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
+import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
@@ -14,32 +17,55 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class SiblingProposeSubcommand extends Subcommand {
-    private static final String MAIN_COMMAND = "sibling";
-    private static final String NAME = "propose";
-    private static final String PERMISSION = "lunaticfamily.sibling";
 
-    public SiblingProposeSubcommand() {
-        super(MAIN_COMMAND, NAME, PERMISSION);
+    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
+    private final CommandMessageKey hasSiblingMK = new CommandMessageKey(this,"has_sibling");
+    private final CommandMessageKey isAdoptedMK = new CommandMessageKey(this,"is_adopted");
+    private final CommandMessageKey selfRequestMK = new CommandMessageKey(this,"self_request");
+    private final CommandMessageKey familyRequestMK = new CommandMessageKey(this,"family_request");
+    private final CommandMessageKey openRequestMK = new CommandMessageKey(this,"open_request");
+    private final CommandMessageKey requestMK = new CommandMessageKey(this,"request");
+    private final CommandMessageKey requestSentMK = new CommandMessageKey(this,"request_sent");
+    private final CommandMessageKey requestExpiredMK = new CommandMessageKey(this,"request_expired");
+    private final CommandMessageKey requestSentExpiredMK = new CommandMessageKey(this,"request_sent_expired");
+
+
+    @Override
+    public String getPermission() {
+        return "lunaticfamily.sibling";
     }
+
+    @Override
+    public String getName() {
+        return "propose";
+    }
+
+    @Override
+    public SiblingSubcommand getParentCommand() {
+        return new SiblingSubcommand();
+    }
+
     @Override
     public boolean execute(Sender sender, String[] args) {
         if (!(sender instanceof PlayerSender)) {
-            sender.sendMessage(getPrefix() + getMessage("no_console_command"));
-        } else if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(getPrefix() + getMessage("no_permission"));
+            sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
+        } else if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else {
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
 
             if (playerFam.hasSibling()) {
-                sender.sendMessage(getPrefix() + getMessage("sibling_propose_has_sibling").replace("%player%", playerFam.getName()));
+                sender.sendMessage(getMessage(hasSiblingMK)
+                        .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
                 return true;
             } else if (playerFam.isAdopted()) {
-                sender.sendMessage(getPrefix() + getMessage("sibling_propose_is_adopted").replace("%player%", playerFam.getName()));
+                sender.sendMessage(getMessage(isAdoptedMK)
+                        .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
                 return true;
             } else if (args.length < 1) {
-                sender.sendMessage(getPrefix() + getMessage("wrong_usage"));
+                sender.sendMessage(getMessage(WRONG_USAGE_MK));
                 Logger.debugLog("SiblingProposeSubcommand: Wrong usage");
                 return true;
             }
@@ -49,64 +75,78 @@ public class SiblingProposeSubcommand extends Subcommand {
             UUID siblingUUID = PlayerDataTable.getUUID(siblingName);
 
             if (siblingUUID == null) {
-                sender.sendMessage(getPrefix() + getMessage("player_not_exist").replace("%player%", siblingName));
+                sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                        .replaceText(getTextReplacementConfig("%player%", siblingName)));
                 return true;
             }
 
             PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
 
             if (!sibling.isOnline()) {
-                sender.sendMessage(getPrefix() + getMessage("player_offline").replace("%player%", sibling.getName()));
+                sender.sendMessage(getMessage(PLAYER_OFFLINE_MK)
+                        .replaceText(getTextReplacementConfig("%player%", sibling.getName())));
                 return true;
             }
 
             if (!Utils.isPlayerOnRegisteredServer(sibling.getUniqueId())) {
-                player.sendMessage(getPrefix() + getMessage("player_not_on_whitelisted_server").replace("%player%", sibling.getName().replace("%server%", sibling.getServerName())));
+                player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
+                        .replaceText(getTextReplacementConfig("%player%", sibling.getName()))
+                        .replaceText(getTextReplacementConfig("%server%", sibling.getServerName())));
                 return true;
             }
 
                 FamilyPlayerImpl siblingFam = new FamilyPlayerImpl(siblingUUID);
                 if (playerFam.getId() == siblingFam.getId()) {
-                    sender.sendMessage(getPrefix() + getMessage("sibling_propose_self_request"));
+                    sender.sendMessage(getMessage(selfRequestMK));
                 } else if (playerFam.isFamilyMember(siblingFam.getId())) {
-                    sender.sendMessage(getPrefix() + getMessage("sibling_propose_family_request").replace("%player%", siblingFam.getName()));
+                    sender.sendMessage(getMessage(familyRequestMK)
+                            .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
                 } else if (siblingFam.isFamilyMember(playerFam.getId())) {
-                    sender.sendMessage(getPrefix() + getMessage("sibling_propose_family_request").replace("%player%", siblingFam.getName()));
+                    sender.sendMessage(getMessage(familyRequestMK)
+                            .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
                 } else if (siblingFam.isAdopted()) {
-                    sender.sendMessage(getPrefix() + getMessage("sibling_propose_sibling_is_adopted").replace("%player%", siblingFam.getName()));
+                    sender.sendMessage(getMessage(isAdoptedMK)
+                            .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
                 } else if (LunaticFamily.siblingRequests.containsKey(siblingUUID)) {
-                    sender.sendMessage(getPrefix() + getMessage("sibling_propose_open_request").replace("%player%", siblingFam.getName()));
-                } else if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, "sibling_proposing_player")) {
-                    sender.sendMessage(getPrefix() + getMessage("not_enough_money"));
+                    sender.sendMessage(getMessage(openRequestMK)
+                            .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
+                } else if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.SIBLING_PROPOSING_PLAYER)) {
+                    sender.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK));
                 } else {
 
                     if (!player.isSameServer(sibling.getUniqueId()) && LunaticFamily.getConfig().getSiblingProposeRange() >= 0) {
-                        sender.sendMessage(getPrefix() + getMessage("player_not_same_server").replace("%player%", sibling.getName()));
+                        sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK)
+                                .replaceText(getTextReplacementConfig("%player%", sibling.getName())));
                         return true;
                     }
 
                     if (!player.isInRange(sibling.getUniqueId(), LunaticFamily.getConfig().getSiblingProposeRange())) {
-                        player.sendMessage(getPrefix() + getMessage("player_too_far_away").replace("%player%", sibling.getName()));
+                        player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK)
+                                .replaceText(getTextReplacementConfig("%player%", sibling.getName())));
                         return true;
                     }
 
                     sibling.sendMessage(Utils.getClickableDecisionMessage(
-                            getPrefix() + getMessage("sibling_propose_request").replace("%player%", siblingFam.getName()),
-                            getMessage("accept"),
+                            getMessage(requestMK)
+                                    .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())),
+                            getMessage(ACCEPT_MK, false),
                             "/family sibling accept",
-                            getMessage("deny"),
+                            getMessage(DENY_MK, false),
                             "/family sibling deny"));
 
                     LunaticFamily.siblingRequests.put(siblingUUID, playerUUID);
 
-                    sender.sendMessage(getPrefix() + getMessage("sibling_propose_request_sent").replace("%player%", siblingFam.getName()));
+                    sender.sendMessage(getMessage(requestSentMK)
+                            .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
 
                     Runnable runnable = () -> {
                         if (LunaticFamily.siblingRequests.containsKey(siblingUUID)) {
                             LunaticFamily.siblingRequests.remove(siblingUUID);
-                            sibling.sendMessage(getPrefix() + getMessage("sibling_propose_request_expired").replace("%player%", player.getName()));
+                            sibling.sendMessage(getMessage(requestExpiredMK)
+                                    .replaceText(getTextReplacementConfig("%player%", player.getName())));
 
-                            player.sendMessage(getPrefix() + getMessage("sibling_propose_request_sent_expired").replace("%player%", sibling.getName()));
+                            player.sendMessage(getMessage(requestSentExpiredMK)
+                                    .replaceText(getTextReplacementConfig("%player%", sibling.getName())));
                         }
                     };
 

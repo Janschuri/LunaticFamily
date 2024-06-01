@@ -1,10 +1,11 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
-import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.family.MarrySubcommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
+import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
@@ -12,29 +13,46 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 import java.util.UUID;
 
 public class MarryGiftSubcommand extends Subcommand {
-    private static final String MAIN_COMMAND = "marry";
-    private static final String NAME = "gift";
-    private static final String PERMISSION = "lunaticfamily.marry.gift";
 
-    public MarryGiftSubcommand() {
-        super(MAIN_COMMAND, NAME, PERMISSION);
+    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
+    private final CommandMessageKey noPartnerMK = new CommandMessageKey(this,"no_partner");
+    private final CommandMessageKey emptyHandMK = new CommandMessageKey(this,"empty_hand");
+    private final CommandMessageKey partnerFullInvMK = new CommandMessageKey(this,"partner_full_inv");
+    private final CommandMessageKey sentMK = new CommandMessageKey(this,"sent");
+    private final CommandMessageKey gotMK = new CommandMessageKey(this,"got");
+
+
+    @Override
+    public String getPermission() {
+        return "lunaticfamily.marry.gift";
     }
+
+    @Override
+    public String getName() {
+        return "gift";
+    }
+
+    @Override
+    public MarrySubcommand getParentCommand() {
+        return new MarrySubcommand();
+    }
+
     @Override
     public boolean execute(Sender sender, String[] args) {
         if (!(sender instanceof PlayerSender)) {
-            sender.sendMessage(LunaticFamily.getLanguageConfig().getPrefix() + LunaticFamily.getLanguageConfig().getMessage("no_console_command"));
-        } else if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(LunaticFamily.getLanguageConfig().getPrefix() + LunaticFamily.getLanguageConfig().getMessage("no_permission"));
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
+        } else if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else {
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
 
             if (!playerFam.isMarried()) {
-                player.sendMessage(LunaticFamily.getLanguageConfig().getPrefix() + LunaticFamily.getLanguageConfig().getMessage("marry_gift_no_partner"));
+                player.sendMessage(getMessage(noPartnerMK));
                 return true;
             } else if (!player.hasPermission("lunaticFamily.marry.gift")) {
-                player.sendMessage(LunaticFamily.getLanguageConfig().getPrefix() + LunaticFamily.getLanguageConfig().getMessage("no_permission"));
+                player.sendMessage(getMessage(NO_PERMISSION_MK));
                 return true;
             }
 
@@ -42,17 +60,20 @@ public class MarryGiftSubcommand extends Subcommand {
             PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
 
             if (!partner.isOnline()) {
-                player.sendMessage(LunaticFamily.getLanguageConfig().getPrefix() + LunaticFamily.getLanguageConfig().getMessage("player_offline").replace("%player%", partner.getName()));
+                player.sendMessage(getMessage(PLAYER_NAME_MK)
+                        .replaceText(getTextReplacementConfig("%player%", partner.getName())));
                 return true;
             }
 
             if (!Utils.isPlayerOnRegisteredServer(partnerUUID)) {
-                player.sendMessage(LunaticFamily.getLanguageConfig().getPrefix() + LunaticFamily.getLanguageConfig().getMessage("player_not_on_whitelisted_server").replace("%player%", partner.getName()).replace("%server%", partner.getServerName()));
+                player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
+                        .replaceText(getTextReplacementConfig("%player%", partner.getName()))
+                        .replaceText(getTextReplacementConfig("%server%", partner.getServerName())));
                 return true;
             }
 
             if (!player.hasItemInMainHand()) {
-                player.sendMessage(LunaticFamily.getLanguageConfig().getPrefix() + LunaticFamily.getLanguageConfig().getMessage("marry_gift_empty_hand"));
+                player.sendMessage(getMessage(emptyHandMK));
                 return true;
             }
 
@@ -60,8 +81,10 @@ public class MarryGiftSubcommand extends Subcommand {
                 byte[] item = player.getItemInMainHand();
                 if (partner.giveItemDrop(item)) {
                     player.removeItemInMainHand();
-                    player.sendMessage(LunaticFamily.getLanguageConfig().getPrefix() + LunaticFamily.getLanguageConfig().getMessage("marry_gift_sent").replace("%player%", partner.getName()));
-                    partner.sendMessage(LunaticFamily.getLanguageConfig().getPrefix() + LunaticFamily.getLanguageConfig().getMessage("marry_gift_got").replace("%player%", player.getName()));
+                    player.sendMessage(getMessage(sentMK)
+                            .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+                    partner.sendMessage(getMessage(gotMK)
+                            .replaceText(getTextReplacementConfig("%player%", player.getName())));
                 } else {
                     Logger.errorLog("Error while giving item to partner.");
                 }

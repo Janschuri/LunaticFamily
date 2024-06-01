@@ -2,32 +2,45 @@ package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 
 import java.util.UUID;
 
 public class FamilyTreeSubcommand extends Subcommand {
-    private static final String MAIN_COMMAND = "family";
-    private static final String NAME = "tree";
-    private static final String PERMISSION = "lunaticfamily.family";
 
-    public FamilyTreeSubcommand() {
-        super(MAIN_COMMAND, NAME, PERMISSION);
+    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
+    private final CommandMessageKey reloadedMK = new CommandMessageKey(this,"reloaded");
+
+
+    @Override
+    public String getPermission() {
+        return "lunaticfamily.family.tree";
+    }
+
+    @Override
+    public String getName() {
+        return "tree";
+    }
+
+    @Override
+    public FamilySubcommand getParentCommand() {
+        return new FamilySubcommand();
     }
 
     @Override
     public boolean execute(Sender sender, String[] args) {
         if (!(sender instanceof PlayerSender)) {
-            sender.sendMessage(getPrefix() + getMessage("no_console_command"));
-        } else if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(getPrefix() + getMessage("no_permission"));
+            sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
+        } else if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else {
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
             playerFam.updateFamilyTree();
-            player.sendMessage(getPrefix() + getMessage("family_tree_reloaded"));
+            player.sendMessage(getMessage(reloadedMK));
         }
         return true;
     }

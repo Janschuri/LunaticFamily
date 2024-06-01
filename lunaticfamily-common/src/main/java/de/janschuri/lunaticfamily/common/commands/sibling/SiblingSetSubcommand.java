@@ -1,26 +1,46 @@
 package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.family.SiblingSubcommand;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
+import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
 
 import java.util.UUID;
 
 public class SiblingSetSubcommand extends Subcommand {
-    private static final String MAIN_COMMAND = "sibling";
-    private static final String NAME = "set";
-    private static final String PERMISSION = "lunaticfamily.admin.sibling";
 
-    public SiblingSetSubcommand() {
-        super(MAIN_COMMAND, NAME, PERMISSION);
+    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
+    private final CommandMessageKey addedMK = new CommandMessageKey(this,"added");
+    private final CommandMessageKey isAdoptedMK = new CommandMessageKey(this,"is_adopted");
+    private final CommandMessageKey setBothAdoptedMK = new CommandMessageKey(this,"set_both_adopted");
+    private final CommandMessageKey sameFamilyMK = new CommandMessageKey(this,"same_family");
+    private final CommandMessageKey samePlayerMK = new CommandMessageKey(this,"same_player");
+
+
+
+    @Override
+    public String getPermission() {
+        return "lunaticfamily.admin.sibling";
     }
+
+    @Override
+    public String getName() {
+        return "set";
+    }
+
+    @Override
+    public SiblingSubcommand getParentCommand() {
+        return new SiblingSubcommand();
+    }
+
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(getPrefix() + getMessage("no_permission"));
+        if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage((getMessage(NO_PERMISSION_MK)));
         } else {
             boolean forced = false;
 
@@ -31,10 +51,10 @@ public class SiblingSetSubcommand extends Subcommand {
             }
 
             if (!sender.hasPermission("lunaticFamily.admin.sibling")) {
-                sender.sendMessage(getPrefix() + getMessage("no_permission"));
+                sender.sendMessage(getMessage(NO_PERMISSION_MK));
                 return true;
             } else if (args.length < 1) {
-                sender.sendMessage(getPrefix() + getMessage("wrong_usage"));
+                sender.sendMessage(getMessage(WRONG_USAGE_MK));
                 Logger.debugLog("SiblingSetSubcommand: Wrong usage");
                 return true;
             }
@@ -49,14 +69,16 @@ public class SiblingSetSubcommand extends Subcommand {
                 player1UUID = UUID.fromString(args[0]);
 
                 if (PlayerDataTable.getID(player1UUID) < 0) {
-                    sender.sendMessage(getPrefix() + getMessage("player_not_exist").replace("%player%", player1Arg));
+                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                            .replaceText(getTextReplacementConfig("%player%", player1Arg)));
                     return true;
                 }
             } else {
                 player1UUID = PlayerDataTable.getUUID(player1Arg);
 
                 if (player1UUID == null) {
-                    sender.sendMessage(getPrefix() + getMessage("player_not_exist").replace("%player%", player1Arg));
+                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                            .replaceText(getTextReplacementConfig("%player%", player1Arg)));
                     return true;
                 }
             }
@@ -65,14 +87,16 @@ public class SiblingSetSubcommand extends Subcommand {
                 player2UUID = UUID.fromString(args[0]);
 
                 if (PlayerDataTable.getID(player2UUID) < 0) {
-                    sender.sendMessage(getPrefix() + getMessage("player_not_exist").replace("%player%", player2Arg));
+                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                            .replaceText(getTextReplacementConfig("%player%", player2Arg)));
                     return true;
                 }
             } else {
                 player2UUID = PlayerDataTable.getUUID(player2Arg);
 
                 if (player2UUID == null) {
-                    sender.sendMessage(getPrefix() + getMessage("player_not_exist").replace("%player%", player2Arg));
+                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                            .replaceText(getTextReplacementConfig("%player%", player2Arg)));
                     return true;
                 }
             }
@@ -82,24 +106,32 @@ public class SiblingSetSubcommand extends Subcommand {
             FamilyPlayerImpl player2Fam = new FamilyPlayerImpl(player2UUID);
 
             if (player1Fam.isFamilyMember(player2Fam.getId())) {
-                sender.sendMessage(getPrefix() + getMessage("admin_already_family").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
+                sender.sendMessage(getMessage(sameFamilyMK)
+                        .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
+                        .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
                 return true;
             }
 
             if (args[0].equalsIgnoreCase(args[1])) {
-                sender.sendMessage(getPrefix() + getMessage("admin_marry_set_same_player"));
+                sender.sendMessage(getMessage(samePlayerMK));
             } else {
 
 
                 if (player1Fam.isAdopted() && player2Fam.isAdopted()) {
-                    sender.sendMessage(getPrefix() + getMessage("admin_sibling_set_both_adopted").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
+                    sender.sendMessage(getMessage(setBothAdoptedMK)
+                            .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
+                            .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
                 } else if (player1Fam.isAdopted()) {
-                    sender.sendMessage(getPrefix() + getMessage("admin_sibling_is_adopted").replace("%player%", player1Fam.getName()));
+                    sender.sendMessage(getMessage(isAdoptedMK)
+                            .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
 
                 } else if (player2Fam.isAdopted()) {
-                    sender.sendMessage(getPrefix() + getMessage("admin_sibling_is_adopted").replace("%player%", player2Fam.getName()));
+                    sender.sendMessage(getMessage(isAdoptedMK)
+                            .replaceText(getTextReplacementConfig("%player%", player2Fam.getName())));
                 } else {
-                    sender.sendMessage(getPrefix() + getMessage("admin_sibling_added").replace("%player1%", player1Fam.getName()).replace("%player2%", player2Fam.getName()));
+                    sender.sendMessage(getMessage(addedMK)
+                            .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
+                            .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
                     player1Fam.addSibling(player2Fam.getId());
                 }
             }

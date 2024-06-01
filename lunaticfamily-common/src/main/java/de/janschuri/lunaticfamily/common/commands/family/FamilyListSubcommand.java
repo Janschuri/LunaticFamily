@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 
@@ -12,23 +13,44 @@ import java.util.Map;
 import java.util.UUID;
 
 public class FamilyListSubcommand extends Subcommand {
-    private static final String MAIN_COMMAND = "family";
-    private static final String NAME = "list";
-    private static final String PERMISSION = "lunaticfamily.family.list";
 
-    public FamilyListSubcommand() {
-        super(MAIN_COMMAND, NAME, PERMISSION);
+    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
+    private final CommandMessageKey helpOthersMK = new CommandMessageKey(this,"help_others");
+    private final CommandMessageKey headerMK = new CommandMessageKey(this,"header");
+    private final CommandMessageKey othersHeaderMK = new CommandMessageKey(this,"others_header");
+
+    @Override
+    public String getPermission() {
+        return "lunaticfamily.family.list";
+    }
+
+    @Override
+    public String getName() {
+        return "list";
+    }
+
+    @Override
+    public FamilySubcommand getParentCommand() {
+        return new FamilySubcommand();
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                helpMK, getPermission(),
+                helpOthersMK, getPermission() + ".others"
+        );
     }
 
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(getPrefix() + getMessage("no_permission"));
+        if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else {
             List<String> list = LunaticFamily.getConfig().getFamilyList();
 
             if (!(sender instanceof PlayerSender) && args.length < 1) {
-                sender.sendMessage(getPrefix() + getMessage("no_console_command"));
+                sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
             } else if (args.length == 0) {
                 PlayerSender player = (PlayerSender) sender;
                 UUID uuid = player.getUniqueId();
@@ -37,7 +59,7 @@ public class FamilyListSubcommand extends Subcommand {
                 playerFam.updateFamilyTree();
 
                 Map<String, Integer> familyList = playerFam.getFamilyMap();
-                StringBuilder msg = new StringBuilder(getPrefix() + getMessage("family_list") + "\n");
+                StringBuilder msg = new StringBuilder(getMessage(headerMK) + "\n");
 
                 sender.sendMessage(getFamilyListMessage(list, familyList, msg));
             } else {
@@ -46,19 +68,21 @@ public class FamilyListSubcommand extends Subcommand {
                 UUID player1UUID = PlayerDataTable.getUUID(playerName);
 
                 if (player1UUID == null) {
-                    sender.sendMessage(getPrefix() + getMessage("player_not_exist").replace("%player%", playerName));
+                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                            .replaceText(getTextReplacementConfig("%player%", playerName)));
                     return true;
                 }
 
 
-                if (!sender.hasPermission("lunaticFamily.family.list.others")) {
-                    sender.sendMessage(getPrefix() + getMessage("no_permission"));
+                if (!sender.hasPermission(getPermission() + ".others")) {
+                    sender.sendMessage(getMessage(NO_PERMISSION_MK));
                     return true;
                 }
 
                     FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
                     Map<String, Integer> familyList = player1Fam.getFamilyMap();
-                    StringBuilder msg = new StringBuilder(getPrefix() + getMessage("family_others_list").replace("%player%", player1Fam.getName()) + "\n");
+                    StringBuilder msg = new StringBuilder(getMessage(othersHeaderMK)
+                            .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())) + "\n");
 
                     sender.sendMessage(getFamilyListMessage(list, familyList, msg));
 

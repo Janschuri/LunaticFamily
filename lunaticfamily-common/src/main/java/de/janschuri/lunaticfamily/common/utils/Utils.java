@@ -17,16 +17,16 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
         return true;
     }
 
-    public static boolean hasEnoughMoney(String serverName, UUID uuid, String... withdrawKeys) {
+    public static boolean hasEnoughMoney(String serverName, UUID uuid, WithdrawKey... withdrawKeys) {
         return hasEnoughMoney(serverName, uuid, 1.0, withdrawKeys);
     }
 
-    public static boolean hasEnoughMoney(String serverName, UUID uuid, double factor, String... withdrawKeys) {
+    public static boolean hasEnoughMoney(String serverName, UUID uuid, double factor, WithdrawKey... withdrawKeys) {
         if (LunaticFamily.getConfig().isUseVault()) {
 
             double amount = 0.0;
-            for (String key : withdrawKeys) {
-                amount += LunaticFamily.getConfig().getCommandWithdraw(key);
+            for (WithdrawKey key : withdrawKeys) {
+                amount += LunaticFamily.getConfig().getCommandWithdraw(key.toString().toLowerCase());
             }
             amount *= factor;
 
@@ -35,16 +35,16 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
         return true;
     }
 
-    public static boolean withdrawMoney(String serverName, UUID uuid, String... withdrawKeys) {
+    public static boolean withdrawMoney(String serverName, UUID uuid, WithdrawKey... withdrawKeys) {
         return withdrawMoney(serverName, uuid, 1.0, withdrawKeys);
     }
 
-    public static boolean withdrawMoney(String serverName, UUID uuid, double factor, String... withdrawKeys) {
+    public static boolean withdrawMoney(String serverName, UUID uuid, double factor, WithdrawKey... withdrawKeys) {
         if (LunaticFamily.getConfig().isUseVault()) {
 
             double amount = 0.0;
-            for (String key : withdrawKeys) {
-                amount += LunaticFamily.getConfig().getCommandWithdraw(key);
+            for (WithdrawKey key : withdrawKeys) {
+                amount += LunaticFamily.getConfig().getCommandWithdraw(key.toString().toLowerCase());
             }
             amount *= factor;
 

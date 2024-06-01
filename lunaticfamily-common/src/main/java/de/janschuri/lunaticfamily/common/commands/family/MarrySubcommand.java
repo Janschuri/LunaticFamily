@@ -2,16 +2,17 @@ package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.commands.marry.*;
+import de.janschuri.lunaticlib.LunaticCommand;
+import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
 import de.janschuri.lunaticlib.Sender;
-import de.janschuri.lunaticlib.common.commands.AbstractSubcommand;
+
+import java.util.List;
 
 public class MarrySubcommand extends Subcommand {
-    private static final String MAIN_COMMAND = "family";
-    private static final String NAME = "marry";
-    private static final String PERMISSION = "lunaticfamily.marry";
 
-    public MarrySubcommand() {
-        super(MAIN_COMMAND, NAME, PERMISSION, new AbstractSubcommand[] {
+    @Override
+    public List<LunaticCommand> getSubcommands() {
+        return List.of(
                 new MarryAcceptSubcommand(),
                 new MarryDenySubcommand(),
                 new MarryDivorceSubcommand(),
@@ -23,28 +24,55 @@ public class MarrySubcommand extends Subcommand {
                 new MarryProposeSubcommand(),
                 new MarrySetSubcommand(),
                 new MarryUnsetSubcommand(),
-        });
+                getHelpCommand()
+        );
     }
+
+    @Override
+    public LunaticHelpCommand getHelpCommand() {
+        return new LunaticHelpCommand(getLanguageConfig(), this);
+    }
+
+    @Override
+    public FamilySubcommand getParentCommand() {
+        return new FamilySubcommand();
+    }
+
+    @Override
+    public String getPermission() {
+        return "lunaticfamily.marry";
+    }
+
+    @Override
+    public String getName() {
+        return "marry";
+    }
+
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(getPrefix() + getMessage("no_permission"));
+        if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else {
             if (args.length == 0) {
-
+                getHelpCommand().execute(sender, args);
             } else {
                 final String subcommand = args[0];
 
-                for (AbstractSubcommand sc : subcommands) {
-                    if (checkIsSubcommand(NAME, sc.getName(), subcommand)) {
+                for (LunaticCommand sc : getSubcommands()) {
+                    if (checkIsSubcommand(sc, subcommand)) {
                         String[] newArgs = new String[args.length - 1];
                         System.arraycopy(args, 1, newArgs, 0, args.length - 1);
                         return sc.execute(sender, newArgs);
                     }
                 }
-                sender.sendMessage(getPrefix() + getMessage("wrong_usage") + 1);
+                sender.sendMessage(getMessage(WRONG_USAGE_MK));
             }
         }
+        return true;
+    }
+
+    @Override
+    public boolean isPrimaryCommand() {
         return true;
     }
 }

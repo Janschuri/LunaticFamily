@@ -2,8 +2,11 @@ package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.family.SiblingSubcommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Utils;
+import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
+import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
@@ -11,19 +14,37 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 import java.util.UUID;
 
 public class SiblingUnsiblingSubcommand extends Subcommand {
-    private static final String MAIN_COMMAND = "sibling";
-    private static final String NAME = "unsibling";
-    private static final String PERMISSION = "lunaticfamily.sibling";
 
-    public SiblingUnsiblingSubcommand() {
-        super(MAIN_COMMAND, NAME, PERMISSION);
+    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
+    private final CommandMessageKey noSiblingMK = new CommandMessageKey(this,"no_sibling");
+    private final CommandMessageKey adoptedMK = new CommandMessageKey(this,"adopted");
+    private final CommandMessageKey confirmMK = new CommandMessageKey(this,"confirm");
+    private final CommandMessageKey cancelMK = new CommandMessageKey(this,"cancel");
+    private final CommandMessageKey completeMK = new CommandMessageKey(this,"complete");
+    private final CommandMessageKey unsiblingedCompleteMK = new CommandMessageKey(this,"unsiblinged_complete");
+
+
+    @Override
+    public String getPermission() {
+        return "lunaticfamily.sibling";
     }
+
+    @Override
+    public String getName() {
+        return "unsibling";
+    }
+
+    @Override
+    public SiblingSubcommand getParentCommand() {
+        return new SiblingSubcommand();
+    }
+
     @Override
     public boolean execute(Sender sender, String[] args) {
         if (!(sender instanceof PlayerSender)) {
-            sender.sendMessage(getPrefix() + getMessage("no_console_command"));
-        } else if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(getPrefix() + getMessage("no_permission"));
+            sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
+        } else if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else {
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
@@ -48,55 +69,56 @@ public class SiblingUnsiblingSubcommand extends Subcommand {
             }
 
             if (!playerFam.hasSibling()) {
-                sender.sendMessage(getPrefix() + getMessage("sibling_unsibling_no_sibling"));
+                sender.sendMessage(getMessage(noSiblingMK));
             }
 
             UUID siblingUUID = playerFam.getSibling().getUniqueId();
             PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
 
             if (playerFam.isAdopted()) {
-                sender.sendMessage(getPrefix() + getMessage("sibling_unsibling_adopted"));
+                sender.sendMessage(getMessage(adoptedMK));
                 return true;
             }
 
             if (cancel) {
-                sender.sendMessage(getPrefix() + getMessage("sibling_unsibling_cancel"));
+                sender.sendMessage(getMessage(cancelMK));
                 return true;
             }
 
             if (!confirm) {
                 sender.sendMessage(Utils.getClickableDecisionMessage(
-                        getPrefix() + getMessage("sibling_unsibling_confirm"),
-                        getMessage("confirm"),
+                        getMessage(confirmMK),
+                        getMessage(CONFIRM_MK, false),
                         "/family sibling unsibling confirm",
-                        getMessage("cancel"),
+                        getMessage(CANCEL_MK, false),
                         "/family sibling unsibling cancel"));
                 return true;
             }
 
-            if (!force && !Utils.hasEnoughMoney(player.getServerName(), playerUUID, "sibling_unsibling_leaving_player")) {
-                sender.sendMessage(getPrefix() + getMessage("not_enough_money"));
+            if (!force && !Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.SIBLING_UNSIBLING_LEAVING_PLAYER)) {
+                sender.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK));
                 return true;
             }
-            if (!force && !Utils.hasEnoughMoney(player.getServerName(), siblingUUID, "sibling_unsibling_left_player")) {
-                sender.sendMessage(getPrefix() + getMessage("player_not_enough_money").replace("%player%", playerFam.getSibling().getName()));
+            if (!force && !Utils.hasEnoughMoney(player.getServerName(), siblingUUID, WithdrawKey.SIBLING_UNSIBLING_LEFT_PLAYER)) {
+                sender.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
+                        .replaceText(getTextReplacementConfig("%player%", playerFam.getSibling().getName())));
                 sender.sendMessage(Utils.getClickableDecisionMessage(
-                        getPrefix() + getMessage("take_payment_confirm"),
-                        getMessage("confirm"),
+                        getMessage(TAKE_PAYMENT_CONFIRM_MK),
+                        getMessage(CONFIRM_MK, false),
                         "/family sibling unsibling confirm force",
-                        getMessage("cancel"),
+                        getMessage(CANCEL_MK, false),
                         "/family sibling unsibling cancel"));
                 return true;
             }
 
-            sender.sendMessage(getPrefix() + getMessage("sibling_unsibling_complete"));
-            sibling.sendMessage(getPrefix() + getMessage("sibling_unsiblinged_complete"));
+            sender.sendMessage(getMessage(completeMK));
+            sibling.sendMessage(getMessage(completeMK));
 
             if (force) {
-                Utils.withdrawMoney(player.getServerName(), playerUUID, "sibling_unsibling_leaving_player", "sibling_unsibling_left_player");
+                Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.SIBLING_UNSIBLING_LEAVING_PLAYER, WithdrawKey.SIBLING_UNSIBLING_LEFT_PLAYER);
             } else {
-                Utils.withdrawMoney(player.getServerName(), playerUUID, "sibling_unsibling_leaving_player");
-                Utils.withdrawMoney(player.getServerName(), siblingUUID, "sibling_unsibling_left_player");
+                Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.SIBLING_UNSIBLING_LEAVING_PLAYER);
+                Utils.withdrawMoney(player.getServerName(), siblingUUID, WithdrawKey.SIBLING_UNSIBLING_LEFT_PLAYER);
             }
 
             for (String command : LunaticFamily.getConfig().getSuccessCommands("unsibling")) {

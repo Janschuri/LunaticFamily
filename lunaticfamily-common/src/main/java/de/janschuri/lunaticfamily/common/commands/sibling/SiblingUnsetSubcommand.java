@@ -1,32 +1,48 @@
 package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.family.SiblingSubcommand;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
+import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
 
 import java.util.UUID;
 
 public class SiblingUnsetSubcommand extends Subcommand {
-    private static final String MAIN_COMMAND = "sibling";
-    private static final String NAME = "unset";
-    private static final String PERMISSION = "lunaticfamily.admin.sibling";
 
-    public SiblingUnsetSubcommand() {
-        super(MAIN_COMMAND, NAME, PERMISSION);
+    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
+    private final CommandMessageKey noSiblingMK = new CommandMessageKey(this,"no_sibling");
+    private final CommandMessageKey unsetMK = new CommandMessageKey(this,"unset");
+
+
+    @Override
+    public String getPermission() {
+        return "lunaticfamily.admin.sibling";
     }
+
+    @Override
+    public String getName() {
+        return "unset";
+    }
+
+    @Override
+    public SiblingSubcommand getParentCommand() {
+        return new SiblingSubcommand();
+    }
+
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(getPrefix() + getMessage("no_permission"));
+        if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else {
             if (!sender.hasPermission("lunaticFamily.admin.sibling")) {
-                sender.sendMessage(getPrefix() + getMessage("no_permission"));
+                sender.sendMessage(getMessage(NO_PERMISSION_MK));
                 return true;
             } else if (args.length < 1) {
-                sender.sendMessage(getPrefix() + getMessage("wrong_usage"));
+                sender.sendMessage(getMessage(WRONG_USAGE_MK));
                 Logger.debugLog("SiblingUnsetSubcommand: Wrong usage");
                 return true;
             }
@@ -38,14 +54,16 @@ public class SiblingUnsetSubcommand extends Subcommand {
                 player1UUID = UUID.fromString(args[0]);
 
                 if (PlayerDataTable.getID(player1UUID) < 0) {
-                    sender.sendMessage(getPrefix() + getMessage("player_not_exist").replace("%player%", player1Name));
+                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                            .replaceText(getTextReplacementConfig("%player%", player1Name)));
                     return true;
                 }
             } else {
                 player1UUID = PlayerDataTable.getUUID(player1Name);
 
                 if (player1UUID == null) {
-                    sender.sendMessage(getPrefix() + getMessage("player_not_exist").replace("%player%", player1Name));
+                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                            .replaceText(getTextReplacementConfig("%player%", player1Name)));
                     return true;
                 }
             }
@@ -54,11 +72,14 @@ public class SiblingUnsetSubcommand extends Subcommand {
 
 
                 if (!player1Fam.hasSibling()) {
-                    sender.sendMessage(getPrefix() + getMessage("admin_sibling_unset_no_sibling").replace("%player%", player1Fam.getName()));
+                    sender.sendMessage(getMessage(noSiblingMK)
+                            .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
                 } else {
                     FamilyPlayerImpl siblingFam = player1Fam.getSibling();
                     player1Fam.removeSibling();
-                    sender.sendMessage(getPrefix() + getMessage("admin_sibling_unset_sibling").replace("%player1%", player1Fam.getName()).replace("%player2%", siblingFam.getName()));
+                    sender.sendMessage(getMessage(unsetMK)
+                            .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
+                            .replaceText(getTextReplacementConfig("%player2%", siblingFam.getName())));
                 }
         }
         return true;
