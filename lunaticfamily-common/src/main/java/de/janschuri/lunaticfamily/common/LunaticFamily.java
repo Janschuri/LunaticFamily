@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import de.janschuri.lunaticfamily.Config;
 import de.janschuri.lunaticfamily.common.commands.family.*;
 import de.janschuri.lunaticfamily.common.config.ConfigImpl;
 import de.janschuri.lunaticfamily.common.config.FamilyTreeJSON;
@@ -31,7 +30,7 @@ public final class LunaticFamily {
     public static boolean isDebug;
 
     private static LanguageConfigImpl languageConfig;
-    private static Config config;
+    private static de.janschuri.lunaticfamily.Config config;
 
     static final String[] commands = {
         "family",
@@ -93,6 +92,7 @@ public final class LunaticFamily {
         if (LunaticFamily.mode != Mode.BACKEND) {
             Database.loadDatabase();
             FamilyTreeJSON.loadFamilyTreeJSON();
+            platform.getFamilyTree().loadFamilyTreeMap(FamilyTreeJSON.getContent());
             registerCommands();
             platform.registerListener();
         }
@@ -133,7 +133,7 @@ public final class LunaticFamily {
         return languageConfig;
     }
 
-    public static Config getConfig() {
+    public static de.janschuri.lunaticfamily.Config getConfig() {
         return config;
     }
 }

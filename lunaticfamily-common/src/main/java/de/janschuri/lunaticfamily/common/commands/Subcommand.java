@@ -1,8 +1,8 @@
 package de.janschuri.lunaticfamily.common.commands;
 
 
+import de.janschuri.lunaticfamily.LanguageConfig;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticlib.LanguageConfig;
 import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.common.command.AbstractLunaticCommand;
 

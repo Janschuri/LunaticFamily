@@ -1,8 +1,7 @@
 package de.janschuri.lunaticfamily.common.config;
 
-import de.janschuri.lunaticfamily.Config;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticlib.common.config.AbstractConfig;
+import de.janschuri.lunaticlib.common.config.LunaticConfigImpl;
 import de.janschuri.lunaticlib.common.utils.Mode;
 
 import java.nio.file.Path;
@@ -10,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ConfigImpl extends AbstractConfig implements Config {
+public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunaticfamily.Config {
     private static final String CONFIG_FILE = "config.yml";
     private String languageKey;
     private String defaultGender;
