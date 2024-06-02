@@ -59,7 +59,7 @@ public class SiblingAcceptSubcommand extends Subcommand {
                     return true;
                 }
 
-                if (!Utils.isPlayerOnRegisteredServer(sibling.getUniqueId())) {
+                if (!Utils.isPlayerOnRegisteredServer(sibling)) {
                     player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
                             .replaceText(getTextReplacementConfig("%player%", sibling.getName()))
                             .replaceText(getTextReplacementConfig("%server%", sibling.getServerName())));

@@ -5,8 +5,10 @@ import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticfamily.Config;
 import de.janschuri.lunaticfamily.common.commands.family.*;
 import de.janschuri.lunaticfamily.common.config.ConfigImpl;
+import de.janschuri.lunaticfamily.common.config.FamilyTreeJSON;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.database.Database;
+import de.janschuri.lunaticfamily.common.futurerequests.LoadFamilyTreeMapRequest;
 import de.janschuri.lunaticfamily.common.futurerequests.SpawnParticlesCloudRequest;
 import de.janschuri.lunaticfamily.common.futurerequests.UpdateFamilyTreeRequest;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -41,11 +43,12 @@ public final class LunaticFamily {
     private static final FutureRequest[] futureRequests = {
         new UpdateFamilyTreeRequest(),
         new SpawnParticlesCloudRequest(),
+        new LoadFamilyTreeMapRequest(),
     };
 
     private static Path dataDirectory;
-    static Mode mode = Mode.STANDALONE;
-    static Platform platform;
+    private static Mode mode = Mode.STANDALONE;
+    private static Platform platform;
 
     public static Mode getMode() {
         return mode;
@@ -80,10 +83,17 @@ public final class LunaticFamily {
 
 
         loadConfig();
-        Database.loadDatabase();
+
+        Logger.debugLog("Mode: " + LunaticFamily.mode);
+
         registerRequests();
-        registerCommands();
-        platform.registerListener();
+
+        if (LunaticFamily.mode != Mode.BACKEND) {
+            Database.loadDatabase();
+            FamilyTreeJSON.loadFamilyTreeJSON();
+            registerCommands();
+            platform.registerListener();
+        }
 
         Logger.infoLog("LunaticFamily enabled.");
     }

@@ -1,11 +1,9 @@
 package de.janschuri.lunaticfamily.platform.bukkit;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.futurerequests.GetFamilyTreeJSONContent;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.platform.FamilyTree;
-import de.janschuri.lunaticlib.common.utils.Mode;
 import de.janschuri.lunaticlib.platform.bukkit.util.ItemStackUtils;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
@@ -21,10 +19,6 @@ import org.bukkit.inventory.ItemStack;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -35,16 +29,13 @@ public class FamilyTreeImpl implements FamilyTree {
     private static final List<NameKey> advancementNameKeys = new ArrayList<>();
     private static final Map<String, Advancement> advancementMap= new HashMap<>();
 
-    private static String JSONContent = null;
+    @Override
+    public boolean loadFamilyTreeMap(String JSONContent) {
+        JSONArray jsonArray = new JSONArray(JSONContent);
 
-
-    public void loadFamilyTreeMap() {
-        File json = new File(LunaticFamily.getDataDirectory().toAbsolutePath() + "/familyTree.json");
-
-        if (!json.exists()) {
-            BukkitLunaticFamily.getInstance().saveResource("familyTree.json", false);
+        if (jsonArray.isEmpty()) {
+            return false;
         }
-
 
         String title = "";
         String description = "";
@@ -64,10 +55,6 @@ public class FamilyTreeImpl implements FamilyTree {
         advancementNameKeys.add(new NameKey("family_tree", "ego"));
         advancements.add("ego");
 
-        JSONContent = getJSONContent();
-
-        JSONArray jsonArray = new JSONArray(JSONContent);
-
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
@@ -83,6 +70,7 @@ public class FamilyTreeImpl implements FamilyTree {
             advancements.add(name);
             advancementNameKeys.add(new NameKey("family_tree", name));
         }
+        return true;
     }
 
     private Advancement createAdvancement(Advancement parent, String relation, Float x, Float y) {
@@ -110,38 +98,10 @@ public class FamilyTreeImpl implements FamilyTree {
     }
 
     @Override
-    public String getJSONContent() {
-        if (JSONContent == null) {
-            loadJSONContent();
-        }
-
-        return JSONContent;
-    }
-
-    @Override
-    public boolean update(UUID uuid, int id) {
-        return FamilyTree.super.update(uuid, id);
-    }
-
-    @Override
-    public void loadJSONContent() {
-        if (LunaticFamily.getMode() == Mode.BACKEND) {
-            JSONContent = new GetFamilyTreeJSONContent().get();
-        } else {
-            try {
-                JSONContent = new String(Files.readAllBytes(Paths.get(LunaticFamily.getDataDirectory().toAbsolutePath() + "/familyTree.json")));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @Override
     public boolean update(UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
         if (advancements.isEmpty() || advancementMap.isEmpty() || advancementNameKeys.isEmpty()) {
-            loadFamilyTreeMap();
+            return false;
         }
-
 
         Logger.debugLog("Creating FamilyTree for " + uuid);
         Player player = Bukkit.getPlayer(uuid);
@@ -176,6 +136,8 @@ public class FamilyTreeImpl implements FamilyTree {
                 if (relation.equalsIgnoreCase("ego")) {
                     advancement.getDisplay().setBackgroundTexture(background);
                 }
+
+                Logger.debugLog("Adding advancement " + advancementKey + " to player " + player.getName());
                 manager.addAdvancement(advancement);
             }
         }

@@ -9,9 +9,8 @@ import java.util.UUID;
 
 public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
 
-    public static boolean isPlayerOnRegisteredServer(UUID uuid) {
+    public static boolean isPlayerOnRegisteredServer(PlayerSender sender) {
         if (LunaticFamily.getMode() == Mode.PROXY) {
-            PlayerSender sender = LunaticLib.getPlatform().getPlayerSender(uuid);
             return LunaticFamily.getConfig().getServers().contains(sender.getServerName());
         }
         return true;

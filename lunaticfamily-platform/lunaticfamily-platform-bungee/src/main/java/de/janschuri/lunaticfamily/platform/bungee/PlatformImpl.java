@@ -5,10 +5,11 @@ import de.janschuri.lunaticfamily.platform.FamilyTree;
 import de.janschuri.lunaticfamily.platform.Platform;
 import de.janschuri.lunaticfamily.platform.bungee.listener.JoinListener;
 import de.janschuri.lunaticfamily.platform.bungee.listener.QuitListener;
+import net.md_5.bungee.api.plugin.Plugin;
 
 import java.util.UUID;
 
-public class PlatformImpl implements Platform {
+public class PlatformImpl implements Platform<Plugin> {
 
     @Override
     public boolean spawnParticlesCloud(UUID uuid, double[] position, String particleString) {
@@ -32,7 +33,7 @@ public class PlatformImpl implements Platform {
     }
 
     @Override
-    public Object getInstanceOfPlatform() {
+    public Plugin getInstanceOfPlatform() {
         return BungeeLunaticFamily.getInstance();
     }
 

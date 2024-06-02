@@ -79,7 +79,7 @@ public class MarryAcceptSubcommand extends Subcommand {
                         return true;
                     }
 
-                    if (!Utils.isPlayerOnRegisteredServer(partner.getUniqueId())) {
+                    if (!Utils.isPlayerOnRegisteredServer(partner)) {
                         player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
                                 .replaceText(getTextReplacementConfig("%player%", partner.getName().replace("%server%", partner.getServerName()))));
                         return true;

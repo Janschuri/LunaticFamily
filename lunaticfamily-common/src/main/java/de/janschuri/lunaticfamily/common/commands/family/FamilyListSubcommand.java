@@ -61,12 +61,12 @@ public class FamilyListSubcommand extends Subcommand {
                 UUID uuid = player.getUniqueId();
                 FamilyPlayerImpl playerFam = new FamilyPlayerImpl(uuid);
 
-                playerFam.updateFamilyTree();
 
                 Map<String, Integer> familyList = playerFam.getFamilyMap();
-                ComponentBuilder msg = Component.text().append(getMessage(headerMK));
+                ComponentBuilder msg = Component.text().append(getMessage(headerMK, false));
 
                 sender.sendMessage(getFamilyListMessage(list, familyList, msg));
+                playerFam.updateFamilyTree();
             } else {
 
                 String playerName = args[0];
@@ -87,11 +87,11 @@ public class FamilyListSubcommand extends Subcommand {
                     FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
                     Map<String, Integer> familyList = player1Fam.getFamilyMap();
                     ComponentBuilder msg = Component.text();
-                    msg.append(getMessage(othersHeaderMK)
+                    msg.append(getMessage(othersHeaderMK, false)
                             .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
 
                     sender.sendMessage(getFamilyListMessage(list, familyList, msg));
-
+                    player1Fam.updateFamilyTree();
             }
         }
         return true;
@@ -133,7 +133,7 @@ public class FamilyListSubcommand extends Subcommand {
                         .match("%player%")
                         .replacement(name).build();
 
-                Component component = getMessage(relationsMK)
+                Component component = getMessage(relationsMK, false)
                         .replaceText(relationRpl)
                         .replaceText(nameRpl);
 

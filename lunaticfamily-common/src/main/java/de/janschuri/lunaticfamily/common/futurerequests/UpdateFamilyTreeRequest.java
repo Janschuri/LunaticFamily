@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
 
-    private static final String REQUEST_NAME = "LunaticFamily:UpdateFamilyTreeRequest";
+    private static final String REQUEST_NAME = "LunaticFamily:UpdateFamilyTree";
     private static final ConcurrentHashMap<Integer, CompletableFuture<Boolean>> requestMap = new ConcurrentHashMap<>();
 
     public UpdateFamilyTreeRequest() {
@@ -23,7 +23,6 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
 
     @Override
     protected void handleRequest(int requestId, ByteArrayDataInput in) {
-
         boolean success = false;
 
         UUID uuid = UUID.fromString(in.readUTF());
@@ -74,6 +73,8 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF(uuid.toString());
         out.writeUTF(background);
+
+        Logger.debugLog("UpdateFamilyTreeRequest: " + familyList.toString());
 
         int size = familyList.size();
         out.writeInt(size);

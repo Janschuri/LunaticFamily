@@ -6,10 +6,6 @@ import java.util.*;
 
 public interface FamilyTree {
 
-    void loadJSONContent();
-
-    String getJSONContent();
-
     default boolean update(UUID uuid, int id) {
         FamilyPlayer familyPlayer = getFamilyPlayer(id);
         String background = familyPlayer.getBackground();
@@ -35,6 +31,8 @@ public interface FamilyTree {
 
         return update(uuid, background, familyList, names, skins, relationLangs);
     }
+
+    boolean loadFamilyTreeMap(String JSONContent);
 
     boolean update(UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs);
 

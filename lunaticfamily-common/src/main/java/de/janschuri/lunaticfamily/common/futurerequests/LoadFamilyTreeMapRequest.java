@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
+import de.janschuri.lunaticfamily.common.config.FamilyTreeJSON;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.platform.FamilyTree;
 import de.janschuri.lunaticlib.common.futurerequests.FutureRequest;
@@ -11,40 +12,43 @@ import de.janschuri.lunaticlib.common.futurerequests.FutureRequest;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class GetFamilyTreeJSONContent extends FutureRequest<String> {
+public class LoadFamilyTreeMapRequest extends FutureRequest<Boolean> {
 
-    private static final String REQUEST_NAME = "LunaticFamily:UpdateFamilyTreeRequest";
-    private static final ConcurrentHashMap<Integer, CompletableFuture<String>> requestMap = new ConcurrentHashMap<>();
+    private static final String REQUEST_NAME = "LunaticFamily:LoadFamilyTreeMap";
+    private static final ConcurrentHashMap<Integer, CompletableFuture<Boolean>> requestMap = new ConcurrentHashMap<>();
 
-    public GetFamilyTreeJSONContent() {
-        super(REQUEST_NAME, requestMap);
+    public LoadFamilyTreeMapRequest() {
+        super(REQUEST_NAME, requestMap, 5);
     }
 
     @Override
     protected void handleRequest(int requestId, ByteArrayDataInput in) {
         FamilyTree familyTree = LunaticFamily.getPlatform().getFamilyTree();
 
-        String content = "";
+        String content = in.readUTF();
+
+        boolean success = false;
 
         if (familyTree == null) {
             Logger.errorLog("FamilyTree is null. Please check if CrazyAdvancementsAPI is installed or disable it!");
         } else {
-            content = familyTree.getJSONContent();
+            success = familyTree.loadFamilyTreeMap(content);
         }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF(content);
+        out.writeBoolean(success);
         sendResponse(requestId, out.toByteArray());
     }
 
     @Override
     protected void handleResponse(int requestId, ByteArrayDataInput in) {
-        String content = in.readUTF();
-        completeRequest(requestId, content);
+        boolean success = in.readBoolean();
+        completeRequest(requestId, success);
     }
 
-    public String get() {
+    public Boolean get(String serverName) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        return sendRequest(out.toByteArray());
+        out.writeUTF(FamilyTreeJSON.getContent());
+        return sendRequest(serverName, out.toByteArray());
     }
 }

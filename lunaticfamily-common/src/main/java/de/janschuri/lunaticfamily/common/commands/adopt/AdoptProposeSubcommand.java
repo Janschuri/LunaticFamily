@@ -110,7 +110,7 @@ public class AdoptProposeSubcommand extends Subcommand {
                 return true;
             }
 
-            if (!Utils.isPlayerOnRegisteredServer(child.getUniqueId())) {
+            if (!Utils.isPlayerOnRegisteredServer(child)) {
                 player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK).replaceText(getTextReplacementConfig("%player%", child.getName().replace("%server%", child.getServerName()))));
                 return true;
             }

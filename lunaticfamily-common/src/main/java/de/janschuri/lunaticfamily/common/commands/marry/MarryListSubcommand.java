@@ -54,10 +54,10 @@ public class MarryListSubcommand extends Subcommand {
 
             List<Integer> marryList = MarriagesTable.getMarryList(page, 10);
 
-            Component msg = getMessage(headerMK);
+            Component msg = getMessage(headerMK, false);
 
             int index = 1 + (10*(page-1));
-            Logger.debugLog("MarryList: " + marryList.toString());
+            Logger.debugLog("MarryList: " + marryList);
             for (Integer e : marryList) {
                 FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(e);
                 FamilyPlayerImpl player2Fam = new FamilyPlayerImpl(player1Fam.getPartner().getId());
@@ -76,7 +76,7 @@ public class MarryListSubcommand extends Subcommand {
                 TextReplacementConfig heartRpl = TextReplacementConfig.builder().match("%emoji%").replacement(heart).build();
 
                 msg = msg.append(Component.newline())
-                        .append(getMessage(pairsMK)
+                        .append(getMessage(pairsMK, false)
                         .replaceText(indexRpl)
                         .replaceText(player1Rpl)
                         .replaceText(player2Rpl)

@@ -103,7 +103,7 @@ public class MarryPriestSubcommand extends Subcommand {
                     return true;
                 }
 
-                if (!Utils.isPlayerOnRegisteredServer(player1.getUniqueId())) {
+                if (!Utils.isPlayerOnRegisteredServer(player1)) {
                     player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
                             .replaceText(getTextReplacementConfig("%player%", player1.getName()))
                             .replaceText(getTextReplacementConfig("%server%", player1.getServerName())));
@@ -116,7 +116,7 @@ public class MarryPriestSubcommand extends Subcommand {
                     return true;
                 }
 
-                if (!Utils.isPlayerOnRegisteredServer(player2.getUniqueId())) {
+                if (!Utils.isPlayerOnRegisteredServer(player2)) {
                     player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
                             .replaceText(getTextReplacementConfig("%player%", player2.getName()))
                             .replaceText(getTextReplacementConfig("%server%", player2.getServerName())));

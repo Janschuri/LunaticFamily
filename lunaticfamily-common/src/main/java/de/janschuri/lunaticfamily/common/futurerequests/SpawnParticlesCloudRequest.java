@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SpawnParticlesCloudRequest extends FutureRequest<Boolean> {
 
-    private static final String REQUEST_NAME = "LunaticFamily:SpawnParticlesCloudRequest";
+    private static final String REQUEST_NAME = "LunaticFamily:SpawnParticlesCloud";
     private static final ConcurrentHashMap<Integer, CompletableFuture<Boolean>> REQUEST_MAP = new ConcurrentHashMap<>();
 
     public SpawnParticlesCloudRequest() {

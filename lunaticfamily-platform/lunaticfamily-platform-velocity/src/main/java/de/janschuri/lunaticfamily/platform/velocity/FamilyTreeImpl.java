@@ -1,5 +1,6 @@
-package de.janschuri.lunaticfamily.platform.bungee;
+package de.janschuri.lunaticfamily.platform.velocity;
 
+import de.janschuri.lunaticfamily.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.futurerequests.UpdateFamilyTreeRequest;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
@@ -11,10 +12,12 @@ import java.util.UUID;
 
 public class FamilyTreeImpl implements FamilyTree {
 
+
     @Override
     public boolean loadFamilyTreeMap(String JSONContent) {
         return true;
     }
+
 
     @Override
     public boolean update(UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
@@ -22,7 +25,7 @@ public class FamilyTreeImpl implements FamilyTree {
     }
 
     @Override
-    public FamilyPlayerImpl getFamilyPlayer(int id) {
+    public FamilyPlayer getFamilyPlayer(int id) {
         return new FamilyPlayerImpl(id);
     }
 
