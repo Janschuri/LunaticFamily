@@ -30,6 +30,16 @@ public class FamilyTreeImpl implements FamilyTree {
     private static final Map<String, Advancement> advancementMap= new HashMap<>();
 
     @Override
+    public boolean isFamilyTreeMapLoaded() {
+        if (advancements.isEmpty() || advancementMap.isEmpty() || advancementNameKeys.isEmpty()) {
+            Logger.debugLog("FamilyTreeMap is not loaded.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
     public boolean loadFamilyTreeMap(String JSONContent) {
         JSONArray jsonArray = new JSONArray(JSONContent);
 
@@ -98,8 +108,8 @@ public class FamilyTreeImpl implements FamilyTree {
     }
 
     @Override
-    public boolean update(UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
-        if (advancements.isEmpty() || advancementMap.isEmpty() || advancementNameKeys.isEmpty()) {
+    public boolean update(String server, UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
+        if (!isFamilyTreeMapLoaded()) {
             return false;
         }
 

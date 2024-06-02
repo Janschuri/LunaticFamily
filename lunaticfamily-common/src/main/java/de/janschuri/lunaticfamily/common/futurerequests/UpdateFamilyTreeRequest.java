@@ -51,7 +51,7 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
         if (familyTree == null) {
             Logger.errorLog("FamilyTree is null. Please check if CrazyAdvancementsAPI is installed or disable it!");
         } else {
-            success = familyTree.update(uuid, background, familyList, names, skins, relationLangs);
+            success = familyTree.update("", uuid, background, familyList, names, skins, relationLangs);
         }
 
         if (!success) {
@@ -69,7 +69,15 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
         completeRequest(requestId, success);
     }
 
-    public boolean get(UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
+    public boolean get(String server, UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
+        if (new IsFamilyTreeMapLoadedRequest().get(server)) {
+            Logger.debugLog("FamilyTreeMap is loaded.");
+        } else {
+            Logger.debugLog("FamilyTreeMap is not loaded.");
+            new LoadFamilyTreeMapRequest().get(server);
+        }
+
+
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF(uuid.toString());
         out.writeUTF(background);
@@ -87,6 +95,6 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
             out.writeUTF(relationLangs.get(relation));
         }
 
-        return sendRequest(out.toByteArray());
+        return sendRequest(server, out.toByteArray());
     }
 }

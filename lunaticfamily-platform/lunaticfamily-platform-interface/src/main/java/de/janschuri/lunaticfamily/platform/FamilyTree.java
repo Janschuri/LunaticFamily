@@ -6,7 +6,7 @@ import java.util.*;
 
 public interface FamilyTree {
 
-    default boolean update(UUID uuid, int id) {
+    default boolean update(String server, UUID uuid, int id) {
         FamilyPlayer familyPlayer = getFamilyPlayer(id);
         String background = familyPlayer.getBackground();
         Map<String, Integer> familyMap = familyPlayer.getFamilyMap();
@@ -29,12 +29,14 @@ public interface FamilyTree {
             relationLangs.put(entry.getKey(), relationLang);
         }
 
-        return update(uuid, background, familyList, names, skins, relationLangs);
+        return update(server, uuid, background, familyList, names, skins, relationLangs);
     }
+
+    boolean isFamilyTreeMapLoaded();
 
     boolean loadFamilyTreeMap(String JSONContent);
 
-    boolean update(UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs);
+    boolean update(String server, UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs);
 
     FamilyPlayer getFamilyPlayer(int id);
 

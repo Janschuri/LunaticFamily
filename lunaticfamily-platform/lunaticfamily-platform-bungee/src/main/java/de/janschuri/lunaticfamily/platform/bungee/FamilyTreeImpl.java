@@ -12,13 +12,18 @@ import java.util.UUID;
 public class FamilyTreeImpl implements FamilyTree {
 
     @Override
+    public boolean isFamilyTreeMapLoaded() {
+        return true;
+    }
+
+    @Override
     public boolean loadFamilyTreeMap(String JSONContent) {
         return true;
     }
 
     @Override
-    public boolean update(UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
-        return new UpdateFamilyTreeRequest().get(uuid, background, familyList, names, skins, relationLangs);
+    public boolean update(String server, UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
+        return new UpdateFamilyTreeRequest().get(server, uuid, background, familyList, names, skins, relationLangs);
     }
 
     @Override

@@ -637,16 +637,18 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         return familyList;
     }
 
-    public void updateFamilyTree() {
+    public boolean updateFamilyTree() {
         if (player.isOnline()) {
             FamilyTree familyTree = LunaticFamily.getPlatform().getFamilyTree();
 
             if (familyTree == null) {
                 Logger.errorLog("FamilyTree is null. Please check if CrazyAdvancementsAPI is installed or disable it!");
+                return false;
             } else {
-                familyTree.update(this.uuid, this.id);
+                return familyTree.update(player.getServerName(), this.uuid, this.id);
             }
         }
+        return true;
     }
 
 }

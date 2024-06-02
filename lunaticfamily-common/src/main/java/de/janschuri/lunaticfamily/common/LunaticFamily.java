@@ -8,6 +8,7 @@ import de.janschuri.lunaticfamily.common.config.ConfigImpl;
 import de.janschuri.lunaticfamily.common.config.FamilyTreeJSON;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.database.Database;
+import de.janschuri.lunaticfamily.common.futurerequests.IsFamilyTreeMapLoadedRequest;
 import de.janschuri.lunaticfamily.common.futurerequests.LoadFamilyTreeMapRequest;
 import de.janschuri.lunaticfamily.common.futurerequests.SpawnParticlesCloudRequest;
 import de.janschuri.lunaticfamily.common.futurerequests.UpdateFamilyTreeRequest;
@@ -44,6 +45,7 @@ public final class LunaticFamily {
         new UpdateFamilyTreeRequest(),
         new SpawnParticlesCloudRequest(),
         new LoadFamilyTreeMapRequest(),
+        new IsFamilyTreeMapLoadedRequest(),
     };
 
     private static Path dataDirectory;

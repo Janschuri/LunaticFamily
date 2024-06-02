@@ -3,14 +3,12 @@ package de.janschuri.lunaticfamily.common.listener;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.family.MarrySubcommand;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
-import de.janschuri.lunaticfamily.common.futurerequests.LoadFamilyTreeMapRequest;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
-import de.janschuri.lunaticlib.common.utils.Mode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,15 +29,6 @@ public class JoinListenerExecuter {
         if (!Utils.isPlayerOnRegisteredServer(sender))  {
             Logger.debugLog("JoinListenerExecuter: " + sender.getName() + " is not on a registered server");
             return true;
-        }
-
-        if (LunaticFamily.getMode() == Mode.PROXY && !registeredServers.contains(sender.getServerName())) {
-            if (new LoadFamilyTreeMapRequest().get(sender.getServerName())) {
-                registeredServers.add(sender.getServerName());
-                Logger.infoLog("Loaded family tree for server " + sender.getServerName());
-            } else {
-                Logger.errorLog("JoinListenerExecuter: Failed to load family tree for server " + sender.getServerName());
-            }
         }
 
 

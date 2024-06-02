@@ -67,5 +67,5 @@ public interface FamilyPlayer {
 
     Map<String, Integer> getFamilyMap();
 
-    void updateFamilyTree();
+    boolean updateFamilyTree();
 }

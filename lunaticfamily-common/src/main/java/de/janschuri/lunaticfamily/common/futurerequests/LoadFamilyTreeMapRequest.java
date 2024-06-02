@@ -18,7 +18,7 @@ public class LoadFamilyTreeMapRequest extends FutureRequest<Boolean> {
     private static final ConcurrentHashMap<Integer, CompletableFuture<Boolean>> requestMap = new ConcurrentHashMap<>();
 
     public LoadFamilyTreeMapRequest() {
-        super(REQUEST_NAME, requestMap, 5);
+        super(REQUEST_NAME, requestMap);
     }
 
     @Override
