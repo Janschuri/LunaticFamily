@@ -22,7 +22,7 @@ import java.nio.file.Path;
         version = "1.1.0",
         authors = "janschuri",
         dependencies = {
-        @Dependency(id = "lunaticlib", optional = true)
+        @Dependency(id = "lunaticlib")
 
         }
 )

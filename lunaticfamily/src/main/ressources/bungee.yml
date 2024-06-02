@@ -4,7 +4,7 @@ main: de.janschuri.lunaticfamily.platform.bungee.BungeeLunaticFamily
 api-version: '1.20'
 author: Janschuri
 description: A plugin that allows you to create a family tree.
-softdepend:
+depend:
   - LunaticLib
 commands:
   family:
