@@ -91,8 +91,12 @@ public final class LunaticFamily {
 
         if (LunaticFamily.mode != Mode.BACKEND) {
             Database.loadDatabase();
+
             FamilyTreeJSON.loadFamilyTreeJSON();
-            platform.getFamilyTree().loadFamilyTreeMap(FamilyTreeJSON.getContent());
+
+            if (config.isUseCrazyAdvancementAPI()) {
+                platform.getFamilyTree().loadFamilyTreeMap(FamilyTreeJSON.getContent());
+            }
             registerCommands();
             platform.registerListener();
         }

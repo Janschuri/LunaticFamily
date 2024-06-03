@@ -12,7 +12,7 @@ import java.nio.file.Path;
 public class BukkitLunaticFamily extends JavaPlugin {
 
     private static BukkitLunaticFamily instance;
-    public static boolean installedCrazyAdvancementsAPI = false;
+    private static boolean installedCrazyAdvancementsAPI = false;
 
     @Override
     public void onEnable() {
@@ -39,5 +39,9 @@ public class BukkitLunaticFamily extends JavaPlugin {
     @Override
     public void onDisable() {
         LunaticFamily.onDisable();
+    }
+
+    public static boolean isInstalledCrazyAdvancementsAPI() {
+        return installedCrazyAdvancementsAPI;
     }
 }

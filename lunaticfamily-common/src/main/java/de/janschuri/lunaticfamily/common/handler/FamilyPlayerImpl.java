@@ -638,7 +638,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public boolean updateFamilyTree() {
-        if (player.isOnline()) {
+        if (player.isOnline() && LunaticFamily.getConfig().isUseCrazyAdvancementAPI()) {
             FamilyTree familyTree = LunaticFamily.getPlatform().getFamilyTree();
 
             if (familyTree == null) {

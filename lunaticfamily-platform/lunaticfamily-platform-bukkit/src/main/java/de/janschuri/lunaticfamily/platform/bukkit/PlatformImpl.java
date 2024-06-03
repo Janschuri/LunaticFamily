@@ -42,7 +42,7 @@ public class PlatformImpl implements Platform<JavaPlugin> {
     }
 
     public FamilyTreeImpl getFamilyTree() {
-        if (!BukkitLunaticFamily.installedCrazyAdvancementsAPI) {
+        if (!BukkitLunaticFamily.isInstalledCrazyAdvancementsAPI()) {
             Logger.errorLog("FamilyTree is null. Please check if CrazyAdvancementsAPI is installed or disable it!");
             return null;
         }
