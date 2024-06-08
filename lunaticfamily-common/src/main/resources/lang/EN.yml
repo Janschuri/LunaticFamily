@@ -33,7 +33,7 @@ commands:
         aliases:
           - accept
         messages:
-          help: "&6%command% %subcommand% &7- Accept an adoption request."
+          help: "&6/%command% %subcommand% &7- Accept an adoption request."
           got_adopted: "You have been adopted by %player1% and %player2%!"
           adopted_by_single: "You have been adopted by %player%!"
           adopted: "You have adopted %player%."
@@ -43,7 +43,7 @@ commands:
         aliases:
           - deny
         messages:
-          help: "&6%command% %subcommand% &7- Deny an adoption request."
+          help: "&6/%command% %subcommand% &7- Deny an adoption request."
           deny: "You have denied the adoption request from %player%."
           denied: "Sorry, %player% does not want to be adopted by you."
           no_request: "You have no adoption requests."
@@ -51,7 +51,7 @@ commands:
         aliases:
           - kickout
         messages:
-          help: "&6%command% %subcommand% &b<%param%> &7- Kick your child out of the family."
+          help: "&6/%command% %subcommand% &b<%param%> &7- Kick your child out of the family."
           specify_child: "Please specify a child."
           kickout: "You have kicked %player% out of the house. This player is no longer adopted by you."
           child: "%player% has kicked you out of the house. You are no longer adopted."
@@ -65,7 +65,7 @@ commands:
         aliases:
           - moveout
         messages:
-          help: "&6%command% %subcommand% &7- Move out from home and leave your parents."
+          help: "&6/%command% %subcommand% &7- Move out from home and leave your parents."
           moveout: "You have moved out. You are no longer adopted."
           confirm: "Please confirm that you want to move out!"
           child: "%player% has moved out. This player is no longer adopted by you."
@@ -76,7 +76,7 @@ commands:
         aliases:
           - propose
         messages:
-          help: "&6%command% %subcommand% &b<%param%> &7- Propose adoption to a player."
+          help: "&6/%command% %subcommand% &b<%param%> &7- Propose adoption to a player."
           limit: "You cannot adopt another child. You have already reached the limit of two children."
           open_request: "%player% already has an open adoption request."
           request: "%player1% and %player2% would like to adopt you. Are you okay with it?"
@@ -96,7 +96,7 @@ commands:
         aliases:
           - set
         messages:
-          help: "&6%command% %subcommand% &b<%param%> &b<%param%> &7- Set the adoption of a child by a player."
+          help: "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Set the adoption of a child by a player."
           no_single_adopt: "%player% is not married. You must be married to adopt a child."
           adopt_limit: "%player% already has two children."
           same_player: "A player cannot be their own child."
@@ -111,7 +111,7 @@ commands:
         aliases:
           - unset
         messages:
-          help: "&6%command% %subcommand% &b<%param%> &7- Unset the adoption of a child by a player."
+          help: "&6/%command% %subcommand% &b<%param%> &7- Unset the adoption of a child by a player."
           not_adopted: "%player% is not adopted."
           unset: "You have dissolved the adoption of %child% by %parent1% and %parent2%."
           unset_by_single: "You have dissolved the adoption of %child% by %parent%."
@@ -119,7 +119,7 @@ commands:
         aliases:
           - help
         messages:
-          help: "&6%command% %subcommand% &7- Show the help page for %command%."
+          help: "&6/%command% %subcommand% &7- Show the help page for %command%."
   family:
     aliases:
       - family
@@ -129,13 +129,13 @@ commands:
         aliases:
           - background
         messages:
-          help: "&6%command% %subcommand% &b<%param%> &7- Change the background of your family tree."
+          help: "&6/%command% %subcommand% &b<%param%> &7- Change the background of your family tree."
           set: "Background has been reset."
       delete:
         aliases:
           - delete
         messages:
-          help: "&6%command% %subcommand% &b<%param%> &7- Delete a player from the database."
+          help: "&6/%command% %subcommand% &b<%param%> &7- Delete a player from the database."
           confirm: "Do you really want to delete %uuid% from the database?"
           deleted: "You have deleted %uuid% from the database."
           cancel: "You have canceled the deletion of %uuid%."
@@ -143,8 +143,8 @@ commands:
         aliases:
           - list
         messages:
-          help: "&6%command% %subcommand% &7- Show a list of all your family members."
-          help_others: "&6%command% %subcommand% &b<%param%> &7- Show a list of all the family members of a player."
+          help: "&6/%command% %subcommand% &7- Show a list of all your family members."
+          help_others: "&6/%command% %subcommand% &b<%param%> &7- Show a list of all the family members of a player."
           header: "Your family:"
           others_header: "%player%'s family:"
           relations: "&6%relation%: &b%player%"
@@ -152,19 +152,19 @@ commands:
         aliases:
           - tree
         messages:
-          help: "&6%command% %subcommand% &7- Update your family tree."
+          help: "&6/%command% %subcommand% &7- Update your family tree."
           reloaded: "Your family tree has been reloaded."
       reload:
         aliases:
           - reload
         messages:
-          help: "&6%command% %subcommand% &7- Reload the configuration."
+          help: "&6/%command% %subcommand% &7- Reload the configuration."
           reloaded: "The configuration has been reloaded."
       help:
         aliases:
           - help
         messages:
-          help: "&6%command% %subcommand% &7- Show the help page for %command%."
+          help: "&6/%command% %subcommand% &7- Show the help page for %command%."
   gender:
     aliases:
       - gender
@@ -174,7 +174,7 @@ commands:
         aliases:
           - set
         messages:
-          help: "&6%command% %subcommand% &3(<%param%>) &7- Set your gender."
+          help: "&6/%command% %subcommand% &3(<%param%>) &7- Set your gender."
           set: "Choose your gender: "
           set_hover: "Set cour gender to %gender%."
           changed: "You have changed your gender to %gender%."
@@ -188,15 +188,15 @@ commands:
         aliases:
           - info
         messages:
-          help: "&6%command% %subcommand% &7- Show your gender."
-          help_others: "&6%command% %subcommand% &b<%param%> &7- Show the gender of a player."
+          help: "&6/%command% %subcommand% &7- Show your gender."
+          help_others: "&6/%command% %subcommand% &b<%param%> &7- Show the gender of a player."
           info: "Your gender is %gender%."
           info_others: "%player%'s gender is %gender%."
       help:
         aliases:
           - help
         messages:
-          help: "&6%command% %subcommand% &7- Show the help page for %command%."
+          help: "&6/%command% %subcommand% &7- Show the help page for %command%."
   marry:
     aliases:
       - marry
@@ -211,7 +211,7 @@ commands:
         aliases:
           - propose
         messages:
-          help: "&6%command% %subcommand% &b<%param%> &7- Propose marriage to a player."
+          help: "&6/%command% %subcommand% &b<%param%> &7- Propose marriage to a player."
           already_married: "You are already married to %player%."
           player_already_married: "%player% is already married."
           request: "%player1%, would you like to marry %player2% on this Minecraft server?"
@@ -226,7 +226,7 @@ commands:
         aliases:
           - priest
         messages:
-          help: "&6%command% %subcommand% <%param%> <%param%> &7- Marry two players."
+          help: "&6/%command% %subcommand% <%param%> <%param%> &7- Marry two players."
           already_priest: "You are already marrying two players."
           request: "%player1%, would you like to marry %player2% on this Minecraft server?"
           player_already_married: "%player% is already married."
@@ -240,7 +240,7 @@ commands:
         aliases:
           - accept
         messages:
-          help: "&6%command% %subcommand% &7- Accept a marriage proposal."
+          help: "&6/%command% %subcommand% &7- Accept a marriage proposal."
           open_request_partner: "You must wait for your future partner's response!"
           no_request: "You have no marriage proposal."
           too_many_children: "%player1% and %player2% have more than 2 children together. %player1% and %player2% must remove %amount% children before they can marry."
@@ -251,7 +251,7 @@ commands:
         aliases:
           - deny
         messages:
-          help: "&6%command% %subcommand% &7- Deny a marriage proposal."
+          help: "&6/%command% %subcommand% &7- Deny a marriage proposal."
           no_request: "You have no marriage proposal."
           denied: "Sorry, %player% does not want to marry you."
           cancel: "The wedding has been canceled."
@@ -259,7 +259,7 @@ commands:
         aliases:
           - divorce
         messages:
-          help: "&6%command% %subcommand% &7- Get divorced."
+          help: "&6/%command% %subcommand% &7- Get divorced."
           no_partner: "You are not married!"
           divorced: "You are now divorced!"
           confirm: "Please confirm that you want to divorce."
@@ -268,7 +268,7 @@ commands:
         aliases:
           - kiss
         messages:
-          help: "&6%command% %subcommand% &7- Kiss your partner."
+          help: "&6/%command% %subcommand% &7- Kiss your partner."
           no_partner: "You are not married!"
           kiss: "You have kissed %player%."
           got_kissed: "%player% has kissed you."
@@ -276,7 +276,7 @@ commands:
         aliases:
           - gift
         messages:
-          help: "&6%command% %subcommand% &7- Gift the item in your hand to your partner."
+          help: "&6/%command% %subcommand% &7- Gift the item in your hand to your partner."
           no_partner: "You are not married!"
           empty_hand: "You must be holding an item in your hand."
           partner_full_inv: "Your partner has no space in their inventory."
@@ -286,7 +286,7 @@ commands:
         aliases:
           - heart
         messages:
-          help: "&6%command% %subcommand% <%param%> &7- Change the color of your heart in the marriage list."
+          help: "&6/%command% %subcommand% <%param%> &7- Change the color of your heart in the marriage list."
           no_color: "You must specify a color."
           color_set: "You have chosen the color %color%."
           color: "color"
@@ -294,14 +294,14 @@ commands:
         aliases:
           - list
         messages:
-          help: "&6%command% %subcommand% &7- List all married couples."
+          help: "&6/%command% %subcommand% &7- List all married couples."
           header: "All married couples on this server: "
           pairs: "&6%index%: &b%player1% %emoji% &b%player2%"
       set:
         aliases:
           - set
         messages:
-          help: "&6%command% %subcommand% &b<%param%> <%param%> &7- Set the marriage between a couple."
+          help: "&6/%command% %subcommand% &b<%param%> <%param%> &7- Set the marriage between a couple."
           same_player: "A player cannot be their own partner."
           already_married: "%player% is already married."
           too_many_children: "%player1% and %player2% have more than 2 children together. %amount% children must be removed before %player1% and %player2% can marry."
@@ -313,14 +313,14 @@ commands:
         aliases:
           - set
         messages:
-          help: "&6%command% %subcommand% &b<%param%> &7- Unset the marriage between a couple."
+          help: "&6/%command% %subcommand% &b<%param%> &7- Unset the marriage between a couple."
           no_partner: "%player% is not married."
           divorced: "You have dissolved the marriage between %player1% and %player2%."
       help:
         aliases:
           - help
         messages:
-          help: "&6%command% %subcommand% &7- Show the help page for %command%."
+          help: "&6/%command% %subcommand% &7- Show the help page for %command%."
   sibling:
     aliases:
       - sibling
@@ -330,7 +330,7 @@ commands:
         aliases:
           - propose
         messages:
-          help: "&6%command% %subcommand% &b<%param%> &7- Propose siblinghood to a player."
+          help: "&6/%command% %subcommand% &b<%param%> &7- Propose siblinghood to a player."
           has_sibling: "You already have a sibling."
           is_adopted: "You are adopted. Your parents can adopt a sibling for you."
           self_request: "You cannot be your own sibling."
@@ -345,21 +345,21 @@ commands:
         aliases:
           - accept
         messages:
-          help: "&6%command% %subcommand% &7- Accept a sibling request."
+          help: "&6/%command% %subcommand% &7- Accept a sibling request."
           no_request: "You have no sibling request."
           complete: "You and %player% are now siblings!"
       deny:
         aliases:
           - deny
         messages:
-          help: "&6%command% %subcommand% &7- Deny a sibling request."
+          help: "&6/%command% %subcommand% &7- Deny a sibling request."
           no_request: "You have no sibling request."
           deny: "You have denied the sibling request from %player%."
       unsibling:
         aliases:
           - unsibling
         messages:
-          help: "&6%command% %subcommand% &7- Un-sibling with your sibling."
+          help: "&6/%command% %subcommand% &7- Un-sibling with your sibling."
           no_sibling: "You have no sibling."
           adopted: "You cannot unsibling your sibling, cause you an your sibling are adopted."
           confirm: "Please confirm that you want to unsibling your sibling."
@@ -372,7 +372,7 @@ commands:
         messages:
           same_player: "You cannot be your own sibling."
           same_family: "%player1% and %player2% are already family."
-          help: "&6%command% %subcommand% &b<%param%> &7- Set the siblinghood between two players."
+          help: "&6/%command% %subcommand% &b<%param%> &7- Set the siblinghood between two players."
           added: "The siblings %player1% and %player2% have been successfully added!"
           is_adopted: "%player% is adopted. Set the adoption by the parents to make %player% a sibling."
           set_both_adopted: "%player1% and %player2% are adopted. Set the adoption by the parents or marry the parents to make %player1% and %player2% siblings."
@@ -380,14 +380,14 @@ commands:
         aliases:
           - unset
         messages:
-          help: "&6%command% %subcommand% &7- Unset the siblinghood between two players."
+          help: "&6/%command% %subcommand% &7- Unset the siblinghood between two players."
           no_sibling: "%player% has no sibling."
           unset: "You have unset the sibling relationship between %player1% and %player2%."
       help:
         aliases:
           - help
         messages:
-          help: "&6%command% %subcommand% &7- Show the help page for %command%."
+          help: "&6/%command% %subcommand% &7- Show the help page for %command%."
 genders:
   fe: "feminine"
   ma: "masculine"

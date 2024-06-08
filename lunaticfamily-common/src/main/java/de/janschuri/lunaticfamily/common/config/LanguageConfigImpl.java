@@ -18,8 +18,8 @@ public class LanguageConfigImpl extends LunaticLanguageConfigImpl implements Lan
     private Map<String, String> colorsTranslations = new HashMap<>();
     private final Map<String, Map<String, String>> relationships = new HashMap<>();
 
-    public LanguageConfigImpl(Path dataDirectory, String[] commands) {
-        super(dataDirectory, LunaticFamily.getConfig().getLanguageKey());
+    public LanguageConfigImpl(Path dataDirectory, String languageKey) {
+        super(dataDirectory, languageKey);
     }
 
     public void load() {

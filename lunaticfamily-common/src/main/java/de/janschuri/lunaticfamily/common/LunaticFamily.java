@@ -71,7 +71,8 @@ public final class LunaticFamily {
         }
 
         if (mode != Mode.BACKEND) {
-            languageConfig = new LanguageConfigImpl(dataDirectory, commands);
+            String languageKey = config.getLanguageKey();
+            languageConfig = new LanguageConfigImpl(dataDirectory, languageKey);
             languageConfig.load();
         }
         return true;

@@ -40,7 +40,7 @@ backgrounds:
   - "gold_block"
 allow_single_adopt: true
 language: "EN"
-use_crazy_advancement_api: true
+use_crazy_advancement_api: false
 date_format: "yyyy-MM-dd HH:mm:ss"
 distances:
   marry_kiss_range: 3
