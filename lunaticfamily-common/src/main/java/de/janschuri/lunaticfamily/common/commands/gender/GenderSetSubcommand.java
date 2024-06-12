@@ -141,7 +141,7 @@ public class GenderSetSubcommand extends Subcommand {
 
     @Override
     public Component getParamsName() {
-        return getMessage(genderMK);
+        return getMessage(genderMK, false);
     }
 
     @Override

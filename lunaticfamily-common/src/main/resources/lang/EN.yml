@@ -20,6 +20,7 @@ messages:
   confirm: "Confirm"
   cancel: "Cancel"
   player_name: "player"
+  background: "background"
   no_uuid: "%input% is not a valid UUID."
 help_header: "--- --- --- ---[%header%]--- --- --- ---"
 help_footer: "--- --- -[Page %page%/%pages%]- --- ---"
@@ -119,7 +120,7 @@ commands:
         aliases:
           - help
         messages:
-          help: "&6/%command% %subcommand% &7- Show the help page for %command%."
+          help: "&6/%command% %subcommand% &7- Show the adopt help page."
   family:
     aliases:
       - family
@@ -164,7 +165,7 @@ commands:
         aliases:
           - help
         messages:
-          help: "&6/%command% %subcommand% &7- Show the help page for %command%."
+          help: "&6/%command% %subcommand% &7- Show the family help page."
   gender:
     aliases:
       - gender
@@ -196,7 +197,7 @@ commands:
         aliases:
           - help
         messages:
-          help: "&6/%command% %subcommand% &7- Show the help page for %command%."
+          help: "&6/%command% %subcommand% &7- Show the gender help page."
   marry:
     aliases:
       - marry
@@ -320,7 +321,7 @@ commands:
         aliases:
           - help
         messages:
-          help: "&6/%command% %subcommand% &7- Show the help page for %command%."
+          help: "&6/%command% %subcommand% &7- Show the marry help page."
   sibling:
     aliases:
       - sibling
@@ -387,7 +388,7 @@ commands:
         aliases:
           - help
         messages:
-          help: "&6/%command% %subcommand% &7- Show the help page for %command%."
+          help: "&6/%command% %subcommand% &7- Show the sibling help page."
 genders:
   fe: "feminine"
   ma: "masculine"

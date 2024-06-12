@@ -20,6 +20,7 @@ messages:
   confirm: "Bestätigen"
   cancel: "Abbrechen"
   player_name: "Spielername"
+  background: "Hintergrund"
   no_uuid: "%input% ist keine gültige UUID!"
 help_header: "--- --- --- ---[%header%]--- --- --- ---"
 help_footer: "--- --- -[Seite %page%/%pages%]- --- ---"
@@ -119,7 +120,7 @@ commands:
         aliases:
           - help
         messages:
-          help: "&6/%command% %subcommand% &7- Zeige die Hilfeseite von %command%."
+          help: "&6/%command% %subcommand% &7- Zeige die Adopt-Hilfeseite."
   family:
     aliases:
       - family
@@ -164,7 +165,7 @@ commands:
         aliases:
           - help
         messages:
-          help: "&6/%command% %subcommand% &7- Zeige die Hilfeseite von %command%."
+          help: "&6/%command% %subcommand% &7- Zeige die Family-Hilfeseite."
   gender:
     aliases:
       - gender
@@ -196,7 +197,7 @@ commands:
         aliases:
           - help
         messages:
-          help: "&6/%command% %subcommand% &7- Zeige die Hilfeseite von %command%."
+          help: "&6/%command% %subcommand% &7- Zeige die Gender-Hilfeseite."
   marry:
     aliases:
       - marry
@@ -320,7 +321,7 @@ commands:
         aliases:
           - help
         messages:
-          help: "&6/%command% %subcommand% &7- Zeige die Hilfeseite von %command%."
+          help: "&6/%command% %subcommand% &7- Zeige die Marry-Hilfeseite."
   sibling:
     aliases:
       - sibling
@@ -387,7 +388,7 @@ commands:
         aliases:
           - help
         messages:
-          help: "&6/%command% %subcommand% &7- Zeige die Hilfeseite von %command%."
+          help: "&6/%command% %subcommand% &7- Zeige die Sibling-Hilfeseite."
 genders:
   fe: "weiblich"
   ma: "männlich"

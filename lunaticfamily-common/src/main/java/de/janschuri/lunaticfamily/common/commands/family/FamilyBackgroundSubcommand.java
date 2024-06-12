@@ -1,15 +1,23 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
+import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
+import net.kyori.adventure.text.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FamilyBackgroundSubcommand extends Subcommand {
 
     private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
     private final CommandMessageKey setMK = new CommandMessageKey(this,"set");
+    private final MessageKey backgroundMK = new MessageKey("background");
 
 
     @Override
@@ -20,6 +28,24 @@ public class FamilyBackgroundSubcommand extends Subcommand {
     @Override
     public String getName() {
         return "background";
+    }
+
+    @Override
+    public Component getParamsName() {
+        return getMessage(backgroundMK, false);
+    }
+
+    @Override
+    public List<Map<String, String>> getParams() {
+        List<String> backgrounds = LunaticFamily.getConfig().getBackgrounds();
+
+        Map<String, String> backgroundParams = new HashMap<>();
+
+        for (String background : backgrounds) {
+            backgroundParams.put(background, getPermission());
+        }
+
+        return List.of(backgroundParams);
     }
 
     @Override
