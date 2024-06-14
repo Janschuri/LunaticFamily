@@ -95,7 +95,7 @@ public class GenderSetSubcommand extends Subcommand {
             }
             return true;
         }
-        if (!sender.hasPermission("lunaticFamily.admin.gender")) {
+        if (!sender.hasPermission("lunaticfamily.admin.gender")) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else if (!LunaticFamily.getLanguageConfig().getGenders().contains(args[0].toLowerCase())) {
             sender.sendMessage(getMessage(notExistMK));

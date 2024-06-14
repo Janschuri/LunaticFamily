@@ -51,7 +51,7 @@ public class MarryGiftSubcommand extends Subcommand {
             if (!playerFam.isMarried()) {
                 player.sendMessage(getMessage(noPartnerMK));
                 return true;
-            } else if (!player.hasPermission("lunaticFamily.marry.gift")) {
+            } else if (!player.hasPermission("lunaticfamily.marry.gift")) {
                 player.sendMessage(getMessage(NO_PERMISSION_MK));
                 return true;
             }

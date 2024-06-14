@@ -60,7 +60,7 @@ public class MarryPriestSubcommand extends Subcommand {
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
 
-            if (!player.hasPermission("lunaticFamily.marry.priest")) {
+            if (!player.hasPermission("lunaticfamily.marry.priest")) {
                 sender.sendMessage(getMessage(NO_PERMISSION_MK));
             } else if (args.length < 2) {
                 sender.sendMessage(getMessage(WRONG_USAGE_MK));

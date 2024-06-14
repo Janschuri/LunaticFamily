@@ -53,7 +53,7 @@ public class SiblingSetSubcommand extends Subcommand {
                 }
             }
 
-            if (!sender.hasPermission("lunaticFamily.admin.sibling")) {
+            if (!sender.hasPermission("lunaticfamily.admin.sibling")) {
                 sender.sendMessage(getMessage(NO_PERMISSION_MK));
                 return true;
             } else if (args.length < 1) {

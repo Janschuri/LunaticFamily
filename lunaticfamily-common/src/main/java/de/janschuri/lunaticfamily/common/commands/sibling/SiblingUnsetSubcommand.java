@@ -41,7 +41,7 @@ public class SiblingUnsetSubcommand extends Subcommand {
         if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else {
-            if (!sender.hasPermission("lunaticFamily.admin.sibling")) {
+            if (!sender.hasPermission("lunaticfamily.admin.sibling")) {
                 sender.sendMessage(getMessage(NO_PERMISSION_MK));
                 return true;
             } else if (args.length < 1) {
