@@ -50,7 +50,7 @@ public class SiblingSubcommand extends Subcommand {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
         } else {
             if (args.length == 0) {
-                
+                getHelpCommand().execute(sender, args);
             } else {
                 final String subcommand = args[0];
 
