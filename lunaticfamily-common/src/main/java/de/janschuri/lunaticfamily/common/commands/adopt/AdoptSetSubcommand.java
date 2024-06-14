@@ -192,8 +192,11 @@ public class AdoptSetSubcommand extends Subcommand {
     }
 
     @Override
-    public Component getParamsName() {
-        return getMessage(PLAYER_NAME_MK, false);
+    public List<Component> getParamsNames() {
+        return List.of(
+                getMessage(PLAYER_NAME_MK, false),
+                getMessage(PLAYER_NAME_MK, false)
+        );
     }
 
     @Override

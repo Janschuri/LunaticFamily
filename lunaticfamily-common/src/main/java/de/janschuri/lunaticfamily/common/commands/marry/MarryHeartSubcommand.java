@@ -12,6 +12,7 @@ import de.janschuri.lunaticlib.Sender;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 
+import java.util.List;
 import java.util.UUID;
 
 public class MarryHeartSubcommand extends Subcommand {
@@ -92,8 +93,11 @@ public class MarryHeartSubcommand extends Subcommand {
         return true;
     }
 
+
     @Override
-    public Component getParamsName() {
-        return getMessage(colorMK, false);
+    public List<Component> getParamsNames() {
+        return List.of(
+                getMessage(colorMK, false)
+        );
     }
 }

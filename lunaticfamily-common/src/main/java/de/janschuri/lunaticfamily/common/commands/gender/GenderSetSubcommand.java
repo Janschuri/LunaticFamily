@@ -15,10 +15,7 @@ import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class GenderSetSubcommand extends Subcommand {
 
@@ -67,7 +64,7 @@ public class GenderSetSubcommand extends Subcommand {
                 msg.append(
                         Component.text("\n - " + LunaticFamily.getLanguageConfig().getGenderLang(gender))
                                 .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/family gender set " + gender))
-                                .hoverEvent(HoverEvent.showText(getMessage(setHoverMK)
+                                .hoverEvent(HoverEvent.showText(getMessage(setHoverMK, false)
                                         .replaceText(getTextReplacementConfig("%gender%", getGenderLang(gender)))))
                 );
             }
@@ -141,11 +138,6 @@ public class GenderSetSubcommand extends Subcommand {
     }
 
     @Override
-    public Component getParamsName() {
-        return getMessage(genderMK, false);
-    }
-
-    @Override
     public List<Map<String, String>> getParams() {
         List<String> genders = LunaticFamily.getLanguageConfig().getGenders();
 
@@ -155,7 +147,7 @@ public class GenderSetSubcommand extends Subcommand {
             genderParams.put(gender, getPermission());
         }
 
-        return List.of(genderParams);
+        return List.of(genderParams, getOnlinePlayersParam());
     }
 
     @Override
@@ -163,6 +155,14 @@ public class GenderSetSubcommand extends Subcommand {
         return Map.of(
                 helpMK, getPermission(),
                 adminHelpMK, "lunaticfamily.admin.gender"
+        );
+    }
+
+    @Override
+    public List<Component> getParamsNames() {
+        return List.of(
+                getMessage(genderMK, false),
+                getMessage(PLAYER_NAME_MK, false)
         );
     }
 }

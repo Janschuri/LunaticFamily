@@ -8,6 +8,8 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
 import net.kyori.adventure.text.Component;
 
+import java.util.List;
+
 public class FamilyDeleteSubcommand extends Subcommand {
 
     private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
@@ -85,7 +87,9 @@ public class FamilyDeleteSubcommand extends Subcommand {
     }
 
     @Override
-    public Component getParamsName() {
-        return Component.text("UUID");
+    public List<Component> getParamsNames() {
+        return List.of(
+            Component.text("UUID")
+        );
     }
 }

@@ -181,7 +181,7 @@ commands:
           changed: "You have changed your gender to %gender%."
           not_exist: "This gender does not exist."
           already: "Your gender is already %gender%."
-          admin_help: "%command% %subcommand% <%param%> <%param%> - Set the gender of a player."
+          admin_help: "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Set the gender of a player."
           admin_set: "You have changed the gender of %player% to %gender%."
           admin_already: "The gender of %player% is already %gender%."
           gender: "gender"

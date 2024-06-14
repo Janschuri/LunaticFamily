@@ -31,8 +31,10 @@ public class FamilyBackgroundSubcommand extends Subcommand {
     }
 
     @Override
-    public Component getParamsName() {
-        return getMessage(backgroundMK, false);
+    public List<Component> getParamsNames() {
+        return List.of(
+                getMessage(backgroundMK, false)
+        );
     }
 
     @Override
