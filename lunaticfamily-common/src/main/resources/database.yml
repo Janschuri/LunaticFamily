@@ -6,4 +6,4 @@ MySQL:
   username: root
   password:
 SQLite:
-  Filename: lunaticfamily
+  filename: lunaticfamily
