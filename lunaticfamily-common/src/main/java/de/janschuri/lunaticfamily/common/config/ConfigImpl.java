@@ -43,6 +43,8 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
 
         if (useProxy && LunaticFamily.getMode() != Mode.PROXY) {
             return;
+        } else {
+            servers = getStringList("servers");
         }
 
         useVault = getBoolean("use_vault");
@@ -65,8 +67,6 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
         successCommands = getStringListMap("success_commands");
         commandWithdraws = getDoubleMap("command_withdraws");
         colors = getStringMap("colors");
-
-        servers = getStringList("servers");
     }
 
     public String getLanguageKey() {
