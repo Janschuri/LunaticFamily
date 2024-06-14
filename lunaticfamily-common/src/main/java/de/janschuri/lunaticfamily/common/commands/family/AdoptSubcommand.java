@@ -13,7 +13,7 @@ public class AdoptSubcommand extends Subcommand {
 
     @Override
     public String getPermission() {
-        return "lunaticfamily.admin";
+        return "lunaticfamily.adopt";
     }
 
     @Override
