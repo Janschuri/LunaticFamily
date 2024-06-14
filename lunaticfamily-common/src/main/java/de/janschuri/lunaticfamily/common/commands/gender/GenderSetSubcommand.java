@@ -157,4 +157,12 @@ public class GenderSetSubcommand extends Subcommand {
 
         return List.of(genderParams);
     }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                helpMK, getPermission(),
+                adminHelpMK, "lunaticfamily.admin.gender"
+        );
+    }
 }
