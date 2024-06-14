@@ -11,6 +11,7 @@ import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 
@@ -60,17 +61,17 @@ public class GenderSetSubcommand extends Subcommand {
             }
             PlayerSender player = (PlayerSender) sender;
 
-            Component msg = Component.text(getMessage(setMK) + "\n");
+            ComponentBuilder msg = Component.text().append(getMessage(setMK));
 
             for (String gender : LunaticFamily.getLanguageConfig().getGenders()) {
                 msg.append(
-                        Component.text(" - " + LunaticFamily.getLanguageConfig().getGenderLang(gender) + "\n")
+                        Component.text("\n - " + LunaticFamily.getLanguageConfig().getGenderLang(gender))
                                 .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/family gender set " + gender))
                                 .hoverEvent(HoverEvent.showText(getMessage(setHoverMK)
                                         .replaceText(getTextReplacementConfig("%gender%", getGenderLang(gender)))))
                 );
             }
-            player.sendMessage(msg);
+            player.sendMessage(msg.build());
             return true;
         }
         if (args.length == 1) {
