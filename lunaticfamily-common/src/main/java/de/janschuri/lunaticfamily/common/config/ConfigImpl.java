@@ -43,7 +43,9 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
 
         if (useProxy && LunaticFamily.getMode() != Mode.PROXY) {
             return;
-        } else {
+        }
+
+        if (LunaticFamily.getMode() == Mode.PROXY) {
             servers = getStringList("servers");
         }
 
