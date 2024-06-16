@@ -10,8 +10,15 @@
 # ───║by Janschuri       ║────────────────────────────────#
 # ───╚══════════╝────────────────────────────────#
 # ───────────────────────────────────────────────#
-default_gender: "fe" # gender of the player if not set
-use_vault: false # enable or disable the use of vault, if enabled vault need to be installed on backend servers
+
+
+
+servers: # List of servers that are connected to the proxy via LunaticFamily
+  - "server1"
+  - "server2"
+
+default_gender: "fe"
+use_vault: false
 command_withdraws:
   marry_proposing_player: 10.0
   marry_proposed_player: 10.0
@@ -29,8 +36,8 @@ command_withdraws:
   sibling_proposed_player: 10.0
   sibling_unsibling_leaving_player: 10.0
   sibling_unsibling_left_player: 10.0
-default_background: "moss_block" # default background if not set
-backgrounds: # List of all backgrounds that can be used in /family background. Need to be a block texture
+default_background: "moss_block"
+backgrounds:
   - "moss_block"
   - "oak_planks"
   - "red_wool"
@@ -38,11 +45,9 @@ backgrounds: # List of all backgrounds that can be used in /family background. N
   - "diamond_block"
   - "gold_block"
 allow_single_adopt: true
-language: "DE"
-use_crazy_advancement_api: true
-# Date format for the /marry list
+language: "EN"
+use_crazy_advancement_api: false
 date_format: "yyyy-MM-dd HH:mm:ss"
-# Required distance between players for the respective actions, set to -1 to disable
 distances:
   marry_kiss_range: 3
   marry_propose_range: 3
@@ -70,9 +75,12 @@ success_commands:
   kickout_single: []
   #avaible placeholders: %parent%, %child%
   moveout_single: []
-  #avaible placeholders: %player% %player2%
-  unsibling: []
-colors: # List of all colors that can be used in /marry heart
+
+# Default heart colors for married players, if no color is set. Could be a color name or a hex color code.
+default_heart_color: "white"
+# Default heart colors for unmarried players, if you use status_heart placeholder. Could be a color name or a hex color code.
+unmarried_heart_color: "gray"
+colors:
   black: "#000000"
   dark_blue: "#0000AA"
   dark_green: "#00AA00"
@@ -89,10 +97,8 @@ colors: # List of all colors that can be used in /marry heart
   light_purple: "#FF55FF"
   yellow: "#FFFF55"
   white: "#FFFFFF"
-servers: # List of servers that are connected to the proxy via LunaticFamily
-  - "server1"
-  - "server2"
-family_list: # List of all family members shown in the family list
+
+family_list:
   - partner
   - sibling
   - first_child

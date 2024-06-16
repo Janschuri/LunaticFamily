@@ -1,10 +1,13 @@
 package de.janschuri.lunaticfamily.platform.bukkit;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.platform.Platform;
+import de.janschuri.lunaticfamily.platform.bukkit.external.PlaceholderAPI;
 import de.janschuri.lunaticlib.common.utils.Mode;
 import de.janschuri.lunaticlib.platform.bukkit.external.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.nio.file.Path;
@@ -31,6 +34,11 @@ public class BukkitLunaticFamily extends JavaPlugin {
         Platform platform = new PlatformImpl();
 
         LunaticFamily.onEnable(dataDirectory, mode, platform);
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { //
+            Logger.infoLog("PlaceholderAPI found. Registering placeholders...");
+            new PlaceholderAPI().register(); //
+        }
     }
     public static BukkitLunaticFamily getInstance() {
         return instance;

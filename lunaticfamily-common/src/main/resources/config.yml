@@ -10,7 +10,11 @@
 # ───║by Janschuri       ║────────────────────────────────#
 # ───╚══════════╝────────────────────────────────#
 # ───────────────────────────────────────────────#
+
+
+
 use_proxy: false # If you have installed LunaticFamily on a proxy server, you can enable it here. If enabled, all following settings are ignored.
+
 default_gender: "fe"
 use_vault: true
 command_withdraws:
@@ -69,7 +73,11 @@ success_commands:
   kickout_single: []
   #avaible placeholders: %parent%, %child%
   moveout_single: []
-  #avaible placeholders
+
+# Default heart colors for married players, if no color is set. Could be a color name or a hex color code.
+default_heart_color: "white"
+# Default heart colors for unmarried players, if you use status_heart placeholder. Could be a color name or a hex color code.
+unmarried_heart_color: "gray"
 colors:
   black: "#000000"
   dark_blue: "#0000AA"
@@ -87,6 +95,7 @@ colors:
   light_purple: "#FF55FF"
   yellow: "#FFFF55"
   white: "#FFFFFF"
+
 family_list:
   - partner
   - sibling

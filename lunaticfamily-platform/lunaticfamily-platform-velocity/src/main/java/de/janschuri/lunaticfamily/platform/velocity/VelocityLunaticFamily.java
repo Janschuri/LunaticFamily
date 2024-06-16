@@ -19,7 +19,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "lunaticfamily",
         name = "LunaticFamily",
-        version = "1.1.3",
+        version = "1.1.5",
         authors = "janschuri",
         dependencies = {
         @Dependency(id = "lunaticlib")

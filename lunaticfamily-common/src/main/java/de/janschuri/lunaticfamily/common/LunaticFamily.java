@@ -7,10 +7,7 @@ import de.janschuri.lunaticfamily.common.config.ConfigImpl;
 import de.janschuri.lunaticfamily.common.config.FamilyTreeJSON;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.database.Database;
-import de.janschuri.lunaticfamily.common.futurerequests.IsFamilyTreeMapLoadedRequest;
-import de.janschuri.lunaticfamily.common.futurerequests.LoadFamilyTreeMapRequest;
-import de.janschuri.lunaticfamily.common.futurerequests.SpawnParticlesCloudRequest;
-import de.janschuri.lunaticfamily.common.futurerequests.UpdateFamilyTreeRequest;
+import de.janschuri.lunaticfamily.common.futurerequests.*;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.platform.Platform;
 import de.janschuri.lunaticlib.common.LunaticLib;
@@ -30,7 +27,7 @@ public final class LunaticFamily {
     public static boolean isDebug;
 
     private static LanguageConfigImpl languageConfig;
-    private static de.janschuri.lunaticfamily.Config config;
+    private static ConfigImpl config;
 
     static final String[] commands = {
         "family",
@@ -45,6 +42,7 @@ public final class LunaticFamily {
         new SpawnParticlesCloudRequest(),
         new LoadFamilyTreeMapRequest(),
         new IsFamilyTreeMapLoadedRequest(),
+        new GetPlaceholderRequest(),
     };
 
     private static Path dataDirectory;
@@ -138,7 +136,7 @@ public final class LunaticFamily {
         return languageConfig;
     }
 
-    public static de.janschuri.lunaticfamily.Config getConfig() {
+    public static ConfigImpl getConfig() {
         return config;
     }
 }

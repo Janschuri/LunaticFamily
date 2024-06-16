@@ -1,6 +1,8 @@
 package de.janschuri.lunaticfamily.common.config;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
+import de.janschuri.lunaticfamily.common.utils.Logger;
+import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.common.config.LunaticConfigImpl;
 import de.janschuri.lunaticlib.common.utils.Mode;
 
@@ -18,7 +20,7 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
     private List<String> servers;
     private boolean useCrazyAdvancementAPI;
     private boolean useVault;
-    private boolean useProxy;
+    private boolean useProxy = false;
     private String dateFormat;
     private double marryKissRange;
     private double marryProposeRange;
@@ -39,14 +41,16 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
         super.load();
 
         LunaticFamily.isDebug = getBoolean("debug", false);
-        useProxy = getBoolean("use_proxy", false);
 
-        if (useProxy && LunaticFamily.getMode() != Mode.PROXY) {
-            return;
-        }
+
 
         if (LunaticFamily.getMode() == Mode.PROXY) {
             servers = getStringList("servers");
+        } else {
+            useProxy = getBoolean("use_proxy", false);
+            if (useProxy) {
+                return;
+            }
         }
 
         useVault = getBoolean("use_vault");
@@ -149,5 +153,35 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
 
     public String getColor(String key) {
         return colors.get(key);
+    }
+
+    public String getDefaultHeartColor() {
+        String colorString = getString("default_heart_color", "#FFFFFF");
+
+        if (Utils.isValidHexCode(colorString)) {
+            return colorString;
+        }
+
+        if (colors.containsKey(colorString)) {
+            return colors.get(colorString);
+        }
+
+        Logger.errorLog("Invalid color code or undefined color for default_heart_color in config.yml. Using default color #FFFFFF.");
+        return colorString;
+    }
+
+    public String getUnmarriedHeartColor() {
+        String colorString = getString("unmarried_heart_color", "#AAAAAA");
+
+        if (Utils.isValidHexCode(colorString)) {
+            return colorString;
+        }
+
+        if (colors.containsKey(colorString)) {
+            return colors.get(colorString);
+        }
+
+        Logger.errorLog("Invalid color code or undefined color for unmarried_heart_color in config.yml. Using default color #AAAAAA.");
+        return colorString;
     }
 }

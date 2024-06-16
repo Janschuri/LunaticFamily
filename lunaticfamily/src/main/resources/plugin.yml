@@ -9,6 +9,7 @@ depend:
 softdepend:
   - CrazyAdvancementAPI
   - Vault
+  - PlaceholderAPI
 commands:
   family:
     description: Get information about your family.

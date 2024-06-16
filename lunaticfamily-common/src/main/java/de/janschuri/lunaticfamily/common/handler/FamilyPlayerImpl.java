@@ -155,7 +155,16 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         saveMarriageHeartColor(color);
     }
     public String getHeartColor() {
-        return MarriagesTable.getMarriageHeartColor(this.id);
+
+        if (!isMarried()) {
+            return LunaticFamily.getConfig().getUnmarriedHeartColor();
+        }
+
+        String color = MarriagesTable.getMarriageHeartColor(this.id);
+        if (color == null) {
+            color = LunaticFamily.getConfig().getDefaultHeartColor();
+        }
+        return color;
     }
 
     public FamilyPlayerImpl getPartner() {

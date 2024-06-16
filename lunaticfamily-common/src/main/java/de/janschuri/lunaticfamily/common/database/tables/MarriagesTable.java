@@ -192,9 +192,6 @@ public class MarriagesTable {
             rs = ps.executeQuery();
             while (rs.next()) {
                 if (rs.getInt("player1ID") == playerID || rs.getInt("player2ID") == playerID) {
-                    if (rs.getString("heart") == null) {
-                        return "#FFFFFF";
-                    }
                     return rs.getString("heart");
                 }
             }
@@ -212,7 +209,7 @@ public class MarriagesTable {
                 Error.close(ex);
             }
         }
-        return "#FFFFFF";
+        return null;
     }
 
     public static void saveMarriage(int player1ID, int player2ID) {
