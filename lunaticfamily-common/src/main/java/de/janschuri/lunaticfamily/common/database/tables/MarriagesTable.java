@@ -22,7 +22,8 @@ public class MarriagesTable {
         new ForeignKey("player2ID", Datatype.INTEGER, false, "playerData", "id", "CASCADE"),
         new ForeignKey("priest", Datatype.INTEGER, true, "playerData", "id", "SET NULL"),
         new Column("heart", true),
-        new Column("date", Datatype.TIMESTAMP, false, "CURRENT_TIMESTAMP")
+        new Column("date", Datatype.TIMESTAMP, false, "CURRENT_TIMESTAMP"),
+        new Column("divorceDate", Datatype.TIMESTAMP_NULL, true, "NULL"),
     };
 
     private static final Table TABLE = new Table(NAME, PRIMARY_KEY, COLUMNS);
@@ -44,7 +45,7 @@ public class MarriagesTable {
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT player1ID, player2ID FROM " + NAME + " WHERE player1ID = ? OR player2iD = ?");
+            ps = conn.prepareStatement("SELECT player1ID, player2ID FROM " + NAME + " WHERE (player1ID = ? OR player2iD = ?) AND divorceDate IS NULL");
             ps.setInt(1, id);
             ps.setInt(2, id);
 
@@ -81,7 +82,7 @@ public class MarriagesTable {
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT player1ID, player2ID, date FROM " + NAME + " WHERE player1ID = ? OR player2ID = ?");
+            ps = conn.prepareStatement("SELECT player1ID, player2ID, date FROM " + NAME + " WHERE (player1ID = ? OR player2ID = ?) AND divorceDate IS NULL");
             ps.setInt(1, id);
             ps.setInt(2, id);
 
@@ -119,7 +120,7 @@ public class MarriagesTable {
         try {
             conn = getSQLConnection();
             int offset = (page - 1) * pageSize;
-            ps = conn.prepareStatement("SELECT player1ID FROM " + NAME + " LIMIT ? OFFSET ?;");
+            ps = conn.prepareStatement("SELECT player1ID FROM " + NAME + " WHERE divorceDate IS NULL LIMIT ? OFFSET ?");
             ps.setInt(1, pageSize);
             ps.setInt(2, offset);
             rs = ps.executeQuery();
@@ -306,5 +307,84 @@ public class MarriagesTable {
                 Error.close(ex);
             }
         }
+    }
+
+    public static void divorceMarriage(int playerID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("UPDATE `" + NAME + "` SET divorceDate = CURRENT_TIMESTAMP WHERE player1ID = ? OR player2ID = ?");
+            ps.setInt(1, playerID);
+            ps.setInt(2, playerID);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+    }
+
+    public static int getMarriagesCount() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT COUNT(*) FROM " + NAME + " WHERE divorceDate IS NULL");
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return 0;
+    }
+
+    public static int getTotalMarriagesCount() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT COUNT(*) FROM " + NAME);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return 0;
     }
 }

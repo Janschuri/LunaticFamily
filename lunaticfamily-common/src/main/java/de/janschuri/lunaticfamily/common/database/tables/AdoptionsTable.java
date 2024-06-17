@@ -24,6 +24,7 @@ public class AdoptionsTable {
         new ForeignKey("parentID", Datatype.INTEGER, false, "playerData", "id", "CASCADE"),
         new ForeignKey("childID", Datatype.INTEGER, false, "playerData", "id", "CASCADE"),
         new Column("date", Datatype.INTEGER, false, "CURRENT_TIMESTAMP"),
+            new Column("unadoptDate", Datatype.TIMESTAMP_NULL, true, "NULL"),
     };
 
     private static final Table TABLE = new Table(NAME, PRIMARY_KEY, COLUMNS);
@@ -47,7 +48,7 @@ public class AdoptionsTable {
         
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT parentID FROM " + NAME + " WHERE childID = ?");
+            ps = conn.prepareStatement("SELECT parentID FROM " + NAME + " WHERE childID = ? AND unadoptDate IS NULL");
             ps.setInt(1, playerID);
             rs = ps.executeQuery();
 
@@ -81,7 +82,7 @@ public class AdoptionsTable {
 
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT childID FROM " + NAME + " WHERE parentID = ?");
+            ps = conn.prepareStatement("SELECT childID FROM " + NAME + " WHERE parentID = ? AND unadoptDate IS NULL");
             ps.setInt(1, parentID);
             rs = ps.executeQuery();
 
@@ -154,4 +155,91 @@ public class AdoptionsTable {
             }
         }
     }
+
+    public static void unadoptAdoption(int playerID, int childID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("UPDATE `" + NAME + "` SET unadoptDate = CURRENT_TIMESTAMP WHERE parentID = ? AND childID = ?");
+            ps.setInt(1, playerID);
+            ps.setInt(2, childID);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+    }
+
+    public static int getAdoptionsCount() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT COUNT(*) FROM " + NAME + " WHERE unadoptDate IS NULL");
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+
+        return 0;
+    }
+
+    public static int getTotalAdoptionsCount() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT COUNT(*) FROM " + NAME);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+
+        return 0;
+    }
+
+
 }

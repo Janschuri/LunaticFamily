@@ -1,6 +1,8 @@
 package de.janschuri.lunaticfamily.platform.bukkit;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
+import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
+import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.platform.Platform;
@@ -11,6 +13,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.nio.file.Path;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 public class BukkitLunaticFamily extends JavaPlugin {
 
@@ -30,6 +34,7 @@ public class BukkitLunaticFamily extends JavaPlugin {
         int pluginId = 21912;
         Metrics metrics = new Metrics(this, pluginId);
 
+
         Path dataDirectory = getDataFolder().toPath();
         Platform platform = new PlatformImpl();
 
@@ -39,6 +44,42 @@ public class BukkitLunaticFamily extends JavaPlugin {
             Logger.infoLog("PlaceholderAPI found. Registering placeholders...");
             new PlaceholderAPI().register(); //
         }
+
+        metrics.addCustomChart(new Metrics.AdvancedPie("marriages", new Callable<Map<String, Integer>>() {
+            @Override
+            public Map<String, Integer> call() throws Exception {
+                return LunaticFamily.getMarriagesStats();
+            }
+        }));
+
+        metrics.addCustomChart(new Metrics.AdvancedPie("adoptions", new Callable<Map<String, Integer>>() {
+            @Override
+            public Map<String, Integer> call() throws Exception {
+                return LunaticFamily.getAdoptionsStats();
+            }
+        }));
+
+        metrics.addCustomChart(new Metrics.AdvancedPie("siblings", new Callable<Map<String, Integer>>() {
+            @Override
+            public Map<String, Integer> call() throws Exception {
+                return LunaticFamily.getSiblinghoodsStats();
+            }
+        }));
+
+        metrics.addCustomChart(new Metrics.SimplePie("mode", () -> {
+            if (LunaticFamily.getMode() == Mode.STANDALONE) {
+                return "Standalone";
+            } else {
+                return "Backend";
+            }
+        }));
+
+        metrics.addCustomChart(new Metrics.SingleLineChart("married_players", new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return LunaticFamily.getMarriedPlayersCount();
+            }
+        }));
     }
     public static BukkitLunaticFamily getInstance() {
         return instance;

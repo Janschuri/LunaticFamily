@@ -127,24 +127,24 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         MarriagesTable.saveMarriageHeartColor(this.id, color);
     }
 
-    private void deleteMarriage() {
-        MarriagesTable.deleteMarriage(this.id);
+    private void divorceMarriage() {
+        MarriagesTable.divorceMarriage(this.id);
     }
 
     private void saveSiblinghood(int siblingID) {
         SiblinghoodsTable.saveSiblinghood(this.id, siblingID);
     }
 
-    private void deleteSiblinghood() {
-        SiblinghoodsTable.deleteSiblinghood(this.id);
+    private void unsiblingSiblinghood() {
+        SiblinghoodsTable.unsiblingSiblinghood(this.id);
     }
 
     private void saveAdoption(int childID) {
         AdoptionsTable.saveAdoption(this.id, childID);
     }
 
-    private void deleteAdoption(int childID) {
-        AdoptionsTable.deleteAdoption(this.id, childID);
+    private void unadoptAdoption(int childID) {
+        AdoptionsTable.unadoptAdoption(this.id, childID);
     }
 
     public String getSkinURL() {
@@ -310,14 +310,14 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
         List<FamilyPlayer> playerChildren = playerFam.getChildren();
         for (FamilyPlayer child : playerChildren) {
-            playerFam.deleteAdoption(child.getId());
+            playerFam.unadoptAdoption(child.getId());
         }
 
-        playerFam.deleteMarriage();
+        playerFam.divorceMarriage();
 
         if (!LunaticFamily.getConfig().isAllowSingleAdopt()) {
             for (FamilyPlayer child : playerChildren) {
-                partnerFam.deleteAdoption(child.getId());
+                partnerFam.unadoptAdoption(child.getId());
             }
         }
 
@@ -351,15 +351,15 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     public void unadopt(int childID) {
         FamilyPlayerImpl playerFam = this;
         FamilyPlayerImpl childFam = new FamilyPlayerImpl(childID);
-        playerFam.deleteAdoption(childID);
+        playerFam.unadoptAdoption(childID);
 
         if (playerFam.isMarried()) {
             FamilyPlayerImpl partnerFam = playerFam.getPartner();
-            partnerFam.deleteAdoption(childID);
+            partnerFam.unadoptAdoption(childID);
         }
 
         if (childFam.hasSibling()) {
-            childFam.deleteSiblinghood();
+            childFam.unsiblingSiblinghood();
         }
 
         playerFam.updateFamilyTree();
@@ -379,7 +379,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         FamilyPlayerImpl playerFam = this;
         FamilyPlayerImpl siblingFam = playerFam.getSibling();
 
-        playerFam.deleteSiblinghood();
+        playerFam.unsiblingSiblinghood();
 
         playerFam.updateFamilyTree();
         siblingFam.updateFamilyTree();

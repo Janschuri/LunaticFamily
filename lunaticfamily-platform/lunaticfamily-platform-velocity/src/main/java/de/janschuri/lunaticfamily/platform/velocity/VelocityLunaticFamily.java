@@ -15,11 +15,13 @@ import de.janschuri.lunaticlib.common.utils.Mode;
 import de.janschuri.lunaticlib.platform.velocity.external.Metrics;
 
 import java.nio.file.Path;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 @Plugin(
         id = "lunaticfamily",
         name = "LunaticFamily",
-        version = "1.1.5",
+        version = "1.2.0",
         authors = "janschuri",
         dependencies = {
         @Dependency(id = "lunaticlib")
@@ -62,6 +64,34 @@ public class VelocityLunaticFamily {
         Path dataDirectory =  VelocityLunaticFamily.dataDirectory;
 
         LunaticFamily.onEnable(dataDirectory, mode, platform);
+
+        metrics.addCustomChart(new Metrics.AdvancedPie("marriages", new Callable<Map<String, Integer>>() {
+            @Override
+            public Map<String, Integer> call() throws Exception {
+                return LunaticFamily.getMarriagesStats();
+            }
+        }));
+
+        metrics.addCustomChart(new Metrics.AdvancedPie("adoptions", new Callable<Map<String, Integer>>() {
+            @Override
+            public Map<String, Integer> call() throws Exception {
+                return LunaticFamily.getAdoptionsStats();
+            }
+        }));
+
+        metrics.addCustomChart(new Metrics.AdvancedPie("siblings", new Callable<Map<String, Integer>>() {
+            @Override
+            public Map<String, Integer> call() throws Exception {
+                return LunaticFamily.getSiblinghoodsStats();
+            }
+        }));
+
+        metrics.addCustomChart(new Metrics.SingleLineChart("married_players", new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return LunaticFamily.getMarriedPlayersCount();
+            }
+        }));
     }
 
     @Subscribe

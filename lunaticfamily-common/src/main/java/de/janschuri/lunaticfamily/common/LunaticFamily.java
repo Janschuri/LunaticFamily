@@ -7,6 +7,9 @@ import de.janschuri.lunaticfamily.common.config.ConfigImpl;
 import de.janschuri.lunaticfamily.common.config.FamilyTreeJSON;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.database.Database;
+import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
+import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
+import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
 import de.janschuri.lunaticfamily.common.futurerequests.*;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.platform.Platform;
@@ -16,6 +19,7 @@ import de.janschuri.lunaticlib.common.futurerequests.FutureRequestsHandler;
 import de.janschuri.lunaticlib.common.utils.Mode;
 
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.UUID;
 
 public final class LunaticFamily {
@@ -138,5 +142,33 @@ public final class LunaticFamily {
 
     public static ConfigImpl getConfig() {
         return config;
+    }
+
+    public static Map<String, Integer> getMarriagesStats() {
+        int totalMarriages = MarriagesTable.getTotalMarriagesCount();
+        int marriages = MarriagesTable.getMarriagesCount();
+        int divorced = totalMarriages - marriages;
+
+        return Map.of("Marriages", marriages, "Divorced Marriages", divorced);
+    }
+
+    public static Map<String, Integer> getSiblinghoodsStats() {
+        int totalSiblings = SiblinghoodsTable.getTotalSiblinghoodsCount();
+        int siblings = SiblinghoodsTable.getSiblinghoodsCount();
+        int unsiblinged = totalSiblings - siblings;
+
+        return Map.of("Siblings", siblings, "Unsiblinged Siblings", unsiblinged);
+    }
+
+    public static Map<String, Integer> getAdoptionsStats() {
+        int totalAdoptions = AdoptionsTable.getTotalAdoptionsCount();
+        int adoptions = AdoptionsTable.getAdoptionsCount();
+        int unadopted = totalAdoptions - adoptions;
+
+        return Map.of("Adoptions", adoptions, "Unadopted Adoptions", unadopted);
+    }
+
+    public static int getMarriedPlayersCount() {
+        return MarriagesTable.getMarriagesCount()*2;
     }
 }
