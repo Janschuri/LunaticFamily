@@ -7,6 +7,7 @@ import de.janschuri.lunaticlib.common.config.LunaticConfigImpl;
 import de.janschuri.lunaticlib.common.utils.Mode;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,6 +133,10 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
     }
 
     public List<String> getSuccessCommands(String key) {
+        if (!successCommands.containsKey(key)) {
+            Logger.errorLog("No success commands found for key " + key);
+            return new ArrayList<>();
+        }
         return successCommands.get(key);
     }
 

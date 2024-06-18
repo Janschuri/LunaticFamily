@@ -223,20 +223,6 @@ commands:
           family_request: "Du kannst %player% nicht heiraten. Dieser Spieler gehört bereits zu deiner Familie."
           too_many_children: "Du und %player% haben zusammen mehr als zwei Kinder. Ihr müss erst %amount% Kinder entfernen, damit du und %player% heiraten könnt."
           self_request: "Du kannst dich nicht selbst heiraten!"
-      priest:
-        aliases:
-          - priest
-        messages:
-          help: "&6/%command% %subcommand% <%param%> <%param%> Verheirate zwei Spieler."
-          already_priest: "Du verheiratest bereits zwei Spieler."
-          request: "%player1%, möchtest du %player2% auf diesem Minecraft-Server heiraten?"
-          player_already_married: "%player% ist bereits verheiratet."
-          too_many_children: "%player1% und %player2% haben zusammen mehr als 2 Kinder. %player1% und %player2% müssen erst %amount% Kinder entfernen, damit sie verheiratet werden können."
-          self_request: "Du kannst dich nicht selbst verheiraten!"
-          open_request: "%player% hat bereits einen offenen Antrag."
-          same_player: "Du kannst niemanden mit sich selbst verheiraten!"
-          request_expired_priest: "Die Hochzeit von %player1% und %player2% wurde abgebrochen."
-          request_expired_player: "Deine Hochzeit mit %player% wurde abgebrochen."
       accept:
         aliases:
           - accept
@@ -246,8 +232,6 @@ commands:
           no_request: "Du hast keine Heiratsanfrage."
           too_many_children: "%player1% und %player2% haben zusammen mehr als 2 Kinder. %player1% und %player2% müssen erst %amount% Kinder entfernen, damit sie verheiratet werden können."
           complete: "Ihr seid verheiratet! Ihr dürft euch jetzt küssen!"
-          request: "%player1%, möchtest du %player2% auf diesem Minecraft-Server heiraten?"
-          priest_complete: "Ihr seid verheiratet! Ihr dürft euch jetzt küssen!"
       deny:
         aliases:
           - deny
@@ -322,6 +306,52 @@ commands:
           - help
         messages:
           help: "&6/%command% %subcommand% &7- Zeige die Marry-Hilfeseite."
+  priest:
+    aliases:
+      - priest
+    help_header: "Priest-Hilfe"
+    subcommands:
+      marry:
+        aliases:
+          - marry
+        messages:
+          help: "&6/%command% %subcommand% <%param%> <%param%> Verheirate zwei Spieler."
+          already_priest: "Du bist bereits Priester in einer anderen Aktion."
+          request: "%player1%, möchtest du %player2% auf diesem Minecraft-Server heiraten?"
+          player_already_married: "%player% ist bereits verheiratet."
+          too_many_children: "%player1% und %player2% haben zusammen mehr als 2 Kinder. %player1% und %player2% müssen erst %amount% Kinder entfernen, damit sie verheiratet werden können."
+          self_request: "Du kannst dich nicht selbst verheiraten!"
+          open_request: "%player% hat bereits einen offenen Antrag."
+          same_player: "Du kannst niemanden mit sich selbst verheiraten!"
+          request_expired_priest: "Die Hochzeit von %player1% und %player2% wurde abgebrochen."
+          request_expired_player: "Deine Hochzeit mit %player% wurde abgebrochen."
+          family_request: "Du kannst %player1% und %player2% nicht verheiraten. Diese Spieler gehören bereits zur selben Familie."
+          yes: "Ja, ich will!"
+          no: "Nein, ich will nicht."
+          complete: "Ihr seid verheiratet! Ihr dürft euch jetzt küssen!"
+      sibling:
+        aliases:
+          - sibling
+        messages:
+          help: "&6/%command% %subcommand% <%param%> <%param%> Verheirate zwei Spieler."
+          already_priest: "Du bist bereits Priester in einer anderen Aktion."
+          request: "%player1%, möchtest du %player2%'s Geschwisterkind werden?"
+          is_adopted: "%player1% ist adoptiert. %player1%'s Eltern können %player2% adoptieren, damit %player1% und %player2% Geschwister werden."
+          already_sibling: "%player% ist hat bereits ein Geschwisterkind."
+          self_request: "Du kannst dich nicht zu deinem eigenen Geschwisterkind machen."
+          open_request: "%player% hat bereits einen offenen Antrag."
+          same_player: "Du kannst niemanden zu seinem eigenen Geschwisterkind machen!"
+          request_expired_priest: "Die Geschwisterkindanfrage von %player1% und %player2% wurde abgebrochen."
+          request_expired_player: "Deine Geschwisterkindanfrage an %player% wurde abgebrochen."
+          family_request: "Du kannst %player1% und %player2% nicht zu Geschwisterkindern machen. Diese Spieler gehören bereits zur selben Familie."
+          yes: "Ja, ich will!"
+          no: "Nein, ich will nicht."
+          complete: "Ihr seid Geschwister!"
+      help:
+        aliases:
+          - help
+        messages:
+          help: "&6/%command% %subcommand% &7- Zeige die Priest-Hilfeseite."
   sibling:
     aliases:
       - sibling

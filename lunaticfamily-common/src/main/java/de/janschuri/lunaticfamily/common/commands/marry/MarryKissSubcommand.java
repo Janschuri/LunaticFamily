@@ -89,14 +89,14 @@ public class MarryKissSubcommand extends Subcommand {
                         Utils.spawnParticleCloud(playerUUID, position, "HEART");
                 };
 
-                player.sendMessage(getMessage(kissMK)
-                        .replaceText(getTextReplacementConfig("%player%", partner.getName())));
-
-                partner.sendMessage(getMessage(gotKissedMK)
-                        .replaceText(getTextReplacementConfig("%player%", player.getName())));
-
                 Utils.scheduleTask(runnable, i * 250L, TimeUnit.MILLISECONDS);
             }
+
+            player.sendMessage(getMessage(kissMK)
+                    .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+
+            partner.sendMessage(getMessage(gotKissedMK)
+                    .replaceText(getTextReplacementConfig("%player%", player.getName())));
 
         }
         return true;

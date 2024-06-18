@@ -26,6 +26,9 @@ commands:
   sibling:
     description: Get yourself a sibling without having parents.
     permission: lunaticfamily.sibling
+  priest:
+    description: Setup marriages, adoptions and siblinghoods.
+    permission: lunaticfamily.priest
 permissions:
   lunaticfamily.adopt:
     description: Use /adopt

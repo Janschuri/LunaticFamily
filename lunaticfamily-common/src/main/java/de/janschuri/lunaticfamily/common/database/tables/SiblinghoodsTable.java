@@ -22,6 +22,7 @@ public class SiblinghoodsTable {
     private static final Column[] columns = {
         new ForeignKey("player1ID", Datatype.INTEGER, false, "playerData", "id", "CASCADE"),
         new ForeignKey("player2ID", Datatype.INTEGER, false, "playerData", "id", "CASCADE"),
+        new ForeignKey("priest", Datatype.INTEGER, true, "playerData", "id", "SET NULL"),
         new Column("date", Datatype.INTEGER, false, "CURRENT_TIMESTAMP"),
         new Column("unsiblingDate", Datatype.TIMESTAMP_NULL, true, "NULL"),
     };
@@ -101,6 +102,32 @@ public class SiblinghoodsTable {
         return;
     }
 
+    public static void saveSiblinghood(int player1ID, int player2ID, int priestID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("REPLACE INTO `" + NAME + "` (player1ID, player2ID, priest) VALUES(?,?,?)");
+            ps.setInt(1, player1ID);
+            ps.setInt(2, player2ID);
+            ps.setInt(3, priestID);
+            ps.executeUpdate();
+            return;
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return;
+    }
+
     public static void deleteSiblinghood(int playerID) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -129,7 +156,7 @@ public class SiblinghoodsTable {
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("UPDATE `" + NAME + "` SET unsiblingSiblinghood = CURRENT_TIMESTAMP WHERE player1ID = ? OR player2ID = ?");
+            ps = conn.prepareStatement("UPDATE `" + NAME + "` SET unsiblingDate = CURRENT_TIMESTAMP WHERE player1ID = ? OR player2ID = ?");
             ps.setInt(1, playerID);
             ps.setInt(2, playerID);
             ps.executeUpdate();

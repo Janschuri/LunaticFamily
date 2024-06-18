@@ -20,8 +20,6 @@ use_vault: true
 command_withdraws:
   marry_proposing_player: 10.0
   marry_proposed_player: 10.0
-  marry_priest: 10.0
-  marry_priest_player: 10.0
   marry_divorce_leaving_player: 10.0
   marry_divorce_left_player: 10.0
   adopt_parent: 10.0
@@ -34,6 +32,12 @@ command_withdraws:
   sibling_proposed_player: 10.0
   sibling_unsibling_leaving_player: 10.0
   sibling_unsibling_left_player: 10.0
+  priest_marry: 10.0
+  priest_marry_player: 10.0
+  priest_adopt: 10.0
+  priest_adopt_player: 10.0
+  priest_sibling: 10.0
+  priest_sibling_player: 10.0
 default_background: "moss_block"
 backgrounds:
   - "moss_block"
@@ -63,6 +67,8 @@ success_commands:
   adopt_single: []
   #avaible placeholders: %player1%, %player2%
   sibling: []
+  #avaible placeholders: %player1%, %player2%, %priest%
+  sibling_priest: []
   #avaible placeholders: %player1%, %player2%
   divorce: []
   #avaible placeholders: %parent1%, %parent2%, %child%

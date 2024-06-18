@@ -32,11 +32,11 @@ public class QuitListenerExecuter {
         UUID uuid = player.getUniqueId();
         FamilyPlayerImpl playerFam = new FamilyPlayerImpl(uuid);
 
-        if (LunaticFamily.marryRequests.containsValue(uuid) || LunaticFamily.marryRequests.containsKey(uuid) || LunaticFamily.marryPriest.containsKey(uuid)) {
+        if (LunaticFamily.marryRequests.containsValue(uuid) || LunaticFamily.marryRequests.containsKey(uuid) || LunaticFamily.marryPriests.containsKey(uuid)) {
 
-            if (LunaticFamily.marryPriest.containsKey(uuid)) {
+            if (LunaticFamily.marryPriests.containsKey(uuid)) {
 
-                UUID priestUUID = LunaticFamily.marryPriest.get(uuid);
+                UUID priestUUID = LunaticFamily.marryPriests.get(uuid);
                 PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
                 priest.chat(languageConfig.getMessage(playerQuitMK, false).replaceText(getTextReplacementConfig("%player%", playerFam.getName())) + " " + languageConfig.getMessage(marryCancelMK, false));
             } else {
@@ -52,8 +52,8 @@ public class QuitListenerExecuter {
             LunaticFamily.marryRequests.inverse().remove(uuid);
             LunaticFamily.marryPriestRequests.remove(uuid);
             LunaticFamily.marryPriestRequests.inverse().remove(uuid);
-            LunaticFamily.marryPriest.remove(uuid);
-            LunaticFamily.marryPriest.inverse().remove(uuid);
+            LunaticFamily.marryPriests.remove(uuid);
+            LunaticFamily.marryPriests.inverse().remove(uuid);
         }
 
         if (LunaticFamily.adoptRequests.containsKey(uuid)) {

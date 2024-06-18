@@ -123,7 +123,7 @@ public class MarryProposeSubcommand extends Subcommand {
                     sender.sendMessage(getMessage(tooManyChildrenMK)
                             .replaceText(getTextReplacementConfig("%player%", partnerFam.getName()))
                             .replaceText(getTextReplacementConfig("%amount%", Integer.toString(amountDiff))));
-                } else if (LunaticFamily.marryRequests.containsKey(partner.getUniqueId()) || LunaticFamily.marryPriest.containsKey(partner.getUniqueId())) {
+                } else if (LunaticFamily.marryRequests.containsKey(partner.getUniqueId()) || LunaticFamily.marryPriests.containsKey(partner.getUniqueId())) {
                     sender.sendMessage(getMessage(openRequestMK)
                             .replaceText(getTextReplacementConfig("%player%", partnerFam.getName())));
                 } else if (partnerFam.isMarried()) {

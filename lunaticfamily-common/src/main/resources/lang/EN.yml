@@ -223,20 +223,6 @@ commands:
           family_request: "You cannot marry %player%. This player already belongs to your family."
           too_many_children: "You and %player% have more than two children together. You must remove %amount% children before you and %player% can marry."
           self_request: "You cannot marry yourself!"
-      priest:
-        aliases:
-          - priest
-        messages:
-          help: "&6/%command% %subcommand% <%param%> <%param%> &7- Marry two players."
-          already_priest: "You are already marrying two players."
-          request: "%player1%, would you like to marry %player2% on this Minecraft server?"
-          player_already_married: "%player% is already married."
-          too_many_children: "%player1% and %player2% have more than 2 children together. %player1% and %player2% must remove %amount% children before they can marry."
-          self_request: "You cannot marry yourself!"
-          open_request: "%player% already has an open proposal."
-          same_player: "You cannot marry someone to themselves!"
-          request_expired_priest: "The wedding between %player1% and %player2% has been canceled."
-          request_expired_player: "Your wedding with %player% has been canceled."
       accept:
         aliases:
           - accept
@@ -246,8 +232,6 @@ commands:
           no_request: "You have no marriage proposal."
           too_many_children: "%player1% and %player2% have more than 2 children together. %player1% and %player2% must remove %amount% children before they can marry."
           complete: "You are married! You may now kiss!"
-          request: "%player1%, would you like to marry %player2% on this Minecraft server?"
-          priest_complete: "You are married! You may now kiss!"
       deny:
         aliases:
           - deny
@@ -322,6 +306,52 @@ commands:
           - help
         messages:
           help: "&6/%command% %subcommand% &7- Show the marry help page."
+  priest:
+    aliases:
+      - priest
+    help_header: "Priest-Help"
+    subcommands:
+      marry:
+        aliases:
+          - marry
+        messages:
+          help: "&6/%command% %subcommand% <%param%> <%param%> &7- Marry two players."
+          already_priest: "You are already a priest in an other action."
+          request: "%player1%, would you like to marry %player2% on this Minecraft server?"
+          player_already_married: "%player% is already married."
+          too_many_children: "%player1% and %player2% have more than 2 children together. %player1% and %player2% must remove %amount% children before they can marry."
+          self_request: "You cannot marry yourself!"
+          open_request: "%player% already has an open proposal."
+          same_player: "You cannot marry someone to themselves!"
+          request_expired_priest: "The wedding between %player1% and %player2% has been canceled."
+          request_expired_player: "Your wedding with %player% has been canceled."
+          family_request: "You cannot marry %player1% and %player2%. These players already belong to the same family."
+          yes: "Yes. I do!"
+          no: "No. I don't want to."
+          complete: "You are married! You may now kiss!"
+      sibling:
+        aliases:
+          - sibling
+        messages:
+          help: "&6/%command% %subcommand% <%param%> <%param%> &7- Marry two players."
+          already_priest: "You are already a priest in an other action."
+          request: "%player1%, would you like to be siblings with %player2% on this Minecraft server?"
+          is_adopted: "%player1% is adopted. You could setup the adoption of %player2% of %player1%'s parents."
+          already_sibling: "%player% has already a sibling."
+          self_request: "You cannot be your own sibling."
+          open_request: "%player% already has an open sibling request."
+          same_player: "You cannot make someone their own sibling."
+          request_expired_priest: "The siblinghood between %player1% and %player2% has been canceled."
+          request_expired_player: "Your siblinghood with %player% has been canceled."
+          family_request: "You cannot setup the siblinghood between %player1% and %player2%. These players already belong to the same family."
+          yes: "Yes. I do!"
+          no: "No. I don't want to."
+          complete: "You are siblings!"
+      help:
+        aliases:
+          - help
+        messages:
+          help: "&6/%command% %subcommand% &7- Show the priest help page."
   sibling:
     aliases:
       - sibling

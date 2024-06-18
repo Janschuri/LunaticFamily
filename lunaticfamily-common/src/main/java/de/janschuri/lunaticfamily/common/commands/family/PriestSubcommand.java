@@ -3,27 +3,20 @@ package de.janschuri.lunaticfamily.common.commands.family;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.commands.marry.*;
 import de.janschuri.lunaticfamily.common.commands.priest.PriestMarrySubcommand;
+import de.janschuri.lunaticfamily.common.commands.priest.PriestSiblingSubcommand;
 import de.janschuri.lunaticlib.LunaticCommand;
 import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
 import de.janschuri.lunaticlib.Sender;
 
 import java.util.List;
 
-public class MarrySubcommand extends Subcommand {
+public class PriestSubcommand extends Subcommand {
 
     @Override
     public List<LunaticCommand> getSubcommands() {
         return List.of(
-                new MarryAcceptSubcommand(),
-                new MarryDenySubcommand(),
-                new MarryDivorceSubcommand(),
-                new MarryGiftSubcommand(),
-                new MarryHeartSubcommand(),
-                new MarryKissSubcommand(),
-                new MarryListSubcommand(),
-                new MarryProposeSubcommand(),
-                new MarrySetSubcommand(),
-                new MarryUnsetSubcommand(),
+                new PriestMarrySubcommand(),
+                new PriestSiblingSubcommand(),
                 getHelpCommand()
         );
     }
@@ -40,12 +33,12 @@ public class MarrySubcommand extends Subcommand {
 
     @Override
     public String getPermission() {
-        return "lunaticfamily.marry";
+        return "lunaticfamily.priest";
     }
 
     @Override
     public String getName() {
-        return "marry";
+        return "priest";
     }
 
     @Override

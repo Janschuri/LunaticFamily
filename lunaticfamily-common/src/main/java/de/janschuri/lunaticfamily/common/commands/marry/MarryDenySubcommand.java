@@ -53,32 +53,32 @@ public class MarryDenySubcommand extends Subcommand {
                 if (LunaticFamily.marryRequests.containsKey(playerUUID)) {
                     UUID partnerUUID = LunaticFamily.marryRequests.get(playerUUID);
                     PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
-                    if (!LunaticFamily.marryPriest.containsKey(partnerUUID)) {
+                    if (!LunaticFamily.marryPriests.containsKey(partnerUUID)) {
                         partner.sendMessage(getMessage(deniedMK)
                                 .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
                     } else {
-                        UUID priestUUID = LunaticFamily.marryPriest.get(partnerUUID);
+                        UUID priestUUID = LunaticFamily.marryPriests.get(partnerUUID);
                         PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
-                        player.chat(getMessage(marryNoMK).toString());
+                        player.chat(getLanguageConfig().getMessageAsString(marryNoMK, false));
 
                         Runnable runnable = () -> {
-                            priest.chat(getMessage(cancelMK).toString());
+                            priest.chat(getLanguageConfig().getMessageAsString(cancelMK, false));
                         };
 
                         Utils.scheduleTask(runnable, 250, TimeUnit.MILLISECONDS);
 
 
-                        LunaticFamily.marryPriest.remove(partnerUUID);
+                        LunaticFamily.marryPriests.remove(partnerUUID);
                     }
                     LunaticFamily.marryRequests.remove(playerUUID);
 
                 } else if (LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
-                    player.chat(getMessage(marryNoMK).toString());
-                    UUID priestUUID = LunaticFamily.marryPriest.get(playerUUID);
+                    player.chat(getLanguageConfig().getMessageAsString(marryNoMK, false));
+                    UUID priestUUID = LunaticFamily.marryPriests.get(playerUUID);
                     PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
-                    priest.chat(getMessage(cancelMK).toString());
+                    priest.chat(getLanguageConfig().getMessageAsString(cancelMK, false));
                     LunaticFamily.marryPriestRequests.remove(playerUUID);
-                    LunaticFamily.marryPriest.remove(playerUUID);
+                    LunaticFamily.marryPriests.remove(playerUUID);
                 }
             }
         }

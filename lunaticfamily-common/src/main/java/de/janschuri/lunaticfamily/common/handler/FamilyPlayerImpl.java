@@ -119,8 +119,8 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         MarriagesTable.saveMarriage(this.id, partnerID);
     }
 
-    private void saveMarriage(int partnerID, int priest) {
-        MarriagesTable.saveMarriage(this.id, partnerID, priest);
+    private void saveMarriage(int partnerID, int priestID) {
+        MarriagesTable.saveMarriage(this.id, partnerID, priestID);
     }
 
     private void saveMarriageHeartColor(String color) {
@@ -133,6 +133,10 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
     private void saveSiblinghood(int siblingID) {
         SiblinghoodsTable.saveSiblinghood(this.id, siblingID);
+    }
+
+    private void saveSiblinghood(int siblingID, int priestID) {
+        SiblinghoodsTable.saveSiblinghood(this.id, siblingID, priestID);
     }
 
     private void unsiblingSiblinghood() {
@@ -370,6 +374,15 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         FamilyPlayerImpl playerFam = this;
         FamilyPlayerImpl siblingFam = new FamilyPlayerImpl(siblingID);
         playerFam.saveSiblinghood(siblingID);
+
+        playerFam.updateFamilyTree();
+        siblingFam.updateFamilyTree();
+    }
+
+    public void addSibling(int siblingID, int priestID) {
+        FamilyPlayerImpl playerFam = this;
+        FamilyPlayerImpl siblingFam = new FamilyPlayerImpl(siblingID);
+        playerFam.saveSiblinghood(siblingID, priestID);
 
         playerFam.updateFamilyTree();
         siblingFam.updateFamilyTree();

@@ -144,11 +144,11 @@ public class MarrySetSubcommand extends Subcommand {
                 } else {
                     LunaticFamily.marryRequests.remove(player1UUID);
                     LunaticFamily.marryPriestRequests.remove(player1UUID);
-                    LunaticFamily.marryPriest.remove(player1UUID);
+                    LunaticFamily.marryPriests.remove(player1UUID);
 
                     LunaticFamily.marryRequests.remove(player1UUID);
                     LunaticFamily.marryPriestRequests.remove(player1UUID);
-                    LunaticFamily.marryPriest.remove(player1UUID);
+                    LunaticFamily.marryPriests.remove(player1UUID);
 
                     player1Fam.marry(player2Fam.getId());
                     sender.sendMessage(getMessage(marriedMK)
