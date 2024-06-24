@@ -94,10 +94,14 @@ success_commands:
   #avaible placeholders: %parent%, %child%
   moveout_single: []
 
-# Default heart colors for married players, if no color is set. Could be a color name or a hex color code.
-default_heart_color: "white"
-# Default heart colors for unmarried players, if you use status_heart placeholder. Could be a color name or a hex color code.
-unmarried_heart_color: "gray"
+# Default colors for emojis in adopt, marry or sibling lists or placeholders, if no color is set. Could be a color name or a hex color code.
+emoji_colors:
+  married: "white"
+  unmarried: "gray"
+  adopted: "white"
+  unadopted: "gray"
+  siblinged: "white"
+  unsiblinged: "gray"
 colors:
   black: "#000000"
   dark_blue: "#0000AA"

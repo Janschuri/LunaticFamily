@@ -168,8 +168,8 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
         return colors.get(key);
     }
 
-    public String getDefaultHeartColor() {
-        String colorString = getString("default_heart_color", "#FFFFFF");
+    public String getDefaultMarryEmojiColor() {
+        String colorString = getString("emoji_colors.married", "#FFFFFF");
 
         if (Utils.isValidHexCode(colorString)) {
             return colorString;
@@ -183,8 +183,69 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
         return colorString;
     }
 
-    public String getUnmarriedHeartColor() {
-        String colorString = getString("unmarried_heart_color", "#AAAAAA");
+    public String getUnmarriedEmojiColor() {
+        String colorString = getString("emoji_colors.unmarried", "#AAAAAA");
+
+        if (Utils.isValidHexCode(colorString)) {
+            return colorString;
+        }
+
+        if (colors.containsKey(colorString)) {
+            return colors.get(colorString);
+        }
+
+        Logger.errorLog("Invalid color code or undefined color for unmarried_heart_color in config.yml. Using default color #AAAAAA.");
+        return colorString;
+    }
+
+
+    public String getDefaultAdoptEmojiColor() {
+        String colorString = getString("emoji_colors.adopted", "#FFFFFF");
+
+        if (Utils.isValidHexCode(colorString)) {
+            return colorString;
+        }
+
+        if (colors.containsKey(colorString)) {
+            return colors.get(colorString);
+        }
+
+        Logger.errorLog("Invalid color code or undefined color for default_heart_color in config.yml. Using default color #FFFFFF.");
+        return colorString;
+    }
+
+    public String getUnadoptedEmojiColor() {
+        String colorString = getString("emoji_colors.unadopted", "#AAAAAA");
+
+        if (Utils.isValidHexCode(colorString)) {
+            return colorString;
+        }
+
+        if (colors.containsKey(colorString)) {
+            return colors.get(colorString);
+        }
+
+        Logger.errorLog("Invalid color code or undefined color for unmarried_heart_color in config.yml. Using default color #AAAAAA.");
+        return colorString;
+    }
+
+    public String getDefaultSiblingEmojiColor() {
+        String colorString = getString("emoji_colors.siblinged", "#FFFFFF");
+
+        if (Utils.isValidHexCode(colorString)) {
+            return colorString;
+        }
+
+        if (colors.containsKey(colorString)) {
+            return colors.get(colorString);
+        }
+
+        Logger.errorLog("Invalid color code or undefined color for default_heart_color in config.yml. Using default color #FFFFFF.");
+        return colorString;
+    }
+
+    public String getUnsiblingedEmojiColor() {
+        String colorString = getString("emoji_colors.unsiblinged", "#AAAAAA");
 
         if (Utils.isValidHexCode(colorString)) {
             return colorString;

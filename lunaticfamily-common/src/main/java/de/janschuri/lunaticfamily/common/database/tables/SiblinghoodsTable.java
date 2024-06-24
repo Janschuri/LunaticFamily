@@ -1,6 +1,7 @@
 package de.janschuri.lunaticfamily.common.database.tables;
 
 import de.janschuri.lunaticfamily.common.database.Database;
+import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticlib.common.database.Datatype;
 import de.janschuri.lunaticlib.common.database.Error;
 import de.janschuri.lunaticlib.common.database.Table;
@@ -8,10 +9,9 @@ import de.janschuri.lunaticlib.common.database.columns.Column;
 import de.janschuri.lunaticlib.common.database.columns.ForeignKey;
 import de.janschuri.lunaticlib.common.database.columns.PrimaryKey;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SiblinghoodsTable {
@@ -23,6 +23,7 @@ public class SiblinghoodsTable {
         new ForeignKey("player1ID", Datatype.INTEGER, false, "playerData", "id", "CASCADE"),
         new ForeignKey("player2ID", Datatype.INTEGER, false, "playerData", "id", "CASCADE"),
         new ForeignKey("priest", Datatype.INTEGER, true, "playerData", "id", "SET NULL"),
+        new Column("emoji", true),
         new Column("date", Datatype.INTEGER, false, "CURRENT_TIMESTAMP"),
         new Column("unsiblingDate", Datatype.TIMESTAMP_NULL, true, "NULL"),
     };
@@ -38,6 +39,43 @@ public class SiblinghoodsTable {
 
     private static Connection getSQLConnection() {
         return Database.getDatabase().getSQLConnection();
+    }
+
+    public static Siblinghood getSiblinghood(int id) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (id = ?)");
+            ps.setInt(1, id);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int player1 = rs.getInt("player1ID");
+                int player2 = rs.getInt("player2ID");
+                int priest = rs.getInt("priest");
+                String emoji = rs.getString("emoji");
+                Timestamp date = rs.getTimestamp("date");
+                Timestamp unsiblingDate = rs.getTimestamp("unsiblingDate");
+
+                return new Siblinghood(id, player1, player2, priest, emoji, date, unsiblingDate);
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return null;
     }
 
     public static int getSibling(int id) {
@@ -75,6 +113,36 @@ public class SiblinghoodsTable {
             }
         }
         return 0;
+    }
+
+    public static String getEmojiColor(int id) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM `" + NAME + "` WHERE id = ?");
+            ps.setInt(1, id);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getString("emoji");
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return null;
     }
 
     public static void saveSiblinghood(int player1ID, int player2ID, int priestID) {
@@ -207,5 +275,68 @@ public class SiblinghoodsTable {
             }
         }
         return 0;
+    }
+
+    public static List<Siblinghood> getSiblinghoodList(int page, int pageSize) {
+        List<Siblinghood> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            int offset = (page - 1) * pageSize;
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE unsiblingDate IS NULL LIMIT ? OFFSET ?");
+            ps.setInt(1, pageSize);
+            ps.setInt(2, offset);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                int player1 = rs.getInt("player1ID");
+                int player2 = rs.getInt("player2ID");
+                int priest = rs.getInt("priest");
+                String emoji = rs.getString("emoji");
+                Timestamp date = rs.getTimestamp("date");
+                Timestamp unsiblingDate = rs.getTimestamp("unsiblingDate");
+
+                list.add(new Siblinghood(id, player1, player2, priest, emoji, date, unsiblingDate));
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return list;
+    }
+
+    public static void saveEmojiColor(int id, String hexColor) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("UPDATE `" + NAME + "` SET heart = ? WHERE id = ?");
+            ps.setString(1, hexColor);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
     }
 }

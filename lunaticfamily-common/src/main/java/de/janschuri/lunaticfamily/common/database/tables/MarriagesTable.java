@@ -1,6 +1,7 @@
 package de.janschuri.lunaticfamily.common.database.tables;
 
 import de.janschuri.lunaticfamily.common.database.Database;
+import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticlib.common.database.Datatype;
 import de.janschuri.lunaticlib.common.database.Error;
 import de.janschuri.lunaticlib.common.database.Table;
@@ -37,6 +38,83 @@ public class MarriagesTable {
 
     private static Connection getSQLConnection() {
         return Database.getDatabase().getSQLConnection();
+    }
+
+    public static Marriage getMarriage(int id) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (id = ?)");
+            ps.setInt(1, id);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int player1 = rs.getInt("player1ID");
+                int player2 = rs.getInt("player2ID");
+                int priest = rs.getInt("priest");
+                String heart = rs.getString("heart");
+                Timestamp date = rs.getTimestamp("date");
+                Timestamp divorceDate = rs.getTimestamp("divorceDate");
+
+                return new Marriage(id, player1, player2, priest, heart, date, divorceDate);
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return null;
+    }
+
+    public static List<Marriage> getPlayersMarriages(int playerID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Marriage> list = new ArrayList<>();
+
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (player1ID = ? OR player2ID = ?)");
+            ps.setInt(1, playerID);
+            ps.setInt(2, playerID);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int player1 = rs.getInt("player1ID");
+                int player2 = rs.getInt("player2ID");
+                int priest = rs.getInt("priest");
+                String heart = rs.getString("heart");
+                Timestamp date = rs.getTimestamp("date");
+                Timestamp divorceDate = rs.getTimestamp("divorceDate");
+
+                list.add(new Marriage(rs.getInt("id"), player1, player2, priest, heart, date, divorceDate));
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return null;
     }
 
     public static int getPartner(int id) {
@@ -112,21 +190,26 @@ public class MarriagesTable {
         return null;
     }
 
-    public static List<Integer> getMarryList(int page, int pageSize) {
-        List<Integer> marryList = new ArrayList<>();
+    public static List<Marriage> getMarriages(int page, int pageSize) {
+        List<Marriage> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
             int offset = (page - 1) * pageSize;
-            ps = conn.prepareStatement("SELECT player1ID FROM " + NAME + " WHERE divorceDate IS NULL LIMIT ? OFFSET ?");
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE divorceDate IS NULL LIMIT ? OFFSET ?");
             ps.setInt(1, pageSize);
             ps.setInt(2, offset);
             rs = ps.executeQuery();
             while (rs.next()) {
                 int player1 = rs.getInt("player1ID");
-                marryList.add(player1);
+                int player2 = rs.getInt("player2ID");
+                int priest = rs.getInt("priest");
+                String heart = rs.getString("heart");
+                Timestamp date = rs.getTimestamp("date");
+                Timestamp divorceDate = rs.getTimestamp("divorceDate");
+                list.add(new Marriage(rs.getInt("id"), player1, player2, priest, heart, date, divorceDate));
             }
         } catch (SQLException ex) {
             Error.execute(ex);
@@ -142,7 +225,7 @@ public class MarriagesTable {
                 Error.close(ex);
             }
         }
-        return marryList;
+        return list;
     }
 
     public static int getPriest(int playerID) {
@@ -180,21 +263,18 @@ public class MarriagesTable {
         return 0;
     }
 
-    public static String getMarriageHeartColor(int playerID) {
+    public static String getEmojiColor(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM `" + NAME + "` WHERE player1ID = ? OR player2ID = ?");
-            ps.setInt(1, playerID);
-            ps.setInt(2, playerID);
+            ps = conn.prepareStatement("SELECT * FROM `" + NAME + "` WHERE id = ?");
+            ps.setInt(1, id);
 
             rs = ps.executeQuery();
             while (rs.next()) {
-                if (rs.getInt("player1ID") == playerID || rs.getInt("player2ID") == playerID) {
-                    return rs.getString("heart");
-                }
+                return rs.getString("heart");
             }
         } catch (SQLException ex) {
             Error.execute(ex);
@@ -242,15 +322,14 @@ public class MarriagesTable {
         }
     }
 
-    public static void saveMarriageHeartColor(int playerID, String hexColor) {
+    public static void saveEmojiColor(int id, String hexColor) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("UPDATE `" + NAME + "` SET heart = ? WHERE player1ID = ? OR player2ID = ?");
+            ps = conn.prepareStatement("UPDATE `" + NAME + "` SET heart = ? WHERE id = ?");
             ps.setString(1, hexColor);
-            ps.setInt(2, playerID);
-            ps.setInt(3, playerID);
+            ps.setInt(2, id);
             ps.executeUpdate();
         } catch (SQLException ex) {
             Error.execute(ex);

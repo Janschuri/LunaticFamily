@@ -275,6 +275,7 @@ commands:
           no_color: "You must specify a color."
           color_set: "You have chosen the color %color%."
           color: "color"
+          no_marriage: "You are not married!"
       list:
         aliases:
           - list
@@ -415,6 +416,13 @@ commands:
           cancel: "You haven't unsiblinged your sibling after all."
           complete: "You have unsiblinged your sibling."
           unsiblinged_complete: "You have been unsiblinged by your sibling."
+      list:
+        aliases:
+          - list
+        messages:
+          help: "&6/%command% %subcommand% &7- List all siblinghoods."
+          header: "All siblinghoods on this server: "
+          siblings: "&6%index%: &b%player1% %emoji% &b%player2%"
       set:
         aliases:
           - set

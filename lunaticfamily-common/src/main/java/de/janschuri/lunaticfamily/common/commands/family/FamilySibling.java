@@ -21,6 +21,7 @@ public class FamilySibling extends Subcommand {
                 new SiblingSet(),
                 new SiblingUnset(),
                 new SiblingPriest(),
+                new SiblingList(),
                 getHelpCommand()
         );
     }

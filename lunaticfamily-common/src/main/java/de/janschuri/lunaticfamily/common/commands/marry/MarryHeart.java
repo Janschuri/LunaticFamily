@@ -21,6 +21,7 @@ public class MarryHeart extends Subcommand {
     private final CommandMessageKey noColorMK = new CommandMessageKey(this,"no_color");
     private final CommandMessageKey colorSetMK = new CommandMessageKey(this,"color_set");
     private final CommandMessageKey colorMK = new CommandMessageKey(this,"color");
+    private final CommandMessageKey noMarriageMK = new CommandMessageKey(this,"no_marriage");
 
 
     @Override
@@ -48,12 +49,23 @@ public class MarryHeart extends Subcommand {
             UUID playerUUID = player.getUniqueId();
             FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
 
+            if (!playerFam.isMarried()) {
+                sender.sendMessage(getMessage(noMarriageMK));
+                return true;
+            }
+
             if (args.length < 1) {
                 sender.sendMessage(getMessage(WRONG_USAGE_MK));
                 Logger.debugLog("MarryHeartSubcommand: Wrong usage");
-            } else if (!LunaticFamily.getLanguageConfig().isColorLang(args[0]) && !Utils.isValidHexCode(args[0])) {
+                return true;
+            }
+
+            if (!LunaticFamily.getLanguageConfig().isColorLang(args[0]) && !Utils.isValidHexCode(args[0])) {
                 sender.sendMessage(getMessage(noColorMK));
-            } else {
+                return true;
+            }
+
+
 
                 String hexColor = "";
 
@@ -85,8 +97,7 @@ public class MarryHeart extends Subcommand {
                 Component msg = getMessage(colorSetMK).replaceText(replacementConfig);
 
                 player.sendMessage(msg);
-                playerFam.setHeartColor(hexColor);
-            }
+                playerFam.getMarriage().setEmojiColor(hexColor);
 
 
         }
