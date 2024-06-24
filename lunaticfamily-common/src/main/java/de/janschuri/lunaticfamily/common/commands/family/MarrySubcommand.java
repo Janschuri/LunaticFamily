@@ -24,6 +24,7 @@ public class MarrySubcommand extends Subcommand {
                 new MarryProposeSubcommand(),
                 new MarrySetSubcommand(),
                 new MarryUnsetSubcommand(),
+                new MarryPriestSubcommand(),
                 getHelpCommand()
         );
     }

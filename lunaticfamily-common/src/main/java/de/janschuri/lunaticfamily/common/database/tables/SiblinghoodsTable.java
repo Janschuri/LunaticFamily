@@ -77,31 +77,6 @@ public class SiblinghoodsTable {
         return 0;
     }
 
-    public static void saveSiblinghood(int player1ID, int player2ID) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("REPLACE INTO `" + NAME + "` (player1ID, player2ID) VALUES(?,?)");
-            ps.setInt(1, player1ID);
-            ps.setInt(2, player2ID);
-            ps.executeUpdate();
-            return;
-        } catch (SQLException ex) {
-            Error.execute(ex);
-        } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                Error.close(ex);
-            }
-        }
-        return;
-    }
-
     public static void saveSiblinghood(int player1ID, int player2ID, int priestID) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -110,7 +85,11 @@ public class SiblinghoodsTable {
             ps = conn.prepareStatement("REPLACE INTO `" + NAME + "` (player1ID, player2ID, priest) VALUES(?,?,?)");
             ps.setInt(1, player1ID);
             ps.setInt(2, player2ID);
-            ps.setInt(3, priestID);
+            if (priestID < 0) {
+                ps.setNull(3, java.sql.Types.INTEGER);
+            } else {
+                ps.setInt(3, priestID);
+            }
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {

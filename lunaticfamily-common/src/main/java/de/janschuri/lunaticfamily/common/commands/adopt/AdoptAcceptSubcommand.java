@@ -3,6 +3,9 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.commands.family.AdoptSubcommand;
+import de.janschuri.lunaticfamily.common.commands.priest.PriestAdoptSubcommand;
+import de.janschuri.lunaticfamily.common.commands.priest.PriestMarrySubcommand;
+import de.janschuri.lunaticfamily.common.commands.priest.PriestAdoptSubcommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
@@ -12,6 +15,7 @@ import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class AdoptAcceptSubcommand extends Subcommand {
 
@@ -20,6 +24,17 @@ public class AdoptAcceptSubcommand extends Subcommand {
     private final CommandMessageKey adoptedMK = new CommandMessageKey(this,"adopted");
     private final CommandMessageKey parentLimitMK = new CommandMessageKey(this,"parent_limit");
     private final CommandMessageKey noRequestMK = new CommandMessageKey(this,"no_request");
+    private final CommandMessageKey openRequestParentMK = new CommandMessageKey(this,"open_request_parent");
+
+    private final CommandMessageKey priestYesMK = new CommandMessageKey(new PriestAdoptSubcommand(),"yes");
+    private final CommandMessageKey priestNoMK = new CommandMessageKey(new PriestAdoptSubcommand(),"no");
+    private final CommandMessageKey priestCompleteMK = new CommandMessageKey(new PriestAdoptSubcommand(),"complete");
+    private final CommandMessageKey priestAlreadyAdoptedMK = new CommandMessageKey(new PriestAdoptSubcommand(),"already_adopted");
+    private final CommandMessageKey priestRequestMK = new CommandMessageKey(new PriestAdoptSubcommand(),"request");
+    private final CommandMessageKey priestRequestExpiredPriestMK = new CommandMessageKey(new PriestAdoptSubcommand(),"request_expired_priest");
+    private final CommandMessageKey priestRequestExpiredParentMK = new CommandMessageKey(new PriestAdoptSubcommand(),"request_expired_parent");
+    private final CommandMessageKey priestRequestExpiredChildMK = new CommandMessageKey(new PriestAdoptSubcommand(),"request_expired_child");
+
 
     @Override
     public String getPermission() {
@@ -38,58 +53,233 @@ public class AdoptAcceptSubcommand extends Subcommand {
 
     @Override
     public boolean execute(Sender sender, String[] args) {
-
-        if (!(sender instanceof PlayerSender)) {
+        if (!(sender instanceof PlayerSender player)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
-        } else if (!sender.hasPermission(getPermission())) {
+            return true;
+        }
+
+        if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
+            return true;
+        }
+
+        UUID playerUUID = player.getUniqueId();
+
+        if (LunaticFamily.adoptPriestRequests.containsValue(playerUUID)) {
+            sender.sendMessage(getMessage(openRequestParentMK));
+            return true;
+        }
+
+        if (LunaticFamily.adoptRequests.containsKey(playerUUID)) {
+            return proceedRequest(player);
+        }
+
+        if (LunaticFamily.adoptPriestRequests.containsKey(playerUUID)) {
+            return proceedPriestRequest(player);
+        }
+
+        sender.sendMessage(getMessage(noRequestMK));
+        return true;
+    }
+
+    private boolean proceedPriestRequest(PlayerSender player) {
+        UUID playerUUID = player.getUniqueId();
+        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+        UUID childUUID = LunaticFamily.adoptPriestRequests.get(playerUUID);
+        FamilyPlayerImpl childFam = new FamilyPlayerImpl(childUUID);
+        PlayerSender child = LunaticLib.getPlatform().getPlayerSender(childUUID);
+
+        if (childFam.isAdopted()) {
+            player.sendMessage(getMessage(priestAlreadyAdoptedMK)
+                    .replaceText(getTextReplacementConfig("%player%", childFam.getName())));
+            return true;
+        }
+
+        UUID priestUUID = LunaticFamily.adoptPriests.get(playerUUID);
+        PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
+
+        if (!Utils.hasEnoughMoney(player.getServerName(), priestUUID, WithdrawKey.PRIEST_ADOPT)) {
+            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
+                    .replaceText(getTextReplacementConfig("%player%", priest.getName()))
+            );
+            return true;
+        }
+
+        if (!Utils.hasEnoughMoney(player.getServerName(), childUUID, WithdrawKey.PRIEST_ADOPT_CHILD)) {
+            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
+                    .replaceText(getTextReplacementConfig("%player%", childFam.getName()))
+            );
+            return true;
+        }
+
+        if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.PRIEST_ADOPT_PARENT)) {
+            player.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK)
+                    .replaceText(getTextReplacementConfig("%player%", player.getName()))
+            );
+            return true;
+        }
+
+        LunaticFamily.adoptPriestRequests.remove(playerUUID);
+        LunaticFamily.adoptRequests.put(childUUID, playerUUID);
+
+        Runnable runnable = () -> {
+            if (LunaticFamily.adoptRequests.containsKey(childUUID)) {
+                LunaticFamily.adoptRequests.remove(childUUID);
+                LunaticFamily.adoptPriests.remove(childUUID);
+                priest.sendMessage(getMessage(priestRequestExpiredPriestMK)
+                        .replaceText(getTextReplacementConfig("%player1%", player.getName()))
+                        .replaceText(getTextReplacementConfig("%player2%", child.getName())));
+                player.sendMessage(getMessage(priestRequestExpiredParentMK)
+                        .replaceText(getTextReplacementConfig("%player%", child.getName())));
+                child.sendMessage(getMessage(priestRequestExpiredChildMK)
+                        .replaceText(getTextReplacementConfig("%player%", player.getName())));
+            }
+        };
+
+        Utils.scheduleTask(runnable, 30L, TimeUnit.SECONDS);
+
+        player.chat(getLanguageConfig().getMessageAsString(priestYesMK, false));
+
+
+        priest.chat(getLanguageConfig().getMessageAsString(priestRequestMK, false)
+                .replace("%player1%", childFam.getName())
+                .replace("%player2%", playerFam.getName()));
+
+
+        child.sendMessage(Utils.getClickableDecisionMessage(
+                getPrefix(),
+                getMessage(priestYesMK, false),
+                "/family adopt accept",
+                getMessage(priestNoMK, false),
+                "/family adopt deny"));
+
+
+        return true;
+    }
+
+    private boolean proceedRequest(PlayerSender player) {
+        UUID playerUUID = player.getUniqueId();
+        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+        UUID parent1UUID = LunaticFamily.adoptRequests.get(playerUUID);
+
+        if (playerFam.isAdopted()) {
+            player.sendMessage(getMessage(priestAlreadyAdoptedMK)
+                    .replaceText(getTextReplacementConfig("%player%", playerFam.getName()))
+            );
+            return true;
+        }
+
+        if (LunaticFamily.adoptPriests.containsKey(parent1UUID)) {
+            return acceptPriestRequest(player);
         } else {
-            PlayerSender player = (PlayerSender) sender;
-            UUID playerUUID = player.getUniqueId();
-            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+            return acceptRequest(player);
+        }
+    }
 
-            if (!LunaticFamily.adoptRequests.containsKey(playerUUID)) {
-                sender.sendMessage(getMessage(noRequestMK));
-            } else {
+    private boolean acceptRequest(PlayerSender player) {
+        UUID playerUUID = player.getUniqueId();
+        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
 
-                UUID parent1UUID = LunaticFamily.adoptRequests.get(playerUUID);
-                FamilyPlayerImpl parentFam = new FamilyPlayerImpl(parent1UUID);
-                PlayerSender parent = LunaticLib.getPlatform().getPlayerSender(parent1UUID);
+        UUID parent1UUID = LunaticFamily.adoptRequests.get(playerUUID);
+        FamilyPlayerImpl parent1Fam = new FamilyPlayerImpl(parent1UUID);
+        PlayerSender parent1 = LunaticLib.getPlatform().getPlayerSender(parent1UUID);
 
-                if (parentFam.getChildrenAmount() > 1) {
-                    sender.sendMessage(getMessage(parentLimitMK).replaceText(getTextReplacementConfig("%player%", parentFam.getName())));
-                } else if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.ADOPT_CHILD)) {
-                    sender.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK));
-                } else if (!Utils.hasEnoughMoney(player.getServerName(), parent1UUID, WithdrawKey.ADOPT_PARENT)) {
-                    sender.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK).replaceText(getTextReplacementConfig("%player%", parentFam.getName())));
-                } else {
+        if (parent1Fam.getChildrenAmount() > 1) {
+            player.sendMessage(getMessage(parentLimitMK)
+                    .replaceText(getTextReplacementConfig("%player%", parent1Fam.getName())));
+            return true;
+        }
+        if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.ADOPT_CHILD)) {
+            player.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK));
+            return true;
+        }
 
-                    if (parentFam.isMarried()) {
-                        sender.sendMessage(getMessage(gotAdoptedMK).replaceText(getTextReplacementConfig("%player1%", parentFam.getName())).replaceText(getTextReplacementConfig("%player2%", parentFam.getPartner().getName())));
-                        parent.sendMessage(getMessage(adoptedMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
-                        UUID parent2UUID = parentFam.getPartner().getUniqueId();
-                        Utils.withdrawMoney(player.getServerName(), parent2UUID, 0.5, WithdrawKey.ADOPT_PARENT);
-                        Utils.withdrawMoney(player.getServerName(), parent1UUID, 0.5, WithdrawKey.ADOPT_PARENT);
-                        for (String command : LunaticFamily.getConfig().getSuccessCommands("adopt")) {
-                            command = command.replace("%parent1%", parentFam.getName()).replace("%parent2%", parentFam.getPartner().getName()).replace("%child%", playerFam.getName());
+        if (!Utils.hasEnoughMoney(player.getServerName(), parent1UUID, WithdrawKey.ADOPT_PARENT)) {
+            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
+                    .replaceText(getTextReplacementConfig("%player%", parent1Fam.getName())));
+            return true;
+        }
 
-                            LunaticLib.getPlatform().sendConsoleCommand(command);
-                        }
-                    } else {
-                        sender.sendMessage(getMessage(adoptedBySingleMK).replaceText(getTextReplacementConfig("%player%", parentFam.getName())));
-                        for (String command : LunaticFamily.getConfig().getSuccessCommands("adopt_single")) {
-                            command = command.replace("%parent%", parentFam.getName()).replace("%child%", playerFam.getName());
-                            LunaticLib.getPlatform().sendConsoleCommand(command);
-                        }
-                    }
-                    Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.ADOPT_CHILD);
+        if (parent1Fam.isMarried()) {
+            player.sendMessage(getMessage(gotAdoptedMK).replaceText(getTextReplacementConfig("%player1%", parent1Fam.getName())).replaceText(getTextReplacementConfig("%player2%", parent1Fam.getPartner().getName())));
+            parent1.sendMessage(getMessage(adoptedMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+            UUID parent2UUID = parent1Fam.getPartner().getUniqueId();
+            Utils.withdrawMoney(player.getServerName(), parent2UUID, 0.5, WithdrawKey.ADOPT_PARENT);
+            Utils.withdrawMoney(player.getServerName(), parent1UUID, 0.5, WithdrawKey.ADOPT_PARENT);
+            for (String command : LunaticFamily.getConfig().getSuccessCommands("adopt")) {
+                command = command.replace("%parent1%", parent1Fam.getName()).replace("%parent2%", parent1Fam.getPartner().getName()).replace("%child%", playerFam.getName());
 
-                    parent.sendMessage(getMessage(adoptedMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
-                    LunaticFamily.adoptRequests.remove(playerUUID);
-                    parentFam.adopt(playerFam.getId());
-                }
+                LunaticLib.getPlatform().sendConsoleCommand(command);
+            }
+        } else {
+            player.sendMessage(getMessage(adoptedBySingleMK).replaceText(getTextReplacementConfig("%player%", parent1Fam.getName())));
+            for (String command : LunaticFamily.getConfig().getSuccessCommands("adopt_single")) {
+                command = command.replace("%parent%", parent1Fam.getName()).replace("%child%", playerFam.getName());
+                LunaticLib.getPlatform().sendConsoleCommand(command);
             }
         }
+
+        Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.ADOPT_CHILD);
+
+        parent1.sendMessage(getMessage(adoptedMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+        LunaticFamily.adoptRequests.remove(playerUUID);
+        parent1Fam.adopt(playerFam.getId());
+
+        return true;
+    }
+
+    private boolean acceptPriestRequest(PlayerSender player) {
+        UUID playerUUID = player.getUniqueId();
+        UUID parent1UUID = LunaticFamily.adoptRequests.get(playerUUID);
+
+        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+        FamilyPlayerImpl parent1Fam = new FamilyPlayerImpl(parent1UUID);
+
+        UUID priestUUID = LunaticFamily.adoptPriests.get(parent1UUID);
+        FamilyPlayerImpl priestFam = new FamilyPlayerImpl(priestUUID);
+        PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
+
+        if (!Utils.hasEnoughMoney(player.getServerName(), priestUUID, WithdrawKey.PRIEST_ADOPT)) {
+            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
+                    .replaceText(getTextReplacementConfig("%player%", priest.getName())));
+            return true;
+        }
+
+        if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.PRIEST_ADOPT_CHILD)) {
+            player.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK)
+                    .replaceText(getTextReplacementConfig("%player%", player.getName())));
+            return true;
+        }
+
+        if (!Utils.hasEnoughMoney(player.getServerName(), parent1UUID, WithdrawKey.PRIEST_ADOPT_PARENT)) {
+            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
+                    .replaceText(getTextReplacementConfig("%player%", parent1Fam.getName())));
+            return true;
+        }
+
+
+
+        Utils.withdrawMoney(player.getServerName(), priestUUID, WithdrawKey.PRIEST_ADOPT);
+        Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.PRIEST_ADOPT_CHILD);
+        Utils.withdrawMoney(player.getServerName(), parent1UUID, WithdrawKey.PRIEST_ADOPT_PARENT);
+
+        player.chat(getLanguageConfig().getMessageAsString(priestYesMK, false));
+
+        priest.chat(getLanguageConfig().getMessageAsString(priestCompleteMK, false)
+                .replace("%player1%", playerFam.getName())
+                .replace("%player2%", parent1Fam.getName()));
+
+        LunaticFamily.adoptRequests.remove(playerUUID);
+        LunaticFamily.adoptPriestRequests.remove(parent1UUID);
+        LunaticFamily.adoptPriests.remove(parent1UUID);
+
+        parent1Fam.adopt(playerFam.getId(), priestFam.getId());
+
+        for (String command : LunaticFamily.getConfig().getSuccessCommands("adopt_priest")) {
+            command = command.replace("%player1%", playerFam.getName()).replace("%player2%", parent1Fam.getName()).replace("%priest%", priestFam.getName());
+            LunaticLib.getPlatform().sendConsoleCommand(command);
+        }
+
         return true;
     }
 }

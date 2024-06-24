@@ -115,10 +115,6 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         }
     }
 
-    private void saveMarriage(int partnerID) {
-        MarriagesTable.saveMarriage(this.id, partnerID);
-    }
-
     private void saveMarriage(int partnerID, int priestID) {
         MarriagesTable.saveMarriage(this.id, partnerID, priestID);
     }
@@ -131,10 +127,6 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         MarriagesTable.divorceMarriage(this.id);
     }
 
-    private void saveSiblinghood(int siblingID) {
-        SiblinghoodsTable.saveSiblinghood(this.id, siblingID);
-    }
-
     private void saveSiblinghood(int siblingID, int priestID) {
         SiblinghoodsTable.saveSiblinghood(this.id, siblingID, priestID);
     }
@@ -143,7 +135,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         SiblinghoodsTable.unsiblingSiblinghood(this.id);
     }
 
-    private void saveAdoption(int childID) {
+    private void saveAdoption(int childID, int priestID) {
         AdoptionsTable.saveAdoption(this.id, childID);
     }
 
@@ -262,47 +254,38 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
 
     public void marry(int partnerID) {
-        FamilyPlayerImpl playerFam = this;
-        FamilyPlayerImpl partnerFam = new FamilyPlayerImpl(partnerID);
-        List<FamilyPlayer> playerChildren = playerFam.getChildren();
-        List<FamilyPlayer> partnerChildren = partnerFam.getChildren();
-
-        for (FamilyPlayer child : playerChildren) {
-            partnerFam.saveAdoption(child.getId());
-        }
-        for (FamilyPlayer child : partnerChildren) {
-            playerFam.saveAdoption(child.getId());
-        }
-
-        if (playerChildren.size() == 1 && partnerChildren.size() == 1) {
-            FamilyPlayerImpl childFam = (FamilyPlayerImpl) playerChildren.get(0);
-            childFam.saveSiblinghood(partnerChildren.get(0).getId());
-        }
-
-        playerFam.saveMarriage(partnerID);
-        playerFam.updateFamilyTree();
-        partnerFam.updateFamilyTree();
+        marry(partnerID, -1);
     }
 
-    public void marry(int partnerID, int priest) {
+    public void marry(int partnerID, int priestID) {
+        if (new FamilyPlayerImpl(partnerID).isFamilyMember(this.id)) {
+            Logger.errorLog("Cancelled marriage. Player is already a family member.");
+            return;
+        }
+
+        if (partnerID == this.id) {
+            Logger.errorLog("Cancelled marriage. Player can't marry himself.");
+            return;
+        }
+
         FamilyPlayerImpl playerFam = this;
         FamilyPlayerImpl partnerFam = new FamilyPlayerImpl(partnerID);
         List<FamilyPlayer> playerChildren = playerFam.getChildren();
         List<FamilyPlayer> partnerChildren = partnerFam.getChildren();
 
         for (FamilyPlayer child : playerChildren) {
-            partnerFam.saveAdoption(child.getId());
+            partnerFam.saveAdoption(child.getId(), priestID);
         }
         for (FamilyPlayer child : partnerChildren) {
-            playerFam.saveAdoption(child.getId());
+            playerFam.saveAdoption(child.getId(), priestID);
         }
 
         if (playerChildren.size() == 1 && partnerChildren.size() == 1) {
             FamilyPlayerImpl childFam = (FamilyPlayerImpl) playerChildren.get(0);
-            childFam.saveSiblinghood(partnerChildren.get(0).getId());
+            childFam.saveSiblinghood(partnerChildren.get(0).getId(), priestID);
         }
 
-        playerFam.saveMarriage(partnerID, priest);
+        playerFam.saveMarriage(partnerID, priestID);
 
         playerFam.updateFamilyTree();
         partnerFam.updateFamilyTree();
@@ -330,21 +313,35 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public void adopt(int childID) {
+        adopt(childID, -1);
+    }
+
+    public void adopt(int childID, int priestID) {
+        if (new FamilyPlayerImpl(childID).isFamilyMember(this.id)) {
+            Logger.errorLog("Cancelled adoption. Player is already a family member.");
+            return;
+        }
+
+        if (childID == this.id) {
+            Logger.errorLog("Cancelled adoption. Player can't adopt himself.");
+            return;
+        }
+
         FamilyPlayerImpl playerFam = this;
         FamilyPlayerImpl childFam = new FamilyPlayerImpl(childID);
-        playerFam.saveAdoption(childID);
+        playerFam.saveAdoption(childID, priestID);
 
         if (playerFam.isMarried()) {
             FamilyPlayerImpl partnerFam = playerFam.getPartner();
-            partnerFam.saveAdoption(childID);
+            partnerFam.saveAdoption(childID, priestID);
         }
 
         if (childFam.hasSibling()) {
             FamilyPlayerImpl siblingFam = childFam.getSibling();
-            playerFam.saveAdoption(siblingFam.getId());
+            playerFam.saveAdoption(siblingFam.getId(), priestID);
             if (playerFam.isMarried()) {
                 FamilyPlayerImpl partnerFam = playerFam.getPartner();
-                partnerFam.saveAdoption(siblingFam.getId());
+                partnerFam.saveAdoption(siblingFam.getId(), priestID);
             }
         }
 
@@ -371,15 +368,20 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public void addSibling(int siblingID) {
-        FamilyPlayerImpl playerFam = this;
-        FamilyPlayerImpl siblingFam = new FamilyPlayerImpl(siblingID);
-        playerFam.saveSiblinghood(siblingID);
-
-        playerFam.updateFamilyTree();
-        siblingFam.updateFamilyTree();
+        addSibling(siblingID, -1);
     }
 
     public void addSibling(int siblingID, int priestID) {
+        if (new FamilyPlayerImpl(siblingID).isFamilyMember(this.id)) {
+            Logger.errorLog("Cancelled Siblinghood. Player is already a family member.");
+            return;
+        }
+
+        if (siblingID == this.id) {
+            Logger.errorLog("Cancelled Siblinghood. Player can't be sibling to himself.");
+            return;
+        }
+
         FamilyPlayerImpl playerFam = this;
         FamilyPlayerImpl siblingFam = new FamilyPlayerImpl(siblingID);
         playerFam.saveSiblinghood(siblingID, priestID);

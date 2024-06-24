@@ -56,27 +56,41 @@ distances:
   marry_priest_range: 3
   adopt_propose_range: 3
   sibling_propose_range: 3
+  sibling_priest_range: 3
+  adopt_priest_range: 3
 success_commands:
   #avaible placeholders: %player1%, %player2%
   marry: []
+
   #avaible placeholders: %player1%, %player2%, %priest%
   marry_priest: []
+
   #avaible placeholders: %parent1%, %parent2%, %child%
   adopt: []
+
+  adopt_priest: []
+
   #avaible placeholders: %parent%, %child%
   adopt_single: []
+
   #avaible placeholders: %player1%, %player2%
   sibling: []
+
   #avaible placeholders: %player1%, %player2%, %priest%
   sibling_priest: []
+
   #avaible placeholders: %player1%, %player2%
   divorce: []
+
   #avaible placeholders: %parent1%, %parent2%, %child%
   kickout: []
+
   #avaible placeholders: %parent1%, %parent2%, %child%
   moveout: []
+
   #avaible placeholders: %parent%, %child%
   kickout_single: []
+
   #avaible placeholders: %parent%, %child%
   moveout_single: []
 

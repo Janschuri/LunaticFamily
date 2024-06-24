@@ -296,7 +296,7 @@ commands:
           same_family: "%player1% and %player2% are already family."
       unset:
         aliases:
-          - set
+          - unset
         messages:
           help: "&6/%command% %subcommand% &b<%param%> &7- Unset the marriage between a couple."
           no_partner: "%player% is not married."
@@ -333,7 +333,7 @@ commands:
         aliases:
           - sibling
         messages:
-          help: "&6/%command% %subcommand% <%param%> <%param%> &7- Marry two players."
+          help: "&6/%command% %subcommand% <%param%> <%param%> &7- Arrange the siblinghood of two players."
           already_priest: "You are already a priest in an other action."
           request: "%player1%, would you like to be siblings with %player2% on this Minecraft server?"
           is_adopted: "%player1% is adopted. You could setup the adoption of %player2% of %player1%'s parents."
@@ -347,6 +347,24 @@ commands:
           yes: "Yes. I do!"
           no: "No. I don't want to."
           complete: "You are siblings!"
+      adopt:
+        aliases:
+          - adopt
+        messages:
+          help: "&6/%command% %subcommand% <%param%> <%param%> &7- Arrange the adoption of a child by a player."
+          already_priest: "You are already a priest in an other action."
+          request: "%player1%, would you like to adopt %player2% on this Minecraft server?"
+          player_already_adopted: "%player% is already adopted."
+          too_many_children: "%player% already has two children."
+          self_request: "You cannot adopt yourself."
+          open_request: "%player% already has an open adoption request."
+          same_player: "You cannot make someone their own child."
+          request_expired_priest: "The adoption of %player2% by %player1% has been canceled."
+          request_expired_player: "Your adoption has been canceled."
+          family_request: "%player1% cannot adopt %player2%. These players already belong to the same family."
+          yes: "Yes. I do!"
+          no: "No. I don't want to."
+          complete: "The adoption has been completed!"
       help:
         aliases:
           - help

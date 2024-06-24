@@ -347,6 +347,24 @@ commands:
           yes: "Ja, ich will!"
           no: "Nein, ich will nicht."
           complete: "Ihr seid Geschwister!"
+      adopt:
+        aliases:
+          - adopt
+        messages:
+          help: "&6/%command% %subcommand% <%param%> <%param%> &7- Arrangiere eine Adoption."
+          already_priest: "Du bist bereits Priester in einer anderen Aktion."
+          request: "%player1%, möchtest du %player2% auf diesem Minecraft-Server adoptieren?"
+          player_already_adopted: "%player% ist bereits adoptiert."
+          too_many_children: "%player% hat bereits zwei Kinder."
+          self_request: "Du kannst dich nicht selbst adoptieren."
+          open_request: "%player% hat bereits eine offene Adoptionsanfrage."
+          same_player: "Niemand kann sich selbst adoptieren!"
+          request_expired_priest: "Die Adoptionsanfrage von %player2% durch %player2% wurde abgebrochen."
+          request_expired_player: "Deine Adoptionsanfrage wurde abgebrochen."
+          family_request: "%player1% kann %player2% nicht adoptieren. %player1% gehört bereits zu %player2%'s Familie."
+          yes: "Ja, ich will!"
+          no: "Nein, ich will nicht."
+          complete: "Die Adoption wurde abgeschlossen!"
       help:
         aliases:
           - help

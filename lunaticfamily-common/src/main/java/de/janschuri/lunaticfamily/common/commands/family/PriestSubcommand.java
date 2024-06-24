@@ -2,6 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.commands.marry.*;
+import de.janschuri.lunaticfamily.common.commands.priest.PriestAdoptSubcommand;
 import de.janschuri.lunaticfamily.common.commands.priest.PriestMarrySubcommand;
 import de.janschuri.lunaticfamily.common.commands.priest.PriestSiblingSubcommand;
 import de.janschuri.lunaticlib.LunaticCommand;
@@ -17,6 +18,7 @@ public class PriestSubcommand extends Subcommand {
         return List.of(
                 new PriestMarrySubcommand(),
                 new PriestSiblingSubcommand(),
+                new PriestAdoptSubcommand(),
                 getHelpCommand()
         );
     }

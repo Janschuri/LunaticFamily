@@ -124,6 +124,14 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
         return marryPriestRange;
     }
 
+    public double getAdoptPriestRange() {
+        return adoptProposeRange;
+    }
+
+    public double getSiblingPriestRange() {
+        return siblingProposeRange;
+    }
+
     public double getAdoptProposeRange() {
         return adoptProposeRange;
     }

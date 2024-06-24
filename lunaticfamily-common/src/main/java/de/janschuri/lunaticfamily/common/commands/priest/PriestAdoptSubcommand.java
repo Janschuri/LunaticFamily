@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.commands.priest;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.family.AdoptSubcommand;
 import de.janschuri.lunaticfamily.common.commands.family.PriestSubcommand;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
@@ -20,31 +19,33 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class PriestSiblingSubcommand extends Subcommand {
+public class PriestAdoptSubcommand extends Subcommand {
 
     private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
     private final CommandMessageKey alreadyPriestMK = new CommandMessageKey(this,"already_priest");
     private final CommandMessageKey requestMK = new CommandMessageKey(this,"request");
-    private final CommandMessageKey alreadySiblingMK = new CommandMessageKey(this,"already_sibling");
-    private final CommandMessageKey isAdoptedMK = new CommandMessageKey(this,"is_adopted");
+
+    private final CommandMessageKey playerAlreadyAdoptedMK = new CommandMessageKey(this,"player_already_adopted");
+    private final CommandMessageKey tooManyChildrenMK = new CommandMessageKey(this,"too_many_children");
+
     private final CommandMessageKey selfRequestMK = new CommandMessageKey(this,"self_request");
     private final CommandMessageKey openRequestMK = new CommandMessageKey(this,"open_request");
     private final CommandMessageKey requestExpiredPriestMK = new CommandMessageKey(this,"request_expired_priest");
     private final CommandMessageKey requestExpiredPlayerMK = new CommandMessageKey(this,"request_expired_player");
     private final CommandMessageKey samePlayerMK = new CommandMessageKey(this,"same_player");
-    private final CommandMessageKey yesMK = new CommandMessageKey(new AdoptSubcommand(),"yes");
-    private final CommandMessageKey noMK = new CommandMessageKey(new AdoptSubcommand(),"no");
+    private final CommandMessageKey yesMK = new CommandMessageKey(this,"yes");
+    private final CommandMessageKey noMK = new CommandMessageKey(this,"no");
     private final CommandMessageKey familyRequestMK = new CommandMessageKey(this,"family_request");
 
 
     @Override
     public String getPermission() {
-        return "lunaticfamily.priest.sibling";
+        return "lunaticfamily.priest.adopt";
     }
 
     @Override
     public String getName() {
-        return "sibling";
+        return "adopt";
     }
 
     @Override
@@ -69,11 +70,11 @@ public class PriestSiblingSubcommand extends Subcommand {
 
         if (args.length < 2) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("PriestSiblingSubcommand: Wrong usage");
+            Logger.debugLog("PriestAdoptSubcommand: Wrong usage");
             return true;
         }
 
-        if (LunaticFamily.siblingPriests.containsValue(playerUUID)) {
+        if (Utils.isPriest(playerUUID)) {
             sender.sendMessage(getMessage(alreadyPriestMK));
             return true;
         }
@@ -179,60 +180,46 @@ public class PriestSiblingSubcommand extends Subcommand {
             return true;
         }
 
-        if (!Utils.hasEnoughMoney(player.getServerName(), player1UUID, WithdrawKey.PRIEST_SIBLING_PLAYER)) {
+        if (!Utils.hasEnoughMoney(player.getServerName(), player1UUID, WithdrawKey.PRIEST_ADOPT_PARENT)) {
             sender.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
                     .replaceText(getTextReplacementConfig("%player%", player1.getName())));
             return true;
         }
 
-        if (!Utils.hasEnoughMoney(player.getServerName(), player2UUID, WithdrawKey.PRIEST_SIBLING_PLAYER)) {
+        if (!Utils.hasEnoughMoney(player.getServerName(), player2UUID, WithdrawKey.PRIEST_ADOPT_CHILD)) {
             sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK)
                     .replaceText(getTextReplacementConfig("%player%", player2.getName())));
             return true;
         }
 
-        if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.PRIEST_SIBLING)) {
+        if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.PRIEST_ADOPT)) {
             sender.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK)
                     .replaceText(getTextReplacementConfig("%player%", player.getName())));
             return true;
         }
 
-
-        if (player1Fam.hasSibling()) {
-            sender.sendMessage(getMessage(alreadySiblingMK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
+        if (player1Fam.getChildrenAmount() > 2) {
+            sender.sendMessage(getMessage(tooManyChildrenMK)
+                    .replaceText(getTextReplacementConfig("%player%", player1Fam.getName()))
+            );
             return true;
         }
 
-        if (player2Fam.isMarried()) {
-            sender.sendMessage(getMessage(alreadySiblingMK)
+        if (player2Fam.hasSibling()) {
+            sender.sendMessage(getMessage(playerAlreadyAdoptedMK)
                     .replaceText(getTextReplacementConfig("%player%", player2Fam.getName())));
             return true;
         }
 
-        if (LunaticFamily.siblingRequests.containsKey(player1UUID) || LunaticFamily.siblingPriests.containsValue(player1UUID)) {
+        if (LunaticFamily.adoptRequests.containsKey(player1UUID) || LunaticFamily.adoptPriests.containsValue(player1UUID)) {
             sender.sendMessage(getMessage(openRequestMK)
                     .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
             return true;
         }
 
-        if (LunaticFamily.siblingRequests.containsKey(player2UUID) || LunaticFamily.siblingPriests.containsValue(player2UUID)) {
+        if (LunaticFamily.adoptRequests.containsKey(player2UUID) || LunaticFamily.adoptPriests.containsValue(player2UUID)) {
             sender.sendMessage(getMessage(openRequestMK)
                     .replaceText(getTextReplacementConfig("%player%", player2Fam.getName())));
-            return true;
-        }
-
-        if (player1Fam.isAdopted()) {
-            sender.sendMessage(getMessage(isAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
-            return true;
-        }
-
-        if (player2Fam.isAdopted()) {
-            sender.sendMessage(getMessage(isAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player1%", player2Fam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", player1Fam.getName())));
             return true;
         }
 
@@ -243,17 +230,17 @@ public class PriestSiblingSubcommand extends Subcommand {
         player1.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
                 getMessage(yesMK),
-                "/family sibling accept",
+                "/family adopt accept",
                 getMessage(noMK),
-                "/family sibling deny"));
+                "/family adopt deny"));
 
-        LunaticFamily.siblingPriestRequests.put(player1UUID, player2UUID);
-        LunaticFamily.siblingPriests.put(player1UUID, playerUUID);
+        LunaticFamily.adoptPriestRequests.put(player1UUID, player2UUID);
+        LunaticFamily.adoptPriests.put(player1UUID, playerUUID);
 
         Runnable runnable = () -> {
-            if (LunaticFamily.siblingPriestRequests.containsKey(player1UUID)) {
-                LunaticFamily.siblingPriestRequests.remove(player1UUID);
-                LunaticFamily.siblingPriests.remove(player1UUID);
+            if (LunaticFamily.adoptPriestRequests.containsKey(player1UUID)) {
+                LunaticFamily.adoptPriestRequests.remove(player1UUID);
+                LunaticFamily.adoptPriests.remove(player1UUID);
                 player.sendMessage(getMessage(requestExpiredPriestMK)
                         .replaceText(getTextReplacementConfig("%player1%", player1.getName()))
                         .replaceText(getTextReplacementConfig("%player2%", player2.getName())));

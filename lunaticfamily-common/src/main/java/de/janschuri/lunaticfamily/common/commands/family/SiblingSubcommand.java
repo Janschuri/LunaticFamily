@@ -20,6 +20,7 @@ public class SiblingSubcommand extends Subcommand {
                 new SiblingProposeSubcommand(),
                 new SiblingSetSubcommand(),
                 new SiblingUnsetSubcommand(),
+                new SiblingPriestSubcommand(),
                 getHelpCommand()
         );
     }

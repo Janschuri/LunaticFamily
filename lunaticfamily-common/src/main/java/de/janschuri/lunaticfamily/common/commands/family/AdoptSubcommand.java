@@ -41,6 +41,7 @@ public class AdoptSubcommand extends Subcommand {
                 new AdoptProposeSubcommand(),
                 new AdoptSetSubcommand(),
                 new AdoptUnsetSubcommand(),
+                new AdoptPriestSubcommand(),
                 getHelpCommand()
         );
     }
