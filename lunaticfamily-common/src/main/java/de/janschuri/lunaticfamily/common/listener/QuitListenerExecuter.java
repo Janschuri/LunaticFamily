@@ -1,9 +1,9 @@
 package de.janschuri.lunaticfamily.common.listener;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.adopt.AdoptDenySubcommand;
-import de.janschuri.lunaticfamily.common.commands.family.MarrySubcommand;
-import de.janschuri.lunaticfamily.common.commands.marry.MarryDenySubcommand;
+import de.janschuri.lunaticfamily.common.commands.adopt.AdoptDeny;
+import de.janschuri.lunaticfamily.common.commands.family.FamilyMarry;
+import de.janschuri.lunaticfamily.common.commands.marry.MarryDeny;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -19,9 +19,9 @@ import java.util.UUID;
 public class QuitListenerExecuter {
 
     private static final MessageKey playerQuitMK = new MessageKey("player_quit");
-    private static final CommandMessageKey marryCancelMK = new CommandMessageKey(new MarryDenySubcommand(), "cancel");
-    private static final CommandMessageKey adoptCancelMK = new CommandMessageKey(new AdoptDenySubcommand(), "cancel");
-    private static final CommandMessageKey marryPartnerOfflineMK = new CommandMessageKey(new MarrySubcommand(), "partner_offline");
+    private static final CommandMessageKey marryCancelMK = new CommandMessageKey(new MarryDeny(), "cancel");
+    private static final CommandMessageKey adoptCancelMK = new CommandMessageKey(new AdoptDeny(), "cancel");
+    private static final CommandMessageKey marryPartnerOfflineMK = new CommandMessageKey(new FamilyMarry(), "partner_offline");
 
 
     public static boolean execute(PlayerSender player) {

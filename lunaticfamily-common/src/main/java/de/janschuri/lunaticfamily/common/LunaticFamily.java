@@ -133,12 +133,12 @@ public final class LunaticFamily {
     }
 
     public static void registerCommands() {
-        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new FamilySubcommand());
-        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new AdoptSubcommand());
-        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new SiblingSubcommand());
-        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new MarrySubcommand());
-        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new GenderSubcommand());
-        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new PriestSubcommand());
+        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new Family());
+        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new FamilyAdopt());
+        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new FamilySibling());
+        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new FamilyMarry());
+        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new FamilyGender());
+        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new FamilyPriest());
     }
 
     public static LanguageConfigImpl getLanguageConfig() {
