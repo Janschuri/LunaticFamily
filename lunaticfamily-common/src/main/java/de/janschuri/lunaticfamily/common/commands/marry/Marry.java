@@ -1,16 +1,32 @@
-package de.janschuri.lunaticfamily.common.commands.family;
+package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.gender.GenderInfo;
-import de.janschuri.lunaticfamily.common.commands.gender.GenderSet;
-import de.janschuri.lunaticfamily.common.utils.Logger;
+import de.janschuri.lunaticfamily.common.commands.family.Family;
 import de.janschuri.lunaticlib.LunaticCommand;
 import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
 import de.janschuri.lunaticlib.Sender;
 
 import java.util.List;
 
-public class FamilyGender extends Subcommand {
+public class Marry extends Subcommand {
+
+    @Override
+    public List<LunaticCommand> getSubcommands() {
+        return List.of(
+                new MarryAccept(),
+                new MarryDeny(),
+                new MarryDivorce(),
+                new MarryGift(),
+                new MarryHeart(),
+                new MarryKiss(),
+                new MarryList(),
+                new MarryPropose(),
+                new MarrySet(),
+                new MarryUnset(),
+                new MarryPriest(),
+                getHelpCommand()
+        );
+    }
 
     @Override
     public LunaticHelpCommand getHelpCommand() {
@@ -18,27 +34,18 @@ public class FamilyGender extends Subcommand {
     }
 
     @Override
-    public List<LunaticCommand> getSubcommands() {
-        return List.of(
-                new GenderSet(),
-                new GenderInfo(),
-                getHelpCommand()
-        );
+    public Family getParentCommand() {
+        return new Family();
     }
 
     @Override
     public String getPermission() {
-        return "lunaticfamily.gender";
+        return "lunaticfamily.marry";
     }
 
     @Override
     public String getName() {
-        return "gender";
-    }
-
-    @Override
-    public Family getParentCommand() {
-        return new Family();
+        return "marry";
     }
 
     @Override
@@ -59,7 +66,6 @@ public class FamilyGender extends Subcommand {
                     }
                 }
                 sender.sendMessage(getMessage(WRONG_USAGE_MK));
-                Logger.debugLog("GenderSubcommand: Wrong usage");
             }
         }
         return true;
@@ -75,4 +81,3 @@ public class FamilyGender extends Subcommand {
         return new Family().getName() + " " + getName();
     }
 }
-

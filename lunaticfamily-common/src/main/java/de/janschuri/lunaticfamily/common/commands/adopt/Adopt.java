@@ -1,7 +1,7 @@
-package de.janschuri.lunaticfamily.common.commands.family;
+package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.sibling.*;
+import de.janschuri.lunaticfamily.common.commands.family.Family;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.LunaticCommand;
 import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
@@ -9,30 +9,21 @@ import de.janschuri.lunaticlib.Sender;
 
 import java.util.List;
 
-public class FamilySibling extends Subcommand {
-
-    @Override
-    public List<LunaticCommand> getSubcommands() {
-        return List.of(
-                new SiblingAccept(),
-                new SiblingDeny(),
-                new SiblingUnsibling(),
-                new SiblingPropose(),
-                new SiblingSet(),
-                new SiblingUnset(),
-                new SiblingPriest(),
-                getHelpCommand()
-        );
-    }
+public class Adopt extends Subcommand {
 
     @Override
     public String getPermission() {
-        return "lunaticfamily.sibling";
+        return "lunaticfamily.adopt";
+    }
+
+    @Override
+    public LunaticHelpCommand getHelpCommand() {
+        return new LunaticHelpCommand(getLanguageConfig(), this);
     }
 
     @Override
     public String getName() {
-        return "sibling";
+        return "adopt";
     }
 
     @Override
@@ -41,8 +32,18 @@ public class FamilySibling extends Subcommand {
     }
 
     @Override
-    public LunaticHelpCommand getHelpCommand() {
-        return new LunaticHelpCommand(getLanguageConfig(), this);
+    public List<LunaticCommand> getSubcommands() {
+        return List.of(
+                new AdoptAccept(),
+                new AdoptDeny(),
+                new AdoptKickout(),
+                new AdoptMoveout(),
+                new AdoptPropose(),
+                new AdoptSet(),
+                new AdoptUnset(),
+                new AdoptPriest(),
+                getHelpCommand()
+        );
     }
 
     @Override
@@ -63,7 +64,7 @@ public class FamilySibling extends Subcommand {
                     }
                 }
                 sender.sendMessage(getMessage(WRONG_USAGE_MK));
-                Logger.debugLog("SiblingSubcommand: Wrong usage");
+                Logger.debugLog("AdoptSubcommand: Wrong usage");
             }
         }
         return true;

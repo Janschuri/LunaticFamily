@@ -1,16 +1,14 @@
-package de.janschuri.lunaticfamily.common.commands.family;
+package de.janschuri.lunaticfamily.common.commands.priest;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.priest.PriestAdopt;
-import de.janschuri.lunaticfamily.common.commands.priest.PriestMarry;
-import de.janschuri.lunaticfamily.common.commands.priest.PriestSibling;
+import de.janschuri.lunaticfamily.common.commands.family.Family;
 import de.janschuri.lunaticlib.LunaticCommand;
 import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
 import de.janschuri.lunaticlib.Sender;
 
 import java.util.List;
 
-public class FamilyPriest extends Subcommand {
+public class Priest extends Subcommand {
 
     @Override
     public List<LunaticCommand> getSubcommands() {

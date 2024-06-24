@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.listener;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.family.FamilyMarry;
+import de.janschuri.lunaticfamily.common.commands.marry.Marry;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 public class JoinListenerExecuter {
 
-    private static final CommandMessageKey marryPartnerOfflineMK = new CommandMessageKey(new FamilyMarry(), "partner_offline");
-    private static final CommandMessageKey marryPartnerOnlineMK = new CommandMessageKey(new FamilyMarry(), "partner_online");
+    private static final CommandMessageKey marryPartnerOfflineMK = new CommandMessageKey(new Marry(), "partner_offline");
+    private static final CommandMessageKey marryPartnerOnlineMK = new CommandMessageKey(new Marry(), "partner_online");
 
     private static List<String> registeredServers = new ArrayList<>();
 

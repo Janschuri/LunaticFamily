@@ -1,7 +1,7 @@
-package de.janschuri.lunaticfamily.common.commands.family;
+package de.janschuri.lunaticfamily.common.commands.gender;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.adopt.*;
+import de.janschuri.lunaticfamily.common.commands.family.Family;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.LunaticCommand;
 import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
@@ -9,12 +9,7 @@ import de.janschuri.lunaticlib.Sender;
 
 import java.util.List;
 
-public class FamilyAdopt extends Subcommand {
-
-    @Override
-    public String getPermission() {
-        return "lunaticfamily.adopt";
-    }
+public class Gender extends Subcommand {
 
     @Override
     public LunaticHelpCommand getHelpCommand() {
@@ -22,28 +17,27 @@ public class FamilyAdopt extends Subcommand {
     }
 
     @Override
+    public List<LunaticCommand> getSubcommands() {
+        return List.of(
+                new GenderSet(),
+                new GenderInfo(),
+                getHelpCommand()
+        );
+    }
+
+    @Override
+    public String getPermission() {
+        return "lunaticfamily.gender";
+    }
+
+    @Override
     public String getName() {
-        return "adopt";
+        return "gender";
     }
 
     @Override
     public Family getParentCommand() {
         return new Family();
-    }
-
-    @Override
-    public List<LunaticCommand> getSubcommands() {
-        return List.of(
-                new AdoptAccept(),
-                new AdoptDeny(),
-                new AdoptKickout(),
-                new AdoptMoveout(),
-                new AdoptPropose(),
-                new AdoptSet(),
-                new AdoptUnset(),
-                new AdoptPriest(),
-                getHelpCommand()
-        );
     }
 
     @Override
@@ -64,7 +58,7 @@ public class FamilyAdopt extends Subcommand {
                     }
                 }
                 sender.sendMessage(getMessage(WRONG_USAGE_MK));
-                Logger.debugLog("AdoptSubcommand: Wrong usage");
+                Logger.debugLog("GenderSubcommand: Wrong usage");
             }
         }
         return true;
@@ -80,3 +74,4 @@ public class FamilyAdopt extends Subcommand {
         return new Family().getName() + " " + getName();
     }
 }
+

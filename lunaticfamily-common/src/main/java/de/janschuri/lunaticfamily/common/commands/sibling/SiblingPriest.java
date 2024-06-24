@@ -1,8 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.family.FamilySibling;
-import de.janschuri.lunaticfamily.common.commands.family.FamilyPriest;
+import de.janschuri.lunaticfamily.common.commands.priest.Priest;
 import de.janschuri.lunaticfamily.common.commands.priest.PriestSibling;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
@@ -24,8 +23,8 @@ public class SiblingPriest extends Subcommand {
     }
 
     @Override
-    public FamilySibling getParentCommand() {
-        return new FamilySibling();
+    public Sibling getParentCommand() {
+        return new Sibling();
     }
 
     @Override
@@ -39,7 +38,7 @@ public class SiblingPriest extends Subcommand {
 
     @Override
     public List<String> getAliases() {
-        return new FamilyPriest().getAliases();
+        return new Priest().getAliases();
     }
 
 

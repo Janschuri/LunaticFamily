@@ -1,6 +1,10 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.adopt.Adopt;
+import de.janschuri.lunaticfamily.common.commands.gender.Gender;
+import de.janschuri.lunaticfamily.common.commands.marry.Marry;
+import de.janschuri.lunaticfamily.common.commands.sibling.Sibling;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.LunaticCommand;
 import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
@@ -23,10 +27,10 @@ public class Family extends Subcommand {
                 new FamilyReload(),
                 new FamilyTree(),
                 new FamilyDelete(),
-                new FamilyAdopt(),
-                new FamilyGender(),
-                new FamilySibling(),
-                new FamilyMarry(),
+                new Adopt(),
+                new Gender(),
+                new Sibling(),
+                new Marry(),
                 getHelpCommand()
         );
     }

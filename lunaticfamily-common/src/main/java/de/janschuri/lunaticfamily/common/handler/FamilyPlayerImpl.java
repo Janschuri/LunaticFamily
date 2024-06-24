@@ -13,8 +13,6 @@ import de.janschuri.lunaticfamily.platform.FamilyTree;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 
-import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class FamilyPlayerImpl implements FamilyPlayer {
@@ -25,7 +23,6 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     private String name;
     private String skinURL;
     private final int partner;
-    private final Timestamp marryDate;
     private final int priest;
     private final int sibling;
 
@@ -44,7 +41,6 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
     public FamilyPlayerImpl(UUID uuid) {
         this.uuid = uuid;
-
         player = LunaticLib.getPlatform().getPlayerSender(uuid);
 
         if (PlayerDataTable.getID(uuid) == -1) {
@@ -53,7 +49,6 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         id = PlayerDataTable.getID(uuid);
 
         partner = MarriagesTable.getPartner(id);
-        marryDate = MarriagesTable.getMarryDate(id);
         priest = MarriagesTable.getPriest(id);
         sibling = SiblinghoodsTable.getSibling(id);
         parents = AdoptionsTable.getParents(id);
@@ -119,10 +114,6 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         MarriagesTable.saveMarriage(this.id, partnerID, priestID);
     }
 
-    private void saveMarriageHeartColor(String color) {
-        MarriagesTable.saveMarriageHeartColor(this.id, color);
-    }
-
     private void divorceMarriage() {
         MarriagesTable.divorceMarriage(this.id);
     }
@@ -147,18 +138,17 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         return skinURL;
     }
 
-    public void setHeartColor(String color) {
-        saveMarriageHeartColor(color);
-    }
-    public String getHeartColor() {
+    public String getMarryEmojiColor() {
 
         if (!isMarried()) {
-            return LunaticFamily.getConfig().getUnmarriedHeartColor();
+            return LunaticFamily.getConfig().getUnmarriedEmojiColor();
         }
 
-        String color = MarriagesTable.getMarriageHeartColor(this.id);
+        Marriage marriage = getMarriage();
+        String color = marriage.getEmojiColor();
+
         if (color == null) {
-            color = LunaticFamily.getConfig().getDefaultHeartColor();
+            color = LunaticFamily.getConfig().getUnmarriedEmojiColor();
         }
         return color;
     }
@@ -173,13 +163,6 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
     public boolean isMarried() {
         return this.partner != 0;
-    }
-
-    public String getMarriageDate() {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(LunaticFamily.getConfig().getDateFormat());
-
-        return formatter.format(this.marryDate.toLocalDateTime());
     }
 
     public FamilyPlayerImpl getPriest() {
@@ -675,6 +658,9 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         return true;
     }
 
+    public Marriage getMarriage() {
+        return MarriagesTable.getPlayersMarriages(this.id).get(0);
+    }
 }
 
 

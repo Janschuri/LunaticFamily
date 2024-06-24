@@ -19,15 +19,15 @@ public class Placeholder {
             return new GetPlaceholderRequest().get(uuid, placeholder);
         }
 
-        FamilyPlayer player = new FamilyPlayerImpl(uuid);
+        FamilyPlayerImpl player = new FamilyPlayerImpl(uuid);
 
         if (placeholder.equalsIgnoreCase("status_heart")) {
-            return "<" + player.getHeartColor() + ">❤";
+            return "<" + player.getMarryEmojiColor() + ">❤";
         }
 
         if (placeholder.equalsIgnoreCase("heart")) {
             if (player.isMarried()) {
-                return "<" + player.getHeartColor() + ">❤";
+                return "<" + player.getMarryEmojiColor() + ">❤";
             }
 
             return "";

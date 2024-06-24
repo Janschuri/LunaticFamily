@@ -1,36 +1,39 @@
-package de.janschuri.lunaticfamily.common.commands.family;
+package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.marry.*;
+import de.janschuri.lunaticfamily.common.commands.family.Family;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.LunaticCommand;
 import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
 import de.janschuri.lunaticlib.Sender;
 
 import java.util.List;
 
-public class FamilyMarry extends Subcommand {
+public class Sibling extends Subcommand {
 
     @Override
     public List<LunaticCommand> getSubcommands() {
         return List.of(
-                new MarryAccept(),
-                new MarryDeny(),
-                new MarryDivorce(),
-                new MarryGift(),
-                new MarryHeart(),
-                new MarryKiss(),
-                new MarryList(),
-                new MarryPropose(),
-                new MarrySet(),
-                new MarryUnset(),
-                new MarryPriest(),
+                new SiblingAccept(),
+                new SiblingDeny(),
+                new SiblingUnsibling(),
+                new SiblingPropose(),
+                new SiblingSet(),
+                new SiblingUnset(),
+                new SiblingPriest(),
+                new SiblingList(),
                 getHelpCommand()
         );
     }
 
     @Override
-    public LunaticHelpCommand getHelpCommand() {
-        return new LunaticHelpCommand(getLanguageConfig(), this);
+    public String getPermission() {
+        return "lunaticfamily.sibling";
+    }
+
+    @Override
+    public String getName() {
+        return "sibling";
     }
 
     @Override
@@ -39,13 +42,8 @@ public class FamilyMarry extends Subcommand {
     }
 
     @Override
-    public String getPermission() {
-        return "lunaticfamily.marry";
-    }
-
-    @Override
-    public String getName() {
-        return "marry";
+    public LunaticHelpCommand getHelpCommand() {
+        return new LunaticHelpCommand(getLanguageConfig(), this);
     }
 
     @Override
@@ -66,6 +64,7 @@ public class FamilyMarry extends Subcommand {
                     }
                 }
                 sender.sendMessage(getMessage(WRONG_USAGE_MK));
+                Logger.debugLog("SiblingSubcommand: Wrong usage");
             }
         }
         return true;

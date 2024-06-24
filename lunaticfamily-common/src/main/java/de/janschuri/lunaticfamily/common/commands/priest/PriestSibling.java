@@ -2,8 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.priest;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.family.FamilyAdopt;
-import de.janschuri.lunaticfamily.common.commands.family.FamilyPriest;
+import de.janschuri.lunaticfamily.common.commands.adopt.Adopt;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -32,8 +31,8 @@ public class PriestSibling extends Subcommand {
     private final CommandMessageKey requestExpiredPriestMK = new CommandMessageKey(this,"request_expired_priest");
     private final CommandMessageKey requestExpiredPlayerMK = new CommandMessageKey(this,"request_expired_player");
     private final CommandMessageKey samePlayerMK = new CommandMessageKey(this,"same_player");
-    private final CommandMessageKey yesMK = new CommandMessageKey(new FamilyAdopt(),"yes");
-    private final CommandMessageKey noMK = new CommandMessageKey(new FamilyAdopt(),"no");
+    private final CommandMessageKey yesMK = new CommandMessageKey(new Adopt(),"yes");
+    private final CommandMessageKey noMK = new CommandMessageKey(new Adopt(),"no");
     private final CommandMessageKey familyRequestMK = new CommandMessageKey(this,"family_request");
 
 
@@ -48,8 +47,8 @@ public class PriestSibling extends Subcommand {
     }
 
     @Override
-    public FamilyPriest getParentCommand() {
-        return new FamilyPriest();
+    public Priest getParentCommand() {
+        return new Priest();
     }
 
     @Override

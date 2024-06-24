@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.family.FamilyMarry;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -32,8 +31,8 @@ public class MarryPropose extends Subcommand {
     private final CommandMessageKey familyRequestMK = new CommandMessageKey(this,"family_request");
     private final CommandMessageKey tooManyChildrenMK = new CommandMessageKey(this,"too_many_children");
     private final CommandMessageKey selfRequestMK = new CommandMessageKey(this,"self_request");
-    private final CommandMessageKey marryYesMK = new CommandMessageKey(new FamilyMarry(),"yes");
-    private final CommandMessageKey marryNoMK = new CommandMessageKey(new FamilyMarry(),"no");
+    private final CommandMessageKey marryYesMK = new CommandMessageKey(new Marry(),"yes");
+    private final CommandMessageKey marryNoMK = new CommandMessageKey(new Marry(),"no");
 
 
     @Override
@@ -47,8 +46,8 @@ public class MarryPropose extends Subcommand {
     }
 
     @Override
-    public FamilyMarry getParentCommand() {
-        return new FamilyMarry();
+    public Marry getParentCommand() {
+        return new Marry();
     }
 
     @Override

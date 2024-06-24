@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.commands.gender;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.family.FamilyGender;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -42,8 +41,8 @@ public class GenderSet extends Subcommand {
     }
 
     @Override
-    public FamilyGender getParentCommand() {
-        return new FamilyGender();
+    public Gender getParentCommand() {
+        return new Gender();
     }
 
     @Override

@@ -2,7 +2,12 @@ package de.janschuri.lunaticfamily.common;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import de.janschuri.lunaticfamily.common.commands.adopt.Adopt;
 import de.janschuri.lunaticfamily.common.commands.family.*;
+import de.janschuri.lunaticfamily.common.commands.gender.Gender;
+import de.janschuri.lunaticfamily.common.commands.marry.Marry;
+import de.janschuri.lunaticfamily.common.commands.priest.Priest;
+import de.janschuri.lunaticfamily.common.commands.sibling.Sibling;
 import de.janschuri.lunaticfamily.common.config.ConfigImpl;
 import de.janschuri.lunaticfamily.common.config.FamilyTreeJSON;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
@@ -134,11 +139,11 @@ public final class LunaticFamily {
 
     public static void registerCommands() {
         LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new Family());
-        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new FamilyAdopt());
-        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new FamilySibling());
-        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new FamilyMarry());
-        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new FamilyGender());
-        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new FamilyPriest());
+        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new Adopt());
+        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new Sibling());
+        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new Marry());
+        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new Gender());
+        LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new Priest());
     }
 
     public static LanguageConfigImpl getLanguageConfig() {

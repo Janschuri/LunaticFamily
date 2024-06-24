@@ -1,8 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.family.FamilyMarry;
-import de.janschuri.lunaticfamily.common.commands.family.FamilyPriest;
+import de.janschuri.lunaticfamily.common.commands.priest.Priest;
 import de.janschuri.lunaticfamily.common.commands.priest.PriestMarry;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
@@ -24,8 +23,8 @@ public class MarryPriest extends Subcommand {
     }
 
     @Override
-    public FamilyMarry getParentCommand() {
-        return new FamilyMarry();
+    public Marry getParentCommand() {
+        return new Marry();
     }
 
     @Override
@@ -39,7 +38,7 @@ public class MarryPriest extends Subcommand {
 
     @Override
     public List<String> getAliases() {
-        return new FamilyPriest().getAliases();
+        return new Priest().getAliases();
     }
 
 

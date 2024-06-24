@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.commands.priest;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.family.FamilyPriest;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -49,8 +48,8 @@ public class PriestAdopt extends Subcommand {
     }
 
     @Override
-    public FamilyPriest getParentCommand() {
-        return new FamilyPriest();
+    public Priest getParentCommand() {
+        return new Priest();
     }
 
     @Override

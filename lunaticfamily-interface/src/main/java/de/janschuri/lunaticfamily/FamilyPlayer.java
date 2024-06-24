@@ -14,15 +14,9 @@ public interface FamilyPlayer {
 
     String getSkinURL();
 
-    void setHeartColor(String color);
-
-    String getHeartColor();
-
     FamilyPlayer getPartner();
 
     boolean isMarried();
-
-    String getMarriageDate();
 
     FamilyPlayer getPriest();
 

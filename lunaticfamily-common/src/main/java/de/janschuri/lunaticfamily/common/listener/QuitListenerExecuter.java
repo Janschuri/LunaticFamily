@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.listener;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.adopt.AdoptDeny;
-import de.janschuri.lunaticfamily.common.commands.family.FamilyMarry;
+import de.janschuri.lunaticfamily.common.commands.marry.Marry;
 import de.janschuri.lunaticfamily.common.commands.marry.MarryDeny;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
@@ -21,7 +21,7 @@ public class QuitListenerExecuter {
     private static final MessageKey playerQuitMK = new MessageKey("player_quit");
     private static final CommandMessageKey marryCancelMK = new CommandMessageKey(new MarryDeny(), "cancel");
     private static final CommandMessageKey adoptCancelMK = new CommandMessageKey(new AdoptDeny(), "cancel");
-    private static final CommandMessageKey marryPartnerOfflineMK = new CommandMessageKey(new FamilyMarry(), "partner_offline");
+    private static final CommandMessageKey marryPartnerOfflineMK = new CommandMessageKey(new Marry(), "partner_offline");
 
 
     public static boolean execute(PlayerSender player) {

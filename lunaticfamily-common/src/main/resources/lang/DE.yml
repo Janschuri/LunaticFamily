@@ -275,6 +275,7 @@ commands:
           no_color: "Du musst eine Farbe angeben."
           color_set: "Du hast die Farbe %color% gewählt."
           color: "Farbe"
+          no_marriage: "Du bist nicht verheiratet."
       list:
         aliases:
           - list
@@ -432,6 +433,13 @@ commands:
           help: "&6/%command% %subcommand% &b<%param%> &7- Löse die Geschwisterschaft von zwei Spielern auf."
           no_sibling: "%player% hat kein Geschwisterkind."
           unset: "Du hast die Geschwisterschaft von %player1% und %player2% aufgelöst."
+      list:
+        aliases:
+          - list
+        messages:
+          help: "&6/%command% %subcommand% <%param%> &7- Zeige alle Geschwister auf diesem Server."
+          header: "Alle Geschwister auf diesem Server: "
+          siblings: "&6%index%: &b%player1% %emoji% &b%player2%"
       help:
         aliases:
           - help

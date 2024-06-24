@@ -1,7 +1,6 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.family.FamilyMarry;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -32,8 +31,8 @@ public class MarryUnset extends Subcommand {
     }
 
     @Override
-    public FamilyMarry getParentCommand() {
-        return new FamilyMarry();
+    public Marry getParentCommand() {
+        return new Marry();
     }
 
     @Override

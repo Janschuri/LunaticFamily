@@ -1,9 +1,9 @@
-package de.janschuri.lunaticfamily.common.commands.marry;
+package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
+import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
+import de.janschuri.lunaticfamily.common.handler.Adoption;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
-import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
@@ -15,7 +15,7 @@ import net.kyori.adventure.text.format.TextColor;
 import java.util.List;
 import java.util.Map;
 
-public class MarryList extends Subcommand {
+public class AdoptList extends Subcommand {
 
     private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
     private final CommandMessageKey headerMK = new CommandMessageKey(this,"header");
@@ -24,7 +24,7 @@ public class MarryList extends Subcommand {
 
     @Override
     public String getPermission() {
-        return "lunaticfamily.marry.list";
+        return "lunaticfamily.adopt.list";
     }
 
     @Override
@@ -33,8 +33,8 @@ public class MarryList extends Subcommand {
     }
 
     @Override
-    public Marry getParentCommand() {
-        return new Marry();
+    public Adopt getParentCommand() {
+        return new Adopt();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class MarryList extends Subcommand {
                 }
             }
 
-            Component msg = getMarryList(page);
+            Component msg = getAdoptList(page);
 
             sender.sendMessage(msg);
         }
@@ -72,16 +72,16 @@ public class MarryList extends Subcommand {
         return List.of(getOnlinePlayersParam());
     }
 
-    private Component getMarryList(int page) {
-        List<Marriage> marryList = MarriagesTable.getMarriages(page, 10);
+    private Component getAdoptList(int page) {
+        List<Adoption> adoptList = AdoptionsTable.getAdoptions(page, 10);
 
         Component msg = getMessage(headerMK, false);
 
         int index = 1 + (10*(page-1));
-        Logger.debugLog("MarryList: " + marryList);
-        for (Marriage e : marryList) {
-            FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(e.getPlayer1ID());
-            FamilyPlayerImpl player2Fam = new FamilyPlayerImpl(e.getPlayer2ID());
+        Logger.debugLog("AdoptList: " + adoptList);
+        for (Adoption e : adoptList) {
+            FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(e.getParentID());
+            FamilyPlayerImpl player2Fam = new FamilyPlayerImpl(e.getChildID());
 
 
             String hoverText = " (" + e.getDate() + ")";
@@ -89,11 +89,11 @@ public class MarryList extends Subcommand {
                 hoverText = hoverText + " -> " + player1Fam.getPriest().getName();
             }
 
-            Component heart = Component.text(" ❤ ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));
+            Component heart = Component.text(" ⌂ ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));
 
             TextReplacementConfig indexRpl = getTextReplacementConfig("%index%", String.valueOf(index));
-            TextReplacementConfig player1Rpl = getTextReplacementConfig("%player1%", player1Fam.getName());
-            TextReplacementConfig player2Rpl = getTextReplacementConfig("%player2%", player2Fam.getName());
+            TextReplacementConfig player1Rpl = getTextReplacementConfig("%parent%", player1Fam.getName());
+            TextReplacementConfig player2Rpl = getTextReplacementConfig("%child%", player2Fam.getName());
             TextReplacementConfig heartRpl = TextReplacementConfig.builder().match("%emoji%").replacement(heart).build();
 
             msg = msg.append(Component.newline())

@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.family.FamilyMarry;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -19,7 +18,7 @@ public class MarryDeny extends Subcommand {
     private final CommandMessageKey noRequestMK = new CommandMessageKey(this,"no_request");
     private final CommandMessageKey deniedMK = new CommandMessageKey(this,"denied");
     private final CommandMessageKey cancelMK = new CommandMessageKey(this,"cancel");
-    private final CommandMessageKey marryNoMK = new CommandMessageKey(new FamilyMarry(),"no");
+    private final CommandMessageKey marryNoMK = new CommandMessageKey(new Marry(),"no");
 
     @Override
     public String getPermission() {
@@ -32,8 +31,8 @@ public class MarryDeny extends Subcommand {
     }
 
     @Override
-    public FamilyMarry getParentCommand() {
-        return new FamilyMarry();
+    public Marry getParentCommand() {
+        return new Marry();
     }
 
     @Override
