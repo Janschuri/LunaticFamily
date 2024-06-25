@@ -104,7 +104,6 @@ public class AdoptList extends Subcommand {
                             .replaceText(heartRpl));
 
 
-
             index++;
         }
 
