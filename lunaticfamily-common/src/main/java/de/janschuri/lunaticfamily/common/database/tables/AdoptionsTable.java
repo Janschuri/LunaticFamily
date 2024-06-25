@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.database.tables;
 
 import de.janschuri.lunaticfamily.common.database.Database;
 import de.janschuri.lunaticfamily.common.handler.Adoption;
-import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticlib.common.database.Datatype;
 import de.janschuri.lunaticlib.common.database.Error;
 import de.janschuri.lunaticlib.common.database.Table;
@@ -309,7 +308,7 @@ public class AdoptionsTable {
         return 0;
     }
 
-    public static List<Adoption> getAdoptions(int page, int limit) {
+    public static List<Adoption> getAdoptionList(int page, int limit) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;

@@ -40,60 +40,49 @@ public class AdoptUnset extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
-            if (args.length < 1) {
-                sender.sendMessage(getMessage(WRONG_USAGE_MK));
-                Logger.debugLog("AdoptUnsetSubcommand: Wrong usage");
-                return true;
-            }
-
-
-            String childArg = args[0];
-            UUID childUUID;
-
-
-            if (Utils.isUUID(childArg)) {
-                childUUID = UUID.fromString(childArg);
-
-                if (PlayerDataTable.getID(childUUID) < 0) {
-                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                            .replaceText(getTextReplacementConfig("%player%", childArg)));
-                    return true;
-                }
-            } else {
-                childUUID = PlayerDataTable.getUUID(childArg);
-
-                if (childUUID == null) {
-                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                            .replaceText(getTextReplacementConfig("%player%", childArg)));
-                    return true;
-                }
-            }
-
-
-                FamilyPlayerImpl childFam = new FamilyPlayerImpl(childUUID);
-
-                if (!childFam.isAdopted()) {
-                    sender.sendMessage(getMessage(notAdoptedMK)
-                            .replaceText(getTextReplacementConfig("%player%", childFam.getName())));
-                } else {
-                    FamilyPlayerImpl firstParentFam = (FamilyPlayerImpl) childFam.getParents().get(0);
-
-                    if (firstParentFam.isMarried()) {
-                        FamilyPlayerImpl secondParentFam = firstParentFam.getPartner();
-                        sender.sendMessage(getMessage(unsetMK)
-                                .replaceText(getTextReplacementConfig("%child%", childFam.getName()))
-                                .replaceText(getTextReplacementConfig("%parent1%", firstParentFam.getName()))
-                                .replaceText(getTextReplacementConfig("%parent2%", secondParentFam.getName())));
-                    } else {
-                        sender.sendMessage(getMessage(unsetBySingleMK)
-                                .replaceText(getTextReplacementConfig("%child%", childFam.getName()))
-                                .replaceText(getTextReplacementConfig("%parent%", firstParentFam.getName())));
-                    }
-                    firstParentFam.unadopt(childFam.getId());
-                }
-
+            return true;
         }
+        if (args.length < 1) {
+            sender.sendMessage(getMessage(WRONG_USAGE_MK));
+            Logger.debugLog("AdoptUnsetSubcommand: Wrong usage");
+            return true;
+        }
+
+
+        String player1Arg = args[0];
+        UUID childUUID = Utils.getUUIDFromArg(player1Arg);
+        if (childUUID == null) {
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                    .replaceText(getTextReplacementConfig("%player%", player1Arg)));
+            return true;
+        }
+
+
+        FamilyPlayerImpl childFam = new FamilyPlayerImpl(childUUID);
+
+        if (!childFam.isAdopted()) {
+            sender.sendMessage(getMessage(notAdoptedMK)
+                    .replaceText(getTextReplacementConfig("%player%", childFam.getName())));
+            return true;
+        }
+        FamilyPlayerImpl firstParentFam = (FamilyPlayerImpl) childFam.getParents().get(0);
+
+        if (firstParentFam.isMarried()) {
+            FamilyPlayerImpl secondParentFam = firstParentFam.getPartner();
+            sender.sendMessage(getMessage(unsetMK)
+                    .replaceText(getTextReplacementConfig("%child%", childFam.getName()))
+                    .replaceText(getTextReplacementConfig("%parent1%", firstParentFam.getName()))
+                    .replaceText(getTextReplacementConfig("%parent2%", secondParentFam.getName())));
+        } else {
+            sender.sendMessage(getMessage(unsetBySingleMK)
+                    .replaceText(getTextReplacementConfig("%child%", childFam.getName()))
+                    .replaceText(getTextReplacementConfig("%parent%", firstParentFam.getName())));
+        }
+
+        firstParentFam.unadopt(childFam.getId());
+
+
+
         return true;
     }
 

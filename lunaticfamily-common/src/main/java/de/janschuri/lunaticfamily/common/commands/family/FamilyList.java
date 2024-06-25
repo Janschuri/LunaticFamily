@@ -51,49 +51,53 @@ public class FamilyList extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
-            List<String> list = LunaticFamily.getConfig().getFamilyList();
-
-            if (!(sender instanceof PlayerSender) && args.length < 1) {
-                sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
-            } else if (args.length == 0) {
-                PlayerSender player = (PlayerSender) sender;
-                UUID uuid = player.getUniqueId();
-                FamilyPlayerImpl playerFam = new FamilyPlayerImpl(uuid);
-
-
-                Map<String, Integer> familyList = playerFam.getFamilyMap();
-                ComponentBuilder msg = Component.text().append(getMessage(headerMK, false));
-
-                sender.sendMessage(getFamilyListMessage(list, familyList, msg));
-                playerFam.updateFamilyTree();
-            } else {
-
-                String playerName = args[0];
-                UUID player1UUID = PlayerDataTable.getUUID(playerName);
-
-                if (player1UUID == null) {
-                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                            .replaceText(getTextReplacementConfig("%player%", playerName)));
-                    return true;
-                }
-
-
-                if (!sender.hasPermission(getPermission() + ".others")) {
-                    sender.sendMessage(getMessage(NO_PERMISSION_MK));
-                    return true;
-                }
-
-                    FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
-                    Map<String, Integer> familyList = player1Fam.getFamilyMap();
-                    ComponentBuilder msg = Component.text();
-                    msg.append(getMessage(othersHeaderMK, false)
-                            .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
-
-                    sender.sendMessage(getFamilyListMessage(list, familyList, msg));
-                    player1Fam.updateFamilyTree();
-            }
+            return true;
         }
+        List<String> list = LunaticFamily.getConfig().getFamilyList();
+
+        if (!(sender instanceof PlayerSender) && args.length < 1) {
+            sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
+            return true;
+        }
+
+        if (args.length == 0) {
+            PlayerSender player = (PlayerSender) sender;
+            UUID uuid = player.getUniqueId();
+            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(uuid);
+
+
+            Map<String, Integer> familyList = playerFam.getFamilyMap();
+            ComponentBuilder msg = Component.text().append(getMessage(headerMK, false));
+
+            sender.sendMessage(getFamilyListMessage(list, familyList, msg));
+            playerFam.updateFamilyTree();
+            return true;
+        }
+
+        String playerName = args[0];
+        UUID player1UUID = PlayerDataTable.getUUID(playerName);
+
+        if (player1UUID == null) {
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                    .replaceText(getTextReplacementConfig("%player%", playerName)));
+            return true;
+        }
+
+
+        if (!sender.hasPermission(getPermission() + ".others")) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
+            return true;
+        }
+
+        FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
+        Map<String, Integer> familyList = player1Fam.getFamilyMap();
+        ComponentBuilder msg = Component.text();
+        msg.append(getMessage(othersHeaderMK, false)
+                .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
+
+        sender.sendMessage(getFamilyListMessage(list, familyList, msg));
+        player1Fam.updateFamilyTree();
+
         return true;
     }
 

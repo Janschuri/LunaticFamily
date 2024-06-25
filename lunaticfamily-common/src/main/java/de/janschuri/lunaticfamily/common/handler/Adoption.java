@@ -74,4 +74,12 @@ public class Adoption {
     public void setEmojiColor(String color) {
         AdoptionsTable.saveEmojiColor(this.id, color);
     }
+
+    public String getColoredEmoji() {
+        return "<" + getEmojiColor() + ">" + getDefaultEmoji();
+    }
+
+    public static String getDefaultEmoji() {
+        return "⌂";
+    }
 }

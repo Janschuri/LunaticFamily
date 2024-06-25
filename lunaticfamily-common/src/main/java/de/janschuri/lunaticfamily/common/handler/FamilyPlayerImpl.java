@@ -43,7 +43,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         this.uuid = uuid;
         player = LunaticLib.getPlatform().getPlayerSender(uuid);
 
-        if (PlayerDataTable.getID(uuid) == -1) {
+        if (PlayerDataTable.getID(uuid) < 1) {
             savePlayerData();
         }
         id = PlayerDataTable.getID(uuid);
@@ -103,7 +103,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     private void savePlayerData() {
-        if (id == -1) {
+        if (id < 1) {
             PlayerDataTable.savePlayerData(uuid.toString(), name, skinURL, gender, background);
         } else {
             PlayerDataTable.updatePlayerData(id, uuid.toString(), name, skinURL, gender, background);
@@ -154,7 +154,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public FamilyPlayerImpl getPartner() {
-        if (this.partner != 0) {
+        if (this.partner < 1) {
             return new FamilyPlayerImpl(this.partner);
         } else {
             return null;
@@ -162,11 +162,11 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public boolean isMarried() {
-        return this.partner != 0;
+        return this.partner < 1;
     }
 
     public FamilyPlayerImpl getPriest() {
-        if (this.priest != 0) {
+        if (this.priest < 1) {
             return new FamilyPlayerImpl(this.priest);
         } else {
             return null;
@@ -174,7 +174,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public FamilyPlayerImpl getSibling() {
-        if (this.sibling != 0) {
+        if (this.sibling < 1) {
             return new FamilyPlayerImpl(this.sibling);
         } else {
             return null;
@@ -182,7 +182,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public boolean hasSibling() {
-        return this.sibling != 0;
+        return this.sibling < 1;
     }
 
     public boolean isAdopted() {
@@ -237,7 +237,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
 
     public void marry(int partnerID) {
-        marry(partnerID, -1);
+        marry(partnerID, 0);
     }
 
     public void marry(int partnerID, int priestID) {
@@ -296,7 +296,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public void adopt(int childID) {
-        adopt(childID, -1);
+        adopt(childID, 0);
     }
 
     public void adopt(int childID, int priestID) {
@@ -351,7 +351,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public void addSibling(int siblingID) {
-        addSibling(siblingID, -1);
+        addSibling(siblingID, 0);
     }
 
     public void addSibling(int siblingID, int priestID) {

@@ -48,6 +48,7 @@ public class GenderInfo extends Subcommand {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
             return true;
         }
+
         if (args.length == 0) {
             if (!(sender instanceof PlayerSender)) {
                 sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));

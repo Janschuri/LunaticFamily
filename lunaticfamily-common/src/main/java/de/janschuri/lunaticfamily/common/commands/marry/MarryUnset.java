@@ -39,46 +39,34 @@ public class MarryUnset extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
-            if (args.length < 1) {
-                sender.sendMessage(getMessage(WRONG_USAGE_MK));
-                Logger.debugLog("MarryUnsetSubcommand: Wrong usage");
-            }
-
-            String player1Arg = args[0];
-            UUID player1UUID;
-
-            if (Utils.isUUID(player1Arg)) {
-                player1UUID = UUID.fromString(player1Arg);
-
-                if (PlayerDataTable.getID(player1UUID) < 0) {
-                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                            .replaceText(getTextReplacementConfig("%player%", player1Arg)));
-                    return true;
-                }
-            } else {
-                player1UUID = PlayerDataTable.getUUID(player1Arg);
-
-                if (player1UUID == null) {
-                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                            .replaceText(getTextReplacementConfig("%player%", player1Arg)));
-                    return true;
-                }
-            }
-
-                FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
-
-                if (!player1Fam.isMarried()) {
-                    sender.sendMessage(getMessage(noPartnerMK)
-                            .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
-                } else {
-                    FamilyPlayerImpl partnerFam = player1Fam.getPartner();
-                    player1Fam.divorce();
-                    sender.sendMessage(getMessage(divorcedMK)
-                            .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                            .replaceText(getTextReplacementConfig("%player2%", partnerFam.getName())));
-                }
+            return true;
         }
+        if (args.length < 1) {
+            sender.sendMessage(getMessage(WRONG_USAGE_MK));
+            Logger.debugLog("MarryUnset: Wrong usage");
+            return true;
+        }
+
+        String player1Arg = args[0];
+        UUID player1UUID = Utils.getUUIDFromArg(player1Arg);
+        if (player1UUID == null) {
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                    .replaceText(getTextReplacementConfig("%player%", player1Arg)));
+            return true;
+        }
+
+        FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
+
+        if (!player1Fam.isMarried()) {
+            sender.sendMessage(getMessage(noPartnerMK)
+                    .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
+            return true;
+        }
+        FamilyPlayerImpl partnerFam = player1Fam.getPartner();
+        player1Fam.divorce();
+        sender.sendMessage(getMessage(divorcedMK)
+                .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
+                .replaceText(getTextReplacementConfig("%player2%", partnerFam.getName())));
         return true;
     }
 

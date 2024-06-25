@@ -41,20 +41,22 @@ public class SiblingList extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
-            int page = 1;
-            if (args.length > 0) {
-                try {
-                    page = Integer.parseInt(args[0]);
-                } catch (NumberFormatException e) {
-                    sender.sendMessage(getMessage(NO_NUMBER_MK)
-                            .replaceText(getTextReplacementConfig("%input%", args[0])));
-                }
-            }
-
-            Component msg = getSiblingList(page);
-            sender.sendMessage(msg);
+            return true;
         }
+
+        int page = 1;
+        if (args.length > 0) {
+            try {
+                page = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                sender.sendMessage(getMessage(NO_NUMBER_MK)
+                        .replaceText(getTextReplacementConfig("%input%", args[0])));
+            }
+        }
+
+        Component msg = getSiblingList(page);
+        sender.sendMessage(msg);
+
         return true;
     }
 
@@ -88,7 +90,7 @@ public class SiblingList extends Subcommand {
                 hoverText = hoverText + " -> " + e.getPriest();
             }
 
-            Component heart = Component.text(" ⭐ ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));
+            Component heart = Component.text(" " + Siblinghood.getDefaultEmoji() + " ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));
 
             TextReplacementConfig indexRpl = getTextReplacementConfig("%index%", String.valueOf(index));
             TextReplacementConfig player1Rpl = getTextReplacementConfig("%player1%", player1Fam.getName());

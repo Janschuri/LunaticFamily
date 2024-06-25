@@ -39,93 +39,97 @@ public class MarryDivorce extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!(sender instanceof PlayerSender)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
-        } else if (!sender.hasPermission(getPermission())) {
-            sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
-            PlayerSender player = (PlayerSender) sender;
-            UUID playerUUID = player.getUniqueId();
-            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
-
-            boolean confirm = false;
-            boolean cancel = false;
-            boolean force = false;
-
-            if (args.length > 0) {
-                if (args[0].equalsIgnoreCase("confirm")) {
-                    confirm = true;
-                }
-                if (args[0].equalsIgnoreCase("cancel")) {
-                    cancel = true;
-                }
-            }
-            if (args.length > 1) {
-                if (args[1].equalsIgnoreCase("force")) {
-                    force = true;
-                }
-            }
-
-
-            if (!playerFam.isMarried()) {
-                player.sendMessage(getMessage(noPartnerMK));
-                return true;
-            }
-            if (cancel) {
-                sender.sendMessage(getMessage(cancelMK));
-                return true;
-            }
-            if (!confirm) {
-                player.sendMessage(Utils.getClickableDecisionMessage(
-                        getMessage(confirmMK),
-                        LunaticFamily.getLanguageConfig().getMessage(CONFIRM_MK, false),
-                        "/family marry divorce confirm",
-                        LunaticFamily.getLanguageConfig().getMessage(CANCEL_MK, false),
-                        "/family marry divorce cancel"));
-                return true;
-            }
-            if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.MARRY_DIVORCE_LEAVING_PLAYER)) {
-                sender.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK));
-                return true;
-            }
-
-            UUID partnerUUID = playerFam.getPartner().getUniqueId();
-            PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
-
-            if (!force && !Utils.hasEnoughMoney(player.getServerName(), partnerUUID, WithdrawKey.MARRY_DIVORCE_LEFT_PLAYER)) {
-                player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
-                        .replaceText(getTextReplacementConfig("%player%", playerFam.getPartner().getName())));
-                player.sendMessage(Utils.getClickableDecisionMessage(
-                        getMessage(TAKE_PAYMENT_CONFIRM_MK),
-                        LunaticFamily.getLanguageConfig().getMessage(CONFIRM_MK, false),
-                        "/family marry divorce confirm force",
-                        LunaticFamily.getLanguageConfig().getMessage(CANCEL_MK, false),
-                        "/family marry divorce cancel"));
-                return true;
-            }
-
-            if (force && !Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.MARRY_DIVORCE_LEFT_PLAYER, WithdrawKey.MARRY_DIVORCE_LEAVING_PLAYER)) {
-                sender.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK));
-                return true;
-            }
-
-
-            sender.sendMessage(getMessage(divorcedMK));
-            partner.sendMessage(getMessage(divorcedMK));
-
-            for (String command : LunaticFamily.getConfig().getSuccessCommands("divorce")) {
-                command = command.replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName());
-                LunaticLib.getPlatform().sendConsoleCommand(command);
-            }
-
-            if (force) {
-                Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.MARRY_DIVORCE_LEFT_PLAYER, WithdrawKey.MARRY_DIVORCE_LEAVING_PLAYER);
-            } else {
-                Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.MARRY_DIVORCE_LEAVING_PLAYER);
-                Utils.withdrawMoney(player.getServerName(), partnerUUID, WithdrawKey.MARRY_DIVORCE_LEFT_PLAYER);
-            }
-
-            playerFam.divorce();
             return true;
         }
-        return false;
+
+        if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
+            return true;
+        }
+
+        PlayerSender player = (PlayerSender) sender;
+        UUID playerUUID = player.getUniqueId();
+        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+
+        boolean confirm = false;
+        boolean cancel = false;
+        boolean force = false;
+
+        if (args.length > 0) {
+            if (args[0].equalsIgnoreCase("confirm")) {
+                confirm = true;
+            }
+            if (args[0].equalsIgnoreCase("cancel")) {
+                cancel = true;
+            }
+        }
+
+        if (args.length > 1) {
+            if (args[1].equalsIgnoreCase("force")) {
+                force = true;
+            }
+        }
+
+
+        if (!playerFam.isMarried()) {
+            player.sendMessage(getMessage(noPartnerMK));
+            return true;
+        }
+        if (cancel) {
+            sender.sendMessage(getMessage(cancelMK));
+            return true;
+        }
+        if (!confirm) {
+            player.sendMessage(Utils.getClickableDecisionMessage(
+                    getMessage(confirmMK),
+                    LunaticFamily.getLanguageConfig().getMessage(CONFIRM_MK, false),
+                    "/family marry divorce confirm",
+                    LunaticFamily.getLanguageConfig().getMessage(CANCEL_MK, false),
+                    "/family marry divorce cancel"));
+            return true;
+        }
+        if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.MARRY_DIVORCE_LEAVING_PLAYER)) {
+            sender.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK));
+            return true;
+        }
+
+        UUID partnerUUID = playerFam.getPartner().getUniqueId();
+        PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
+
+        if (!force && !Utils.hasEnoughMoney(player.getServerName(), partnerUUID, WithdrawKey.MARRY_DIVORCE_LEFT_PLAYER)) {
+            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
+                    .replaceText(getTextReplacementConfig("%player%", playerFam.getPartner().getName())));
+            player.sendMessage(Utils.getClickableDecisionMessage(
+                    getMessage(TAKE_PAYMENT_CONFIRM_MK),
+                    LunaticFamily.getLanguageConfig().getMessage(CONFIRM_MK, false),
+                    "/family marry divorce confirm force",
+                    LunaticFamily.getLanguageConfig().getMessage(CANCEL_MK, false),
+                    "/family marry divorce cancel"));
+            return true;
+        }
+
+        if (force && !Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.MARRY_DIVORCE_LEFT_PLAYER, WithdrawKey.MARRY_DIVORCE_LEAVING_PLAYER)) {
+            sender.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK));
+            return true;
+        }
+
+
+        sender.sendMessage(getMessage(divorcedMK));
+        partner.sendMessage(getMessage(divorcedMK));
+
+        for (String command : LunaticFamily.getConfig().getSuccessCommands("divorce")) {
+            command = command.replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName());
+            LunaticLib.getPlatform().sendConsoleCommand(command);
+        }
+
+        if (force) {
+            Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.MARRY_DIVORCE_LEFT_PLAYER, WithdrawKey.MARRY_DIVORCE_LEAVING_PLAYER);
+        } else {
+            Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.MARRY_DIVORCE_LEAVING_PLAYER);
+            Utils.withdrawMoney(player.getServerName(), partnerUUID, WithdrawKey.MARRY_DIVORCE_LEFT_PLAYER);
+        }
+
+        playerFam.divorce();
+        return true;
     }
 }

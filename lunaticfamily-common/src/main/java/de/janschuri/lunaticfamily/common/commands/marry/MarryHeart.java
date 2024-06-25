@@ -41,65 +41,69 @@ public class MarryHeart extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!(sender instanceof PlayerSender)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
-        } else if (!sender.hasPermission(getPermission())) {
-            sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
-            PlayerSender player = (PlayerSender) sender;
-            UUID playerUUID = player.getUniqueId();
-            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
-
-            if (!playerFam.isMarried()) {
-                sender.sendMessage(getMessage(noMarriageMK));
-                return true;
-            }
-
-            if (args.length < 1) {
-                sender.sendMessage(getMessage(WRONG_USAGE_MK));
-                Logger.debugLog("MarryHeartSubcommand: Wrong usage");
-                return true;
-            }
-
-            if (!LunaticFamily.getLanguageConfig().isColorLang(args[0]) && !Utils.isValidHexCode(args[0])) {
-                sender.sendMessage(getMessage(noColorMK));
-                return true;
-            }
-
-
-
-                String hexColor = "";
-
-                String color = args[0];
-
-                String colorMsg = "";
-
-                if (LunaticFamily.getLanguageConfig().isColorLang(args[0])) {
-                    String colorKey = LunaticFamily.getLanguageConfig().getColorKeyFromLang(color);
-                    if (player.hasPermission(getPermission() + ".color." + colorKey)){
-                        hexColor = LunaticFamily.getConfig().getColor(colorKey);
-                        colorMsg = LunaticFamily.getLanguageConfig().getColorLang(colorKey);
-                    } else {
-                        sender.sendMessage(getMessage(NO_PERMISSION_MK));
-                        return true;
-                    }
-                } else {
-                    if (player.hasPermission(getPermission() + ".hex")) {
-                        hexColor = args[0];
-                        colorMsg = args[0];
-                    } else {
-                        sender.sendMessage(getMessage(NO_PERMISSION_MK));
-                        return true;
-                    }
-                }
-
-                TextReplacementConfig replacementConfig = TextReplacementConfig.builder().match("%color%").replacement(colorMsg).build();
-
-                Component msg = getMessage(colorSetMK).replaceText(replacementConfig);
-
-                player.sendMessage(msg);
-                playerFam.getMarriage().setEmojiColor(hexColor);
-
-
+            return true;
         }
+
+        if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
+            return true;
+        }
+
+
+        PlayerSender player = (PlayerSender) sender;
+        UUID playerUUID = player.getUniqueId();
+        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+
+        if (!playerFam.isMarried()) {
+            sender.sendMessage(getMessage(noMarriageMK));
+            return true;
+        }
+
+        if (args.length < 1) {
+            sender.sendMessage(getMessage(WRONG_USAGE_MK));
+            Logger.debugLog("MarryHeartSubcommand: Wrong usage");
+            return true;
+        }
+
+        if (!LunaticFamily.getLanguageConfig().isColorLang(args[0]) && !Utils.isValidHexCode(args[0])) {
+            sender.sendMessage(getMessage(noColorMK));
+            return true;
+        }
+
+
+
+        String hexColor = "";
+
+        String color = args[0];
+
+        String colorMsg = "";
+
+        if (LunaticFamily.getLanguageConfig().isColorLang(args[0])) {
+            String colorKey = LunaticFamily.getLanguageConfig().getColorKeyFromLang(color);
+            if (player.hasPermission(getPermission() + ".color." + colorKey)){
+                hexColor = LunaticFamily.getConfig().getColor(colorKey);
+                colorMsg = LunaticFamily.getLanguageConfig().getColorLang(colorKey);
+            } else {
+                sender.sendMessage(getMessage(NO_PERMISSION_MK));
+                return true;
+            }
+        } else {
+            if (player.hasPermission(getPermission() + ".hex")) {
+                hexColor = args[0];
+                colorMsg = args[0];
+            } else {
+                sender.sendMessage(getMessage(NO_PERMISSION_MK));
+                return true;
+            }
+        }
+
+        TextReplacementConfig replacementConfig = TextReplacementConfig.builder().match("%color%").replacement(colorMsg).build();
+
+        Component msg = getMessage(colorSetMK).replaceText(replacementConfig);
+
+        player.sendMessage(msg);
+        playerFam.getMarriage().setEmojiColor(hexColor);
+
         return true;
     }
 

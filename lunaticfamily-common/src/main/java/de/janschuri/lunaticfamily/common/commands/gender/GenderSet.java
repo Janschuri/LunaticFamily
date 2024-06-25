@@ -51,6 +51,7 @@ public class GenderSet extends Subcommand {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
             return true;
         }
+
         if (args.length == 0) {
             if (!(sender instanceof PlayerSender)) {
                 sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
@@ -70,6 +71,7 @@ public class GenderSet extends Subcommand {
             player.sendMessage(msg.build());
             return true;
         }
+
         if (args.length == 1) {
             if (!(sender instanceof PlayerSender)) {
                 sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
@@ -93,30 +95,21 @@ public class GenderSet extends Subcommand {
         }
         if (!sender.hasPermission("lunaticfamily.admin.gender")) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else if (!LunaticFamily.getLanguageConfig().getGenders().contains(args[0].toLowerCase())) {
+            return true;
+        }
+
+        if (!LunaticFamily.getLanguageConfig().getGenders().contains(args[0].toLowerCase())) {
             sender.sendMessage(getMessage(notExistMK));
-        } else {
-            String playerArg = args[1];
+            return true;
+        }
 
-            UUID player1UUID;
-
-            if (Utils.isUUID(playerArg)) {
-                player1UUID = UUID.fromString(args[1]);
-
-                if (PlayerDataTable.getID(player1UUID) < 0) {
-                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                            .replaceText(getTextReplacementConfig("%player%", playerArg)));
-                    return true;
-                }
-            } else {
-                player1UUID = PlayerDataTable.getUUID(playerArg);
-
-                if (player1UUID == null) {
-                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                            .replaceText(getTextReplacementConfig("%player%", playerArg)));
-                    return true;
-                }
-            }
+        String player1Arg = args[1];
+        UUID player1UUID = Utils.getUUIDFromArg(player1Arg);
+        if (player1UUID == null) {
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                    .replaceText(getTextReplacementConfig("%player%", player1Arg)));
+            return true;
+        }
 
             PlayerSender player1 = LunaticLib.getPlatform().getPlayerSender(player1UUID);
 
@@ -131,7 +124,7 @@ public class GenderSet extends Subcommand {
             sender.sendMessage(getMessage(adminSetMK)
                     .replaceText(getTextReplacementConfig("%player%", player1.getName()))
                     .replaceText(getTextReplacementConfig("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[1]))));
-        }
+
         return true;
 
     }

@@ -37,24 +37,29 @@ public class AdoptDeny extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!(sender instanceof PlayerSender)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
-        } else if (!sender.hasPermission(getPermission())) {
-            sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
-            PlayerSender player = (PlayerSender) sender;
-            UUID playerUUID = player.getUniqueId();
-            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
-
-            if (!LunaticFamily.adoptRequests.containsKey(playerUUID)) {
-                sender.sendMessage(getMessage(noRequestMK));
-            } else {
-                UUID parentUUID = LunaticFamily.adoptRequests.get(playerUUID);
-                FamilyPlayerImpl parentFam = new FamilyPlayerImpl(parentUUID);
-                PlayerSender parent = LunaticLib.getPlatform().getPlayerSender(parentUUID);
-                parent.sendMessage(getMessage(denyMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
-                sender.sendMessage(getMessage(deniedMK).replaceText(getTextReplacementConfig("%player%", parentFam.getName())));
-                LunaticFamily.adoptRequests.remove(playerUUID);
-            }
+            return true;
         }
+
+        if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
+            return true;
+        }
+
+        PlayerSender player = (PlayerSender) sender;
+        UUID playerUUID = player.getUniqueId();
+        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+
+        if (!LunaticFamily.adoptRequests.containsKey(playerUUID)) {
+            sender.sendMessage(getMessage(noRequestMK));
+            return true;
+        }
+        UUID parentUUID = LunaticFamily.adoptRequests.get(playerUUID);
+        FamilyPlayerImpl parentFam = new FamilyPlayerImpl(parentUUID);
+        PlayerSender parent = LunaticLib.getPlatform().getPlayerSender(parentUUID);
+        parent.sendMessage(getMessage(denyMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+        sender.sendMessage(getMessage(deniedMK).replaceText(getTextReplacementConfig("%player%", parentFam.getName())));
+        LunaticFamily.adoptRequests.remove(playerUUID);
+
         return true;
     }
 }

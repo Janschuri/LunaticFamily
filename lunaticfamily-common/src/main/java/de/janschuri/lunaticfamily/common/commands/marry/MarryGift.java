@@ -40,9 +40,14 @@ public class MarryGift extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!(sender instanceof PlayerSender)) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else if (!sender.hasPermission(getPermission())) {
+            return true;
+        }
+
+        if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
+            return true;
+        }
+
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
@@ -50,16 +55,13 @@ public class MarryGift extends Subcommand {
             if (!playerFam.isMarried()) {
                 player.sendMessage(getMessage(noPartnerMK));
                 return true;
-            } else if (!player.hasPermission("lunaticfamily.marry.gift")) {
-                player.sendMessage(getMessage(NO_PERMISSION_MK));
-                return true;
             }
 
             UUID partnerUUID = playerFam.getPartner().getUniqueId();
             PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
 
             if (!partner.isOnline()) {
-                player.sendMessage(getMessage(PLAYER_NAME_MK)
+                player.sendMessage(getMessage(PLAYER_OFFLINE_MK)
                         .replaceText(getTextReplacementConfig("%player%", partner.getName())));
                 return true;
             }
@@ -86,8 +88,9 @@ public class MarryGift extends Subcommand {
                             .replaceText(getTextReplacementConfig("%player%", player.getName())));
                 } else {
                     Logger.errorLog("Error while giving item to partner.");
+                    Logger.errorLog("Item: " + item);
+                    return false;
                 }
-        }
         return true;
     }
 }

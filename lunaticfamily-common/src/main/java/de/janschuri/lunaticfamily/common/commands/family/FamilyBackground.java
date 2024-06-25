@@ -58,20 +58,27 @@ public class FamilyBackground extends Subcommand {
     @Override
     public boolean execute(Sender sender, String[] args) {
 
-        if (!(sender instanceof PlayerSender)) {
+        if (!(sender instanceof PlayerSender player)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
-        } else if (!sender.hasPermission(getPermission())) {
-            sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else if (args.length == 0) {
-            sender.sendMessage(getMessage(helpMK));
-        } else {
-            PlayerSender player = (PlayerSender) sender;
-            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(player.getUniqueId());
-
-            playerFam.setBackground(args[0]);
-            sender.sendMessage(getMessage(setMK));
-            playerFam.updateFamilyTree();
+            return true;
         }
+
+        if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
+            return true;
+        }
+
+        if (args.length == 0) {
+            sender.sendMessage(getMessage(helpMK));
+            return true;
+        }
+
+        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(player.getUniqueId());
+
+        playerFam.setBackground(args[0]);
+        sender.sendMessage(getMessage(setMK));
+        playerFam.updateFamilyTree();
+
         return true;
     }
 }

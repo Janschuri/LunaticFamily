@@ -39,48 +39,55 @@ public class MarryDeny extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!(sender instanceof PlayerSender)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
-        } else if (!sender.hasPermission(getPermission())) {
-            sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
-            PlayerSender player = (PlayerSender) sender;
-            UUID playerUUID = player.getUniqueId();
-            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
-
-            if (!LunaticFamily.marryRequests.containsKey(playerUUID) && !LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
-                sender.sendMessage(getMessage(noRequestMK));
-            } else {
-                if (LunaticFamily.marryRequests.containsKey(playerUUID)) {
-                    UUID partnerUUID = LunaticFamily.marryRequests.get(playerUUID);
-                    PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
-                    if (!LunaticFamily.marryPriests.containsKey(partnerUUID)) {
-                        partner.sendMessage(getMessage(deniedMK)
-                                .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
-                    } else {
-                        UUID priestUUID = LunaticFamily.marryPriests.get(partnerUUID);
-                        PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
-                        player.chat(getLanguageConfig().getMessageAsString(marryNoMK, false));
-
-                        Runnable runnable = () -> {
-                            priest.chat(getLanguageConfig().getMessageAsString(cancelMK, false));
-                        };
-
-                        Utils.scheduleTask(runnable, 250, TimeUnit.MILLISECONDS);
-
-
-                        LunaticFamily.marryPriests.remove(partnerUUID);
-                    }
-                    LunaticFamily.marryRequests.remove(playerUUID);
-
-                } else if (LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
-                    player.chat(getLanguageConfig().getMessageAsString(marryNoMK, false));
-                    UUID priestUUID = LunaticFamily.marryPriests.get(playerUUID);
-                    PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
-                    priest.chat(getLanguageConfig().getMessageAsString(cancelMK, false));
-                    LunaticFamily.marryPriestRequests.remove(playerUUID);
-                    LunaticFamily.marryPriests.remove(playerUUID);
-                }
-            }
+            return true;
         }
+
+        if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
+            return true;
+        }
+
+        PlayerSender player = (PlayerSender) sender;
+        UUID playerUUID = player.getUniqueId();
+        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+
+
+        if (LunaticFamily.marryRequests.containsKey(playerUUID)) {
+            UUID partnerUUID = LunaticFamily.marryRequests.get(playerUUID);
+            PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
+            if (!LunaticFamily.marryPriests.containsKey(partnerUUID)) {
+                partner.sendMessage(getMessage(deniedMK)
+                        .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+            } else {
+                UUID priestUUID = LunaticFamily.marryPriests.get(partnerUUID);
+                PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
+                player.chat(getLanguageConfig().getMessageAsString(marryNoMK, false));
+
+                Runnable runnable = () -> {
+                    priest.chat(getLanguageConfig().getMessageAsString(cancelMK, false));
+                };
+
+                Utils.scheduleTask(runnable, 250, TimeUnit.MILLISECONDS);
+
+
+                LunaticFamily.marryPriests.remove(partnerUUID);
+            }
+            LunaticFamily.marryRequests.remove(playerUUID);
+            return true;
+        }
+
+        if (LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
+            player.chat(getLanguageConfig().getMessageAsString(marryNoMK, false));
+            UUID priestUUID = LunaticFamily.marryPriests.get(playerUUID);
+            PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
+            priest.chat(getLanguageConfig().getMessageAsString(cancelMK, false));
+            LunaticFamily.marryPriestRequests.remove(playerUUID);
+            LunaticFamily.marryPriests.remove(playerUUID);
+            return true;
+        }
+
+        sender.sendMessage(getMessage(noRequestMK));
+
         return true;
     }
 }

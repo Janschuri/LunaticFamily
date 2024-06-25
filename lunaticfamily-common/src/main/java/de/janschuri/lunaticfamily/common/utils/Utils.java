@@ -1,6 +1,7 @@
 package de.janschuri.lunaticfamily.common.utils;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
+import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.utils.Mode;
@@ -59,5 +60,21 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
 
     public static boolean isPriest(UUID uuid) {
         return LunaticFamily.marryPriests.containsValue(uuid);
+    }
+
+    public static UUID getUUIDFromArg(String arg) {
+        UUID uuid;
+
+        if (isUUID(arg)) {
+            uuid = UUID.fromString(arg);
+
+            if (PlayerDataTable.getID(uuid) < 0) {
+                return null;
+            }
+        } else {
+            uuid = PlayerDataTable.getUUID(arg);
+        }
+
+        return uuid;
     }
 }

@@ -46,115 +46,99 @@ public class MarrySet extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
-            boolean force = false;
-
-            if (args.length > 2) {
-                if (args[2].equalsIgnoreCase("force")) {
-                    force = true;
-                }
-            }
-
-            if (args.length < 1) {
-                sender.sendMessage(getMessage(WRONG_USAGE_MK));
-                Logger.debugLog("MarrySetSubcommand: Wrong usage");
-                return true;
-            } else if (args[0].equalsIgnoreCase("deny")) {
-                sender.sendMessage(getMessage(deniedMK));
-                return true;
-            } else if (args.length < 2) {
-                sender.sendMessage(getMessage(WRONG_USAGE_MK));
-                Logger.debugLog("MarrySetSubcommand: Wrong usage");
-                return true;
-            }
-
-            String player1Arg = args[0];
-            String player2Arg = args[1];
-
-            UUID player1UUID;
-            UUID player2UUID;
-
-            if (Utils.isUUID(player1Arg)) {
-                player1UUID = UUID.fromString(args[0]);
-
-                if (PlayerDataTable.getID(player1UUID) < 0) {
-                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                            .replaceText(getTextReplacementConfig("%player%", player1Arg)));
-                    return true;
-                }
-            } else {
-                player1UUID = PlayerDataTable.getUUID(player1Arg);
-
-                if (player1UUID == null) {
-                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                            .replaceText(getTextReplacementConfig("%player%", player1Arg)));
-                    return true;
-                }
-            }
-
-            if (Utils.isUUID(args[1])) {
-                player2UUID = UUID.fromString(player2Arg);
-
-                if (PlayerDataTable.getID(player1UUID) < 0) {
-                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                            .replaceText(getTextReplacementConfig("%player%", player2Arg)));
-                    return true;
-                }
-            } else {
-                player2UUID = PlayerDataTable.getUUID(player2Arg);
-
-                if (player2UUID == null) {
-                    sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                            .replaceText(getTextReplacementConfig("%player%", player2Arg)));
-                    return true;
-                }
-            }
-
-
-
-
-            if (player1UUID.equals(player2UUID)) {
-                sender.sendMessage(getMessage(samePlayerMK));
-                return true;
-            }
-
-                FamilyPlayerImpl player2Fam = new FamilyPlayerImpl(player2UUID);
-                FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
-
-                if (player1Fam.isFamilyMember(player2Fam.getId())) {
-                    sender.sendMessage(getMessage(sameFamilyMK)
-                            .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                            .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
-                    return true;
-                }
-
-                if (player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() > 2) {
-                    int amountDiff = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() - 2;
-                    sender.sendMessage(getMessage(tooManyChildrenMK)
-                            .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                            .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName()))
-                            .replaceText(getTextReplacementConfig("%amount%", Integer.toString(amountDiff))));
-                } else if (player1Fam.isMarried()) {
-                    sender.sendMessage(getMessage(alreadyMarriedMK)
-                            .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
-                } else if (player2Fam.isMarried()) {
-                    sender.sendMessage(getMessage(alreadyMarriedMK)
-                            .replaceText(getTextReplacementConfig("%player%", player2Fam.getName())));
-                } else {
-                    LunaticFamily.marryRequests.remove(player1UUID);
-                    LunaticFamily.marryPriestRequests.remove(player1UUID);
-                    LunaticFamily.marryPriests.remove(player1UUID);
-
-                    LunaticFamily.marryRequests.remove(player1UUID);
-                    LunaticFamily.marryPriestRequests.remove(player1UUID);
-                    LunaticFamily.marryPriests.remove(player1UUID);
-
-                    player1Fam.marry(player2Fam.getId());
-                    sender.sendMessage(getMessage(marriedMK)
-                            .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                            .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
-                }
+            return true;
         }
+        boolean force = false;
+
+        if (args.length > 2) {
+            if (args[2].equalsIgnoreCase("force")) {
+                force = true;
+            }
+        }
+
+        if (args.length < 1) {
+            sender.sendMessage(getMessage(WRONG_USAGE_MK));
+            Logger.debugLog("MarrySet: Wrong usage");
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("deny")) {
+            sender.sendMessage(getMessage(deniedMK));
+            return true;
+        }
+
+        if (args.length < 2) {
+            sender.sendMessage(getMessage(WRONG_USAGE_MK));
+            Logger.debugLog("MarrySetSubcommand: Wrong usage");
+            return true;
+        }
+
+        String player1Arg = args[0];
+        UUID player1UUID = Utils.getUUIDFromArg(player1Arg);
+        if (player1UUID == null) {
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                    .replaceText(getTextReplacementConfig("%player%", player1Arg)));
+            return true;
+        }
+
+        String player2Arg = args[1];
+        UUID player2UUID = Utils.getUUIDFromArg(player2Arg);
+        if (player2UUID == null) {
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
+                    .replaceText(getTextReplacementConfig("%player%", player2Arg)));
+            return true;
+        }
+
+
+        if (player1UUID.equals(player2UUID)) {
+            sender.sendMessage(getMessage(samePlayerMK));
+            return true;
+        }
+
+        FamilyPlayerImpl player2Fam = new FamilyPlayerImpl(player2UUID);
+        FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
+
+        if (player1Fam.isFamilyMember(player2Fam.getId())) {
+            sender.sendMessage(getMessage(sameFamilyMK)
+                    .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
+                    .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
+            return true;
+        }
+
+        if (player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() > 2) {
+            int amountDiff = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() - 2;
+            sender.sendMessage(getMessage(tooManyChildrenMK)
+                    .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
+                    .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName()))
+                    .replaceText(getTextReplacementConfig("%amount%", Integer.toString(amountDiff))));
+            return true;
+        }
+
+        if (player1Fam.isMarried()) {
+            sender.sendMessage(getMessage(alreadyMarriedMK)
+                    .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
+            return true;
+        }
+
+        if (player2Fam.isMarried()) {
+            sender.sendMessage(getMessage(alreadyMarriedMK)
+                    .replaceText(getTextReplacementConfig("%player%", player2Fam.getName())));
+            return true;
+        }
+
+
+        LunaticFamily.marryRequests.remove(player1UUID);
+        LunaticFamily.marryPriestRequests.remove(player1UUID);
+        LunaticFamily.marryPriests.remove(player1UUID);
+
+        LunaticFamily.marryRequests.remove(player1UUID);
+        LunaticFamily.marryPriestRequests.remove(player1UUID);
+        LunaticFamily.marryPriests.remove(player1UUID);
+
+        player1Fam.marry(player2Fam.getId());
+        sender.sendMessage(getMessage(marriedMK)
+                .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
+                .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
         return true;
     }
 

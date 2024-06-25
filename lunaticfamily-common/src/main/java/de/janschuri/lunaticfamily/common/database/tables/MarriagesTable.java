@@ -190,7 +190,7 @@ public class MarriagesTable {
         return null;
     }
 
-    public static List<Marriage> getMarriages(int page, int pageSize) {
+    public static List<Marriage> getMarriageList(int page, int pageSize) {
         List<Marriage> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;

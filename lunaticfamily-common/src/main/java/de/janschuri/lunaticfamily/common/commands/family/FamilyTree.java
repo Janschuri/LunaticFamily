@@ -33,18 +33,23 @@ public class FamilyTree extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!(sender instanceof PlayerSender)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
-        } else if (!sender.hasPermission(getPermission())) {
+            return true;
+        }
+
+        if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
+            return true;
+        }
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+
             if (playerFam.updateFamilyTree()) {
                 player.sendMessage(getMessage(reloadedMK));
             } else {
                 return false;
             }
-        }
+
         return true;
     }
 }

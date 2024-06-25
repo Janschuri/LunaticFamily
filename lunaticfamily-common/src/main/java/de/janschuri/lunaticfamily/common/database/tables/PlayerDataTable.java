@@ -68,7 +68,7 @@ public class PlayerDataTable {
                 Error.close(ex);
             }
         }
-        return -1;
+        return 0;
     }
 
     public static UUID getUUID(int id) {

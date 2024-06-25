@@ -41,21 +41,23 @@ public class AdoptList extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
-            int page = 1;
-            if (args.length > 0) {
-                try {
-                    page = Integer.parseInt(args[0]);
-                } catch (NumberFormatException e) {
-                    sender.sendMessage(getMessage(NO_NUMBER_MK)
-                            .replaceText(getTextReplacementConfig("%input%", args[0])));
-                }
-            }
-
-            Component msg = getAdoptList(page);
-
-            sender.sendMessage(msg);
+            return true;
         }
+
+        int page = 1;
+        if (args.length > 0) {
+            try {
+                page = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                sender.sendMessage(getMessage(NO_NUMBER_MK)
+                        .replaceText(getTextReplacementConfig("%input%", args[0])));
+            }
+        }
+
+        Component msg = getAdoptList(page);
+
+        sender.sendMessage(msg);
+
         return true;
     }
 
@@ -73,7 +75,7 @@ public class AdoptList extends Subcommand {
     }
 
     private Component getAdoptList(int page) {
-        List<Adoption> adoptList = AdoptionsTable.getAdoptions(page, 10);
+        List<Adoption> adoptList = AdoptionsTable.getAdoptionList(page, 10);
 
         Component msg = getMessage(headerMK, false);
 
@@ -89,7 +91,7 @@ public class AdoptList extends Subcommand {
                 hoverText = hoverText + " -> " + player1Fam.getPriest().getName();
             }
 
-            Component heart = Component.text(" ⌂ ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));
+            Component heart = Component.text(" " + Adoption.getDefaultEmoji() + " ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));
 
             TextReplacementConfig indexRpl = getTextReplacementConfig("%index%", String.valueOf(index));
             TextReplacementConfig player1Rpl = getTextReplacementConfig("%parent%", player1Fam.getName());

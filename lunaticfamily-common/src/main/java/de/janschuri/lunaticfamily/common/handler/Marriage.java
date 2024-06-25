@@ -72,4 +72,12 @@ public class Marriage {
     public void setEmojiColor(String color) {
         MarriagesTable.saveEmojiColor(this.id, color);
     }
+
+    public String getColoredEmoji() {
+        return "<" + getEmojiColor() + ">" + getDefaultEmoji();
+    }
+
+    public static String getDefaultEmoji() {
+        return "❤";
+    }
 }

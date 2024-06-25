@@ -29,10 +29,12 @@ public class FamilyReload extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
-            LunaticFamily.loadConfig();
-            sender.sendMessage(getMessage(reloadedMK));
+            return true;
         }
+
+
+        LunaticFamily.loadConfig();
+        sender.sendMessage(getMessage(reloadedMK));
         return true;
     }
 }

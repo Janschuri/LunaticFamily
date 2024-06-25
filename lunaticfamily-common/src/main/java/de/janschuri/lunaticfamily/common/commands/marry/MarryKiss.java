@@ -39,65 +39,69 @@ public class MarryKiss extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!(sender instanceof PlayerSender)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
-        } else if (!sender.hasPermission(getPermission())) {
-            sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
-            PlayerSender player = (PlayerSender) sender;
-            UUID playerUUID = player.getUniqueId();
-            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
-
-            if (!playerFam.isMarried()) {
-                sender.sendMessage(getMessage(noPartnerMK));
-                return true;
-            }
-
-            PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUniqueId());
-
-            if (!partner.isOnline()) {
-                sender.sendMessage(getMessage(PLAYER_OFFLINE_MK)
-                        .replaceText(getTextReplacementConfig("%player%", partner.getName())));
-                return true;
-            }
-
-            if (!Utils.isPlayerOnRegisteredServer(partner)) {
-                player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
-                        .replaceText(getTextReplacementConfig("%player%", partner.getName()))
-                        .replaceText(getTextReplacementConfig("%server%", partner.getServerName())));
-                return true;
-            }
-
-            if (!player.isSameServer(partner.getUniqueId())) {
-                sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK)
-                        .replaceText(getTextReplacementConfig("%player%", partner.getName())));
-                return true;
-            }
-
-            if (!player.isInRange(partner.getUniqueId(), LunaticFamily.getConfig().getMarryKissRange())) {
-                player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK)
-                        .replaceText(getTextReplacementConfig("%player%", partner.getName())));
-                return true;
-            }
-
-            double[] playerPosition = player.getPosition();
-            double[] partnerPosition = partner.getPosition();
-            double[] position = Utils.getPositionBetweenLocations(playerPosition, partnerPosition);
-            position[1] += 2;
-            for (int i = 0; i < 6; i++) {
-
-                Runnable runnable = () -> {
-                        Utils.spawnParticleCloud(playerUUID, position, "HEART");
-                };
-
-                Utils.scheduleTask(runnable, i * 250L, TimeUnit.MILLISECONDS);
-            }
-
-            player.sendMessage(getMessage(kissMK)
-                    .replaceText(getTextReplacementConfig("%player%", partner.getName())));
-
-            partner.sendMessage(getMessage(gotKissedMK)
-                    .replaceText(getTextReplacementConfig("%player%", player.getName())));
-
+            return true;
         }
+
+        if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
+            return true;
+        }
+        PlayerSender player = (PlayerSender) sender;
+        UUID playerUUID = player.getUniqueId();
+        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+
+        if (!playerFam.isMarried()) {
+            sender.sendMessage(getMessage(noPartnerMK));
+            return true;
+        }
+
+        PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUniqueId());
+
+        if (!partner.isOnline()) {
+            sender.sendMessage(getMessage(PLAYER_OFFLINE_MK)
+                    .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+            return true;
+        }
+
+        if (!Utils.isPlayerOnRegisteredServer(partner)) {
+            player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
+                    .replaceText(getTextReplacementConfig("%player%", partner.getName()))
+                    .replaceText(getTextReplacementConfig("%server%", partner.getServerName())));
+            return true;
+        }
+
+        if (!player.isSameServer(partner.getUniqueId())) {
+            sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK)
+                    .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+            return true;
+        }
+
+        if (!player.isInRange(partner.getUniqueId(), LunaticFamily.getConfig().getMarryKissRange())) {
+            player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK)
+                    .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+            return true;
+        }
+
+        double[] playerPosition = player.getPosition();
+        double[] partnerPosition = partner.getPosition();
+        double[] position = Utils.getPositionBetweenLocations(playerPosition, partnerPosition);
+        position[1] += 2;
+        for (int i = 0; i < 6; i++) {
+
+            Runnable runnable = () -> {
+                Utils.spawnParticleCloud(playerUUID, position, "HEART");
+            };
+
+            Utils.scheduleTask(runnable, i * 250L, TimeUnit.MILLISECONDS);
+        }
+
+        player.sendMessage(getMessage(kissMK)
+                .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+
+        partner.sendMessage(getMessage(gotKissedMK)
+                .replaceText(getTextReplacementConfig("%player%", player.getName())));
+
+
         return true;
     }
 }

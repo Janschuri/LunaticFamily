@@ -37,23 +37,31 @@ public class SiblingDeny extends Subcommand {
     public boolean execute(Sender sender, String[] args) {
         if (!(sender instanceof PlayerSender)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
-        } else if (!sender.hasPermission(getPermission())) {
-            sender.sendMessage(getMessage(NO_PERMISSION_MK));
-        } else {
-            PlayerSender player = (PlayerSender) sender;
-            UUID playerUUID = player.getUniqueId();
-            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
-
-            if (!LunaticFamily.siblingRequests.containsKey(playerUUID)) {
-                sender.sendMessage(getMessage(noRequestMK));
-            } else {
-                UUID siblingUUID = LunaticFamily.siblingRequests.get(playerUUID);
-                PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
-                sibling.sendMessage(getMessage(deniedMK)
-                        .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
-                LunaticFamily.siblingRequests.remove(playerUUID);
-            }
+            return true;
         }
+
+        if (!sender.hasPermission(getPermission())) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
+            return true;
+        }
+
+        PlayerSender player = (PlayerSender) sender;
+        UUID playerUUID = player.getUniqueId();
+        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+
+        if (!LunaticFamily.siblingRequests.containsKey(playerUUID)) {
+            sender.sendMessage(getMessage(noRequestMK));
+            return true;
+        }
+
+        UUID siblingUUID = LunaticFamily.siblingRequests.get(playerUUID);
+        PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
+
+        sibling.sendMessage(getMessage(deniedMK)
+                .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+
+        LunaticFamily.siblingRequests.remove(playerUUID);
+
         return true;
     }
 }
