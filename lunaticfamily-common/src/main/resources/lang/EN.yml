@@ -239,6 +239,7 @@ commands:
           help: "&6/%command% %subcommand% &7- Deny a marriage proposal."
           no_request: "You have no marriage proposal."
           denied: "Sorry, %player% does not want to marry you."
+          deny: "You have denied the marriage proposal from %player%."
           cancel: "The wedding has been canceled."
       divorce:
         aliases:
@@ -330,6 +331,7 @@ commands:
           yes: "Yes. I do!"
           no: "No. I don't want to."
           complete: "You are married! You may now kiss!"
+          cancel: "The wedding has been canceled."
       sibling:
         aliases:
           - sibling
@@ -348,6 +350,7 @@ commands:
           yes: "Yes. I do!"
           no: "No. I don't want to."
           complete: "You are siblings!"
+          cancel: "The siblinghood has been canceled."
       adopt:
         aliases:
           - adopt
@@ -366,6 +369,7 @@ commands:
           yes: "Yes. I do!"
           no: "No. I don't want to."
           complete: "The adoption has been completed!"
+          cancel: "The adoption has been canceled."
       help:
         aliases:
           - help
@@ -383,6 +387,7 @@ commands:
           help: "&6/%command% %subcommand% &b<%param%> &7- Propose siblinghood to a player."
           has_sibling: "You already have a sibling."
           is_adopted: "You are adopted. Your parents can adopt a sibling for you."
+          player_is_adopted: "%player% is adopted. %player%'s parents can adopt a sibling for %player%."
           self_request: "You cannot be your own sibling."
           family_request: "%player% is already part of your family."
           sibling_is_adopted: "%player% is already adopted. Their parents can adopt you to become your sibling."
@@ -404,6 +409,7 @@ commands:
         messages:
           help: "&6/%command% %subcommand% &7- Deny a sibling request."
           no_request: "You have no sibling request."
+          denied: "Sorry, %player% does not want to be your sibling."
           deny: "You have denied the sibling request from %player%."
       unsibling:
         aliases:

@@ -154,7 +154,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public FamilyPlayerImpl getPartner() {
-        if (this.partner < 1) {
+        if (this.partner > 0) {
             return new FamilyPlayerImpl(this.partner);
         } else {
             return null;
@@ -162,11 +162,11 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public boolean isMarried() {
-        return this.partner < 1;
+        return this.partner > 0;
     }
 
     public FamilyPlayerImpl getPriest() {
-        if (this.priest < 1) {
+        if (this.priest > 0) {
             return new FamilyPlayerImpl(this.priest);
         } else {
             return null;
@@ -174,7 +174,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public FamilyPlayerImpl getSibling() {
-        if (this.sibling < 1) {
+        if (this.sibling > 0) {
             return new FamilyPlayerImpl(this.sibling);
         } else {
             return null;
@@ -182,7 +182,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public boolean hasSibling() {
-        return this.sibling < 1;
+        return this.sibling > 0;
     }
 
     public boolean isAdopted() {

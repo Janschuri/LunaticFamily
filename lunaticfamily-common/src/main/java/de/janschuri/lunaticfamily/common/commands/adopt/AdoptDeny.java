@@ -2,20 +2,26 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.priest.PriestAdopt;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class AdoptDeny extends Subcommand {
 
     private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey denyMK = new CommandMessageKey(this,"deny");
     private final CommandMessageKey deniedMK = new CommandMessageKey(this,"denied");
+    private final CommandMessageKey denyMK = new CommandMessageKey(this,"deny");
     private final CommandMessageKey noRequestMK = new CommandMessageKey(this,"no_request");
+
+    private final CommandMessageKey priestNoMK = new CommandMessageKey(new PriestAdopt(),"no");
+    private final CommandMessageKey priestCancelMK = new CommandMessageKey(new PriestAdopt(),"cancel");
 
 
     @Override
@@ -49,16 +55,43 @@ public class AdoptDeny extends Subcommand {
         UUID playerUUID = player.getUniqueId();
         FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
 
-        if (!LunaticFamily.adoptRequests.containsKey(playerUUID)) {
-            sender.sendMessage(getMessage(noRequestMK));
+        if (LunaticFamily.adoptRequests.containsKey(playerUUID)) {
+            UUID partnerUUID = LunaticFamily.adoptRequests.get(playerUUID);
+            PlayerSender parent = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
+            if (!LunaticFamily.adoptPriests.containsKey(partnerUUID)) {
+                player.sendMessage(getMessage(denyMK)
+                        .replaceText(getTextReplacementConfig("%player%", parent.getName())));
+                parent.sendMessage(getMessage(deniedMK)
+                        .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+            } else {
+                UUID priestUUID = LunaticFamily.adoptPriests.get(partnerUUID);
+                PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
+                player.chat(getLanguageConfig().getMessageAsString(priestNoMK, false));
+
+                Runnable runnable = () -> {
+                    priest.chat(getLanguageConfig().getMessageAsString(priestCancelMK, false));
+                };
+
+                Utils.scheduleTask(runnable, 250, TimeUnit.MILLISECONDS);
+
+
+                LunaticFamily.adoptPriests.remove(partnerUUID);
+            }
+            LunaticFamily.adoptRequests.remove(playerUUID);
             return true;
         }
-        UUID parentUUID = LunaticFamily.adoptRequests.get(playerUUID);
-        FamilyPlayerImpl parentFam = new FamilyPlayerImpl(parentUUID);
-        PlayerSender parent = LunaticLib.getPlatform().getPlayerSender(parentUUID);
-        parent.sendMessage(getMessage(denyMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
-        sender.sendMessage(getMessage(deniedMK).replaceText(getTextReplacementConfig("%player%", parentFam.getName())));
-        LunaticFamily.adoptRequests.remove(playerUUID);
+
+        if (LunaticFamily.adoptPriestRequests.containsKey(playerUUID)) {
+            player.chat(getLanguageConfig().getMessageAsString(priestNoMK, false));
+            UUID priestUUID = LunaticFamily.adoptPriests.get(playerUUID);
+            PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
+            priest.chat(getLanguageConfig().getMessageAsString(priestCancelMK, false));
+            LunaticFamily.adoptPriestRequests.remove(playerUUID);
+            LunaticFamily.adoptPriests.remove(playerUUID);
+            return true;
+        }
+
+        sender.sendMessage(getMessage(noRequestMK));
 
         return true;
     }

@@ -2,20 +2,26 @@ package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.priest.PriestSibling;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class SiblingDeny extends Subcommand {
 
     private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
     private final CommandMessageKey noRequestMK = new CommandMessageKey(this,"no_request");
     private final CommandMessageKey deniedMK = new CommandMessageKey(this,"denied");
-    private final CommandMessageKey cancelMK = new CommandMessageKey(this,"cancel");
+    private final CommandMessageKey denyMK = new CommandMessageKey(this,"deny");
+
+    private final CommandMessageKey priestNoMK = new CommandMessageKey(new PriestSibling(),"no");
+    private final CommandMessageKey priestCancelMK = new CommandMessageKey(new PriestSibling(),"cancel");
 
 
     @Override
@@ -49,18 +55,43 @@ public class SiblingDeny extends Subcommand {
         UUID playerUUID = player.getUniqueId();
         FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
 
-        if (!LunaticFamily.siblingRequests.containsKey(playerUUID)) {
-            sender.sendMessage(getMessage(noRequestMK));
+        if (LunaticFamily.siblingRequests.containsKey(playerUUID)) {
+            UUID partnerUUID = LunaticFamily.siblingRequests.get(playerUUID);
+            PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
+            if (!LunaticFamily.siblingPriests.containsKey(partnerUUID)) {
+                player.sendMessage(getMessage(denyMK)
+                        .replaceText(getTextReplacementConfig("%player%", sibling.getName())));
+                sibling.sendMessage(getMessage(deniedMK)
+                        .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+            } else {
+                UUID priestUUID = LunaticFamily.siblingPriests.get(partnerUUID);
+                PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
+                player.chat(getLanguageConfig().getMessageAsString(priestNoMK, false));
+
+                Runnable runnable = () -> {
+                    priest.chat(getLanguageConfig().getMessageAsString(priestCancelMK, false));
+                };
+
+                Utils.scheduleTask(runnable, 250, TimeUnit.MILLISECONDS);
+
+
+                LunaticFamily.siblingPriests.remove(partnerUUID);
+            }
+            LunaticFamily.siblingRequests.remove(playerUUID);
             return true;
         }
 
-        UUID siblingUUID = LunaticFamily.siblingRequests.get(playerUUID);
-        PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
+        if (LunaticFamily.siblingPriestRequests.containsKey(playerUUID)) {
+            player.chat(getLanguageConfig().getMessageAsString(priestNoMK, false));
+            UUID priestUUID = LunaticFamily.siblingPriests.get(playerUUID);
+            PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
+            priest.chat(getLanguageConfig().getMessageAsString(priestCancelMK, false));
+            LunaticFamily.siblingPriestRequests.remove(playerUUID);
+            LunaticFamily.siblingPriests.remove(playerUUID);
+            return true;
+        }
 
-        sibling.sendMessage(getMessage(deniedMK)
-                .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
-
-        LunaticFamily.siblingRequests.remove(playerUUID);
+        sender.sendMessage(getMessage(noRequestMK));
 
         return true;
     }

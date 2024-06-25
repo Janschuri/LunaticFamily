@@ -23,6 +23,7 @@ public class SiblingPropose extends Subcommand {
     private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
     private final CommandMessageKey hasSiblingMK = new CommandMessageKey(this,"has_sibling");
     private final CommandMessageKey isAdoptedMK = new CommandMessageKey(this,"is_adopted");
+    private final CommandMessageKey playerIsAdoptedMK = new CommandMessageKey(this,"player_is_adopted");
     private final CommandMessageKey selfRequestMK = new CommandMessageKey(this,"self_request");
     private final CommandMessageKey familyRequestMK = new CommandMessageKey(this,"family_request");
     private final CommandMessageKey openRequestMK = new CommandMessageKey(this,"open_request");
@@ -77,7 +78,7 @@ public class SiblingPropose extends Subcommand {
 
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("SiblingProposeSubcommand: Wrong usage");
+            Logger.debugLog("SiblingPropose: Wrong usage");
             return true;
         }
 
@@ -125,7 +126,7 @@ public class SiblingPropose extends Subcommand {
         }
 
         if (siblingFam.isAdopted()) {
-            sender.sendMessage(getMessage(isAdoptedMK)
+            sender.sendMessage(getMessage(playerIsAdoptedMK)
                     .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
             return true;
         }

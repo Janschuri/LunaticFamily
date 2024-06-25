@@ -17,8 +17,10 @@ public class MarryDeny extends Subcommand {
     private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
     private final CommandMessageKey noRequestMK = new CommandMessageKey(this,"no_request");
     private final CommandMessageKey deniedMK = new CommandMessageKey(this,"denied");
-    private final CommandMessageKey cancelMK = new CommandMessageKey(this,"cancel");
-    private final CommandMessageKey marryNoMK = new CommandMessageKey(new Marry(),"no");
+    private final CommandMessageKey denyMK = new CommandMessageKey(this,"deny");
+
+    private final CommandMessageKey priestCancelMK = new CommandMessageKey(this,"cancel");
+    private final CommandMessageKey priestNoMK = new CommandMessageKey(new Marry(),"no");
 
     @Override
     public String getPermission() {
@@ -56,15 +58,17 @@ public class MarryDeny extends Subcommand {
             UUID partnerUUID = LunaticFamily.marryRequests.get(playerUUID);
             PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
             if (!LunaticFamily.marryPriests.containsKey(partnerUUID)) {
+                player.sendMessage(getMessage(denyMK)
+                        .replaceText(getTextReplacementConfig("%player%", partner.getName())));
                 partner.sendMessage(getMessage(deniedMK)
                         .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
             } else {
                 UUID priestUUID = LunaticFamily.marryPriests.get(partnerUUID);
                 PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
-                player.chat(getLanguageConfig().getMessageAsString(marryNoMK, false));
+                player.chat(getLanguageConfig().getMessageAsString(priestNoMK, false));
 
                 Runnable runnable = () -> {
-                    priest.chat(getLanguageConfig().getMessageAsString(cancelMK, false));
+                    priest.chat(getLanguageConfig().getMessageAsString(priestCancelMK, false));
                 };
 
                 Utils.scheduleTask(runnable, 250, TimeUnit.MILLISECONDS);
@@ -77,10 +81,10 @@ public class MarryDeny extends Subcommand {
         }
 
         if (LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
-            player.chat(getLanguageConfig().getMessageAsString(marryNoMK, false));
+            player.chat(getLanguageConfig().getMessageAsString(priestNoMK, false));
             UUID priestUUID = LunaticFamily.marryPriests.get(playerUUID);
             PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
-            priest.chat(getLanguageConfig().getMessageAsString(cancelMK, false));
+            priest.chat(getLanguageConfig().getMessageAsString(priestCancelMK, false));
             LunaticFamily.marryPriestRequests.remove(playerUUID);
             LunaticFamily.marryPriests.remove(playerUUID);
             return true;

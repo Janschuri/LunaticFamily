@@ -203,8 +203,6 @@ commands:
       - marry
     help_header: "Marry-Hilfe"
     messages:
-      yes: "Ja, ich will!"
-      no: "Nein, ich will nicht."
       partner_online: "Dein Partner ist online."
       partner_offline: "Dein Partner ist offline."
     subcommands:
@@ -212,6 +210,7 @@ commands:
         aliases:
           - propose
         messages:
+          yes: "Ja, ich will!"
           help: "&6/%command% %subcommand% &b<%param%> &7- Mache einem Spieler einen Heiratsantrag."
           already_married: "Du bist bereits mit %player% verheiratet."
           player_already_married: "%player% ist bereits verheiratet."
@@ -240,6 +239,8 @@ commands:
           no_request: "Du hast keine Heiratsanfrage."
           denied: "Entschuldigung, %player% möchte dich nicht heiraten."
           cancel: "Die Hochzeit wurde abgebrochen."
+          no: "Nein, ich will nicht."
+          deny: "Du hast die Heiratsanfrage von %player% abgelehnt."
       divorce:
         aliases:
           - divorce
@@ -330,6 +331,7 @@ commands:
           yes: "Ja, ich will!"
           no: "Nein, ich will nicht."
           complete: "Ihr seid verheiratet! Ihr dürft euch jetzt küssen!"
+          cancel: "Die Hochzeit wurde abgebrochen."
       sibling:
         aliases:
           - sibling
@@ -348,6 +350,7 @@ commands:
           yes: "Ja, ich will!"
           no: "Nein, ich will nicht."
           complete: "Ihr seid Geschwister!"
+          cancel: "Die Geschwisterkindanfrage wurde abgebrochen."
       adopt:
         aliases:
           - adopt
@@ -366,6 +369,7 @@ commands:
           yes: "Ja, ich will!"
           no: "Nein, ich will nicht."
           complete: "Die Adoption wurde abgeschlossen!"
+          cancel: "Die Adoption wurde abgebrochen."
       help:
         aliases:
           - help
@@ -383,6 +387,7 @@ commands:
           help: "&6/%command% %subcommand% &b<%param%> &7- Biete einem Spieler an, sein Geschwisterkind zu werden."
           has_sibling: "Du hast schon ein Geschwisterkind."
           is_adopted: "Du bist adoptiert. Deine Eltern können dir ein Geschwisterkind adoptieren"
+          player_is_adopted: "%player% ist adoptiert. %player%'s Eltern können dich adoptieren, damit du das Geschwisterkind wirst."
           self_request: "Du kannst nicht dein eigenes Geschwisterkind sein."
           family_request: "%player% ist bereits Teil deiner Familie."
           sibling_is_adopted: "%player% ist bereits adoptiert. Seine Eltern können dich adoptiern, damit du das Geschwisterkind wirst."
@@ -404,6 +409,7 @@ commands:
         messages:
           help: "&6/%command% %subcommand% &7- Lehne eine Geschwisterkindanfrage ab."
           no_request: "Du hast keine Geschwisteranfrage."
+          denied: "%player% möchte nicht dein Geschwisterkind sein."
           deny: "Du hast die Geschwisteranfrage von %player% abgelehnt."
       unsibling:
         aliases:
