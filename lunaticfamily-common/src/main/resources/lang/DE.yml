@@ -21,6 +21,7 @@ messages:
   cancel: "Abbrechen"
   player_name: "Spielername"
   background: "Hintergrund"
+  color: "Farbe"
   no_uuid: "%input% ist keine gültige UUID!"
 help_header: "--- --- --- ---[%header%]--- --- --- ---"
 help_footer: "--- --- -[Seite %page%/%pages%]- --- ---"
@@ -93,6 +94,21 @@ commands:
           already_adopted: "%player% ist bereits adoptiert."
           family_request: "Du kannst %player% nicht adoptieren. Dieser Spieler gehört bereits zu deiner Familie."
           cancel: "Du hast die Adoptionsanfrage an %player% abgebrochen."
+      list:
+        aliases:
+          - list
+        messages:
+          help: "&6/%command% %subcommand% <%param%> &7- Zeige alle Adoptionen auf diesem Server."
+          header: "Alle Adoptionen auf diesem Server: "
+          pairs: "&6%index%: &b%parent% %emoji% &b%child%"
+      emoji:
+        aliases:
+          - emoji
+        messages:
+          help: "&6/%command% %subcommand% <%param%> &7- Setze die Farbe deines Emojis in der Adoptionsliste."
+          no_color: "Du musst eine Farbe angeben."
+          color_set: "Du hast die Farbe %color% gewählt."
+          no_marriage: "Du bist nicht adoptiert."
       set:
         aliases:
           - set
@@ -276,14 +292,13 @@ commands:
           partner_full_inv: "Dein Partner hat kein Platz im Inventar."
           sent: "Du hast deinem Partner etwas geschenkt."
           got: "Dein Partner hat dir etwas geschenkt."
-      heart:
+      emoji:
         aliases:
           - heart
         messages:
           help: "&6/%command% %subcommand% <%param%> &7- Setze die Farbe deines Herzens in der Heiratsliste."
           no_color: "Du musst eine Farbe angeben."
           color_set: "Du hast die Farbe %color% gewählt."
-          color: "Farbe"
           no_marriage: "Du bist nicht verheiratet."
       list:
         aliases:
@@ -456,6 +471,14 @@ commands:
           help: "&6/%command% %subcommand% &b<%param%> &7- Löse die Geschwisterschaft von zwei Spielern auf."
           no_sibling: "%player% hat kein Geschwisterkind."
           unset: "Du hast die Geschwisterschaft von %player1% und %player2% aufgelöst."
+      emoji:
+        aliases:
+          - emoji
+        messages:
+          help: "&6/%command% %subcommand% <%param%> &7- Setze die Farbe deines Emojis in der Geschwisterliste."
+          no_color: "Du musst eine Farbe angeben."
+          color_set: "Du hast die Farbe %color% gewählt."
+          no_siblinghood: "Du hast kein Geschwisterkind."
       list:
         aliases:
           - list

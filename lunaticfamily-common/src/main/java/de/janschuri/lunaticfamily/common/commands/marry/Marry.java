@@ -17,7 +17,7 @@ public class Marry extends Subcommand {
                 new MarryDeny(),
                 new MarryDivorce(),
                 new MarryGift(),
-                new MarryHeart(),
+                new MarryEmoji(),
                 new MarryKiss(),
                 new MarryList(),
                 new MarryPropose(),

@@ -29,7 +29,7 @@ public class Placeholder {
             return player.getName();
         }
 
-        Pattern marriagePattern = Pattern.compile("marriage_(emoji_status|partner|emoji|priest|date)");
+        Pattern marriagePattern = Pattern.compile("marriage_(emoji_status|emoji|partner|priest|date)");
 
         if (marriagePattern.matcher(placeholder).matches()) {
             String[] split = placeholder.split("_");

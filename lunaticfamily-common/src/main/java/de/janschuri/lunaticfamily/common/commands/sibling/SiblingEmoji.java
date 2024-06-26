@@ -1,4 +1,4 @@
-package de.janschuri.lunaticfamily.common.commands.marry;
+package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
@@ -11,31 +11,32 @@ import de.janschuri.lunaticlib.Sender;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-public class MarryHeart extends Subcommand {
+public class SiblingEmoji extends Subcommand {
 
     private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
     private final CommandMessageKey noColorMK = new CommandMessageKey(this,"no_color");
     private final CommandMessageKey colorSetMK = new CommandMessageKey(this,"color_set");
-    private final CommandMessageKey colorMK = new CommandMessageKey(this,"color");
-    private final CommandMessageKey noMarriageMK = new CommandMessageKey(this,"no_marriage");
+    private final CommandMessageKey noSiblinghoodMK = new CommandMessageKey(this,"no_siblinghood");
 
 
     @Override
     public String getPermission() {
-        return "lunaticfamily.marry.heart";
+        return "lunaticfamily.sibling.emoji";
     }
 
     @Override
     public String getName() {
-        return "heart";
+        return "emoji";
     }
 
     @Override
-    public Marry getParentCommand() {
-        return new Marry();
+    public Sibling getParentCommand() {
+        return new Sibling();
     }
 
     public boolean execute(Sender sender, String[] args) {
@@ -54,14 +55,14 @@ public class MarryHeart extends Subcommand {
         UUID playerUUID = player.getUniqueId();
         FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
 
-        if (!playerFam.isMarried()) {
-            sender.sendMessage(getMessage(noMarriageMK));
+        if (!playerFam.hasSibling()) {
+            sender.sendMessage(getMessage(noSiblinghoodMK));
             return true;
         }
 
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("MarryHeartSubcommand: Wrong usage");
+            Logger.debugLog("SiblingEmoji: Wrong usage");
             return true;
         }
 
@@ -97,12 +98,13 @@ public class MarryHeart extends Subcommand {
             }
         }
 
+
+        playerFam.getSiblinghoods().get(0).setEmojiColor(hexColor);
         TextReplacementConfig replacementConfig = TextReplacementConfig.builder().match("%color%").replacement(colorMsg).build();
 
         Component msg = getMessage(colorSetMK).replaceText(replacementConfig);
 
         player.sendMessage(msg);
-        playerFam.getMarriages().get(0).setEmojiColor(hexColor);
 
         return true;
     }
@@ -111,7 +113,22 @@ public class MarryHeart extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(colorMK, false)
+                getMessage(COLOR_MK, false)
         );
+    }
+
+    @Override
+    public List<Map<String, String>> getParams() {
+        List<Map<String, String>> list = new ArrayList<>();
+
+        for (String color : LunaticFamily.getConfig().getColors().keySet()) {
+            list.add(Map.of(
+                    getPermission()+".color."+color, LunaticFamily.getLanguageConfig().getColorLang(color)
+            ));
+        }
+
+        list.add(Map.of(getPermission()+".hex", "#RRGGBB"));
+
+        return list;
     }
 }

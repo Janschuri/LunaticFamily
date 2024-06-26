@@ -21,6 +21,7 @@ messages:
   cancel: "Cancel"
   player_name: "player"
   background: "background"
+  color: "color"
   no_uuid: "%input% is not a valid UUID."
 help_header: "--- --- --- ---[%header%]--- --- --- ---"
 help_footer: "--- --- -[Page %page%/%pages%]- --- ---"
@@ -93,6 +94,21 @@ commands:
           already_adopted: "%player% is already adopted."
           family_request: "You cannot adopt %player%. This player already belongs to your family."
           cancel: "You have canceled the adoption request to %player%."
+      list:
+        aliases:
+          - list
+        messages:
+          help: "&6/%command% %subcommand% <%param%> &7- Show a list of all adopted children."
+          header: "All adoptions on this server: "
+          pairs: "&6%index%: &b%parent% %emoji% &b%child%"
+      emoji:
+        aliases:
+          - emoji
+        messages:
+          help: "&6/%command% %subcommand% <%param%> &7- Change the color of your emoji in the adoption list."
+          no_color: "You must specify a color."
+          color_set: "You have chosen the color %color%."
+          no_adoption: "You are not adopted!"
       set:
         aliases:
           - set
@@ -283,7 +299,6 @@ commands:
           help: "&6/%command% %subcommand% <%param%> &7- Change the color of your heart in the marriage list."
           no_color: "You must specify a color."
           color_set: "You have chosen the color %color%."
-          color: "color"
           no_marriage: "You are not married!"
       list:
         aliases:
@@ -446,6 +461,14 @@ commands:
           help: "&6/%command% %subcommand% &7- List all siblinghoods."
           header: "All siblinghoods on this server: "
           siblings: "&6%index%: &b%player1% %emoji% &b%player2%"
+      emoji:
+        aliases:
+          - emoji
+        messages:
+          help: "&6/%command% %subcommand% <%param%> &7- Change the color of your emoji in the sibling list."
+          no_color: "You must specify a color."
+          color_set: "You have chosen the color %color%."
+          no_siblinghood: "You have no sibling."
       set:
         aliases:
           - set
