@@ -154,42 +154,6 @@ public class MarriagesTable {
         return 0;
     }
 
-    public static Timestamp getMarryDate(int id) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT player1ID, player2ID, date FROM " + NAME + " WHERE (player1ID = ? OR player2ID = ?) AND divorceDate IS NULL");
-            ps.setInt(1, id);
-            ps.setInt(2, id);
-
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                int player1 = rs.getInt("player1ID");
-                int player2 = rs.getInt("player2ID");
-                Timestamp date = rs.getTimestamp("date");
-                if (player1 == id || player2 == id) {
-                    return date;
-                }
-            }
-        } catch (SQLException ex) {
-            Error.execute(ex);
-        } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                Error.close(ex);
-            }
-        }
-        return null;
-    }
-
     public static List<Marriage> getMarriageList(int page, int pageSize) {
         List<Marriage> list = new ArrayList<>();
         Connection conn = null;
@@ -261,36 +225,6 @@ public class MarriagesTable {
             }
         }
         return 0;
-    }
-
-    public static String getEmojiColor(int id) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM `" + NAME + "` WHERE id = ?");
-            ps.setInt(1, id);
-
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                return rs.getString("heart");
-            }
-        } catch (SQLException ex) {
-            Error.execute(ex);
-        } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                Error.close(ex);
-            }
-        }
-        return null;
     }
 
     public static void saveMarriage(int player1ID, int player2ID, int priestID) {
@@ -426,6 +360,64 @@ public class MarriagesTable {
         try {
             conn = getSQLConnection();
             ps = conn.prepareStatement("SELECT COUNT(*) FROM " + NAME);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return 0;
+    }
+
+    public static int getPriestsMarriagesCount(int priestID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT COUNT(*) FROM " + NAME + " WHERE divorceDate IS NULL AND priest = ?");
+            ps.setInt(1, priestID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return 0;
+    }
+
+    public static int getPriestsTotalMarriagesCount(int priestID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT COUNT(*) FROM " + NAME + " WHERE priest = ?");
+            ps.setInt(1, priestID);
             rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1);

@@ -77,4 +77,13 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
 
         return uuid;
     }
+
+    public static String getPercentageAsString(int active, int total) {
+        if (total == 0) {
+            return "0.00";
+        }
+
+        double percentage = (active / (double) total) * 100;
+        return String.format("%.2f", percentage);
+    }
 }

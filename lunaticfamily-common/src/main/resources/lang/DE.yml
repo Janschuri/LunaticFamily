@@ -370,6 +370,15 @@ commands:
           no: "Nein, ich will nicht."
           complete: "Die Adoption wurde abgeschlossen!"
           cancel: "Die Adoption wurde abgebrochen."
+      stats:
+        aliases:
+          - stats
+        messages:
+          help: "&6/%command% %subcommand% &7- Zeige die Statistiken."
+          header: "Statistiken:"
+          marriages: "&6Ehen: &b%active%/%total% &7(%percentage%%)"
+          adoptions: "&6Adoptionen: &b%active%/%total% &7(%percentage%%)"
+          siblings: "&6Geschwister: &b%active%/%total% &7(%percentage%%)"
       help:
         aliases:
           - help

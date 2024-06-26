@@ -16,6 +16,7 @@ public class Priest extends Subcommand {
                 new PriestMarry(),
                 new PriestSibling(),
                 new PriestAdopt(),
+                new PriestStats(),
                 getHelpCommand()
         );
     }

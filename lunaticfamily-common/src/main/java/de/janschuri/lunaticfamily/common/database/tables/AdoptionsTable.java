@@ -145,36 +145,6 @@ public class AdoptionsTable {
         return childsList;
     }
 
-    public static String getEmojiColor(int id) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM `" + NAME + "` WHERE id = ?");
-            ps.setInt(1, id);
-
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                return rs.getString("heart");
-            }
-        } catch (SQLException ex) {
-            Error.execute(ex);
-        } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                Error.close(ex);
-            }
-        }
-        return null;
-    }
-
     public static void saveAdoption(int parentID, int childID) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -372,5 +342,69 @@ public class AdoptionsTable {
                 Error.close(ex);
             }
         }
+    }
+
+    public static int getPriestsAdoptionsCount(int priestID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT COUNT(*) FROM " + NAME + " WHERE unadoptDate IS NULL AND priest = ?");
+            ps.setInt(1, priestID);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+
+        return 0;
+    }
+
+    public static int getPriestsTotalAdoptionsCount(int priestID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT COUNT(*) FROM " + NAME + " WHERE priest = ?");
+            ps.setInt(1, priestID);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+
+        return 0;
     }
 }
