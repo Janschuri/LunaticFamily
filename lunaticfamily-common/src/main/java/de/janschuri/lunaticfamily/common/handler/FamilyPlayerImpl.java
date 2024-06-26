@@ -152,6 +152,10 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         return !getMarriages().isEmpty();
     }
 
+    public boolean hasChildren() {
+        return !getAdoptionsAsParent().isEmpty();
+    }
+
     public FamilyPlayerImpl getSibling() {
         if (getSiblinghoods().isEmpty()) {
             return null;

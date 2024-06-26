@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.handler;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
-import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
 
 import java.sql.Timestamp;
 
@@ -71,11 +70,19 @@ public class Adoption {
         AdoptionsTable.saveEmojiColor(this.id, color);
     }
 
-    public String getColoredEmoji() {
-        return "<" + getEmojiColor() + ">" + getDefaultEmoji();
+    public String getColoredParentEmoji() {
+        return "<" + getEmojiColor() + ">" + getDefaultParentEmoji();
     }
 
-    public static String getDefaultEmoji() {
+    public String getColoredChildEmoji() {
+        return "<" + getEmojiColor() + ">" + getDefaultChildEmoji();
+    }
+
+    public static String getDefaultParentEmoji() {
         return "⌂";
+    }
+
+    public static String getDefaultChildEmoji() {
+        return "☀";
     }
 }

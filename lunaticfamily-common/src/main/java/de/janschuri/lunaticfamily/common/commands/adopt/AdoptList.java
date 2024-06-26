@@ -91,7 +91,7 @@ public class AdoptList extends Subcommand {
                 hoverText = hoverText + " -> " + new FamilyPlayerImpl(e.getPriest()).getName();
             }
 
-            Component heart = Component.text(" " + Adoption.getDefaultEmoji() + " ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));
+            Component heart = Component.text(" " + Adoption.getDefaultParentEmoji() + " ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));
 
             TextReplacementConfig indexRpl = getTextReplacementConfig("%index%", String.valueOf(index));
             TextReplacementConfig player1Rpl = getTextReplacementConfig("%parent%", player1Fam.getName());

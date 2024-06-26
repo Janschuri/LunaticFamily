@@ -184,7 +184,7 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
             return colors.get(colorString);
         }
 
-        Logger.errorLog("Invalid color code or undefined color for default_heart_color in config.yml. Using default color #FFFFFF.");
+        Logger.errorLog("Invalid color code or undefined color for married in config.yml. Using default color #FFFFFF.");
         return colorString;
     }
 
@@ -199,7 +199,7 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
             return colors.get(colorString);
         }
 
-        Logger.errorLog("Invalid color code or undefined color for unmarried_heart_color in config.yml. Using default color #AAAAAA.");
+        Logger.errorLog("Invalid color code or undefined color for unmarried in config.yml. Using default color #AAAAAA.");
         return colorString;
     }
 
@@ -215,7 +215,7 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
             return colors.get(colorString);
         }
 
-        Logger.errorLog("Invalid color code or undefined color for default_heart_color in config.yml. Using default color #FFFFFF.");
+        Logger.errorLog("Invalid color code or undefined color for adopted in config.yml. Using default color #FFFFFF.");
         return colorString;
     }
 
@@ -230,7 +230,22 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
             return colors.get(colorString);
         }
 
-        Logger.errorLog("Invalid color code or undefined color for unmarried_heart_color in config.yml. Using default color #AAAAAA.");
+        Logger.errorLog("Invalid color code or undefined color for unadopted in config.yml. Using default color #AAAAAA.");
+        return colorString;
+    }
+
+    public String getUnparentEmojiColor() {
+        String colorString = getString("emoji_colors.unparent", "#AAAAAA");
+
+        if (Utils.isValidHexCode(colorString)) {
+            return colorString;
+        }
+
+        if (colors.containsKey(colorString)) {
+            return colors.get(colorString);
+        }
+
+        Logger.errorLog("Invalid color code or undefined color for unparent in config.yml. Using default color #AAAAAA.");
         return colorString;
     }
 
