@@ -304,7 +304,7 @@ public class AdoptionsTable {
 
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT COUNT(*) FROM " + NAME + " WHERE unadoptDate IS NULL");
+            ps = conn.prepareStatement("SELECT COUNT(DISTINCT childID) FROM " + NAME + " WHERE unadoptDate IS NULL");
             rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -335,7 +335,7 @@ public class AdoptionsTable {
 
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT COUNT(*) FROM " + NAME);
+            ps = conn.prepareStatement("SELECT COUNT(DISTINCT childID) FROM " + NAME);
             rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -432,7 +432,7 @@ public class AdoptionsTable {
 
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT COUNT(*) FROM " + NAME + " WHERE unadoptDate IS NULL AND priest = ?");
+            ps = conn.prepareStatement("SELECT COUNT(DISTINCT childID) FROM " + NAME + " WHERE unadoptDate IS NULL AND priest = ?");
             ps.setInt(1, priestID);
             rs = ps.executeQuery();
 
@@ -464,7 +464,7 @@ public class AdoptionsTable {
 
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT COUNT(*) FROM " + NAME + " WHERE priest = ?");
+            ps = conn.prepareStatement("SELECT COUNT(DISTINCT childID) FROM " + NAME + " WHERE priest = ?");
             ps.setInt(1, priestID);
             rs = ps.executeQuery();
 
