@@ -30,7 +30,8 @@ public class QuitListenerExecuter {
 
         LanguageConfigImpl languageConfig = LunaticFamily.getLanguageConfig();
         UUID uuid = player.getUniqueId();
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(uuid);
+        String name = player.getName();
+        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(uuid, name);
 
         if (LunaticFamily.marryRequests.containsValue(uuid) || LunaticFamily.marryRequests.containsKey(uuid) || LunaticFamily.marryPriests.containsKey(uuid)) {
 

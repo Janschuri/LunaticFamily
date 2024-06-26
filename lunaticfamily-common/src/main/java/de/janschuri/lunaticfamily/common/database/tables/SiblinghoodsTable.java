@@ -1,6 +1,7 @@
 package de.janschuri.lunaticfamily.common.database.tables;
 
 import de.janschuri.lunaticfamily.common.database.Database;
+import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticlib.common.database.Datatype;
 import de.janschuri.lunaticlib.common.database.Error;
@@ -76,6 +77,47 @@ public class SiblinghoodsTable {
             }
         }
         return null;
+    }
+
+    public static List<Siblinghood> getPlayersSiblinghoods(int playerID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Siblinghood> list = new ArrayList<>();
+
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (player1ID = ? OR player2ID = ?)");
+            ps.setInt(1, playerID);
+            ps.setInt(2, playerID);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                int player1 = rs.getInt("player1ID");
+                int player2 = rs.getInt("player2ID");
+                int priest = rs.getInt("priest");
+                String heart = rs.getString("emoji");
+                Timestamp date = rs.getTimestamp("date");
+                Timestamp unsiblingDate = rs.getTimestamp("unsiblingDate");
+
+                list.add(new Siblinghood(id, player1, player2, priest, heart, date, unsiblingDate));
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return list;
     }
 
     public static int getSibling(int id) {

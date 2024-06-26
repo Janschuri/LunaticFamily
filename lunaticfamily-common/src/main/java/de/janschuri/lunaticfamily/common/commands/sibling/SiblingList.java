@@ -86,8 +86,8 @@ public class SiblingList extends Subcommand {
 
 
             String hoverText = " (" + e.getDate() + ")";
-            if (player1Fam.getPriest() != null) {
-                hoverText = hoverText + " -> " + e.getPriest();
+            if (e.getPriest() > 0) {
+                hoverText = hoverText + " -> " + new FamilyPlayerImpl(e.getPriest()).getName();
             }
 
             Component heart = Component.text(" " + Siblinghood.getDefaultEmoji() + " ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));

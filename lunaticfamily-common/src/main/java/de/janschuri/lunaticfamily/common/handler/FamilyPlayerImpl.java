@@ -22,12 +22,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     private final UUID uuid;
     private String name;
     private String skinURL;
-    private final int partner;
-    private final int priest;
-    private final int sibling;
 
-    private final List<Integer> parents;
-    private final List<Integer> children;
     private String gender;
     private String background;
     private final PlayerSender player;
@@ -36,11 +31,16 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
 
     public FamilyPlayerImpl(int id) {
-        this(Objects.requireNonNull(PlayerDataTable.getUUID(id)));
+        this(Objects.requireNonNull(PlayerDataTable.getUUID(id)), Objects.requireNonNull(PlayerDataTable.getName(id)));
     }
 
     public FamilyPlayerImpl(UUID uuid) {
+        this(uuid, null);
+    }
+
+    public FamilyPlayerImpl(UUID uuid, String name) {
         this.uuid = uuid;
+        this.name = name;
         player = LunaticLib.getPlatform().getPlayerSender(uuid);
 
         if (PlayerDataTable.getID(uuid) < 1) {
@@ -48,18 +48,16 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         }
         id = PlayerDataTable.getID(uuid);
 
-        partner = MarriagesTable.getPartner(id);
-        priest = MarriagesTable.getPriest(id);
-        sibling = SiblinghoodsTable.getSibling(id);
-        parents = AdoptionsTable.getParents(id);
-        children = AdoptionsTable.getChildren(id);
-        name = player.getName();
+        if (player.getName() != null) {
+            this.name = player.getName();
+        }
 
         if (name == null) {
-            name = PlayerDataTable.getName(id);
+            this.name = PlayerDataTable.getName(id);
         }
 
         skinURL = player.getSkinURL();
+
         if (skinURL == null) {
             skinURL = PlayerDataTable.getSkinURL(id);
         }
@@ -138,66 +136,50 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         return skinURL;
     }
 
-    public String getMarryEmojiColor() {
-
-        if (!isMarried()) {
-            return LunaticFamily.getConfig().getUnmarriedEmojiColor();
-        }
-
-        Marriage marriage = getMarriage();
-        String color = marriage.getEmojiColor();
-
-        if (color == null) {
-            color = LunaticFamily.getConfig().getUnmarriedEmojiColor();
-        }
-        return color;
-    }
-
     public FamilyPlayerImpl getPartner() {
-        if (this.partner > 0) {
-            return new FamilyPlayerImpl(this.partner);
-        } else {
+        if (getMarriages().isEmpty()) {
             return null;
         }
+
+        int partnerID = getMarriages().get(0).getPartnerID(id);
+        return new FamilyPlayerImpl(partnerID);
     }
 
     public boolean isMarried() {
-        return this.partner > 0;
-    }
-
-    public FamilyPlayerImpl getPriest() {
-        if (this.priest > 0) {
-            return new FamilyPlayerImpl(this.priest);
-        } else {
-            return null;
-        }
+        return !getMarriages().isEmpty();
     }
 
     public FamilyPlayerImpl getSibling() {
-        if (this.sibling > 0) {
-            return new FamilyPlayerImpl(this.sibling);
-        } else {
+        if (getSiblinghoods().isEmpty()) {
             return null;
         }
+
+        int siblingID = getSiblinghoods().get(0).getSiblingID(id);
+        return new FamilyPlayerImpl(siblingID);
     }
 
     public boolean hasSibling() {
-        return this.sibling > 0;
+        return !getSiblinghoods().isEmpty();
     }
 
     public boolean isAdopted() {
-        return !parents.isEmpty();
+        return !getAdoptionsAsChild().isEmpty();
     }
 
     public boolean isChildOf(int parentID) {
-        return parents.contains(parentID);
+        for (Adoption adoption : getAdoptionsAsChild()) {
+            if (adoption.getParentID() == parentID) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<FamilyPlayer> getParents() {
         List<FamilyPlayer> list = new ArrayList<>();
 
-        for (int parent : this.parents) {
-            list.add(new FamilyPlayerImpl(parent));
+        for (Adoption adoption : getAdoptionsAsChild()) {
+            list.add(new FamilyPlayerImpl(adoption.getParentID()));
         }
 
         return list;
@@ -206,8 +188,8 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     public List<FamilyPlayer> getChildren() {
         List<FamilyPlayer> list = new ArrayList<>();
 
-        for (int child : this.children) {
-            list.add(new FamilyPlayerImpl(child));
+        for (Adoption adoption : getAdoptionsAsParent()) {
+            list.add(new FamilyPlayerImpl(adoption.getChildID()));
         }
 
         return list;
@@ -232,7 +214,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public Integer getChildrenAmount() {
-        return children.size();
+        return getAdoptionsAsParent().size();
     }
 
 
@@ -658,8 +640,20 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         return true;
     }
 
-    public Marriage getMarriage() {
-        return MarriagesTable.getPlayersMarriages(this.id).get(0);
+    public List<Marriage> getMarriages() {
+        return MarriagesTable.getPlayersMarriages(this.id);
+    }
+
+    public List<Siblinghood> getSiblinghoods() {
+        return SiblinghoodsTable.getPlayersSiblinghoods(this.id);
+    }
+
+    public List<Adoption> getAdoptionsAsParent() {
+        return AdoptionsTable.getPlayerAsParentAdoptions(this.id);
+    }
+
+    public List<Adoption> getAdoptionsAsChild() {
+        return AdoptionsTable.getPlayerAsChildAdoptions(this.id);
     }
 }
 

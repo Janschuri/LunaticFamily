@@ -114,44 +114,7 @@ public class MarriagesTable {
                 Error.close(ex);
             }
         }
-        return null;
-    }
-
-    public static int getPartner(int id) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT player1ID, player2ID FROM " + NAME + " WHERE (player1ID = ? OR player2iD = ?) AND divorceDate IS NULL");
-            ps.setInt(1, id);
-            ps.setInt(2, id);
-
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                int player1 = rs.getInt("player1ID");
-                int player2 = rs.getInt("player2ID");
-                if (player1 == id) {
-                    return player2;
-                } else if (player2 == id) {
-                    return player1;
-                }
-            }
-        } catch (SQLException ex) {
-            Error.execute(ex);
-        } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                Error.close(ex);
-            }
-        }
-        return 0;
+        return list;
     }
 
     public static List<Marriage> getMarriageList(int page, int pageSize) {
@@ -190,41 +153,6 @@ public class MarriagesTable {
             }
         }
         return list;
-    }
-
-    public static int getPriest(int playerID) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT player1ID, player2ID, priest FROM " + NAME + " WHERE player1ID = ? OR player2ID = ?");
-            ps.setInt(1, playerID);
-            ps.setInt(2, playerID);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                int player1 = rs.getInt("player1ID");
-                int player2 = rs.getInt("player2ID");
-                int priest = rs.getInt("priest");
-                if (player1 == playerID || player2 == playerID) {
-                    return priest;
-                }
-            }
-        } catch (SQLException ex) {
-            Error.execute(ex);
-        } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                Error.close(ex);
-            }
-        }
-        return 0;
     }
 
     public static void saveMarriage(int player1ID, int player2ID, int priestID) {

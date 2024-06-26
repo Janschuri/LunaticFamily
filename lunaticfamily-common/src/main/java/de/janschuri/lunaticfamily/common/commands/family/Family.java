@@ -27,6 +27,7 @@ public class Family extends Subcommand {
                 new FamilyReload(),
                 new FamilyTree(),
                 new FamilyDelete(),
+                new FamilyCreate(),
                 new Adopt(),
                 new Gender(),
                 new Sibling(),

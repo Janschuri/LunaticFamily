@@ -39,10 +39,6 @@ public class Siblinghood {
         this.unsiblingDate = unsiblingDate;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public int getPlayer1ID() {
         return player1ID;
     }
@@ -81,5 +77,17 @@ public class Siblinghood {
 
     public static String getDefaultEmoji() {
         return "⭐";
+    }
+
+    public int getSiblingID(int playerID) {
+        if (playerID == player1ID) {
+            return player2ID;
+        }
+
+        if (playerID == player2ID) {
+            return player1ID;
+        }
+
+        return -1;
     }
 }

@@ -102,7 +102,7 @@ public class MarryHeart extends Subcommand {
         Component msg = getMessage(colorSetMK).replaceText(replacementConfig);
 
         player.sendMessage(msg);
-        playerFam.getMarriage().setEmojiColor(hexColor);
+        playerFam.getMarriages().get(0).setEmojiColor(hexColor);
 
         return true;
     }

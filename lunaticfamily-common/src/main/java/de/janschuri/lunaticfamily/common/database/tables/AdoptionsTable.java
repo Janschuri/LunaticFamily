@@ -2,6 +2,7 @@ package de.janschuri.lunaticfamily.common.database.tables;
 
 import de.janschuri.lunaticfamily.common.database.Database;
 import de.janschuri.lunaticfamily.common.handler.Adoption;
+import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticlib.common.database.Datatype;
 import de.janschuri.lunaticlib.common.database.Error;
 import de.janschuri.lunaticlib.common.database.Table;
@@ -67,6 +68,86 @@ public class AdoptionsTable {
             }
         }
         return null;
+    }
+
+    public static List<Adoption> getPlayerAsParentAdoptions(int playerID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Adoption> list = new ArrayList<>();
+
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (parentID = ?)");
+            ps.setInt(1, playerID);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                int parent = rs.getInt("parentID");
+                int child = rs.getInt("childID");
+                int priest = rs.getInt("priest");
+                String emoji = rs.getString("emoji");
+                Timestamp date = rs.getTimestamp("date");
+                Timestamp unadoptDate = rs.getTimestamp("unadoptDate");
+
+                list.add(new Adoption(id, parent, child, priest, emoji, date, unadoptDate));
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return list;
+    }
+
+    public static List<Adoption> getPlayerAsChildAdoptions(int playerID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Adoption> list = new ArrayList<>();
+
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (childID = ?)");
+            ps.setInt(1, playerID);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                int parent = rs.getInt("parentID");
+                int child = rs.getInt("childID");
+                int priest = rs.getInt("priest");
+                String emoji = rs.getString("emoji");
+                Timestamp date = rs.getTimestamp("date");
+                Timestamp unadoptDate = rs.getTimestamp("unadoptDate");
+
+                list.add(new Adoption(id, parent, child, priest, emoji, date, unadoptDate));
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return list;
     }
 
     public static Table getTable() {

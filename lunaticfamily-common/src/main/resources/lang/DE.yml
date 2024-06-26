@@ -140,6 +140,14 @@ commands:
           confirm: "Möchtest du %uuid% wirklich aus der Datenbank löschen?"
           deleted: "Du hast %uuid% aus der Datenbank gelöscht."
           cancel: "Du hast das Löschen von %uuid% abgebrochen."
+      create:
+        aliases:
+          - create
+        messages:
+          help: "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Erstelle einen Spieler in der Datenbank."
+          created: "Du hast %name% mit der UUID %uuid% in der Datenbank erstellt."
+          confirm: "Möchtest du %name% mit der UUID %uuid% wirklich in der Datenbank erstellen?"
+          cancel: "Du hast das Erstellen von %name% mit der UUID %uuid% abgebrochen."
       list:
         aliases:
           - list

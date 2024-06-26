@@ -22,12 +22,16 @@ public class Placeholder {
         FamilyPlayerImpl player = new FamilyPlayerImpl(uuid);
 
         if (placeholder.equalsIgnoreCase("status_heart")) {
-            return "<" + player.getMarryEmojiColor() + ">" + Marriage.getDefaultEmoji();
+            if (player.isMarried()) {
+                return player.getMarriages().get(0).getColoredEmoji();
+            }
+
+            return "<" + LunaticFamily.getConfig().getUnadoptedEmojiColor() + ">" + Marriage.getDefaultEmoji();
         }
 
         if (placeholder.equalsIgnoreCase("heart")) {
             if (player.isMarried()) {
-                return "<" + player.getMarryEmojiColor() + ">" + Marriage.getDefaultEmoji();
+                return player.getMarriages().get(0).getColoredEmoji();
             }
 
             return "";

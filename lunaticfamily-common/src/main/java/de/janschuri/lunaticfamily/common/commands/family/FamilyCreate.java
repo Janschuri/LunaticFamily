@@ -1,7 +1,9 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
+import de.janschuri.lunaticfamily.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -9,23 +11,24 @@ import de.janschuri.lunaticlib.Sender;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
+import java.util.UUID;
 
-public class FamilyDelete extends Subcommand {
+public class FamilyCreate extends Subcommand {
 
     private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
     private final CommandMessageKey confirmMK = new CommandMessageKey(this,"confirm");
-    private final CommandMessageKey deletedMK = new CommandMessageKey(this,"deleted");
+    private final CommandMessageKey createdMK = new CommandMessageKey(this,"created");
     private final CommandMessageKey cancelMK = new CommandMessageKey(this, "cancel");
 
 
     @Override
     public String getPermission() {
-        return "lunaticfamily.admin.delete";
+        return "lunaticfamily.admin.create";
     }
 
     @Override
     public String getName() {
-        return "delete";
+        return "create";
     }
 
     @Override
@@ -40,50 +43,63 @@ public class FamilyDelete extends Subcommand {
             return true;
         }
 
-        if (args.length < 1) {
+        if (args.length < 2) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("FamilyDeleteSubcommand: Wrong usage");
+            Logger.debugLog("FamilyCreate: Wrong usage");
             return true;
         }
 
         boolean confirm = false;
         boolean cancel = false;
 
-        if (args.length > 1) {
-            if (args[1].equalsIgnoreCase("confirm")) {
+        if (args.length > 2) {
+            if (args[2].equalsIgnoreCase("confirm")) {
                 confirm = true;
             }
-            if (args[1].equalsIgnoreCase("cancel")) {
+            if (args[2].equalsIgnoreCase("cancel")) {
                 cancel = true;
             }
         }
 
-        String playerArg = args[0];
+        String playerName = args[0];
 
-        if (!Utils.isUUID(playerArg)) {
+        String playerUUIDArg = args[1];
+
+        if (!Utils.isUUID(playerUUIDArg)) {
             sender.sendMessage(getMessage(NO_UUID_MK)
-                    .replaceText(getTextReplacementConfig("%input%", playerArg)));
+                    .replaceText(getTextReplacementConfig("%input%", playerUUIDArg)));
             return true;
         }
 
+        UUID playerUUID = UUID.fromString(playerUUIDArg);
+
         if (confirm) {
-            PlayerDataTable.deletePlayerData(playerArg);
-            sender.sendMessage(getMessage(deletedMK).replaceText(getTextReplacementConfig("%uuid%", playerArg)));
+            new FamilyPlayerImpl(playerUUID, playerName);
+            sender.sendMessage(getMessage(createdMK)
+                    .replaceText(getTextReplacementConfig("%uuid%", playerUUIDArg))
+                    .replaceText(getTextReplacementConfig("%name%", playerName))
+            );
             return true;
         }
 
         if (cancel) {
-            sender.sendMessage(getMessage(cancelMK).replaceText(getTextReplacementConfig("%uuid%", playerArg)));
+            sender.sendMessage(getMessage(cancelMK)
+                    .replaceText(getTextReplacementConfig("%uuid%", playerUUIDArg))
+                    .replaceText(getTextReplacementConfig("%name%", playerName))
+            );
             return true;
         }
 
 
         sender.sendMessage(Utils.getClickableDecisionMessage(
-                getMessage(confirmMK).replaceText(getTextReplacementConfig("%uuid%", playerArg)),
+                getMessage(confirmMK)
+                        .replaceText(getTextReplacementConfig("%uuid%", playerUUIDArg))
+                        .replaceText(getTextReplacementConfig("%name%", playerName))
+                ,
                 getMessage(CONFIRM_MK, false),
-                "/family delete " + playerArg + " confirm",
+                "/family create " + playerName + " " + playerUUIDArg + " confirm",
                 getMessage(CANCEL_MK, false),
-                "/family delete " + playerArg + " cancel"));
+                "/family create " + playerName + " " + playerUUIDArg + " cancel"));
 
 
         return true;
@@ -92,6 +108,7 @@ public class FamilyDelete extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
+            getMessage(PLAYER_NAME_MK, false),
             Component.text("UUID")
         );
     }

@@ -38,10 +38,6 @@ public class Adoption {
         this.unadoptDate = unadoptDate;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public int getParentID() {
         return parentID;
     }

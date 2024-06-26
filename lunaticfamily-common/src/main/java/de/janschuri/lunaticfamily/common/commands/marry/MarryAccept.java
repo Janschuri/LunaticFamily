@@ -3,6 +3,7 @@ package de.janschuri.lunaticfamily.common.commands.marry;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.commands.priest.PriestMarry;
+import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
@@ -76,10 +77,12 @@ public class MarryAccept extends Subcommand {
 
     private boolean proceedRequest(PlayerSender player) {
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+        int playerID = PlayerDataTable.getID(playerUUID);
+        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerID);
 
         UUID partnerUUID = LunaticFamily.marryRequests.get(playerUUID);
-        FamilyPlayerImpl partnerFam = new FamilyPlayerImpl(partnerUUID);
+        int partnerID = PlayerDataTable.getID(partnerUUID);
+        FamilyPlayerImpl partnerFam = new FamilyPlayerImpl(partnerID);
         PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
 
         if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {

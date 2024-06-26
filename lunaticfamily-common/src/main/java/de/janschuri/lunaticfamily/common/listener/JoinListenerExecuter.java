@@ -33,7 +33,7 @@ public class JoinListenerExecuter {
 
 
         LanguageConfigImpl languageConfig = LunaticFamily.getLanguageConfig();
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(sender.getUniqueId());
+        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(sender.getUniqueId(), sender.getName());
 
         Runnable runnable = () -> {
             playerFam.updateFamilyTree();

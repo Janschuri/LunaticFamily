@@ -86,8 +86,8 @@ public class MarryList extends Subcommand {
 
 
             String hoverText = " (" + e.getDate() + ")";
-            if (player1Fam.getPriest() != null) {
-                hoverText = hoverText + " -> " + player1Fam.getPriest().getName();
+            if (e.getPriest() < 1) {
+                hoverText = hoverText + " -> " + new FamilyPlayerImpl(e.getPriest()).getName();
             }
 
             Component heart = Component.text(" " + Marriage.getDefaultEmoji() + " ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));

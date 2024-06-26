@@ -14,48 +14,9 @@ public interface FamilyPlayer {
 
     String getSkinURL();
 
-    FamilyPlayer getPartner();
-
-    boolean isMarried();
-
-    FamilyPlayer getPriest();
-
-    FamilyPlayer getSibling();
-
-    boolean hasSibling();
-
-    boolean isAdopted();
-
-    boolean isChildOf(int parentID);
-
-    List<FamilyPlayer> getParents();
-
-    List<FamilyPlayer> getChildren();
-
     String getGender();
 
-    void setGender(String gender);
-
     String getBackground();
-
-    void setBackground(String background);
-
-    Integer getChildrenAmount();
-
-
-    void marry(int partnerID);
-
-    void marry(int partnerID, int priest);
-
-    void divorce();
-
-    void adopt(int childID);
-
-    void unadopt(int childID);
-
-    void addSibling(int siblingID);
-
-    void removeSibling();
 
     boolean isFamilyMember(int id);
 
