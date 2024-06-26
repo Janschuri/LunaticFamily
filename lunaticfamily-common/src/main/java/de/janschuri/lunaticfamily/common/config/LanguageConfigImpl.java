@@ -61,26 +61,6 @@ public class LanguageConfigImpl extends LunaticLanguageConfigImpl implements Lan
         }
         return list;
     }
-    public String getColorKeyFromLang(String key) {
-        for (String colorLang : getColorLangs()) {
-            if (colorLang.equalsIgnoreCase(key)) {
-                BiMap<String, String> inverseColorsTranslations = HashBiMap.create(colorsTranslations).inverse();
-                return inverseColorsTranslations.get(colorLang);
-            }
-        }
-        return "#FFFFFF";
-    }
-
-    public boolean isColorLang(String key) {
-
-        for (String colorLang : getColorLangs()) {
-            if (colorLang.equalsIgnoreCase(key)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     public String getRelation(String relation, String gender) {
         String relationKey = relation
@@ -112,16 +92,8 @@ public class LanguageConfigImpl extends LunaticLanguageConfigImpl implements Lan
         }
     }
 
-    public Map<String, String> getGenderLang() {
-        return genderLang;
-    }
-
     public List<String> getGenders() {
         return genders;
-    }
-
-    public Map<String, String> getColorsTranslations() {
-        return colorsTranslations;
     }
 
     public Map<String, Map<String, String>> getRelationships() {

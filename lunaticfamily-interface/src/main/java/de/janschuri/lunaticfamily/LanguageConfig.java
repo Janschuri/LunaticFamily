@@ -13,15 +13,9 @@ public interface LanguageConfig extends LunaticLanguageConfig {
 
     List<String> getColorLangs();
 
-    String getColorKeyFromLang(String key);
-
-    boolean isColorLang(String key);
-
     String getRelation(String relation, String gender);
 
     List<String> getGenders();
-
-    Map<String, String> getColorsTranslations();
 
     Map<String, Map<String, String>> getRelationships();
 }

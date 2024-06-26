@@ -2,6 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.handler.Adoption;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -9,12 +10,12 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.TextColor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class AdoptEmoji extends Subcommand {
 
@@ -22,6 +23,7 @@ public class AdoptEmoji extends Subcommand {
     private final CommandMessageKey noColorMK = new CommandMessageKey(this,"no_color");
     private final CommandMessageKey colorSetMK = new CommandMessageKey(this,"color_set");
     private final CommandMessageKey noAdoptionMK = new CommandMessageKey(this,"no_adoption");
+    private final CommandMessageKey headerMK = new CommandMessageKey(this,"header");
 
 
     @Override
@@ -61,12 +63,33 @@ public class AdoptEmoji extends Subcommand {
         }
 
         if (args.length < 1) {
-            sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("AdoptEmoji: Wrong usage");
+            ComponentBuilder builder = Component.text();
+            builder.append(getMessage(headerMK));
+            builder.append(Component.newline());
+
+            for (String color : getParams().get(0).keySet()) {
+                if (color.startsWith("#")) {
+                    continue;
+                }
+                String colorLang = LunaticFamily.getLanguageConfig().getColorLang(color);
+
+                ComponentBuilder component = Component.text()
+                        .append(Component.text(colorLang)
+                                .color(TextColor.fromHexString(LunaticFamily.getConfig().getColor(color)))
+                                .clickEvent(ClickEvent.runCommand("/family adopt emoji " + color))
+                        );
+
+                builder.append(component);
+                builder.append(Component.space());
+            }
+
+            player.sendMessage(builder.build());
             return true;
         }
 
-        if (!LunaticFamily.getLanguageConfig().isColorLang(args[0]) && !Utils.isValidHexCode(args[0])) {
+        String color = args[0];
+
+        if (!LunaticFamily.getConfig().getColors().containsKey(color) && !Utils.isValidHexCode(args[0])) {
             sender.sendMessage(getMessage(noColorMK));
             return true;
         }
@@ -75,15 +98,14 @@ public class AdoptEmoji extends Subcommand {
 
         String hexColor = "";
 
-        String color = args[0];
+
 
         String colorMsg = "";
 
-        if (LunaticFamily.getLanguageConfig().isColorLang(args[0])) {
-            String colorKey = LunaticFamily.getLanguageConfig().getColorKeyFromLang(color);
-            if (player.hasPermission(getPermission() + ".color." + colorKey)){
-                hexColor = LunaticFamily.getConfig().getColor(colorKey);
-                colorMsg = LunaticFamily.getLanguageConfig().getColorLang(colorKey);
+        if (LunaticFamily.getConfig().getColors().containsKey(color)) {
+            if (player.hasPermission(getPermission() + ".color." + color)){
+                hexColor = LunaticFamily.getConfig().getColor(color);
+                colorMsg = LunaticFamily.getLanguageConfig().getColorLang(color);
             } else {
                 sender.sendMessage(getMessage(NO_PERMISSION_MK));
                 return true;
@@ -98,9 +120,16 @@ public class AdoptEmoji extends Subcommand {
             }
         }
 
+        Component colorComponent = Component.text().content(colorMsg).color(TextColor.fromHexString(hexColor)).build();
+
 
         playerFam.getAdoptionsAsChild().get(0).setEmojiColor(hexColor);
-        TextReplacementConfig replacementConfig = TextReplacementConfig.builder().match("%color%").replacement(colorMsg).build();
+
+        for (Adoption adoption : playerFam.getAdoptionsAsChild()) {
+            adoption.setEmojiColor(hexColor);
+        }
+
+        TextReplacementConfig replacementConfig = TextReplacementConfig.builder().match("%color%").replacement(colorComponent).build();
 
         Component msg = getMessage(colorSetMK).replaceText(replacementConfig);
 
@@ -120,15 +149,17 @@ public class AdoptEmoji extends Subcommand {
     @Override
     public List<Map<String, String>> getParams() {
         List<Map<String, String>> list = new ArrayList<>();
+        Map<String, String> map = new HashMap<>();
 
         for (String color : LunaticFamily.getConfig().getColors().keySet()) {
-            list.add(Map.of(
-                    getPermission()+".color."+color, LunaticFamily.getLanguageConfig().getColorLang(color)
-            ));
+            map.put(
+                    color , getPermission()+".color."+color
+            );
         }
 
-        list.add(Map.of(getPermission()+".hex", "#RRGGBB"));
+        map.put("#RRGGBB",getPermission()+".hex");
 
+        list.add(map);
         return list;
     }
 }

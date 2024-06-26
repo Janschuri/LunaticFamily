@@ -407,7 +407,7 @@ public class AdoptionsTable {
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("UPDATE `" + NAME + "` SET heart = ? WHERE id = ?");
+            ps = conn.prepareStatement("UPDATE `" + NAME + "` SET emoji = ? WHERE id = ?");
             ps.setString(1, hexColor);
             ps.setInt(2, id);
             ps.executeUpdate();

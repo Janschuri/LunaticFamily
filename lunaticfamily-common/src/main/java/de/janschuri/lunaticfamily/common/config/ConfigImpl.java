@@ -165,6 +165,11 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
     }
 
     public String getColor(String key) {
+        if (!colors.containsKey(key)) {
+            Logger.errorLog("No color found for key " + key);
+            return "#FFFFFF";
+        }
+
         return colors.get(key);
     }
 

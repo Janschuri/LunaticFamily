@@ -109,6 +109,7 @@ commands:
           no_color: "You must specify a color."
           color_set: "You have chosen the color %color%."
           no_adoption: "You are not adopted!"
+          header: "Available colors:"
       set:
         aliases:
           - set
@@ -292,7 +293,7 @@ commands:
           partner_full_inv: "Your partner has no space in their inventory."
           sent: "You have gifted something to your partner."
           got: "Your partner has gifted you something."
-      heart:
+      emoji:
         aliases:
           - heart
         messages:
@@ -300,6 +301,7 @@ commands:
           no_color: "You must specify a color."
           color_set: "You have chosen the color %color%."
           no_marriage: "You are not married!"
+          header: "Available colors:"
       list:
         aliases:
           - list
@@ -469,6 +471,7 @@ commands:
           no_color: "You must specify a color."
           color_set: "You have chosen the color %color%."
           no_siblinghood: "You have no sibling."
+          header: "Available colors:"
       set:
         aliases:
           - set

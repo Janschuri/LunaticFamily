@@ -22,6 +22,7 @@ public class Sibling extends Subcommand {
                 new SiblingUnset(),
                 new SiblingPriest(),
                 new SiblingList(),
+                new SiblingEmoji(),
                 getHelpCommand()
         );
     }

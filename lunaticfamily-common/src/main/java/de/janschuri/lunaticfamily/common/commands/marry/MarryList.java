@@ -86,7 +86,7 @@ public class MarryList extends Subcommand {
 
 
             String hoverText = " (" + e.getDate() + ")";
-            if (e.getPriest() < 1) {
+            if (e.getPriest() > 0) {
                 hoverText = hoverText + " -> " + new FamilyPlayerImpl(e.getPriest()).getName();
             }
 

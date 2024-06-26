@@ -31,7 +31,10 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
 
     public FamilyPlayerImpl(int id) {
-        this(Objects.requireNonNull(PlayerDataTable.getUUID(id)), Objects.requireNonNull(PlayerDataTable.getName(id)));
+        this(
+                Objects.requireNonNull(PlayerDataTable.getUUID(id)),
+                Objects.requireNonNull(PlayerDataTable.getName(id))
+        );
     }
 
     public FamilyPlayerImpl(UUID uuid) {

@@ -42,6 +42,8 @@ public class Adopt extends Subcommand {
                 new AdoptSet(),
                 new AdoptUnset(),
                 new AdoptPriest(),
+                new AdoptEmoji(),
+                new AdoptList(),
                 getHelpCommand()
         );
     }

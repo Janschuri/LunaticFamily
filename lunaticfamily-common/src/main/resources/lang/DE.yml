@@ -109,6 +109,7 @@ commands:
           no_color: "Du musst eine Farbe angeben."
           color_set: "Du hast die Farbe %color% gewählt."
           no_marriage: "Du bist nicht adoptiert."
+          header: "Verfügbare Farben: "
       set:
         aliases:
           - set
@@ -300,6 +301,7 @@ commands:
           no_color: "Du musst eine Farbe angeben."
           color_set: "Du hast die Farbe %color% gewählt."
           no_marriage: "Du bist nicht verheiratet."
+          header: "Verfügbare Farben: "
       list:
         aliases:
           - list
@@ -479,6 +481,7 @@ commands:
           no_color: "Du musst eine Farbe angeben."
           color_set: "Du hast die Farbe %color% gewählt."
           no_siblinghood: "Du hast kein Geschwisterkind."
+          header: "Verfügbare Farben: "
       list:
         aliases:
           - list

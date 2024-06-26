@@ -7,6 +7,7 @@ import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
 import de.janschuri.lunaticfamily.common.futurerequests.GetPlaceholderRequest;
 import de.janschuri.lunaticlib.common.utils.Mode;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -44,11 +45,13 @@ public class Placeholder {
             }
 
 
-            Marriage marriage = player.getMarriages().get(0);
+            List<Marriage> marriages = player.getMarriages();
 
-            if (marriage == null) {
-                return null;
+            if (marriages.isEmpty()) {
+                return "";
             }
+
+            Marriage marriage = marriages.get(0);
 
             if (Objects.equals(type, "partner")) {
                 return player.getPartner().getName();
