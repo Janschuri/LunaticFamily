@@ -32,7 +32,7 @@ public class GenderSet extends Subcommand {
 
     @Override
     public String getPermission() {
-        return "lunaticfamily.admin.gender";
+        return "lunaticfamily.gender";
     }
 
     @Override
