@@ -155,12 +155,15 @@ public class SiblingPropose extends Subcommand {
         }
 
         sibling.sendMessage(Utils.getClickableDecisionMessage(
-                getMessage(requestMK)
+                getPrefix(),
+                getMessage(requestMK, false)
                         .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())),
                 getMessage(ACCEPT_MK, false),
                 "/family sibling accept",
                 getMessage(DENY_MK, false),
-                "/family sibling deny"));
+                "/family sibling deny"),
+                LunaticFamily.getConfig().decisionAsInvGUI()
+        );
 
         LunaticFamily.siblingRequests.put(siblingUUID, playerUUID);
 

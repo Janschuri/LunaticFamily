@@ -241,10 +241,13 @@ public class PriestSibling extends Subcommand {
 
         player1.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
+                Component.empty(),
                 getMessage(yesMK),
                 "/family sibling accept",
                 getMessage(noMK),
-                "/family sibling deny"));
+                "/family sibling deny"),
+                LunaticFamily.getConfig().decisionAsInvGUI()
+        );
 
         LunaticFamily.siblingPriestRequests.put(player1UUID, player2UUID);
         LunaticFamily.siblingPriests.put(player1UUID, playerUUID);

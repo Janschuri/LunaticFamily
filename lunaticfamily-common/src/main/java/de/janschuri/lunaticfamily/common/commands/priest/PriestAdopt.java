@@ -228,10 +228,13 @@ public class PriestAdopt extends Subcommand {
 
         player1.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
+                Component.empty(),
                 getMessage(yesMK),
                 "/family adopt accept",
                 getMessage(noMK),
-                "/family adopt deny"));
+                "/family adopt deny"),
+                LunaticFamily.getConfig().decisionAsInvGUI()
+        );
 
         LunaticFamily.adoptPriestRequests.put(player1UUID, player2UUID);
         LunaticFamily.adoptPriests.put(player1UUID, playerUUID);

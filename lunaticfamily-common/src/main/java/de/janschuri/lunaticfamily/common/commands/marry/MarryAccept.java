@@ -11,6 +11,7 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import net.kyori.adventure.text.Component;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -158,10 +159,13 @@ public class MarryAccept extends Subcommand {
 
         partner.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
+                Component.empty(),
                 getMessage(priestYesMK, false),
                 "/family marry accept",
                 getMessage(priestNoMK, false),
-                "/family marry deny"));
+                "/family marry deny"),
+                LunaticFamily.getConfig().decisionAsInvGUI()
+        );
 
         return true;
     }

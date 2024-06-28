@@ -42,14 +42,6 @@ public final class LunaticFamily {
     private static LanguageConfigImpl languageConfig;
     private static ConfigImpl config;
 
-    static final String[] commands = {
-        "family",
-        "marry",
-        "gender",
-        "adopt",
-        "sibling",
-    };
-
     private static final FutureRequest[] futureRequests = {
         new UpdateFamilyTreeRequest(),
         new SpawnParticlesCloudRequest(),

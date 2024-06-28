@@ -49,6 +49,11 @@ public class AdoptSet extends Subcommand {
 
     @Override
     public boolean execute(Sender sender, String[] args) {
+        if (!(sender instanceof PlayerSender player)) {
+            sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
+            return true;
+        }
+
         if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
             return true;
@@ -139,13 +144,16 @@ public class AdoptSet extends Subcommand {
         }
 
         if (childFam.hasSibling() && !confirm) {
-            sender.sendMessage(Utils.getClickableDecisionMessage(
-                    getMessage(hasSiblingMK)
+            player.sendMessage(Utils.getClickableDecisionMessage(
+                    getPrefix(),
+                    getMessage(hasSiblingMK, false)
                             .replaceText(getTextReplacementConfig("%player%", childFam.getName())),
                     getMessage(CONFIRM_MK, false),
                     "/family adopt set " + firstParentFam.getName() + " " + childFam.getName() + " force confirm",
                     getMessage(CANCEL_MK, false),
-                    "/family adopt set " + firstParentFam.getName() + " " + child.getName() + "force cancel"));
+                    "/family adopt set " + firstParentFam.getName() + " " + child.getName() + "force cancel"),
+                    LunaticFamily.getConfig().decisionAsInvGUI()
+            );
             return true;
         }
 

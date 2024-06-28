@@ -18,12 +18,11 @@ servers: # List of servers that are connected to the proxy via LunaticFamily
   - "server2"
 
 default_gender: "fe"
-use_vault: false
+use_vault: true
+decision_as_inv_gui: false
 command_withdraws:
   marry_proposing_player: 10.0
   marry_proposed_player: 10.0
-  marry_priest: 10.0
-  marry_priest_player: 10.0
   marry_divorce_leaving_player: 10.0
   marry_divorce_left_player: 10.0
   adopt_parent: 10.0
@@ -36,6 +35,12 @@ command_withdraws:
   sibling_proposed_player: 10.0
   sibling_unsibling_leaving_player: 10.0
   sibling_unsibling_left_player: 10.0
+  priest_marry: 10.0
+  priest_marry_player: 10.0
+  priest_adopt: 10.0
+  priest_adopt_player: 10.0
+  priest_sibling: 10.0
+  priest_sibling_player: 10.0
 default_background: "moss_block"
 backgrounds:
   - "moss_block"
@@ -54,32 +59,52 @@ distances:
   marry_priest_range: 3
   adopt_propose_range: 3
   sibling_propose_range: 3
+  sibling_priest_range: 3
+  adopt_priest_range: 3
 success_commands:
   #avaible placeholders: %player1%, %player2%
   marry: []
+
   #avaible placeholders: %player1%, %player2%, %priest%
   marry_priest: []
+
   #avaible placeholders: %parent1%, %parent2%, %child%
   adopt: []
+
+  adopt_priest: []
+
   #avaible placeholders: %parent%, %child%
   adopt_single: []
+
   #avaible placeholders: %player1%, %player2%
   sibling: []
+
+  #avaible placeholders: %player1%, %player2%, %priest%
+  sibling_priest: []
+
   #avaible placeholders: %player1%, %player2%
   divorce: []
+
   #avaible placeholders: %parent1%, %parent2%, %child%
   kickout: []
+
   #avaible placeholders: %parent1%, %parent2%, %child%
   moveout: []
+
   #avaible placeholders: %parent%, %child%
   kickout_single: []
+
   #avaible placeholders: %parent%, %child%
   moveout_single: []
 
-# Default heart colors for married players, if no color is set. Could be a color name or a hex color code.
-default_heart_color: "white"
-# Default heart colors for unmarried players, if you use status_heart placeholder. Could be a color name or a hex color code.
-unmarried_heart_color: "gray"
+# Default colors for emojis in adopt, marry or sibling lists or placeholders, if no color is set. Could be a color name or a hex color code.
+emoji_colors:
+  married: "white"
+  unmarried: "gray"
+  adopted: "white"
+  unadopted: "gray"
+  siblinged: "white"
+  unsiblinged: "gray"
 colors:
   black: "#000000"
   dark_blue: "#0000AA"

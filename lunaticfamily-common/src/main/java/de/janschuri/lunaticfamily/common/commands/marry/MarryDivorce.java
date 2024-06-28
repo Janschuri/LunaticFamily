@@ -81,11 +81,14 @@ public class MarryDivorce extends Subcommand {
         }
         if (!confirm) {
             player.sendMessage(Utils.getClickableDecisionMessage(
-                    getMessage(confirmMK),
+                    getPrefix(),
+                    getMessage(confirmMK, false),
                     LunaticFamily.getLanguageConfig().getMessage(CONFIRM_MK, false),
                     "/family marry divorce confirm",
                     LunaticFamily.getLanguageConfig().getMessage(CANCEL_MK, false),
-                    "/family marry divorce cancel"));
+                    "/family marry divorce cancel"),
+                    LunaticFamily.getConfig().decisionAsInvGUI()
+            );
             return true;
         }
         if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.MARRY_DIVORCE_LEAVING_PLAYER)) {
@@ -100,11 +103,14 @@ public class MarryDivorce extends Subcommand {
             player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
                     .replaceText(getTextReplacementConfig("%player%", playerFam.getPartner().getName())));
             player.sendMessage(Utils.getClickableDecisionMessage(
-                    getMessage(TAKE_PAYMENT_CONFIRM_MK),
+                    getPrefix(),
+                    getMessage(TAKE_PAYMENT_CONFIRM_MK, false),
                     LunaticFamily.getLanguageConfig().getMessage(CONFIRM_MK, false),
                     "/family marry divorce confirm force",
                     LunaticFamily.getLanguageConfig().getMessage(CANCEL_MK, false),
-                    "/family marry divorce cancel"));
+                    "/family marry divorce cancel"),
+                    LunaticFamily.getConfig().decisionAsInvGUI()
+            );
             return true;
         }
 

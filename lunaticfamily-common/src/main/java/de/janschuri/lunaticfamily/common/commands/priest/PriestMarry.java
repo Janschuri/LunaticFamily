@@ -235,10 +235,13 @@ public class PriestMarry extends Subcommand {
 
         player1.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
+                Component.empty(),
                 getMessage(yesMK),
                 "/family marry accept",
                 getMessage(noMK),
-                "/family marry deny"));
+                "/family marry deny"),
+                LunaticFamily.getConfig().decisionAsInvGUI()
+        );
 
         LunaticFamily.marryPriestRequests.put(player1UUID, player2UUID);
         LunaticFamily.marryPriests.put(player1UUID, playerUUID);
