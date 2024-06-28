@@ -17,6 +17,7 @@ use_proxy: false # If you have installed LunaticFamily on a proxy server, you ca
 
 default_gender: "fe"
 use_vault: true
+decision_as_inv_gui: false
 command_withdraws:
   marry_proposing_player: 10.0
   marry_proposed_player: 10.0

@@ -164,6 +164,10 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
         return colors;
     }
 
+    public boolean decisionAsInvGUI() {
+        return getBoolean("decision_as_inv_gui", false);
+    }
+
     public String getColor(String key) {
         if (!colors.containsKey(key)) {
             Logger.errorLog("No color found for key " + key);

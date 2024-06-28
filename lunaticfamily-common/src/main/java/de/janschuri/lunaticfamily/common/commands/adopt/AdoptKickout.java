@@ -116,11 +116,15 @@ public class AdoptKickout extends Subcommand {
 
         if (!confirm) {
             player.sendMessage(Utils.getClickableDecisionMessage(
-                    getMessage(this.confirmMK).replaceText(getTextReplacementConfig("%player%", child.getName())),
+                    getPrefix(),
+                    getMessage(confirmMK, false)
+                            .replaceText(getTextReplacementConfig("%player%", child.getName())),
                     getMessage(CONFIRM_MK),
                     "/family adopt kickout " + args[0] + " confirm",
                     getMessage(CANCEL_MK),
-                    "/family adopt kickout " + args[0] + " cancel"));
+                    "/family adopt kickout " + args[0] + " cancel"),
+                    LunaticFamily.getConfig().decisionAsInvGUI()
+            );
             return true;
         }
 
@@ -137,11 +141,14 @@ public class AdoptKickout extends Subcommand {
         if (!Utils.hasEnoughMoney(player.getServerName(), childUUID, WithdrawKey.ADOPT_KICKOUT_CHILD)) {
             player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK).replaceText(getTextReplacementConfig("%player%", childFam.getName())));
             player.sendMessage(Utils.getClickableDecisionMessage(
-                    getMessage(TAKE_PAYMENT_CONFIRM_MK),
+                    getPrefix(),
+                    getMessage(TAKE_PAYMENT_CONFIRM_MK, false),
                     getMessage(CONFIRM_MK, false),
                     "/family adopt kickout confirm force",
                     getMessage(CANCEL_MK, false),
-                    "/family adopt kickout confirm force"));
+                    "/family adopt kickout confirm force"),
+                    LunaticFamily.getConfig().decisionAsInvGUI()
+            );
             return true;
         }
 
@@ -150,11 +157,14 @@ public class AdoptKickout extends Subcommand {
             if (!Utils.hasEnoughMoney(player.getServerName(), partnerUUID, WithdrawKey.ADOPT_KICKOUT_PARENT)) {
                 player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK).replaceText(getTextReplacementConfig("%player%", playerFam.getPartner().getName())));
                 player.sendMessage(Utils.getClickableDecisionMessage(
-                        getMessage(TAKE_PAYMENT_CONFIRM_MK),
+                        getPrefix(),
+                        getMessage(TAKE_PAYMENT_CONFIRM_MK, false),
                         getMessage(CONFIRM_MK, false),
                         "/family adopt kickout confirm force",
                         getMessage(CANCEL_MK, false),
-                        "/family adopt kickout confirm force"));
+                        "/family adopt kickout confirm force"),
+                        LunaticFamily.getConfig().decisionAsInvGUI()
+                );
                 return true;
             }
         }

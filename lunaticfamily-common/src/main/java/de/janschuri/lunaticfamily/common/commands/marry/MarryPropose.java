@@ -157,13 +157,16 @@ public class MarryPropose extends Subcommand {
         }
 
         partner.sendMessage(Utils.getClickableDecisionMessage(
-                getMessage(requestMK)
+                getPrefix(),
+                getMessage(requestMK, false)
                         .replaceText(getTextReplacementConfig("%player1%", partnerFam.getName()))
                         .replaceText(getTextReplacementConfig("%player2%", playerFam.getName())),
                 getMessage(marryYesMK, false),
                 "/family marry accept",
                 getMessage(marryNoMK, false),
-                "/family marry deny"));
+                "/family marry deny"),
+                LunaticFamily.getConfig().decisionAsInvGUI()
+        );
 
 
         LunaticFamily.marryRequests.put(partnerUUID, playerUUID);

@@ -1,12 +1,14 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.FamilyPlayer;
+import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import net.kyori.adventure.text.Component;
 
@@ -38,6 +40,11 @@ public class FamilyCreate extends Subcommand {
 
     @Override
     public boolean execute(Sender sender, String[] args) {
+        if (!(sender instanceof PlayerSender player)) {
+            sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
+            return true;
+        }
+
         if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
             return true;
@@ -91,15 +98,18 @@ public class FamilyCreate extends Subcommand {
         }
 
 
-        sender.sendMessage(Utils.getClickableDecisionMessage(
-                getMessage(confirmMK)
+        player.sendMessage(Utils.getClickableDecisionMessage(
+                getPrefix(),
+                getMessage(confirmMK, false)
                         .replaceText(getTextReplacementConfig("%uuid%", playerUUIDArg))
                         .replaceText(getTextReplacementConfig("%name%", playerName))
                 ,
                 getMessage(CONFIRM_MK, false),
                 "/family create " + playerName + " " + playerUUIDArg + " confirm",
                 getMessage(CANCEL_MK, false),
-                "/family create " + playerName + " " + playerUUIDArg + " cancel"));
+                "/family create " + playerName + " " + playerUUIDArg + " cancel"),
+                LunaticFamily.getConfig().decisionAsInvGUI()
+        );
 
 
         return true;

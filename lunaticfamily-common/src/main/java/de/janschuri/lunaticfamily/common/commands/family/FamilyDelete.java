@@ -1,10 +1,12 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
+import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import net.kyori.adventure.text.Component;
 
@@ -35,6 +37,11 @@ public class FamilyDelete extends Subcommand {
 
     @Override
     public boolean execute(Sender sender, String[] args) {
+        if (!(sender instanceof PlayerSender player)) {
+            sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
+            return true;
+        }
+
         if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
             return true;
@@ -78,12 +85,15 @@ public class FamilyDelete extends Subcommand {
         }
 
 
-        sender.sendMessage(Utils.getClickableDecisionMessage(
-                getMessage(confirmMK).replaceText(getTextReplacementConfig("%uuid%", playerArg)),
+        player.sendMessage(Utils.getClickableDecisionMessage(
+                getPrefix(),
+                getMessage(confirmMK, false).replaceText(getTextReplacementConfig("%uuid%", playerArg)),
                 getMessage(CONFIRM_MK, false),
                 "/family delete " + playerArg + " confirm",
                 getMessage(CANCEL_MK, false),
-                "/family delete " + playerArg + " cancel"));
+                "/family delete " + playerArg + " cancel"),
+                LunaticFamily.getConfig().decisionAsInvGUI()
+        );
 
 
         return true;

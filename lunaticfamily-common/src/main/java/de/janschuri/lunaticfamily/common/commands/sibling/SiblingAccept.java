@@ -10,6 +10,7 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import net.kyori.adventure.text.Component;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -141,10 +142,13 @@ public class SiblingAccept extends Subcommand {
 
         sibling.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
+                Component.empty(),
                 getMessage(priestYesMK, false),
                 "/family sibling accept",
                 getMessage(priestNoMK, false),
-                "/family sibling deny"));
+                "/family sibling deny"),
+                LunaticFamily.getConfig().decisionAsInvGUI()
+        );
 
 
         return true;

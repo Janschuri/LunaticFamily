@@ -167,13 +167,16 @@ public class AdoptPropose extends Subcommand {
 
         if (childFam.hasSibling() && !confirm) {
             player.sendMessage(Utils.getClickableDecisionMessage(
-                    getMessage(hasSiblingMK)
+                    getPrefix(),
+                    getMessage(hasSiblingMK, false)
                             .replaceText(getTextReplacementConfig("%player1%", childFam.getName()))
                             .replaceText(getTextReplacementConfig("%player2%", childFam.getSibling().getName())),
                     getMessage(CONFIRM_MK, false),
                     "/family adopt propose " + child.getName() + " confirm",
                     getMessage(CANCEL_MK, false),
-                    "/family adopt propose " + child.getName() + " cancel"));
+                    "/family adopt propose " + child.getName() + " cancel"),
+                    LunaticFamily.getConfig().decisionAsInvGUI()
+            );
             return true;
         }
 
@@ -186,21 +189,27 @@ public class AdoptPropose extends Subcommand {
 
         if (playerFam.isMarried()) {
             child.sendMessage(Utils.getClickableDecisionMessage(
-                    getMessage(requestMK)
+                    getPrefix(),
+                    getMessage(requestMK, false)
                             .replaceText(getTextReplacementConfig("%player1%", playerFam.getName()))
                             .replaceText(getTextReplacementConfig("%player2%", playerFam.getPartner().getName())),
                     getMessage(ACCEPT_MK, false),
                     "/family adopt accept",
                     getMessage(DENY_MK, false),
-                    "/family adopt deny"));
+                    "/family adopt deny"),
+                    LunaticFamily.getConfig().decisionAsInvGUI()
+            );
         } else {
             child.sendMessage(Utils.getClickableDecisionMessage(
-                    getMessage(requestBySingleMK)
+                    getPrefix(),
+                    getMessage(requestBySingleMK, false)
                             .replaceText(getTextReplacementConfig("%player%", playerFam.getName())),
                     getMessage(ACCEPT_MK, false),
                     "/family adopt accept",
                     getMessage(DENY_MK, false),
-                    "/family adopt deny"));
+                    "/family adopt deny"),
+                    LunaticFamily.getConfig().decisionAsInvGUI()
+            );
         }
 
         LunaticFamily.adoptRequests.put(childUUID, playerUUID);
