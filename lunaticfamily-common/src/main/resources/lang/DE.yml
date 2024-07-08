@@ -180,6 +180,8 @@ commands:
         messages:
           help: "&6/%command% %subcommand% &7- Aktualisiere deinen Familienstammbaum."
           reloaded: "Dein Familienstammbaum wurde neu geladen."
+          failed: "Dein Familienstammbaum konnte nicht neu geladen werden."
+          disabled: "Das Familienstammbaum-Feature ist deaktiviert."
       reload:
         aliases:
           - reload
@@ -497,6 +499,9 @@ commands:
 genders:
   fe: "weiblich"
   ma: "männlich"
+gender_emoji:
+  fe: "♀"
+  ma: "♂"
 family_relationships:
   fe:
     ego: "&6du"

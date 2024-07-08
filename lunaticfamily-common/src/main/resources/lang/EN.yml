@@ -180,6 +180,8 @@ commands:
         messages:
           help: "&6/%command% %subcommand% &7- Update your family tree."
           reloaded: "Your family tree has been reloaded."
+          failed: "Failed to reload your family tree."
+          disabled: "The family tree is disabled."
       reload:
         aliases:
           - reload
@@ -497,6 +499,9 @@ commands:
 genders:
   fe: "feminine"
   ma: "masculine"
+gender_emoji:
+  fe: "♀"
+  ma: "♂"
 family_relationships:
   fe:
     ego: "&6you"

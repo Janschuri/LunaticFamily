@@ -7,10 +7,7 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticlib.common.config.LunaticLanguageConfigImpl;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class LanguageConfigImpl extends LunaticLanguageConfigImpl implements LanguageConfig {
     private Map<String, String> genderLang = new HashMap<>();
@@ -98,5 +95,10 @@ public class LanguageConfigImpl extends LunaticLanguageConfigImpl implements Lan
 
     public Map<String, Map<String, String>> getRelationships() {
         return relationships;
+    }
+
+    public String getGenderEmoji(String gender) {
+        String emoji = getString("gender_emoji." + gender);
+        return Objects.requireNonNullElse(emoji, "undefined");
     }
 }
