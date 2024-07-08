@@ -1,6 +1,8 @@
 package de.janschuri.lunaticfamily.common.handler;
 
+import de.janschuri.lunaticfamily.LanguageConfig;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
+import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
 import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
 import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
@@ -28,6 +30,14 @@ public class Placeholder {
 
         if (placeholder.equalsIgnoreCase("player")) {
             return player.getName();
+        }
+
+        if (placeholder.equalsIgnoreCase("gender")) {
+            return LunaticFamily.getLanguageConfig().getGenderLang(player.getGender());
+        }
+
+        if (placeholder.equalsIgnoreCase("gender_emoji")) {
+            return LunaticFamily.getLanguageConfig().getGenderEmoji(player.getGender());
         }
 
         Pattern marriagePattern = Pattern.compile("marriage_(emoji_status|emoji|partner|priest|date)");
