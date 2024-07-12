@@ -85,7 +85,7 @@ public class MarriagesTable {
 
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (player1ID = ? OR player2ID = ?)");
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (player1ID = ? OR player2ID = ?) AND divorceDate IS NULL");
             ps.setInt(1, playerID);
             ps.setInt(2, playerID);
 

@@ -78,7 +78,7 @@ public class AdoptionsTable {
 
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (parentID = ?)");
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (parentID = ?) AND unadoptDate IS NULL");
             ps.setInt(1, playerID);
 
             rs = ps.executeQuery();
@@ -118,7 +118,7 @@ public class AdoptionsTable {
 
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (childID = ?)");
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (childID = ?) AND unadoptDate IS NULL");
             ps.setInt(1, playerID);
 
             rs = ps.executeQuery();
