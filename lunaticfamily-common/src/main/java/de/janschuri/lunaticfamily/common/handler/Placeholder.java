@@ -40,7 +40,7 @@ public class Placeholder {
             return LunaticFamily.getLanguageConfig().getGenderEmoji(player.getGender());
         }
 
-        Pattern marriagePattern = Pattern.compile("marriage_(emoji_status|emoji|partner|priest|date)");
+        Pattern marriagePattern = Pattern.compile("marriage_(emoji_status|emoji|partner|priest|date|status|color)");
 
         if (marriagePattern.matcher(placeholder).matches()) {
             String[] split = placeholder.split("_");
@@ -52,6 +52,10 @@ public class Placeholder {
                 }
 
                 return "<" + LunaticFamily.getConfig().getUnmarriedEmojiColor() + ">" + Marriage.getDefaultEmoji();
+            }
+
+            if (Objects.equals(type, "status")) {
+                return player.isMarried() + "";
             }
 
 
@@ -81,9 +85,13 @@ public class Placeholder {
             if (Objects.equals(type, "date")) {
                 return marriage.getDate().toString();
             }
+
+            if (Objects.equals(type, "color")) {
+                return marriage.getEmojiColor();
+            }
         }
 
-        Pattern siblinghoodPattern = Pattern.compile("siblinghood_(emoji_status|emoji|sibling|priest|date)");
+        Pattern siblinghoodPattern = Pattern.compile("siblinghood_(emoji_status|emoji|sibling|priest|date|status|color)");
 
         if (siblinghoodPattern.matcher(placeholder).matches()) {
             String[] split = placeholder.split("_");
@@ -95,6 +103,10 @@ public class Placeholder {
                 }
 
                 return "<" + LunaticFamily.getConfig().getUnsiblingedEmojiColor() + ">" + Siblinghood.getDefaultEmoji();
+            }
+
+            if (Objects.equals(type, "status")) {
+                return player.hasSibling() + "";
             }
 
 
@@ -124,22 +136,17 @@ public class Placeholder {
             if (Objects.equals(type, "date")) {
                 return siblinghood.getDate().toString();
             }
+
+            if (Objects.equals(type, "color")) {
+                return siblinghood.getEmojiColor();
+            }
         }
 
-        Pattern adoptionFirstChildPattern = Pattern.compile("adoptionAsParent_firstChild_(emoji_status|emoji|child|priest|date)");
+        Pattern adoptionFirstChildPattern = Pattern.compile("adoptionAsParent_firstChild_(emoji_status|emoji|child|priest|date|status|color)");
 
         if (adoptionFirstChildPattern.matcher(placeholder).matches()) {
             String[] split = placeholder.split("_");
             String type = split[1];
-
-
-            List<Adoption> adoptions = player.getAdoptionsAsParent();
-
-            if (adoptions.isEmpty()) {
-                return "";
-            }
-
-            Adoption adoption = adoptions.get(0);
 
             if (Objects.equals(type, "emoji_status")) {
                 if (player.hasChildren()) {
@@ -148,6 +155,18 @@ public class Placeholder {
 
                 return "<" + LunaticFamily.getConfig().getUnadoptedEmojiColor() + ">" + Adoption.getDefaultParentEmoji();
             }
+
+            if (Objects.equals(type, "status")) {
+                return player.hasChildren() + "";
+            }
+
+            List<Adoption> adoptions = player.getAdoptionsAsParent();
+
+            if (adoptions.isEmpty()) {
+                return "";
+            }
+
+            Adoption adoption = adoptions.get(0);
 
             if (Objects.equals(type, "child")) {
                 return player.getChildren().get(0).getName();
@@ -167,14 +186,29 @@ public class Placeholder {
             if (Objects.equals(type, "date")) {
                 return adoption.getDate().toString();
             }
+
+            if (Objects.equals(type, "color")) {
+                return adoption.getEmojiColor();
+            }
         }
 
-        Pattern adoptionSecondChildPattern = Pattern.compile("adoptionAsParent_secondChild_(emoji_status|emoji|child|priest|date)");
+        Pattern adoptionSecondChildPattern = Pattern.compile("adoptionAsParent_secondChild_(emoji_status|emoji|child|priest|date|status|color)");
 
         if (adoptionSecondChildPattern.matcher(placeholder).matches()) {
             String[] split = placeholder.split("_");
             String type = split[1];
 
+            if (Objects.equals(type, "emoji_status")) {
+                if (player.getChildrenAmount() > 1) {
+                    return player.getAdoptionsAsParent().get(1).getColoredParentEmoji();
+                }
+
+                return "<" + LunaticFamily.getConfig().getUnparentEmojiColor() + ">" + Adoption.getDefaultParentEmoji();
+            }
+
+            if (Objects.equals(type, "status")) {
+                return (player.getChildrenAmount() > 1) + "";
+            }
 
             List<Adoption> adoptions = player.getAdoptionsAsParent();
 
@@ -183,14 +217,6 @@ public class Placeholder {
             }
 
             Adoption adoption = adoptions.get(1);
-
-            if (Objects.equals(type, "emoji_status")) {
-                if (player.hasChildren()) {
-                    return player.getAdoptionsAsParent().get(1).getColoredParentEmoji();
-                }
-
-                return "<" + LunaticFamily.getConfig().getUnparentEmojiColor() + ">" + Adoption.getDefaultParentEmoji();
-            }
 
             if (Objects.equals(type, "child")) {
                 return player.getChildren().get(1).getName();
@@ -210,9 +236,13 @@ public class Placeholder {
             if (Objects.equals(type, "date")) {
                 return adoption.getDate().toString();
             }
+
+            if (Objects.equals(type, "color")) {
+                return adoption.getEmojiColor();
+            }
         }
 
-        Pattern adoptionAsChildPattern = Pattern.compile("adoptionAsChild_(emoji_status|emoji|firstParent|secondParent|priest|date)");
+        Pattern adoptionAsChildPattern = Pattern.compile("adoptionAsChild_(emoji_status|emoji|firstParent|secondParent|priest|date|status|color)");
 
         if (adoptionAsChildPattern.matcher(placeholder).matches()) {
             String[] split = placeholder.split("_");
@@ -224,6 +254,10 @@ public class Placeholder {
                 }
 
                 return "<" + LunaticFamily.getConfig().getUnadoptedEmojiColor() + ">" + Adoption.getDefaultChildEmoji();
+            }
+
+            if (Objects.equals(type, "status")) {
+                return player.isAdopted() + "";
             }
 
 
@@ -256,6 +290,10 @@ public class Placeholder {
 
             if (Objects.equals(type, "date")) {
                 return adoption.getDate().toString();
+            }
+
+            if (Objects.equals(type, "color")) {
+                return adoption.getEmojiColor();
             }
         }
 
