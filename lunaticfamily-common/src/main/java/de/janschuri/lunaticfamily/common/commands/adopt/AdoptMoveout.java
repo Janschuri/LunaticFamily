@@ -132,21 +132,23 @@ public class AdoptMoveout extends Subcommand {
             return true;
         }
 
-        UUID parent2UUID = playerFam.getParents().get(1).getUniqueId();
-        PlayerSender secondParent = LunaticLib.getPlatform().getPlayerSender(parent2UUID);
+        if (playerFam.getParents().size() > 1) {
+            UUID parent2UUID = playerFam.getParents().get(1).getUniqueId();
+            PlayerSender secondParent = LunaticLib.getPlatform().getPlayerSender(parent2UUID);
 
-        if (!force && playerFam.getParents().size() == 2 && !Utils.hasEnoughMoney(player.getServerName(), parent2UUID, 0.5, WithdrawKey.ADOPT_MOVEOUT_PARENT)) {
-            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK).replaceText(getTextReplacementConfig("%player%", playerFam.getParents().get(1).getName())));
-            player.sendMessage(Utils.getClickableDecisionMessage(
-                    getPrefix(),
-                    getMessage(TAKE_PAYMENT_CONFIRM_MK, false),
-                    getMessage(CONFIRM_MK, false),
-                    "/family adopt moveout confirm force",
-                    getMessage(CANCEL_MK, false),
-                    "/family adopt moveout cancel"),
-                    LunaticFamily.getConfig().decisionAsInvGUI()
-            );
-            return true;
+            if (!force && !Utils.hasEnoughMoney(player.getServerName(), parent2UUID, 0.5, WithdrawKey.ADOPT_MOVEOUT_PARENT)) {
+                player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK).replaceText(getTextReplacementConfig("%player%", playerFam.getParents().get(1).getName())));
+                player.sendMessage(Utils.getClickableDecisionMessage(
+                                getPrefix(),
+                                getMessage(TAKE_PAYMENT_CONFIRM_MK, false),
+                                getMessage(CONFIRM_MK, false),
+                                "/family adopt moveout confirm force",
+                                getMessage(CANCEL_MK, false),
+                                "/family adopt moveout cancel"),
+                        LunaticFamily.getConfig().decisionAsInvGUI()
+                );
+                return true;
+            }
         }
 
         if (force && !Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.ADOPT_MOVEOUT_PARENT, WithdrawKey.ADOPT_MOVEOUT_CHILD)) {
@@ -166,14 +168,17 @@ public class AdoptMoveout extends Subcommand {
 
 
         firstParent.sendMessage(getMessage(childMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
-        if (firstParentFam.isMarried()) {
+        if (playerFam.getParents().size() > 1) {
+            UUID parent2UUID = playerFam.getParents().get(1).getUniqueId();
+            PlayerSender secondParent = LunaticLib.getPlatform().getPlayerSender(parent2UUID);
             secondParent.sendMessage(getMessage(childMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
         }
 
         if (force) {
             Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.ADOPT_MOVEOUT_CHILD, WithdrawKey.ADOPT_MOVEOUT_PARENT);
         } else {
-            if (firstParentFam.isMarried()) {
+            if (playerFam.getParents().size() > 1) {
+                UUID parent2UUID = playerFam.getParents().get(1).getUniqueId();
                 FamilyPlayerImpl secondParentFam = firstParentFam.getPartner();
                 Utils.withdrawMoney(player.getServerName(), parent2UUID, 0.5, WithdrawKey.ADOPT_MOVEOUT_PARENT);
                 Utils.withdrawMoney(player.getServerName(), parent1UUID, 0.5, WithdrawKey.ADOPT_MOVEOUT_PARENT);

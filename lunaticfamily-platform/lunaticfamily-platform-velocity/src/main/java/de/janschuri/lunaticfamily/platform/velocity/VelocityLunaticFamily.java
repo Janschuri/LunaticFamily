@@ -21,7 +21,7 @@ import java.util.concurrent.Callable;
 @Plugin(
         id = "lunaticfamily",
         name = "LunaticFamily",
-        version = "1.2.6",
+        version = "1.2.7",
         authors = "janschuri",
         dependencies = {
         @Dependency(id = "lunaticlib")

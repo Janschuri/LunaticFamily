@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -62,7 +63,7 @@ public class AdoptKickout extends Subcommand {
         UUID playerUUID = player.getUniqueId();
         FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
 
-        if (!playerFam.getChildren().isEmpty()) {
+        if (playerFam.getChildren().isEmpty()) {
             sender.sendMessage(getMessage(noChildMK));
             return true;
         }
@@ -85,7 +86,7 @@ public class AdoptKickout extends Subcommand {
         PlayerSender child = LunaticLib.getPlatform().getPlayerSender(childUUID);
         FamilyPlayerImpl childFam = new FamilyPlayerImpl(childUUID);
 
-        if (childFam.isChildOf(playerFam.getId())) {
+        if (!childFam.isChildOf(playerFam.getId())) {
             sender.sendMessage(getMessage(notYourChildMK).replaceText(getTextReplacementConfig("%player%", childFam.getName())));
             return true;
         }
@@ -115,14 +116,15 @@ public class AdoptKickout extends Subcommand {
         }
 
         if (!confirm) {
+            Logger.debugLog(child.getName());
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
                     getMessage(confirmMK, false)
-                            .replaceText(getTextReplacementConfig("%player%", child.getName())),
+                            .replaceText(getTextReplacementConfig("%player%", childFam.getName())),
                     getMessage(CONFIRM_MK),
-                    "/family adopt kickout " + args[0] + " confirm",
+                    "/family adopt kickout " + childName + " confirm",
                     getMessage(CANCEL_MK),
-                    "/family adopt kickout " + args[0] + " cancel"),
+                    "/family adopt kickout " + childName + " cancel"),
                     LunaticFamily.getConfig().decisionAsInvGUI()
             );
             return true;
