@@ -26,7 +26,7 @@ public class SiblinghoodsTable {
         new ForeignKey("priest", Datatype.INTEGER, true, "playerData", "id", "SET NULL"),
         new Column("emoji", true),
         new Column("date", Datatype.INTEGER, false, "CURRENT_TIMESTAMP"),
-        new Column("unsiblingDate", Datatype.TIMESTAMP_NULL, true, "NULL"),
+        new Column("unsiblingDate", Datatype.TIMESTAMP, true, "NULL"),
     };
 
     private static final Table TABLE = new Table(NAME, PRIMARY_KEY, columns);

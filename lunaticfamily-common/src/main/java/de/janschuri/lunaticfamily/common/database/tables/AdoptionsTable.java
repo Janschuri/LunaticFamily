@@ -25,7 +25,7 @@ public class AdoptionsTable {
         new ForeignKey("priest", Datatype.INTEGER, true, "playerData", "id", "SET NULL"),
         new Column("emoji", true),
         new Column("date", Datatype.INTEGER, false, "CURRENT_TIMESTAMP"),
-        new Column("unadoptDate", Datatype.TIMESTAMP_NULL, true, "NULL"),
+        new Column("unadoptDate", Datatype.TIMESTAMP, true, "NULL"),
     };
 
     private static final Table TABLE = new Table(NAME, PRIMARY_KEY, COLUMNS);
