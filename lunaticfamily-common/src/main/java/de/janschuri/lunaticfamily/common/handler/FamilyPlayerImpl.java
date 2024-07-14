@@ -128,7 +128,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     private void saveAdoption(int childID, int priestID) {
-        AdoptionsTable.saveAdoption(this.id, childID);
+        AdoptionsTable.saveAdoption(this.id, childID, priestID);
     }
 
     private void unadoptAdoption(int childID) {
@@ -226,7 +226,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
 
     public void marry(int partnerID) {
-        marry(partnerID, 0);
+        marry(partnerID, -1);
     }
 
     public void marry(int partnerID, int priestID) {
@@ -285,7 +285,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public void adopt(int childID) {
-        adopt(childID, 0);
+        adopt(childID, -1);
     }
 
     public void adopt(int childID, int priestID) {
@@ -340,7 +340,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public void addSibling(int siblingID) {
-        addSibling(siblingID, 0);
+        addSibling(siblingID, -1);
     }
 
     public void addSibling(int siblingID, int priestID) {
