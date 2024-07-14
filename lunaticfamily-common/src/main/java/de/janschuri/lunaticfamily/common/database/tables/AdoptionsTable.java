@@ -158,14 +158,19 @@ public class AdoptionsTable {
         return Database.getDatabase().getSQLConnection();
     }
 
-    public static void saveAdoption(int parentID, int childID) {
+    public static void saveAdoption(int parentID, int childID, int priestID) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("REPLACE INTO `" + NAME + "` (parentID, childID) VALUES(?,?)");
+            ps = conn.prepareStatement("REPLACE INTO `" + NAME + "` (parentID, childID, priest) VALUES(?,?,?)");
             ps.setInt(1, parentID);
             ps.setInt(2, childID);
+            if (priestID < 0) {
+                ps.setNull(3, Types.INTEGER);
+            } else {
+                ps.setInt(3, priestID);
+            }
             ps.executeUpdate();
             return;
         } catch (SQLException ex) {
