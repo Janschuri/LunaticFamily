@@ -60,9 +60,9 @@ public class AdoptDeny extends Subcommand {
             PlayerSender parent = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
             if (!LunaticFamily.adoptPriests.containsKey(partnerUUID)) {
                 player.sendMessage(getMessage(denyMK)
-                        .replaceText(getTextReplacementConfig("%player%", parent.getName())));
-                parent.sendMessage(getMessage(deniedMK)
                         .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+                parent.sendMessage(getMessage(deniedMK)
+                        .replaceText(getTextReplacementConfig("%player%", parent.getName())));
             } else {
                 UUID priestUUID = LunaticFamily.adoptPriests.get(partnerUUID);
                 PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);

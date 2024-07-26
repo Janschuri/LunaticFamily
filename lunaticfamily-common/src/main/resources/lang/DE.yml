@@ -23,6 +23,7 @@ messages:
   background: "Hintergrund"
   color: "Farbe"
   no_uuid: "%input% ist keine gültige UUID!"
+  number: "Nummer"
 help_header: "--- --- --- ---[%header%]--- --- --- ---"
 help_footer: "--- --- -[Seite %page%/%pages%]- --- ---"
 commands:

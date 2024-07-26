@@ -27,6 +27,7 @@ public abstract class Subcommand extends AbstractLunaticCommand {
     protected static final MessageKey PLAYER_NAME_MK = new MessageKey("player_name");
     protected static final MessageKey NO_UUID_MK = new MessageKey("no_uuid");
     protected static final MessageKey COLOR_MK = new MessageKey("color");
+    protected static final MessageKey NUMBER_MK = new MessageKey("number");
 
 
     protected static String getRelation(String mainCommand, String subcommand) {

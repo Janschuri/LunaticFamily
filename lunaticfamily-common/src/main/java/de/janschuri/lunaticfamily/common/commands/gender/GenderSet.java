@@ -117,13 +117,13 @@ public class GenderSet extends Subcommand {
             if (player1Fam.getGender().equalsIgnoreCase(args[0])) {
                 sender.sendMessage(getMessage(adminAlreadyMK)
                         .replaceText(getTextReplacementConfig("%player%", player1.getName()))
-                        .replaceText(getTextReplacementConfig("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[1]))));
+                        .replaceText(getTextReplacementConfig("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));
                 return true;
             }
             player1Fam.setGender(args[0].toLowerCase());
             sender.sendMessage(getMessage(adminSetMK)
                     .replaceText(getTextReplacementConfig("%player%", player1.getName()))
-                    .replaceText(getTextReplacementConfig("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[1]))));
+                    .replaceText(getTextReplacementConfig("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));
 
         return true;
 
