@@ -211,6 +211,28 @@ public class AdoptionsTable {
         }
     }
 
+    public static void deleteAllAdoptions(int playerID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("DELETE FROM `" + NAME + "` WHERE parentID = ? OR childID = ?");
+            ps.setInt(1, playerID);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+    }
+
     public static void unadoptAdoption(int playerID, int childID) {
         Connection conn = null;
         PreparedStatement ps = null;
