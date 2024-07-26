@@ -232,6 +232,8 @@ commands:
     messages:
       partner_online: "Dein Partner ist online."
       partner_offline: "Dein Partner ist offline."
+      partner_left: "Dein Partner hat den Server verlassen."
+      partner_joined: "Dein Partner ist dem Server beigetreten."
     subcommands:
       propose:
         aliases:
@@ -447,6 +449,7 @@ commands:
           no_request: "Du hast keine Geschwisteranfrage."
           denied: "%player% möchte nicht dein Geschwisterkind sein."
           deny: "Du hast die Geschwisteranfrage von %player% abgelehnt."
+          cancel: "Die Geschwisterkindanfrage an %player% wurde abgebrochen."
       unsibling:
         aliases:
           - unsibling

@@ -16,8 +16,9 @@ import java.util.concurrent.TimeUnit;
 
 public class JoinListenerExecuter {
 
-    private static final CommandMessageKey marryPartnerOfflineMK = new CommandMessageKey(new Marry(), "partner_offline");
-    private static final CommandMessageKey marryPartnerOnlineMK = new CommandMessageKey(new Marry(), "partner_online");
+    private static final CommandMessageKey MARRY_PARTNER_OFFLINE_MK = new CommandMessageKey(new Marry(), "partner_offline");
+    private static final CommandMessageKey MARRY_PARTNER_ONLINE_MK = new CommandMessageKey(new Marry(), "partner_online");
+    private static final CommandMessageKey MARRY_PARTNER_JOINED_MK = new CommandMessageKey(new Marry(), "partner_joined");
 
     private static List<String> registeredServers = new ArrayList<>();
 
@@ -40,11 +41,12 @@ public class JoinListenerExecuter {
 
             if (playerFam.isMarried()) {
                 PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUniqueId());
+
                 if (partner.isOnline()) {
-                    partner.sendMessage(languageConfig.getMessage(marryPartnerOfflineMK));
-                    sender.sendMessage(languageConfig.getMessage(marryPartnerOnlineMK));
+                    partner.sendMessage(languageConfig.getMessage(MARRY_PARTNER_JOINED_MK));
+                    sender.sendMessage(languageConfig.getMessage(MARRY_PARTNER_ONLINE_MK));
                 } else {
-                    sender.sendMessage(languageConfig.getMessage(marryPartnerOfflineMK));
+                    sender.sendMessage(languageConfig.getMessage(MARRY_PARTNER_OFFLINE_MK));
                 }
             }
         };
