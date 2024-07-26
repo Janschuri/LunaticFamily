@@ -189,6 +189,13 @@ commands:
         messages:
           help: "&6/%command% %subcommand% &7- Reload the configuration."
           reloaded: "The configuration has been reloaded."
+      dblist:
+        aliases:
+          - dblist
+        messages:
+          help: "&6/%command% %subcommand% &7- Show a list of all players in the database."
+          header: "All players in the database:"
+          players: "&6%index%: &b%name% &7(%gender%)"
       help:
         aliases:
           - help

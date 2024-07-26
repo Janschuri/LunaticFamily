@@ -34,6 +34,7 @@ public class Family extends Subcommand {
                 new Sibling(),
                 new Marry(),
                 new Priest(),
+                new FamilyDBList(),
                 getHelpCommand()
         );
     }

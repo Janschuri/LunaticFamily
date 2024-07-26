@@ -1,7 +1,6 @@
 package de.janschuri.lunaticfamily.common.database.tables;
 
 import de.janschuri.lunaticfamily.common.database.Database;
-import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticlib.common.database.Datatype;
 import de.janschuri.lunaticlib.common.database.Error;

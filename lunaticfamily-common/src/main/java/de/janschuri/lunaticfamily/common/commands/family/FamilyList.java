@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
@@ -75,7 +76,7 @@ public class FamilyList extends Subcommand {
         }
 
         String playerName = args[0];
-        UUID player1UUID = PlayerDataTable.getUUID(playerName);
+        UUID player1UUID = Utils.getUUIDFromArg(playerName);
 
         if (player1UUID == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)

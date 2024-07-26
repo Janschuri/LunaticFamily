@@ -6,6 +6,8 @@ import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.utils.Mode;
 
+import java.nio.file.LinkOption;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
@@ -65,15 +67,25 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
     public static UUID getUUIDFromArg(String arg) {
         UUID uuid;
 
+        Logger.debugLog("arg: " + arg);
+
         if (isUUID(arg)) {
+            Logger.debugLog("arg is UUID");
+
             uuid = UUID.fromString(arg);
 
             if (PlayerDataTable.getID(uuid) < 0) {
-                return null;
+                uuid = null;
             }
         } else {
+            Logger.debugLog("arg is not UUID");
             uuid = PlayerDataTable.getUUID(arg);
         }
+
+        if (uuid == null) {
+            Logger.debugLog("UUID is null");
+        }
+
 
         return uuid;
     }
