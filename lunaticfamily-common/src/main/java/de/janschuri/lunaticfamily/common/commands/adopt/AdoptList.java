@@ -64,7 +64,7 @@ public class AdoptList extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(NUMBER_MK, false)
+                getMessage(PAGE_MK, false)
         );
     }
 
