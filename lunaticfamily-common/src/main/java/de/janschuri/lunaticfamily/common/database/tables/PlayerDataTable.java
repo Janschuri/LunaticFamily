@@ -12,7 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerDataTable {
 
@@ -68,7 +68,7 @@ public class PlayerDataTable {
                 Error.close(ex);
             }
         }
-        return 0;
+        return -1;
     }
 
     public static UUID getUUID(int id) {
@@ -342,4 +342,46 @@ public class PlayerDataTable {
         }
     }
 
+    public static Map<Integer, Map<String, String>> getPlayerList(int page) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        Map<Integer, Map<String, String>> players = new HashMap<>();
+
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " ORDER BY id DESC LIMIT ?,?");
+            ps.setInt(1, (page - 1) * 10);
+            ps.setInt(2, page * 10);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Map<String, String> player = new HashMap<>();
+                int id = rs.getInt("id");
+                player.put("id", String.valueOf(id));
+                player.put("uuid", rs.getString("uuid"));
+                player.put("name", rs.getString("name"));
+                player.put("skinURL", rs.getString("skinURL"));
+                player.put("gender", rs.getString("gender"));
+                player.put("background", rs.getString("background"));
+                players.put(id, player);
+            }
+
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+
+        return players;
+    }
 }

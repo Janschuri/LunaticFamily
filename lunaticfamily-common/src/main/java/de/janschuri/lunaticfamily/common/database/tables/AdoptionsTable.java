@@ -25,7 +25,7 @@ public class AdoptionsTable {
         new ForeignKey("priest", Datatype.INTEGER, true, "playerData", "id", "SET NULL"),
         new Column("emoji", true),
         new Column("date", Datatype.INTEGER, false, "CURRENT_TIMESTAMP"),
-        new Column("unadoptDate", Datatype.TIMESTAMP_NULL, true, "NULL"),
+        new Column("unadoptDate", Datatype.TIMESTAMP, true, "NULL"),
     };
 
     private static final Table TABLE = new Table(NAME, PRIMARY_KEY, COLUMNS);
@@ -196,6 +196,28 @@ public class AdoptionsTable {
             ps = conn.prepareStatement("DELETE FROM `" + NAME + "` WHERE parentID = ? AND childID = ?");
             ps.setInt(1, parentID);
             ps.setInt(2, childID);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+    }
+
+    public static void deleteAllAdoptions(int playerID) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("DELETE FROM `" + NAME + "` WHERE parentID = ? OR childID = ?");
+            ps.setInt(1, playerID);
             ps.executeUpdate();
         } catch (SQLException ex) {
             Error.execute(ex);

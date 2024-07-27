@@ -3,19 +3,16 @@ package de.janschuri.lunaticfamily.common.commands.marry;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.commands.priest.Priest;
 import de.janschuri.lunaticfamily.common.commands.priest.PriestMarry;
+import de.janschuri.lunaticfamily.common.commands.priest.PriestSibling;
+import de.janschuri.lunaticfamily.common.commands.sibling.Sibling;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.logger.Logger;
 
 import java.util.List;
 import java.util.Map;
 
-public class MarryPriest extends Subcommand {
-
-
-    @Override
-    public String getPermission() {
-        return "lunaticfamily.priest.marry";
-    }
+public class MarryPriest extends PriestMarry {
 
     @Override
     public String getName() {
@@ -23,23 +20,19 @@ public class MarryPriest extends Subcommand {
     }
 
     @Override
-    public Marry getParentCommand() {
-        return new Marry();
-    }
-
-    @Override
     public Map<CommandMessageKey, String> getHelpMessages() {
-        return new PriestMarry().getHelpMessages();
-    }
-    @Override
-    public boolean execute(Sender sender, String[] args) {
-        return new PriestMarry().execute(sender, args);
+        return Map.of(new CommandMessageKey(new PriestMarry(), "help"), getPermission());
     }
 
     @Override
     public List<String> getAliases() {
-        return new Priest().getAliases();
+        List<String> list = this.getLanguageConfig().getAliases(super.getParentCommand().getName());
+
+        if (list.isEmpty()) {
+            list.add(super.getParentCommand().getName());
+        }
+
+        Logger.debugLog("Aliases: " + list.toString());
+        return list;
     }
-
-
 }

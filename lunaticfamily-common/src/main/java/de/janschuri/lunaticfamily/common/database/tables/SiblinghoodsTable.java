@@ -1,7 +1,6 @@
 package de.janschuri.lunaticfamily.common.database.tables;
 
 import de.janschuri.lunaticfamily.common.database.Database;
-import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticlib.common.database.Datatype;
 import de.janschuri.lunaticlib.common.database.Error;
@@ -26,7 +25,7 @@ public class SiblinghoodsTable {
         new ForeignKey("priest", Datatype.INTEGER, true, "playerData", "id", "SET NULL"),
         new Column("emoji", true),
         new Column("date", Datatype.INTEGER, false, "CURRENT_TIMESTAMP"),
-        new Column("unsiblingDate", Datatype.TIMESTAMP_NULL, true, "NULL"),
+        new Column("unsiblingDate", Datatype.TIMESTAMP, true, "NULL"),
     };
 
     private static final Table TABLE = new Table(NAME, PRIMARY_KEY, columns);
@@ -87,7 +86,7 @@ public class SiblinghoodsTable {
 
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (player1ID = ? OR player2ID = ?)");
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (player1ID = ? OR player2ID = ?) AND unsiblingDate IS NULL");
             ps.setInt(1, playerID);
             ps.setInt(2, playerID);
 

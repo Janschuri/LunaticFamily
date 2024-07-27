@@ -55,8 +55,12 @@ public class FamilyPlayerImpl implements FamilyPlayer {
             this.name = player.getName();
         }
 
-        if (name == null) {
+        if (this.name == null) {
             this.name = PlayerDataTable.getName(id);
+        }
+
+        if (this.name == null) {
+            this.name = "unknown";
         }
 
         skinURL = player.getSkinURL();

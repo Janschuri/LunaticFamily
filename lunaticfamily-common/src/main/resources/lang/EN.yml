@@ -23,6 +23,7 @@ messages:
   background: "background"
   color: "color"
   no_uuid: "%input% is not a valid UUID."
+  page: "page"
 help_header: "--- --- --- ---[%header%]--- --- --- ---"
 help_footer: "--- --- -[Page %page%/%pages%]- --- ---"
 commands:
@@ -188,6 +189,13 @@ commands:
         messages:
           help: "&6/%command% %subcommand% &7- Reload the configuration."
           reloaded: "The configuration has been reloaded."
+      dblist:
+        aliases:
+          - dblist
+        messages:
+          help: "&6/%command% %subcommand% &7- Show a list of all players in the database."
+          header: "All players in the database:"
+          players: "&6%index%: &b%name% &7(%gender%)"
       help:
         aliases:
           - help
@@ -234,6 +242,8 @@ commands:
       no: "No. I don't want to."
       partner_online: "Your partner is online."
       partner_offline: "Your partner is offline."
+      partner_left: "Your partner has left the server."
+      partner_joined: "Your partner has joined the server."
     subcommands:
       propose:
         aliases:
@@ -447,6 +457,7 @@ commands:
           no_request: "You have no sibling request."
           denied: "Sorry, %player% does not want to be your sibling."
           deny: "You have denied the sibling request from %player%."
+          cancel: "The sibling request to %player% has been canceled."
       unsibling:
         aliases:
           - unsibling

@@ -20,21 +20,22 @@ import java.util.concurrent.TimeUnit;
 
 public class PriestAdopt extends Subcommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey alreadyPriestMK = new CommandMessageKey(this,"already_priest");
-    private final CommandMessageKey requestMK = new CommandMessageKey(this,"request");
+    private static final PriestAdopt instance = new PriestAdopt();
+    private final CommandMessageKey helpMK = new CommandMessageKey(instance,"help");
+    private final CommandMessageKey alreadyPriestMK = new CommandMessageKey(instance,"already_priest");
+    private final CommandMessageKey requestMK = new CommandMessageKey(instance,"request");
 
-    private final CommandMessageKey playerAlreadyAdoptedMK = new CommandMessageKey(this,"player_already_adopted");
-    private final CommandMessageKey tooManyChildrenMK = new CommandMessageKey(this,"too_many_children");
+    private final CommandMessageKey playerAlreadyAdoptedMK = new CommandMessageKey(instance,"player_already_adopted");
+    private final CommandMessageKey tooManyChildrenMK = new CommandMessageKey(instance,"too_many_children");
 
-    private final CommandMessageKey selfRequestMK = new CommandMessageKey(this,"self_request");
-    private final CommandMessageKey openRequestMK = new CommandMessageKey(this,"open_request");
-    private final CommandMessageKey requestExpiredPriestMK = new CommandMessageKey(this,"request_expired_priest");
-    private final CommandMessageKey requestExpiredPlayerMK = new CommandMessageKey(this,"request_expired_player");
-    private final CommandMessageKey samePlayerMK = new CommandMessageKey(this,"same_player");
-    private final CommandMessageKey yesMK = new CommandMessageKey(this,"yes");
-    private final CommandMessageKey noMK = new CommandMessageKey(this,"no");
-    private final CommandMessageKey familyRequestMK = new CommandMessageKey(this,"family_request");
+    private final CommandMessageKey selfRequestMK = new CommandMessageKey(instance,"self_request");
+    private final CommandMessageKey openRequestMK = new CommandMessageKey(instance,"open_request");
+    private final CommandMessageKey requestExpiredPriestMK = new CommandMessageKey(instance,"request_expired_priest");
+    private final CommandMessageKey requestExpiredPlayerMK = new CommandMessageKey(instance,"request_expired_player");
+    private final CommandMessageKey samePlayerMK = new CommandMessageKey(instance,"same_player");
+    private final CommandMessageKey yesMK = new CommandMessageKey(instance,"yes");
+    private final CommandMessageKey noMK = new CommandMessageKey(instance,"no");
+    private final CommandMessageKey familyRequestMK = new CommandMessageKey(instance,"family_request");
 
 
     @Override
@@ -48,7 +49,7 @@ public class PriestAdopt extends Subcommand {
     }
 
     @Override
-    public Priest getParentCommand() {
+    public Subcommand getParentCommand() {
         return new Priest();
     }
 
