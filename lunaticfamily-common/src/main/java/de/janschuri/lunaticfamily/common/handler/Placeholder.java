@@ -1,15 +1,16 @@
 package de.janschuri.lunaticfamily.common.handler;
 
-import de.janschuri.lunaticfamily.LanguageConfig;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
 import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
 import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
 import de.janschuri.lunaticfamily.common.futurerequests.GetPlaceholderRequest;
+import de.janschuri.lunaticfamily.common.futurerequests.GetRelationalPlaceholderRequest;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.common.utils.Mode;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -417,6 +418,34 @@ public class Placeholder {
 
             if (Objects.equals(type, "date")) {
                 return siblinghood.getDate().toString();
+            }
+        }
+
+        return null;
+    }
+
+    public static String getPlaceholder(UUID uuid1, UUID uuid2, String placeholder) {
+
+        if (LunaticFamily.getMode() == Mode.BACKEND) {
+            return new GetRelationalPlaceholderRequest().get(uuid1, uuid2, placeholder);
+        }
+
+        FamilyPlayerImpl player1 = new FamilyPlayerImpl(uuid1);
+        FamilyPlayerImpl player2 = new FamilyPlayerImpl(uuid2);
+
+        if (placeholder.equalsIgnoreCase("relation")) {
+
+
+            if (player1.isFamilyMember(player2.getId())) {
+                Map<String, Integer> familyMap = player1.getFamilyMap();
+                String relation = familyMap.entrySet().stream()
+                        .filter(e -> e.getValue().equals(player2.getId()))
+                        .map(Map.Entry::getKey)
+                        .findFirst()
+                        .orElse("");
+                return LunaticFamily.getLanguageConfig().getRelation(relation, player2.getGender());
+            } else {
+                return "";
             }
         }
 
