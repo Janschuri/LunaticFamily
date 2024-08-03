@@ -9,24 +9,24 @@ public interface FamilyTree {
     default boolean update(String server, UUID uuid, int id) {
         FamilyPlayer familyPlayer = getFamilyPlayer(id);
         String background = familyPlayer.getBackground();
-        Map<String, Integer> familyMap = familyPlayer.getFamilyMap();
-        familyMap.put("ego", id);
+        Map<Integer, String> familyMap = familyPlayer.getFamilyMap();
+        familyMap.put(id, "ego");
 
         List<String> familyList = new ArrayList<>();
         Map<String, String> names = new HashMap<>();
         Map<String, String> skins = new HashMap<>();
         Map<String, String> relationLangs = new HashMap<>();
 
-        for (Map.Entry<String, Integer> entry : familyMap.entrySet()) {
-            FamilyPlayer relationFam = getFamilyPlayer(entry.getValue());
-            String relationLang = getRelation(entry.getKey(), relationFam.getGender());
+        for (Map.Entry<Integer, String> entry : familyMap.entrySet()) {
+            FamilyPlayer relationFam = getFamilyPlayer(entry.getKey());
+            String relationLang = getRelation(entry.getValue(), relationFam.getGender());
 
             String skinURL = relationFam.getSkinURL();
 
-            familyList.add(entry.getKey());
-            names.put(entry.getKey(), relationFam.getName());
-            skins.put(entry.getKey(), skinURL);
-            relationLangs.put(entry.getKey(), relationLang);
+            familyList.add(entry.getValue());
+            names.put(entry.getValue(), relationFam.getName());
+            skins.put(entry.getValue(), skinURL);
+            relationLangs.put(entry.getValue(), relationLang);
         }
 
         return update(server, uuid, background, familyList, names, skins, relationLangs);

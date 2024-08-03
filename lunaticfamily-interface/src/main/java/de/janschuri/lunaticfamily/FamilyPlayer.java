@@ -20,7 +20,7 @@ public interface FamilyPlayer {
 
     boolean isFamilyMember(int id);
 
-    Map<String, Integer> getFamilyMap();
+    Map<Integer, String> getFamilyMap();
 
     boolean updateFamilyTree();
 }

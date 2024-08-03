@@ -437,10 +437,10 @@ public class Placeholder {
 
 
             if (player1.isFamilyMember(player2.getId())) {
-                Map<String, Integer> familyMap = player1.getFamilyMap();
+                Map<Integer, String> familyMap = player1.getFamilyMap();
                 String relation = familyMap.entrySet().stream()
-                        .filter(e -> e.getValue().equals(player2.getId()))
-                        .map(Map.Entry::getKey)
+                        .filter(e -> e.getKey().equals(player2.getId()))
+                        .map(Map.Entry::getValue)
                         .findFirst()
                         .orElse("");
                 return LunaticFamily.getLanguageConfig().getRelation(relation, player2.getGender());
