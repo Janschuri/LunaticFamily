@@ -67,7 +67,7 @@ public class FamilyList extends Subcommand {
             FamilyPlayerImpl playerFam = new FamilyPlayerImpl(uuid);
 
 
-            Map<String, Integer> familyList = playerFam.getFamilyMap();
+            Map<Integer, String> familyList = playerFam.getFamilyMap();
             ComponentBuilder msg = Component.text().append(getMessage(headerMK, false));
 
             sender.sendMessage(getFamilyListMessage(list, familyList, msg));
@@ -91,7 +91,7 @@ public class FamilyList extends Subcommand {
         }
 
         FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
-        Map<String, Integer> familyList = player1Fam.getFamilyMap();
+        Map<Integer, String> familyList = player1Fam.getFamilyMap();
         ComponentBuilder msg = Component.text();
         msg.append(getMessage(othersHeaderMK, false)
                 .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
@@ -114,13 +114,13 @@ public class FamilyList extends Subcommand {
         return List.of(getOnlinePlayersParam());
     }
 
-    private Component getFamilyListMessage(List<String> list, Map<String, Integer> familyList, ComponentBuilder msg) {
+    private Component getFamilyListMessage(List<String> list, Map<Integer, String> familyList, ComponentBuilder msg) {
 
-        for (String e : list) {
-            if (familyList.containsKey(e)) {
-                int relationID = familyList.get(e);
+        for (int relationID : familyList.keySet()) {
+            if (list.contains(familyList.get(relationID))) {
+                String relationString = familyList.get(relationID);
                 FamilyPlayerImpl relationFam = new FamilyPlayerImpl(relationID);
-                String relationKey = e.replace("first_", "")
+                String relationKey = relationString.replace("first_", "")
                         .replace("second_", "")
                         .replace("third_", "")
                         .replace("fourth_", "")

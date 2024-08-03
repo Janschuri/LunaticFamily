@@ -75,7 +75,6 @@ public class PlayerDataTable {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Logger.debugLog("ID: " + id);
         try {
             conn = getSQLConnection();
             ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE id = ?;");
@@ -84,7 +83,6 @@ public class PlayerDataTable {
             rs = ps.executeQuery();
             while (rs.next()) {
                 if (rs.getInt("id") == id) {
-                    Logger.debugLog("UUID: " + rs.getString("uuid"));
                     return UUID.fromString(rs.getString("uuid"));
                 }
             }
