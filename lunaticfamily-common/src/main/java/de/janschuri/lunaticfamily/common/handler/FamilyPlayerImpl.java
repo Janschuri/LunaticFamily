@@ -19,6 +19,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     private final int id;
     private final UUID uuid;
 
+    private static final List<Integer> isLoaded = new ArrayList<>();
     private static final Map<Integer, String> names = new HashMap<>();
     private static final Map<Integer, String> skinURLs = new HashMap<>();
     private static final Map<Integer, String> genders = new HashMap<>();
@@ -52,7 +53,13 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         }
 
         id = PlayerDataTable.getID(uuid);
-        names.put(id, name);
+        if (name != null) {
+            names.put(id, name);
+        }
+
+        if (!isLoaded.contains(id)) {
+            update();
+        }
     }
 
     public void update() {
@@ -100,7 +107,11 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         adoptionsAsParent.put(id, AdoptionsTable.getPlayerAsParentAdoptions(id));
         adoptionsAsChild.put(id, AdoptionsTable.getPlayerAsChildAdoptions(id));
 
+        loadFamilyMap();
+
         savePlayerData();
+
+        isLoaded.add(id);
     }
 
     public String getName() {
@@ -125,8 +136,6 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         } else {
             PlayerDataTable.updatePlayerData(id, uuid.toString(), getName(), getSkinURL(), getGender(), getBackground());
         }
-
-        update();
     }
 
     private void saveMarriage(int partnerID, int priestID) {
@@ -397,7 +406,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public boolean isFamilyMember(int id) {
-        return this.getFamilyMap().containsValue(id);
+        return getFamilyMap().containsKey(id);
     }
 
     @Override

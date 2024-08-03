@@ -65,7 +65,7 @@ public class FamilyList extends Subcommand {
             PlayerSender player = (PlayerSender) sender;
             UUID uuid = player.getUniqueId();
             FamilyPlayerImpl playerFam = new FamilyPlayerImpl(uuid);
-
+            playerFam.update();
 
             Map<Integer, String> familyList = playerFam.getFamilyMap();
             ComponentBuilder msg = Component.text().append(getMessage(headerMK, false));

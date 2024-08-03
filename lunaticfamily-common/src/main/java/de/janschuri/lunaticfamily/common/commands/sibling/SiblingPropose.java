@@ -113,11 +113,15 @@ public class SiblingPropose extends Subcommand {
             return true;
         }
 
+        playerFam.update();
+
         if (playerFam.isFamilyMember(siblingFam.getId())) {
             sender.sendMessage(getMessage(familyRequestMK)
                     .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
             return true;
         }
+
+        siblingFam.update();
 
         if (siblingFam.isFamilyMember(playerFam.getId())) {
             sender.sendMessage(getMessage(familyRequestMK)
