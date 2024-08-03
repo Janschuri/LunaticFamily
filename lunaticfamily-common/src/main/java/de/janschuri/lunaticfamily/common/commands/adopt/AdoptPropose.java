@@ -147,6 +147,8 @@ public class AdoptPropose extends Subcommand {
             return true;
         }
 
+        playerFam.update();
+
         if (playerFam.isFamilyMember(childFam.getId())) {
             player.sendMessage(getMessage(familyRequestMK)
                     .replaceText(getTextReplacementConfig("%player%", childFam.getName())));

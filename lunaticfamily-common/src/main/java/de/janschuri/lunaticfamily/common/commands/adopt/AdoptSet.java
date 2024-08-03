@@ -118,6 +118,8 @@ public class AdoptSet extends Subcommand {
         FamilyPlayerImpl firstParentFam = new FamilyPlayerImpl(firstParentUUID);
         FamilyPlayerImpl childFam = new FamilyPlayerImpl(childUUID);
 
+        firstParentFam.update();
+
         if (firstParentFam.isFamilyMember(childFam.getId())) {
             sender.sendMessage(getMessage(sameFamilyMK)
                     .replaceText(getTextReplacementConfig("%player1%", firstParentFam.getName()))

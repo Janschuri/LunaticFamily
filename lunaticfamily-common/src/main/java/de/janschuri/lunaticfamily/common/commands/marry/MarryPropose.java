@@ -119,6 +119,8 @@ public class MarryPropose extends Subcommand {
         }
 
         FamilyPlayerImpl partnerFam = new FamilyPlayerImpl(partnerUUID);
+        partnerFam.update();
+
         if (playerFam.isFamilyMember(partnerFam.getId())) {
             sender.sendMessage(getMessage(familyRequestMK)
                     .replaceText(getTextReplacementConfig("%player%", partnerFam.getName())));

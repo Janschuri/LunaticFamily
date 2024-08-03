@@ -75,10 +75,20 @@ public class SiblingSet extends Subcommand {
         FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
         FamilyPlayerImpl player2Fam = new FamilyPlayerImpl(player2UUID);
 
+        player1Fam.update();
+        player2Fam.update();
+
         if (player1Fam.isFamilyMember(player2Fam.getId())) {
             sender.sendMessage(getMessage(sameFamilyMK)
                     .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
                     .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
+            return true;
+        }
+
+        if (player2Fam.isFamilyMember(player1Fam.getId())) {
+            sender.sendMessage(getMessage(sameFamilyMK)
+                    .replaceText(getTextReplacementConfig("%player1%", player2Fam.getName()))
+                    .replaceText(getTextReplacementConfig("%player2%", player1Fam.getName())));
             return true;
         }
 
