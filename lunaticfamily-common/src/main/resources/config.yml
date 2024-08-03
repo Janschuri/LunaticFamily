@@ -36,7 +36,8 @@ command_withdraws:
   priest_marry: 10.0
   priest_marry_player: 10.0
   priest_adopt: 10.0
-  priest_adopt_player: 10.0
+  priest_adopt_child: 10.0
+  priest_adopt_parent: 10.0
   priest_sibling: 10.0
   priest_sibling_player: 10.0
 default_background: "moss_block"
