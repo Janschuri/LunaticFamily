@@ -94,7 +94,11 @@ public final class LunaticFamily {
         registerRequests();
 
         if (LunaticFamily.mode != Mode.BACKEND) {
-            Database.loadDatabase();
+            if (Database.loadDatabase()) {
+                Logger.infoLog("Database loaded.");
+            } else {
+                Logger.errorLog("Database could not be loaded.");
+            }
 
             FamilyTreeJSON.loadFamilyTreeJSON();
 

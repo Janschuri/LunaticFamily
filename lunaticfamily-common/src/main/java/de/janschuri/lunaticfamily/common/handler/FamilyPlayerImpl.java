@@ -64,6 +64,8 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
     public void update() {
 
+        isLoaded.add(id);
+
         players.put(id, LunaticLib.getPlatform().getPlayerSender(uuid));
 
         if (getPlayer().getName() != null) {
@@ -110,8 +112,6 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         loadFamilyMap();
 
         savePlayerData();
-
-        isLoaded.add(id);
     }
 
     public String getName() {
