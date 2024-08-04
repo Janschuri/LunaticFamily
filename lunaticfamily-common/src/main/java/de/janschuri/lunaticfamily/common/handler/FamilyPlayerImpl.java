@@ -187,31 +187,44 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     private void saveMarriage(int partnerID, int priestID) {
         MarriagesTable.saveMarriage(this.id, partnerID, priestID);
         update();
+        updateAll();
     }
 
     private void divorceMarriage() {
         MarriagesTable.divorceMarriage(this.id);
         update();
+        updateAll();
     }
 
     private void saveSiblinghood(int siblingID, int priestID) {
         SiblinghoodsTable.saveSiblinghood(this.id, siblingID, priestID);
         update();
+        updateAll();
     }
 
     private void unsiblingSiblinghood() {
         SiblinghoodsTable.unsiblingSiblinghood(this.id);
         update();
+        updateAll();
     }
 
     private void saveAdoption(int childID, int priestID) {
         AdoptionsTable.saveAdoption(this.id, childID, priestID);
         update();
+        updateAll();
     }
 
     private void unadoptAdoption(int childID) {
         AdoptionsTable.unadoptAdoption(this.id, childID);
         update();
+        updateAll();
+    }
+
+    public void updateAll() {
+        Map<Integer, String> familyMap = getFamilyMap();
+        for (int id : familyMap.keySet()) {
+            new FamilyPlayerImpl(id).update();
+        }
     }
 
     public String getSkinURL() {
