@@ -7,6 +7,7 @@ import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
 import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.common.database.Table;
 
 public class Database {
@@ -21,6 +22,7 @@ public class Database {
     };
 
     public static boolean loadDatabase() {
+        Logger.infoLog("Loading database...");
         DatabaseConfig databaseConfig = new DatabaseConfig(LunaticFamily.getDataDirectory());
         databaseConfig.load();
         db = de.janschuri.lunaticlib.common.database.Database.getDatabase(databaseConfig, tables);
@@ -29,6 +31,7 @@ public class Database {
     }
 
     public static de.janschuri.lunaticlib.common.database.Database getDatabase() {
+        Logger.debugLog("Returning database instance.");
         return db;
     }
 }

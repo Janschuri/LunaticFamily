@@ -40,6 +40,8 @@ public class PlayerDataTable {
     }
 
     public static int getID(UUID uuid) {
+        Logger.debugLog("Accessing database: getID(UUID uuid)");
+
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -72,6 +74,7 @@ public class PlayerDataTable {
     }
 
     public static UUID getUUID(int id) {
+        Logger.debugLog("Accessing database: getUUID(" + id + ")");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -104,6 +107,7 @@ public class PlayerDataTable {
     }
 
     public static String getName(int id) {
+        Logger.debugLog("Accessing database: getName(" + id + ")");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -136,6 +140,7 @@ public class PlayerDataTable {
     }
 
     public static UUID getUUID(String name) {
+        Logger.debugLog("Accessing database: getUUID(String name)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -168,6 +173,7 @@ public class PlayerDataTable {
     }
 
     public static String getSkinURL(int id) {
+        Logger.debugLog("Accessing database: getSkinURL(int id)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -200,6 +206,7 @@ public class PlayerDataTable {
     }
 
     public static String getGender(int id) {
+        Logger.debugLog("Accessing database: getGender(int id)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -232,6 +239,7 @@ public class PlayerDataTable {
     }
 
     public static String getBackground(int id) {
+        Logger.debugLog("Accessing database: getBackground(int id)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -264,6 +272,7 @@ public class PlayerDataTable {
     }
 
     public static void updatePlayerData(int id, String uuid, String name, String skinURL, String gender, String background) {
+        Logger.debugLog("Accessing database: updatePlayerData(int id, String uuid, String name, String skinURL, String gender, String background)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -292,6 +301,7 @@ public class PlayerDataTable {
     }
 
     public static void savePlayerData(String uuid, String name, String skinURL, String gender, String background) {
+        Logger.debugLog("Accessing database: savePlayerData(String uuid, String name, String skinURL, String gender, String background)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -319,6 +329,7 @@ public class PlayerDataTable {
     }
 
     public static void deletePlayerData(String uuid) {
+        Logger.debugLog("Accessing database: deletePlayerData(String uuid)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -341,6 +352,7 @@ public class PlayerDataTable {
     }
 
     public static Map<Integer, Map<String, String>> getPlayerList(int page) {
+        Logger.debugLog("Accessing database: getPlayerList(int page)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
