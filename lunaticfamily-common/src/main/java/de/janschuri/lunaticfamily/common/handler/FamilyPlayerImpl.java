@@ -1,5 +1,7 @@
 package de.janschuri.lunaticfamily.common.handler;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticfamily.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
@@ -19,6 +21,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     private final int id;
     private final UUID uuid;
 
+    private static final BiMap<UUID, Integer> ids = HashBiMap.create();
     private static final List<Integer> isLoaded = new ArrayList<>();
     private static final Map<Integer, String> names = new HashMap<>();
     private static final Map<Integer, String> skinURLs = new HashMap<>();
@@ -36,8 +39,8 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
     public FamilyPlayerImpl(int id) {
         this(
-                Objects.requireNonNull(PlayerDataTable.getUUID(id)),
-                Objects.requireNonNull(PlayerDataTable.getName(id))
+                Objects.requireNonNull(getUUID(id)),
+                Objects.requireNonNull(getName(id))
         );
     }
 
@@ -48,11 +51,24 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     public FamilyPlayerImpl(UUID uuid, String name) {
         this.uuid = uuid;
 
-        if (PlayerDataTable.getID(uuid) < 1) {
-            savePlayerData();
+        if (ids.containsKey(uuid)) {
+            id = ids.get(uuid);
+        } else {
+            Logger.debugLog("UUID " + uuid + " not found in the map.");
+
+            int id = PlayerDataTable.getID(uuid);
+
+            if (id < 1) {
+                savePlayerData();
+                this.id = PlayerDataTable.getID(uuid);
+            } else {
+                this.id = id;
+            }
+
+            Logger.debugLog("Put UUID " + uuid + " with ID " + this.id + " into the map.");
+            ids.put(uuid, this.id);
         }
 
-        id = PlayerDataTable.getID(uuid);
         if (name != null) {
             names.put(id, name);
         }
@@ -112,6 +128,36 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         loadFamilyMap();
 
         savePlayerData();
+    }
+
+    public static String getName(int id) {
+        if (names.containsKey(id)) {
+            return names.get(id);
+        } else {
+            String name = PlayerDataTable.getName(id);
+            names.put(id, name);
+            return name;
+        }
+    }
+
+    public static int getID(UUID uuid) {
+        if (ids.containsKey(uuid)) {
+            return ids.get(uuid);
+        } else {
+            int id = PlayerDataTable.getID(uuid);
+            ids.put(uuid, id);
+            return id;
+        }
+    }
+
+    public static UUID getUUID(int id) {
+        if (ids.containsValue(id)) {
+            return ids.inverse().get(id);
+        } else {
+            UUID uuid = PlayerDataTable.getUUID(id);
+            ids.put(uuid, id);
+            return uuid;
+        }
     }
 
     public String getName() {

@@ -31,6 +31,7 @@ public class Database {
     }
 
     public static de.janschuri.lunaticlib.common.database.Database getDatabase() {
+        Logger.debugLog("Returning database instance.");
         return db;
     }
 }

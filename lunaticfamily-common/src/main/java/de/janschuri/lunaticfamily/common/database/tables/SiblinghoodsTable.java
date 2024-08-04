@@ -2,6 +2,7 @@ package de.janschuri.lunaticfamily.common.database.tables;
 
 import de.janschuri.lunaticfamily.common.database.Database;
 import de.janschuri.lunaticfamily.common.handler.Siblinghood;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.common.database.Datatype;
 import de.janschuri.lunaticlib.common.database.Error;
 import de.janschuri.lunaticlib.common.database.Table;
@@ -42,6 +43,7 @@ public class SiblinghoodsTable {
     }
 
     public static Siblinghood getSiblinghood(int id) {
+        Logger.debugLog("Accessing database: getSiblinghood(int id)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -79,6 +81,7 @@ public class SiblinghoodsTable {
     }
 
     public static List<Siblinghood> getPlayersSiblinghoods(int playerID) {
+        Logger.debugLog("Accessing database: getPlayersSiblinghoods(int playerID)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -120,6 +123,7 @@ public class SiblinghoodsTable {
     }
 
     public static int getSibling(int id) {
+        Logger.debugLog("Accessing database: getSibling(int id)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -157,6 +161,7 @@ public class SiblinghoodsTable {
     }
 
     public static void saveSiblinghood(int player1ID, int player2ID, int priestID) {
+        Logger.debugLog("Accessing database: saveSiblinghood(int player1ID, int player2ID, int priestID)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -187,6 +192,7 @@ public class SiblinghoodsTable {
     }
 
     public static void deleteSiblinghood(int playerID) {
+        Logger.debugLog("Accessing database: deleteSiblinghood(int playerID)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -210,6 +216,7 @@ public class SiblinghoodsTable {
     }
 
     public static void unsiblingSiblinghood(int playerID) {
+        Logger.debugLog("Accessing database: unsiblingSiblinghood(int playerID)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -233,6 +240,7 @@ public class SiblinghoodsTable {
     }
 
     public static int getSiblinghoodsCount() {
+        Logger.debugLog("Accessing database: getSiblinghoodsCount()");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -261,6 +269,7 @@ public class SiblinghoodsTable {
     }
 
     public static int getTotalSiblinghoodsCount() {
+        Logger.debugLog("Accessing database: getTotalSiblinghoodsCount()");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -289,6 +298,7 @@ public class SiblinghoodsTable {
     }
 
     public static List<Siblinghood> getSiblinghoodList(int page, int pageSize) {
+        Logger.debugLog("Accessing database: getSiblinghoodList(int page, int pageSize)");
         List<Siblinghood> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
@@ -329,6 +339,7 @@ public class SiblinghoodsTable {
     }
 
     public static void saveEmojiColor(int id, String hexColor) {
+        Logger.debugLog("Accessing database: saveEmojiColor(int id, String hexColor)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -352,6 +363,7 @@ public class SiblinghoodsTable {
     }
 
     public static int getPriestsSiblinghoodsCount(int priestID) {
+        Logger.debugLog("Accessing database: getPriestsSiblinghoodsCount(int priestID)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -381,6 +393,7 @@ public class SiblinghoodsTable {
     }
 
     public static int getPriestsTotalSiblinghoodsCount(int priestID) {
+        Logger.debugLog("Accessing database: getPriestsTotalSiblinghoodsCount(int priestID)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;

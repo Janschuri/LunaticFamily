@@ -3,6 +3,7 @@ package de.janschuri.lunaticfamily.common.database.tables;
 import de.janschuri.lunaticfamily.common.database.Database;
 import de.janschuri.lunaticfamily.common.handler.Adoption;
 import de.janschuri.lunaticfamily.common.handler.Marriage;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.common.database.Datatype;
 import de.janschuri.lunaticlib.common.database.Error;
 import de.janschuri.lunaticlib.common.database.Table;
@@ -34,6 +35,7 @@ public class AdoptionsTable {
     }
 
     public static Adoption getAdoption(int id) {
+        Logger.debugLog("Accessing database: getAdoption(int id)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -71,6 +73,7 @@ public class AdoptionsTable {
     }
 
     public static List<Adoption> getPlayerAsParentAdoptions(int playerID) {
+        Logger.debugLog("Accessing database: getPlayerAsParentAdoptions(int playerID)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -111,6 +114,7 @@ public class AdoptionsTable {
     }
 
     public static List<Adoption> getPlayerAsChildAdoptions(int playerID) {
+        Logger.debugLog("Accessing database: getPlayerAsChildAdoptions(int playerID)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -159,6 +163,7 @@ public class AdoptionsTable {
     }
 
     public static void saveAdoption(int parentID, int childID, int priestID) {
+        Logger.debugLog("Accessing database: saveAdoption(int parentID, int childID, int priestID)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -189,6 +194,7 @@ public class AdoptionsTable {
     }
 
     public static void deleteAdoption(int parentID, int childID) {
+        Logger.debugLog("Accessing database: deleteAdoption(int parentID, int childID)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -212,6 +218,7 @@ public class AdoptionsTable {
     }
 
     public static void deleteAllAdoptions(int playerID) {
+        Logger.debugLog("Accessing database: deleteAllAdoptions(int playerID)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -234,6 +241,7 @@ public class AdoptionsTable {
     }
 
     public static void unadoptAdoption(int playerID, int childID) {
+        Logger.debugLog("Accessing database: unadoptAdoption(int playerID, int childID)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -257,6 +265,7 @@ public class AdoptionsTable {
     }
 
     public static int getAdoptionsCount() {
+        Logger.debugLog("Accessing database: getAdoptionsCount()");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -288,6 +297,7 @@ public class AdoptionsTable {
     }
 
     public static int getTotalAdoptionsCount() {
+        Logger.debugLog("Accessing database: getTotalAdoptionsCount()");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -319,6 +329,7 @@ public class AdoptionsTable {
     }
 
     public static List<Adoption> getAdoptionList(int page, int limit) {
+        Logger.debugLog("Accessing database: getAdoptionList(int page, int limit)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -362,6 +373,7 @@ public class AdoptionsTable {
     }
 
     public static void saveEmojiColor(int id, String hexColor) {
+        Logger.debugLog("Accessing database: saveEmojiColor(int id, String hexColor)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -385,6 +397,7 @@ public class AdoptionsTable {
     }
 
     public static int getPriestsAdoptionsCount(int priestID) {
+        Logger.debugLog("Accessing database: getPriestsAdoptionsCount(int priestID)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -417,6 +430,7 @@ public class AdoptionsTable {
     }
 
     public static int getPriestsTotalAdoptionsCount(int priestID) {
+        Logger.debugLog("Accessing database: getPriestsTotalAdoptionsCount(int priestID)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;

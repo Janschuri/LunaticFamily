@@ -1,7 +1,9 @@
 package de.janschuri.lunaticfamily.common.database.tables;
 
+import com.mysql.cj.log.Log;
 import de.janschuri.lunaticfamily.common.database.Database;
 import de.janschuri.lunaticfamily.common.handler.Marriage;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.common.database.Datatype;
 import de.janschuri.lunaticlib.common.database.Error;
 import de.janschuri.lunaticlib.common.database.Table;
@@ -41,6 +43,7 @@ public class MarriagesTable {
     }
 
     public static Marriage getMarriage(int id) {
+        Logger.debugLog("Accessing database: getMarriage(int id)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -78,6 +81,7 @@ public class MarriagesTable {
     }
 
     public static List<Marriage> getPlayersMarriages(int playerID) {
+        Logger.debugLog("Accessing database: getPlayersMarriages(int playerID)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -118,6 +122,7 @@ public class MarriagesTable {
     }
 
     public static List<Marriage> getMarriageList(int page, int pageSize) {
+        Logger.debugLog("Accessing database: getMarriageList(int page, int pageSize)");
         List<Marriage> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
@@ -156,6 +161,7 @@ public class MarriagesTable {
     }
 
     public static void saveMarriage(int player1ID, int player2ID, int priestID) {
+        Logger.debugLog("Accessing database: saveMarriage(int player1ID, int player2ID, int priestID)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -185,6 +191,7 @@ public class MarriagesTable {
     }
 
     public static void saveEmojiColor(int id, String hexColor) {
+        Logger.debugLog("Accessing database: saveEmojiColor(int id, String hexColor)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -208,6 +215,7 @@ public class MarriagesTable {
     }
 
     public static void deleteMarriage(int playerID) {
+        Logger.debugLog("Accessing database: deleteMarriage(int playerID)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -231,6 +239,7 @@ public class MarriagesTable {
     }
 
     public static void divorceMarriage(int playerID) {
+        Logger.debugLog("Accessing database: divorceMarriage(int playerID)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -254,6 +263,7 @@ public class MarriagesTable {
     }
 
     public static int getMarriagesCount() {
+        Logger.debugLog("Accessing database: getMarriagesCount()");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -282,6 +292,7 @@ public class MarriagesTable {
     }
 
     public static int getTotalMarriagesCount() {
+        Logger.debugLog("Accessing database: getTotalMarriagesCount()");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -310,6 +321,7 @@ public class MarriagesTable {
     }
 
     public static int getPriestsMarriagesCount(int priestID) {
+        Logger.debugLog("Accessing database: getPriestsMarriagesCount(int priestID)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -339,6 +351,7 @@ public class MarriagesTable {
     }
 
     public static int getPriestsTotalMarriagesCount(int priestID) {
+        Logger.debugLog("Accessing database: getPriestsTotalMarriagesCount(int priestID)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
