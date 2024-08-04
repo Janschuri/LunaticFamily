@@ -26,7 +26,7 @@ public class MarriagesTable {
         new ForeignKey("priest", Datatype.INTEGER, true, "playerData", "id", "SET NULL"),
         new Column("heart", true),
         new Column("date", Datatype.TIMESTAMP, false, "CURRENT_TIMESTAMP"),
-        new Column("divorceDate", Datatype.TIMESTAMP, true, "NULL"),
+        new Column("divorceDate", Datatype.TIMESTAMP, true),
     };
 
     private static final Table TABLE = new Table(NAME, PRIMARY_KEY, COLUMNS);
