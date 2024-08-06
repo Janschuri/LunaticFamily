@@ -747,18 +747,34 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public List<Marriage> getMarriages() {
+        if (!marriages.containsKey(this.id)) {
+            marriages.put(this.id, new ArrayList<>());
+        }
+
         return marriages.get(this.id);
     }
 
     public List<Siblinghood> getSiblinghoods() {
+        if (!siblinghoods.containsKey(this.id)) {
+            siblinghoods.put(this.id, new ArrayList<>());
+        }
+
         return siblinghoods.get(this.id);
     }
 
     public List<Adoption> getAdoptionsAsParent() {
+        if (!adoptionsAsParent.containsKey(this.id)) {
+            adoptionsAsParent.put(this.id, new ArrayList<>());
+        }
+
         return adoptionsAsParent.get(this.id);
     }
 
     public List<Adoption> getAdoptionsAsChild() {
+        if (!adoptionsAsChild.containsKey(this.id)) {
+            adoptionsAsChild.put(this.id, new ArrayList<>());
+        }
+
         return adoptionsAsChild.get(this.id);
     }
 }
