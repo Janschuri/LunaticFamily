@@ -6,6 +6,7 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
@@ -16,6 +17,7 @@ import de.janschuri.lunaticlib.platform.velocity.external.Metrics;
 
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 @Plugin(
@@ -32,7 +34,6 @@ public class VelocityLunaticFamily {
 
     private static ProxyServer proxy;
     private static Path dataDirectory;
-    private static VelocityLunaticFamily instance;
     public static final MinecraftChannelIdentifier IDENTIFIER = MinecraftChannelIdentifier.from("lunaticfamily:proxy");
     private final Metrics.Factory metricsFactory;
 
@@ -50,9 +51,6 @@ public class VelocityLunaticFamily {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-
-        instance = this;
-
         proxy.getChannelRegistrar().register(IDENTIFIER);
 
         int pluginId = 21914;
@@ -60,7 +58,7 @@ public class VelocityLunaticFamily {
 
 
         Mode mode = Mode.PROXY;
-        Platform platform = new PlatformImpl();
+        Platform<PluginContainer> platform = new PlatformImpl();
         Path dataDirectory =  VelocityLunaticFamily.dataDirectory;
 
         LunaticFamily.onEnable(dataDirectory, mode, platform);
@@ -99,8 +97,8 @@ public class VelocityLunaticFamily {
         LunaticFamily.onDisable();
     }
 
-    public static VelocityLunaticFamily getInstance() {
-        return instance;
+    public static PluginContainer getInstance() {
+        return getProxy().getPluginManager().getPlugin("lunaticfamily").get();
     }
 }
 
