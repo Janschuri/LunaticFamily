@@ -35,11 +35,13 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
     private Map<String, String> colors = new HashMap<>();
 
     public ConfigImpl(Path dataDirectory) {
-        super(dataDirectory, CONFIG_FILE, (LunaticFamily.getMode() == Mode.PROXY || LunaticFamily.getMode() == Mode.BACKEND) ? "proxyConfig.yml" : "config.yml");
+        super(dataDirectory, CONFIG_FILE);
+
     }
 
     public void load() {
-        super.load();
+        String defaultPath = (LunaticFamily.getMode() == Mode.PROXY || LunaticFamily.getMode() == Mode.BACKEND) ? "proxyConfig.yml" : "config.yml";
+        super.load(defaultPath);
 
         LunaticFamily.isDebug = getBoolean("debug", false);
 
