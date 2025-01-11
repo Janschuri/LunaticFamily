@@ -1,272 +1,137 @@
 package de.janschuri.lunaticfamily.common.handler;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import de.janschuri.lunaticfamily.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
-import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
-import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
-import de.janschuri.lunaticfamily.common.utils.Logger;
-import de.janschuri.lunaticfamily.platform.FamilyTree;
+import de.janschuri.lunaticfamily.Marriage;
+import de.janschuri.lunaticfamily.Siblinghood;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class FamilyPlayerImpl implements FamilyPlayer {
+public abstract class FamilyPlayerImpl implements Serializable {
 
 
     private final int id;
     private final UUID uuid;
-
-    private static final BiMap<UUID, Integer> ids = HashBiMap.create();
-    private static final List<Integer> isLoaded = new ArrayList<>();
-    private static final Map<Integer, String> names = new HashMap<>();
-    private static final Map<Integer, String> skinURLs = new HashMap<>();
-    private static final Map<Integer, String> genders = new HashMap<>();
-    private static final Map<Integer, String> backgrounds = new HashMap<>();
-    private static final Map<Integer, PlayerSender> players = new HashMap<>();
-    private static final Map<Integer, Map<Integer, String>> familyLists = new HashMap<>();
-    private static final Map<Integer, List<Adoption>> adoptionsAsParent = new HashMap<>();
-    private static final Map<Integer, List<Siblinghood>> siblinghoods = new HashMap<>();
-    private static final Map<Integer, List<Adoption>> adoptionsAsChild = new HashMap<>();
-    private static final Map<Integer, List<Marriage>> marriages = new HashMap<>();
+    private String name;
+    private String skinURL;
+    private PlayerSender player;
+    private String gender;
+    private String background;
+    private List<Integer> familyList;
+    private List<de.janschuri.lunaticfamily.Marriage> marriages;
+    private List<de.janschuri.lunaticfamily.Siblinghood> siblinghoods;
+    private List<Adoption> adoptionsAsParent;
+    private List<Adoption> adoptionsAsChild;
 
     public static final String DEFAULT_SKIN = "http://textures.minecraft.net/texture/2705fd94a0c431927fb4e639b0fcfb49717e412285a02b439e0112da22b2e2ec";
 
 
-    public FamilyPlayerImpl(int id) {
-        this(
-                Objects.requireNonNull(getUUID(id)),
-                Objects.requireNonNull(getName(id))
-        );
-    }
-
-    public FamilyPlayerImpl(UUID uuid) {
-        this(uuid, null);
-    }
-
-    public FamilyPlayerImpl(UUID uuid, String name) {
+    public FamilyPlayerImpl(
+            int id,
+            UUID uuid,
+            String name,
+            String skinURL,
+            String gender,
+            String background,
+            List<Integer> familyList,
+            List<de.janschuri.lunaticfamily.Marriage> marriages,
+            List<de.janschuri.lunaticfamily.Siblinghood> siblinghoods,
+            List<Adoption> adoptionsAsParent,
+            List<Adoption> adoptionsAsChild
+    ) {
+        this.id = id;
         this.uuid = uuid;
-
-        if (ids.containsKey(uuid)) {
-            id = ids.get(uuid);
-        } else {
-            Logger.debugLog("UUID " + uuid + " not found in the map.");
-
-            int id = PlayerDataTable.getID(uuid);
-
-            if (id < 1) {
-                savePlayerData();
-                this.id = PlayerDataTable.getID(uuid);
-            } else {
-                this.id = id;
-            }
-
-            Logger.debugLog("Put UUID " + uuid + " with ID " + this.id + " into the map.");
-            ids.put(uuid, this.id);
-        }
-
-        if (name != null) {
-            names.put(id, name);
-        }
-
-        if (!isLoaded.contains(id)) {
-            update();
-        }
+        this.name = name;
+        this.skinURL = skinURL;
+        this.gender = gender;
+        this.background = background;
+        this.familyList = familyList;
+        this.marriages = marriages;
+        this.siblinghoods = siblinghoods;
+        this.adoptionsAsParent = adoptionsAsParent;
+        this.adoptionsAsChild = adoptionsAsChild;
     }
 
-    public void update() {
+    public abstract FamilyPlayerImpl getFamilyPlayer(int id);
+    public abstract FamilyPlayerImpl getFamilyPlayer(UUID uuid);
 
-        isLoaded.add(id);
+    public abstract void update();
+    public abstract void save();
 
-        players.put(id, LunaticLib.getPlatform().getPlayerSender(uuid));
+    protected abstract void saveMarriage(int partnerID, int priestID);
+    protected abstract void divorceMarriage();
+    protected abstract void saveSiblinghood(int siblingID, int priestID);
+    protected abstract void unsiblingSiblinghood();
+    protected abstract void saveAdoption(int childID, int priestID);
+    protected abstract void unadoptAdoption(int childID);
 
-        if (getPlayer().getName() != null) {
-            names.put(id, getPlayer().getName());
-        }
-
-        if (getName() == null) {
-            names.put(id, PlayerDataTable.getName(id));
-        }
-
-        if (getName() == null) {
-            names.put(id, "unknown");
-        }
-
-        skinURLs.put(id, getPlayer().getSkinURL());
-
-        if (getSkinURL() == null) {
-            skinURLs.put(id, PlayerDataTable.getSkinURL(id));
-        }
-        if (getSkinURL() == null) {
-            skinURLs.put(id, DEFAULT_SKIN);
-        }
-
-        String gender = PlayerDataTable.getGender(id);
-        if (gender == null) {
-            genders.put(id, LunaticFamily.getConfig().getDefaultGender());
-        } else {
-            genders.put(id, gender);
-        }
-
-
-        String background = PlayerDataTable.getBackground(id);
-        if (background == null) {
-            backgrounds.put(id, LunaticFamily.getConfig().getDefaultBackground());
-        } else {
-            backgrounds.put(id, background);
-        }
-
-        marriages.put(id, MarriagesTable.getPlayersMarriages(id));
-        siblinghoods.put(id, SiblinghoodsTable.getPlayersSiblinghoods(id));
-        adoptionsAsParent.put(id, AdoptionsTable.getPlayerAsParentAdoptions(id));
-        adoptionsAsChild.put(id, AdoptionsTable.getPlayerAsChildAdoptions(id));
-
-        loadFamilyMap();
-        updateFamilyTree();
-
-        savePlayerData();
-    }
-
-    public static String getName(int id) {
-        if (names.containsKey(id)) {
-            return names.get(id);
-        } else {
-            String name = PlayerDataTable.getName(id);
-            names.put(id, name);
-            return name;
-        }
-    }
-
-    public static int getID(UUID uuid) {
-        if (ids.containsKey(uuid)) {
-            return ids.get(uuid);
-        } else {
-            int id = PlayerDataTable.getID(uuid);
-            ids.put(uuid, id);
-            return id;
-        }
-    }
-
-    public static UUID getUUID(int id) {
-        if (ids.containsValue(id)) {
-            return ids.inverse().get(id);
-        } else {
-            UUID uuid = PlayerDataTable.getUUID(id);
-            ids.put(uuid, id);
-            return uuid;
-        }
-    }
-
-    public String getName() {
-        return names.get(id);
-    }
-
-    public PlayerSender getPlayer() {
-        return players.get(id);
-    }
-
-    public int getId() {
+    public final int getId() {
         return id;
     }
 
-    public UUID getUniqueId() {
+    public final UUID getUniqueId() {
         return uuid;
     }
 
-    private void savePlayerData() {
-        if (id < 1) {
-            PlayerDataTable.savePlayerData(uuid.toString(), getName(), getSkinURL(), getGender(), getBackground());
-        } else {
-            PlayerDataTable.updatePlayerData(id, uuid.toString(), getName(), getSkinURL(), getGender(), getBackground());
+    public final String getName() {
+        return name;
+    }
+
+    public final String getSkinURL() {
+        return skinURL;
+    }
+
+    public final PlayerSender getPlayer() {
+        if (player == null) {
+            player = LunaticLib.getPlatform().getPlayerSender(uuid);
         }
+        return player;
     }
 
-    private void saveMarriage(int partnerID, int priestID) {
-        MarriagesTable.saveMarriage(this.id, partnerID, priestID);
+    public final void updateAll() {
         update();
-        updateAll();
-    }
-
-    private void divorceMarriage() {
-        MarriagesTable.divorceMarriage(this.id);
-        update();
-        updateAll();
-    }
-
-    private void saveSiblinghood(int siblingID, int priestID) {
-        SiblinghoodsTable.saveSiblinghood(this.id, siblingID, priestID);
-        update();
-        updateAll();
-    }
-
-    private void unsiblingSiblinghood() {
-        SiblinghoodsTable.unsiblingSiblinghood(this.id);
-        update();
-        updateAll();
-    }
-
-    private void saveAdoption(int childID, int priestID) {
-        AdoptionsTable.saveAdoption(this.id, childID, priestID);
-        update();
-        updateAll();
-    }
-
-    private void unadoptAdoption(int childID) {
-        AdoptionsTable.unadoptAdoption(this.id, childID);
-        update();
-        updateAll();
-    }
-
-    public void updateAll() {
-        Map<Integer, String> familyMap = getFamilyMap();
+        Map<Integer, String> familyMap = getFamilyList();
         for (int id : familyMap.keySet()) {
-            new FamilyPlayerImpl(id).update();
+            getFamilyPlayer(id).update();
         }
     }
 
-    public String getSkinURL() {
-        return skinURLs.get(id);
-    }
-
-    public FamilyPlayerImpl getPartner() {
+    public final FamilyPlayerImpl getPartner() {
         if (getMarriages().isEmpty()) {
             return null;
         }
 
         int partnerID = getMarriages().get(0).getPartnerID(id);
-        return new FamilyPlayerImpl(partnerID);
+        return getFamilyPlayer(partnerID);
     }
 
-    public boolean isMarried() {
+    public final boolean isMarried() {
         return !getMarriages().isEmpty();
     }
 
-    public boolean hasChildren() {
+    public final boolean hasChildren() {
         return !getAdoptionsAsParent().isEmpty();
     }
 
-    public FamilyPlayerImpl getSibling() {
+    public final FamilyPlayerImpl getSibling() {
         if (getSiblinghoods().isEmpty()) {
             return null;
         }
 
         int siblingID = getSiblinghoods().get(0).getSiblingID(id);
-        return new FamilyPlayerImpl(siblingID);
+        return getFamilyPlayer(siblingID);
     }
 
-    public boolean hasSibling() {
+    public final boolean hasSibling() {
         return !getSiblinghoods().isEmpty();
     }
 
-    public boolean isAdopted() {
+    public final boolean isAdopted() {
         return !getAdoptionsAsChild().isEmpty();
     }
 
-    public boolean isChildOf(int parentID) {
+    public final boolean isChildOf(int parentID) {
         for (Adoption adoption : getAdoptionsAsChild()) {
             if (adoption.getParentID() == parentID) {
                 return true;
@@ -275,56 +140,59 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         return false;
     }
 
-    public List<FamilyPlayer> getParents() {
-        List<FamilyPlayer> list = new ArrayList<>();
+    public final List<FamilyPlayerImpl> getParents() {
+        List<FamilyPlayerImpl> list = new ArrayList<>();
 
         for (Adoption adoption : getAdoptionsAsChild()) {
-            list.add(new FamilyPlayerImpl(adoption.getParentID()));
+            list.add(getFamilyPlayer(adoption.getParentID()));
         }
 
         return list;
     }
 
-    public List<FamilyPlayer> getChildren() {
-        List<FamilyPlayer> list = new ArrayList<>();
+    public final List<FamilyPlayerImpl> getChildren() {
+        List<FamilyPlayerImpl> list = new ArrayList<>();
 
         for (Adoption adoption : getAdoptionsAsParent()) {
-            list.add(new FamilyPlayerImpl(adoption.getChildID()));
+            list.add(getFamilyPlayer(adoption.getChildID()));
         }
 
         return list;
     }
 
-    public String getGender() {
-        return genders.get(id);
+    public final String getGender() {
+        return gender;
     }
 
-    public void setGender(String gender) {
-        genders.put(id, gender);
-        savePlayerData();
+    public final void setGender(String gender) {
+        this.gender = gender;
     }
 
-    public String getBackground() {
-        return backgrounds.get(id);
+    public final String getBackground() {
+        return background;
     }
 
-    public void setBackground(String background) {
-        backgrounds.put(id, "textures/block/" + background + ".png");
-        savePlayerData();
+    public final void setBackground(String background) {
+//        backgrounds.put(id, "textures/block/" + background + ".png");
+        this.background = background;
     }
 
-    public Integer getChildrenAmount() {
+    public final Integer getChildrenAmount() {
         return getAdoptionsAsParent().size();
     }
 
 
-    public void marry(int partnerID) {
+    public final void marry(int partnerID) {
         marry(partnerID, -1);
     }
 
-    public void marry(int partnerID, int priestID) {
-        if (new FamilyPlayerImpl(partnerID).isFamilyMember(this.id)) {
-            Logger.errorLog("Cancelled marriage. Player is already a family member.");
+    public final void marry(int partnerID, int priestID) {
+        FamilyPlayerImpl playerFam = this;
+        FamilyPlayerImpl partnerFam = getFamilyPlayer(partnerID);
+
+        if
+
+        if (getFamilyPlayer(partnerID).isFamilyMember(this.id)) {
             return;
         }
 
@@ -333,15 +201,13 @@ public class FamilyPlayerImpl implements FamilyPlayer {
             return;
         }
 
-        FamilyPlayerImpl playerFam = this;
-        FamilyPlayerImpl partnerFam = new FamilyPlayerImpl(partnerID);
-        List<FamilyPlayer> playerChildren = playerFam.getChildren();
-        List<FamilyPlayer> partnerChildren = partnerFam.getChildren();
+        List<FamilyPlayerImpl> playerChildren = playerFam.getChildren();
+        List<FamilyPlayerImpl> partnerChildren = partnerFam.getChildren();
 
-        for (FamilyPlayer child : playerChildren) {
+        for (FamilyPlayerImpl child : playerChildren) {
             partnerFam.saveAdoption(child.getId(), priestID);
         }
-        for (FamilyPlayer child : partnerChildren) {
+        for (FamilyPlayerImpl child : partnerChildren) {
             playerFam.saveAdoption(child.getId(), priestID);
         }
 
@@ -356,19 +222,19 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         partnerFam.updateFamilyTree();
     }
 
-    public void divorce() {
+    public final void divorce() {
         FamilyPlayerImpl playerFam = this;
         FamilyPlayerImpl partnerFam = playerFam.getPartner();
 
-        List<FamilyPlayer> playerChildren = playerFam.getChildren();
-        for (FamilyPlayer child : playerChildren) {
+        List<FamilyPlayerImpl> playerChildren = playerFam.getChildren();
+        for (FamilyPlayerImpl child : playerChildren) {
             playerFam.unadoptAdoption(child.getId());
         }
 
         playerFam.divorceMarriage();
 
         if (!LunaticFamily.getConfig().isAllowSingleAdopt()) {
-            for (FamilyPlayer child : playerChildren) {
+            for (FamilyPlayerImpl child : playerChildren) {
                 partnerFam.unadoptAdoption(child.getId());
             }
         }
@@ -377,11 +243,11 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         partnerFam.updateFamilyTree();
     }
 
-    public void adopt(int childID) {
+    public final void adopt(int childID) {
         adopt(childID, -1);
     }
 
-    public void adopt(int childID, int priestID) {
+    public final void adopt(int childID, int priestID) {
         if (new FamilyPlayerImpl(childID).isFamilyMember(this.id)) {
             Logger.errorLog("Cancelled adoption. Player is already a family member.");
             return;
@@ -414,7 +280,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         childFam.updateFamilyTree();
     }
 
-    public void unadopt(int childID) {
+    public final void unadopt(int childID) {
         FamilyPlayerImpl playerFam = this;
         FamilyPlayerImpl childFam = new FamilyPlayerImpl(childID);
         playerFam.unadoptAdoption(childID);
@@ -433,11 +299,11 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         childFam.updateFamilyTree();
     }
 
-    public void addSibling(int siblingID) {
+    public final void addSibling(int siblingID) {
         addSibling(siblingID, -1);
     }
 
-    public void addSibling(int siblingID, int priestID) {
+    public final void addSibling(int siblingID, int priestID) {
         if (new FamilyPlayerImpl(siblingID).isFamilyMember(this.id)) {
             Logger.errorLog("Cancelled Siblinghood. Player is already a family member.");
             return;
@@ -456,7 +322,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         siblingFam.updateFamilyTree();
     }
 
-    public void removeSibling() {
+    public final void removeSibling() {
         FamilyPlayerImpl playerFam = this;
         FamilyPlayerImpl siblingFam = playerFam.getSibling();
 
@@ -466,12 +332,12 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         siblingFam.updateFamilyTree();
     }
 
-    public boolean isFamilyMember(int id) {
-        return getFamilyMap().containsKey(id);
+    public final boolean isFamilyMember(int id) {
+        return getFamilyList().containsKey(id);
     }
 
     @Override
-    public Map<Integer, String> getFamilyMap() {
+    public Map<Integer, String> getFamilyList() {
         return familyLists.get(id);
     }
 

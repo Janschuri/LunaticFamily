@@ -72,6 +72,51 @@ public class AdoptionsTable {
         return null;
     }
 
+    public static void save(Adoption adoption) {
+        int id = adoption.getId();
+        int parentID = adoption.getParentID();
+        int childID = adoption.getChildID();
+        int priest = adoption.getPriest();
+        String emoji = adoption.getEmojiColor();
+        Timestamp date = adoption.getDate();
+        Timestamp unadoptDate = adoption.getUnadoptDate();
+
+        Logger.debugLog("Accessing database: save(Adoption adoption)");
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("REPLACE INTO `" + NAME + "` (id, parentID, childID, priest, emoji, date, unadoptDate) VALUES(?,?,?,?,?,?,?)");
+            if (id == -1) {
+                ps.setNull(1, Types.INTEGER);
+            } else {
+                ps.setInt(1, id);
+            }
+            ps.setInt(2, parentID);
+            ps.setInt(3, childID);
+            if (priest <= 0) {
+                ps.setNull(4, Types.INTEGER);
+            } else {
+                ps.setInt(4, priest);
+            }
+            ps.setString(5, emoji);
+            ps.setTimestamp(6, date);
+            ps.setTimestamp(7, unadoptDate);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+    }
+
     public static List<Adoption> getPlayerAsParentAdoptions(int playerID) {
         Logger.debugLog("Accessing database: getPlayerAsParentAdoptions(int playerID)");
         Connection conn = null;

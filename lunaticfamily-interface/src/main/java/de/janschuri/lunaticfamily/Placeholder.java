@@ -1,4 +1,4 @@
-package de.janschuri.lunaticfamily.common.handler;
+package de.janschuri.lunaticfamily;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;

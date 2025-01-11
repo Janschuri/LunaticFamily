@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -67,7 +66,7 @@ public class FamilyList extends Subcommand {
             FamilyPlayerImpl playerFam = new FamilyPlayerImpl(uuid);
             playerFam.update();
 
-            Map<Integer, String> familyList = playerFam.getFamilyMap();
+            Map<Integer, String> familyList = playerFam.getFamilyList();
             ComponentBuilder msg = Component.text().append(getMessage(headerMK, false));
 
             sender.sendMessage(getFamilyListMessage(list, familyList, msg));
@@ -91,7 +90,7 @@ public class FamilyList extends Subcommand {
         }
 
         FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
-        Map<Integer, String> familyList = player1Fam.getFamilyMap();
+        Map<Integer, String> familyList = player1Fam.getFamilyList();
         ComponentBuilder msg = Component.text();
         msg.append(getMessage(othersHeaderMK, false)
                 .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));

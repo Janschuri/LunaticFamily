@@ -1,80 +1,85 @@
 package de.janschuri.lunaticfamily.common.handler;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
+import de.janschuri.lunaticfamily.common.database.Database;
 import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Adoption {
+public class Adoption implements Model {
+
+    private static final Map<Integer, Adoption> adoptions = new HashMap<>();
 
     private final int id;
     private final int parentID;
     private final int childID;
     private final int priest;
-    private final String emoji;
     private final Timestamp date;
     private final Timestamp unadoptDate;
-
-    public Adoption(int id) {
-        Adoption adoption = AdoptionsTable.getAdoption(id);
-        assert adoption != null;
-        this.id = adoption.id;
-        this.parentID = adoption.parentID;
-        this.childID = adoption.childID;
-        this.priest = adoption.priest;
-        this.emoji = adoption.emoji;
-        this.date = adoption.date;
-        this.unadoptDate = adoption.unadoptDate;
-    }
+    private String emojiColor;
 
     public Adoption(int id, int parentID, int childID, int priest, String emoji, Timestamp date, Timestamp unadoptDate) {
         this.id = id;
         this.parentID = parentID;
         this.childID = childID;
         this.priest = priest;
-        this.emoji = emoji;
+        this.emojiColor = emoji;
         this.date = date;
         this.unadoptDate = unadoptDate;
     }
 
-    public int getParentID() {
+    public Adoption getAdoption(int id) {
+        if (adoptions.containsKey(id)) {
+            return adoptions.get(id);
+        }
+
+        return AdoptionsTable.getAdoption(id);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public final int getParentID() {
         return parentID;
     }
 
-    public int getChildID() {
+    public final int getChildID() {
         return childID;
     }
 
-    public int getPriest() {
+    public final int getPriest() {
         return priest;
     }
 
-    public Timestamp getDate() {
+    public final Timestamp getDate() {
         return date;
     }
 
-    public Timestamp getUnadoptDate() {
+    public final Timestamp getUnadoptDate() {
         return unadoptDate;
     }
 
-    public String getEmojiColor() {
-
-        String color = emoji;
+    public final String getEmojiColor() {
+        String color = emojiColor;
         if (color == null) {
             color = LunaticFamily.getConfig().getDefaultAdoptEmojiColor();
         }
         return color;
     }
 
-    public void setEmojiColor(String color) {
-        AdoptionsTable.saveEmojiColor(this.id, color);
+    public final void setEmojiColor(String emojiColor) {
+        this.emojiColor = emojiColor;
     }
 
-    public String getColoredParentEmoji() {
+    public final String getColoredParentEmoji() {
         return "<" + getEmojiColor() + ">" + getDefaultParentEmoji();
     }
 
-    public String getColoredChildEmoji() {
+    public final String getColoredChildEmoji() {
         return "<" + getEmojiColor() + ">" + getDefaultChildEmoji();
     }
 

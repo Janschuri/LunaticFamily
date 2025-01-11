@@ -1,11 +1,10 @@
 package de.janschuri.lunaticfamily.common.commands.priest;
 
-import de.janschuri.lunaticfamily.FamilyPlayer;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
 import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
 import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
@@ -49,7 +48,7 @@ public class PriestStats extends Subcommand {
         msg.append(getMessage(headerMK, false));
 
         PlayerSender player = (PlayerSender) sender;
-        FamilyPlayer familyPlayer = new FamilyPlayerImpl(player.getUniqueId());
+        FamilyPlayerImpl familyPlayer = new de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl(player.getUniqueId());
 
         int totalAdoptions = AdoptionsTable.getPriestsTotalAdoptionsCount(familyPlayer.getId());
         int activeAdoptions = AdoptionsTable.getPriestsAdoptionsCount(familyPlayer.getId());

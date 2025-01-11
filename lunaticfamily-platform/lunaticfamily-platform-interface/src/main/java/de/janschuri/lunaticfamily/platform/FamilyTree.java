@@ -1,15 +1,15 @@
 package de.janschuri.lunaticfamily.platform;
 
-import de.janschuri.lunaticfamily.FamilyPlayer;
+import de.janschuri.lunaticfamily.FamilyPlayerImpl;
 
 import java.util.*;
 
 public interface FamilyTree {
 
     default boolean update(String server, UUID uuid, int id) {
-        FamilyPlayer familyPlayer = getFamilyPlayer(id);
+        FamilyPlayerImpl familyPlayer = getFamilyPlayer(id);
         String background = familyPlayer.getBackground();
-        Map<Integer, String> familyMap = familyPlayer.getFamilyMap();
+        Map<Integer, String> familyMap = familyPlayer.getFamilyList();
         familyMap.put(id, "ego");
 
         List<String> familyList = new ArrayList<>();
@@ -18,7 +18,7 @@ public interface FamilyTree {
         Map<String, String> relationLangs = new HashMap<>();
 
         for (Map.Entry<Integer, String> entry : familyMap.entrySet()) {
-            FamilyPlayer relationFam = getFamilyPlayer(entry.getKey());
+            FamilyPlayerImpl relationFam = getFamilyPlayer(entry.getKey());
             String relationLang = getRelation(entry.getValue(), relationFam.getGender());
 
             String skinURL = relationFam.getSkinURL();
@@ -54,7 +54,7 @@ public interface FamilyTree {
 
     boolean update(String server, UUID uuid, String background, FamilyRelation familyRelation);
 
-    FamilyPlayer getFamilyPlayer(int id);
+    FamilyPlayerImpl getFamilyPlayer(int id);
 
     String getRelation(String relation, String key);
 

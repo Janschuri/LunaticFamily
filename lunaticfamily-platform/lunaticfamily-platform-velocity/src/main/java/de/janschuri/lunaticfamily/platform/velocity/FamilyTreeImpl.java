@@ -1,9 +1,8 @@
 package de.janschuri.lunaticfamily.platform.velocity;
 
-import de.janschuri.lunaticfamily.FamilyPlayer;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.futurerequests.UpdateFamilyTreeRequest;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.platform.FamilyTree;
 
 import java.util.List;
@@ -30,8 +29,8 @@ public class FamilyTreeImpl implements FamilyTree {
     }
 
     @Override
-    public FamilyPlayer getFamilyPlayer(int id) {
-        return new FamilyPlayerImpl(id);
+    public FamilyPlayerImpl getFamilyPlayer(int id) {
+        return new de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl(id);
     }
 
     @Override
