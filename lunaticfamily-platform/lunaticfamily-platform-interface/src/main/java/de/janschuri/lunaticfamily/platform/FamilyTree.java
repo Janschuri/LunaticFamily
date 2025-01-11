@@ -29,14 +29,30 @@ public interface FamilyTree {
             relationLangs.put(entry.getValue(), relationLang);
         }
 
-        return update(server, uuid, background, familyList, names, skins, relationLangs);
+        List<FamilyRelation> partners = new ArrayList<>();
+        List<FamilyRelation> siblings = new ArrayList<>();
+        List<FamilyRelation> parents = new ArrayList<>();
+        List<FamilyRelation> children = new ArrayList<>();
+
+        FamilyRelation ego = new FamilyRelation(
+                "ego",
+                "ego",
+                familyPlayer.getName(),
+                familyPlayer.getSkinURL(),
+                children,
+                parents,
+                siblings,
+                partners
+        );
+
+        return update(server, uuid, background, ego);
     }
 
     boolean isFamilyTreeMapLoaded();
 
     boolean loadFamilyTreeMap(String JSONContent);
 
-    boolean update(String server, UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs);
+    boolean update(String server, UUID uuid, String background, FamilyRelation familyRelation);
 
     FamilyPlayer getFamilyPlayer(int id);
 

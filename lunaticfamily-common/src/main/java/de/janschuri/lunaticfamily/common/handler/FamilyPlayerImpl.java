@@ -126,6 +126,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         adoptionsAsChild.put(id, AdoptionsTable.getPlayerAsChildAdoptions(id));
 
         loadFamilyMap();
+        updateFamilyTree();
 
         savePlayerData();
     }
@@ -428,6 +429,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         }
 
         playerFam.updateFamilyTree();
+        childFam.update();
         childFam.updateFamilyTree();
     }
 
