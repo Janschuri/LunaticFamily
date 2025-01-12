@@ -1,6 +1,10 @@
 package de.janschuri.lunaticfamily.common.database.tables;
 
 import de.janschuri.lunaticfamily.common.database.Database;
+import de.janschuri.lunaticfamily.common.handler.Adoption;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.Marriage;
+import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.common.database.Datatype;
 import de.janschuri.lunaticlib.common.database.Error;
@@ -71,6 +75,55 @@ public class PlayerDataTable {
             }
         }
         return -1;
+    }
+
+    public static FamilyPlayerImpl getPlayer (int id) {
+        Logger.debugLog("Accessing database: getPlayer(int id)");
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE id = ?;");
+            ps.setInt(1, id);
+
+            rs = ps.executeQuery();
+            UUID uuid;
+            String name;
+            String skinURL;
+            String gender;
+            String background;
+            List<Integer> familyList = new ArrayList<>();
+            List<Marriage> marriages = new ArrayList<>();
+            List<Siblinghood> siblinghoods = new ArrayList<>();
+            List<Adoption> adoptionsAsParent = new ArrayList<>();
+            List<Adoption> adoptionsAsChild = new ArrayList<>();
+            while (rs.next()) {
+                if (rs.getInt("id") == id) {
+                    uuid = UUID.fromString(rs.getString("uuid"));
+                    name = rs.getString("name");
+                    skinURL = rs.getString("skinURL");
+                    gender = rs.getString("gender");
+                    background = rs.getString("background");
+
+                    return new FamilyPlayerImpl(id, uuid, name, skinURL, gender, background, familyList, marriages, siblinghoods, adoptionsAsParent, adoptionsAsChild);
+                }
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return null;
     }
 
     public static UUID getUUID(int id) {

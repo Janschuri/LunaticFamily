@@ -72,6 +72,48 @@ public class AdoptionsTable {
         return null;
     }
 
+    public static Adoption getAdoption(int parentID, int childID) {
+        Logger.debugLog("Accessing database: getAdoption(int parentID, int childID)");
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE (parentID = ? AND childID = ?) OR (parentID = ? AND childID = ?)");
+            ps.setInt(1, parentID);
+            ps.setInt(2, childID);
+            ps.setInt(3, childID);
+            ps.setInt(4, parentID);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                int player1 = rs.getInt("parentID");
+                int player2 = rs.getInt("childID");
+                int priest = rs.getInt("priest");
+                String emoji = rs.getString("emoji");
+                Timestamp date = rs.getTimestamp("date");
+                Timestamp unsiblingDate = rs.getTimestamp("unadoptDate");
+
+                return new Adoption(id, player1, player2, priest, emoji, date, unsiblingDate);
+            }
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return null;
+    }
+
     public static void save(Adoption adoption) {
         int id = adoption.getId();
         int parentID = adoption.getParentID();
@@ -96,14 +138,27 @@ public class AdoptionsTable {
             }
             ps.setInt(2, parentID);
             ps.setInt(3, childID);
-            if (priest <= 0) {
+            if (priest == -1) {
                 ps.setNull(4, Types.INTEGER);
             } else {
                 ps.setInt(4, priest);
             }
-            ps.setString(5, emoji);
-            ps.setTimestamp(6, date);
-            ps.setTimestamp(7, unadoptDate);
+            if (emoji == null) {
+                ps.setNull(5, Types.VARCHAR);
+            } else {
+                ps.setString(5, emoji);
+            }
+            if (date == null) {
+                ps.setNull(6, Types.TIMESTAMP);
+            } else {
+                ps.setTimestamp(6, date);
+            }
+            if (unadoptDate == null) {
+                ps.setNull(7, Types.TIMESTAMP);
+            } else {
+                ps.setTimestamp(7, unadoptDate);
+            }
+
             ps.executeUpdate();
         } catch (SQLException ex) {
             Error.execute(ex);
@@ -205,37 +260,6 @@ public class AdoptionsTable {
     
     public static Connection getSQLConnection() {
         return Database.getDatabase().getSQLConnection();
-    }
-
-    public static void saveAdoption(int parentID, int childID, int priestID) {
-        Logger.debugLog("Accessing database: saveAdoption(int parentID, int childID, int priestID)");
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("REPLACE INTO `" + NAME + "` (parentID, childID, priest) VALUES(?,?,?)");
-            ps.setInt(1, parentID);
-            ps.setInt(2, childID);
-            if (priestID < 0) {
-                ps.setNull(3, Types.INTEGER);
-            } else {
-                ps.setInt(3, priestID);
-            }
-            ps.executeUpdate();
-            return;
-        } catch (SQLException ex) {
-            Error.execute(ex);
-        } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                Error.close(ex);
-            }
-        }
-        return;
     }
 
     public static void deleteAdoption(int parentID, int childID) {

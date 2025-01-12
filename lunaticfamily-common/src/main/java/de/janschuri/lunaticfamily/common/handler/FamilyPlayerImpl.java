@@ -1,15 +1,19 @@
 package de.janschuri.lunaticfamily.common.handler;
 
-import de.janschuri.lunaticfamily.Marriage;
-import de.janschuri.lunaticfamily.Siblinghood;
+import de.janschuri.lunaticfamily.common.LunaticFamily;
+import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
+import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
+import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
+import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 
 import java.io.Serializable;
 import java.util.*;
 
-public abstract class FamilyPlayerImpl implements Serializable {
+public class FamilyPlayerImpl implements Serializable {
 
+    private static final Map<Integer, FamilyPlayerImpl> familyPlayer = new HashMap<>();
 
     private final int id;
     private final UUID uuid;
@@ -19,8 +23,8 @@ public abstract class FamilyPlayerImpl implements Serializable {
     private String gender;
     private String background;
     private List<Integer> familyList;
-    private List<de.janschuri.lunaticfamily.Marriage> marriages;
-    private List<de.janschuri.lunaticfamily.Siblinghood> siblinghoods;
+    private List<Marriage> marriages;
+    private List<Siblinghood> siblinghoods;
     private List<Adoption> adoptionsAsParent;
     private List<Adoption> adoptionsAsChild;
 
@@ -35,8 +39,8 @@ public abstract class FamilyPlayerImpl implements Serializable {
             String gender,
             String background,
             List<Integer> familyList,
-            List<de.janschuri.lunaticfamily.Marriage> marriages,
-            List<de.janschuri.lunaticfamily.Siblinghood> siblinghoods,
+            List<Marriage> marriages,
+            List<Siblinghood> siblinghoods,
             List<Adoption> adoptionsAsParent,
             List<Adoption> adoptionsAsChild
     ) {
@@ -53,10 +57,48 @@ public abstract class FamilyPlayerImpl implements Serializable {
         this.adoptionsAsChild = adoptionsAsChild;
     }
 
-    public abstract FamilyPlayerImpl getFamilyPlayer(int id);
-    public abstract FamilyPlayerImpl getFamilyPlayer(UUID uuid);
+    public FamilyPlayerImpl getFamilyPlayer(int id) {
+        if (familyPlayer.containsKey(id)) {
+            return familyPlayer.get(id);
+        }
 
-    public abstract void update();
+        FamilyPlayerImpl familyPlayer = PlayerDataTable.getPlayer(id);
+        if (familyPlayer != null) {
+
+        }
+    }
+
+    public FamilyPlayerImpl getFamilyPlayer(UUID uuid) {
+
+    }
+
+
+
+    public void update() {
+        player = LunaticLib.getPlatform().getPlayerSender(uuid);
+
+        name = player.getName();
+        name = name == null ? PlayerDataTable.getName(id) : name;
+        name = name == null ? "unknown" : name;
+
+        skinURL = player.getSkinURL();
+        skinURL = skinURL == null ? PlayerDataTable.getSkinURL(id) : skinURL;
+        skinURL = skinURL == null ? DEFAULT_SKIN : skinURL;
+
+        gender = PlayerDataTable.getGender(id);
+        gender = LunaticFamily.getConfig().getDefaultGender();
+
+        background = PlayerDataTable.getBackground(id);
+        background = background == null ? LunaticFamily.getConfig().getDefaultBackground() : background;
+
+        marriages = MarriagesTable.getPlayersMarriages(id);
+        siblinghoods = SiblinghoodsTable.getPlayersSiblinghoods(id);
+        adoptionsAsParent = AdoptionsTable.getPlayerAsParentAdoptions(id);
+        adoptionsAsChild = AdoptionsTable.getPlayerAsChildAdoptions(id);
+
+        loadFamilyMap();
+    }
+
     public abstract void save();
 
     protected abstract void saveMarriage(int partnerID, int priestID);

@@ -1,7 +1,6 @@
 package de.janschuri.lunaticfamily.common.handler;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.database.Database;
 import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
 
 import java.io.Serializable;
@@ -9,9 +8,11 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Adoption implements Model {
+public class Adoption implements Serializable {
 
     private static final Map<Integer, Adoption> adoptions = new HashMap<>();
+    private static final Map<Integer, Integer> adoptionsAsParent = new HashMap<>();
+    private static final Map<Integer, Integer> adoptionsAsChild = new HashMap<>();
 
     private final int id;
     private final int parentID;
@@ -31,15 +32,55 @@ public class Adoption implements Model {
         this.unadoptDate = unadoptDate;
     }
 
-    public Adoption getAdoption(int id) {
+    public static Adoption getAdoption(int id) {
         if (adoptions.containsKey(id)) {
             return adoptions.get(id);
         }
 
-        return AdoptionsTable.getAdoption(id);
+        Adoption adoption = AdoptionsTable.getAdoption(id);
+        if (adoption != null) {
+            adoptions.put(id, adoption);
+            adoptionsAsParent.put(adoption.getParentID(), id);
+            adoptionsAsChild.put(adoption.getChildID(), id);
+        }
+        return adoption;
     }
 
-    public int getId() {
+    public static Adoption getAdoption(int parentID, int childID) {
+        for (Adoption adoption : adoptions.values()) {
+            if (adoption.getParentID() == parentID && adoption.getChildID() == childID) {
+                return adoption;
+            }
+        }
+
+        Adoption adoption = AdoptionsTable.getAdoption(parentID, childID);
+        if (adoption != null) {
+            adoptions.put(adoption.getId(), adoption);
+            adoptionsAsParent.put(adoption.getParentID(), adoption.getId());
+            adoptionsAsChild.put(adoption.getChildID(), adoption.getId());
+        }
+        return adoption;
+    }
+
+    public static Adoption getAdoptionAsParent(int parentID) {
+        if (adoptionsAsParent.containsKey(parentID)) {
+            return getAdoption(adoptionsAsParent.get(parentID));
+        }
+
+        Adoption adoption = AdoptionsTable.getAdoptionAsParent(parentID);
+        if (adoption != null) {
+            adoptions.put(adoption.getId(), adoption);
+            adoptionsAsParent.put(adoption.getParentID(), adoption.getId());
+            adoptionsAsChild.put(adoption.getChildID(), adoption.getId());
+        }
+        return adoption;
+    }
+
+    public void save() {
+        AdoptionsTable.save(this);
+    }
+
+    public final int getId() {
         return id;
     }
 
