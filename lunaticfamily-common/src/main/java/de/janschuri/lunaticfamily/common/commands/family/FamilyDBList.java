@@ -82,24 +82,32 @@ public class FamilyDBList extends Subcommand {
 
         for (Map<String, String> player : players.values()) {
             msg.append(Component.newline());
+
+            String id = player.get("id") == null ? "null" : player.get("id");
+            String uuid = player.get("uuid") == null ? "null" : player.get("uuid");
+            String skinURL = player.get("skinURL") == null ? "null" : player.get("skinURL");
+            String background = player.get("background") == null ? "null" : player.get("background");
+            String name = player.get("name") == null ? "null" : player.get("name");
+            String gender = player.get("gender") == null ? "null" : player.get("gender");
+
             ComponentBuilder<TextComponent, TextComponent.Builder> hover = Component.text()
-                            .append(Component.text("ID: " + player.get("id")))
+                            .append(Component.text("ID: " + id))
                             .append(Component.newline())
-                            .append(Component.text("UUID: " + player.get("uuid")))
+                            .append(Component.text("UUID: " + uuid))
                             .append(Component.newline())
-                            .append(Component.text("SkinURL: " + player.get("skinURL")))
+                            .append(Component.text("SkinURL: " + skinURL))
                             .append(Component.newline())
-                            .append(Component.text("Background: " + player.get("background")))
+                            .append(Component.text("Background: " + background))
                     ;
 
-            Component name = Component.text(player.get("name"))
+            Component nameCmp = Component.text(name)
                     .hoverEvent(HoverEvent.showText(hover.build()));
 
-            TextReplacementConfig nameRpl = TextReplacementConfig.builder().match("%name%").replacement(name).build();
+            TextReplacementConfig nameRpl = TextReplacementConfig.builder().match("%name%").replacement(nameCmp).build();
 
             Component row = getMessage(playersMK, false)
                     .replaceText(nameRpl)
-                    .replaceText(getTextReplacementConfig("%gender%", player.get("gender")))
+                    .replaceText(getTextReplacementConfig("%gender%", gender))
                     .replaceText(getTextReplacementConfig("%index%",  String.valueOf(page*i)));
 
             msg.append(row);
