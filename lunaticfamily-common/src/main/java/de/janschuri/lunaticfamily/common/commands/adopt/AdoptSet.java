@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -115,8 +114,8 @@ public class AdoptSet extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl firstParentFam = new FamilyPlayerImpl(firstParentUUID);
-        FamilyPlayerImpl childFam = new FamilyPlayerImpl(childUUID);
+        FamilyPlayerImpl firstParentFam = getFamilyPlayer(firstParentUUID);
+        FamilyPlayerImpl childFam = getFamilyPlayer(childUUID);
 
         firstParentFam.update();
 

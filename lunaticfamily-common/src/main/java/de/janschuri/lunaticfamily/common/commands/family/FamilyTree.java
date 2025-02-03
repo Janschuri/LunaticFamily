@@ -53,7 +53,7 @@ public class FamilyTree extends Subcommand {
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             String name = player.getName();
-            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID, name);
+            FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
             playerFam.update();
 
             if (playerFam.updateFamilyTree()) {

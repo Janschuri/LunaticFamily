@@ -1,7 +1,6 @@
 package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -58,7 +57,7 @@ public class AdoptUnset extends Subcommand {
         }
 
 
-        FamilyPlayerImpl childFam = new FamilyPlayerImpl(childUUID);
+        FamilyPlayerImpl childFam = getFamilyPlayer(childUUID);
 
         if (!childFam.isAdopted()) {
             sender.sendMessage(getMessage(notAdoptedMK)

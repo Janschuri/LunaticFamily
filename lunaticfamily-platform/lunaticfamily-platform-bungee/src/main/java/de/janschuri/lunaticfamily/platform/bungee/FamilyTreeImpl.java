@@ -28,7 +28,7 @@ public class FamilyTreeImpl implements FamilyTree {
 
     @Override
     public FamilyPlayerImpl getFamilyPlayer(int id) {
-        return new FamilyPlayerImpl(id);
+        return FamilyPlayerImpl.getFamilyPlayer(id);
     }
 
     @Override

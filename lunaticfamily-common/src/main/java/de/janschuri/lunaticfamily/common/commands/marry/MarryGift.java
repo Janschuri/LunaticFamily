@@ -50,8 +50,7 @@ public class MarryGift extends Subcommand {
 
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
-            String name = player.getName();
-            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID, name);
+            FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
 
             if (!playerFam.isMarried()) {
                 player.sendMessage(getMessage(noPartnerMK));

@@ -63,7 +63,7 @@ public class MarryPropose extends Subcommand {
         }
         PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
 
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
@@ -118,7 +118,7 @@ public class MarryPropose extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl partnerFam = new FamilyPlayerImpl(partnerUUID);
+        FamilyPlayerImpl partnerFam = getFamilyPlayer(partnerUUID);
         partnerFam.update();
 
         if (playerFam.isFamilyMember(partnerFam.getId())) {

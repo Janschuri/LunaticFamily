@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -95,8 +94,8 @@ public class MarrySet extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl player2Fam = new FamilyPlayerImpl(player2UUID);
-        FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
+        FamilyPlayerImpl player2Fam = getFamilyPlayer(player2UUID);
+        FamilyPlayerImpl player1Fam = getFamilyPlayer(player1UUID);
 
         player1Fam.update();
         player2Fam.update();

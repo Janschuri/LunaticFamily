@@ -61,7 +61,7 @@ public class SiblingUnset extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
+        FamilyPlayerImpl player1Fam = getFamilyPlayer(player1UUID);
 
 
         if (!player1Fam.hasSibling()) {

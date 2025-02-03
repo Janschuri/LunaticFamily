@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -64,7 +63,7 @@ public class FamilyList extends Subcommand {
         if (args.length == 0) {
             PlayerSender player = (PlayerSender) sender;
             UUID uuid = player.getUniqueId();
-            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(uuid);
+            FamilyPlayerImpl playerFam = getFamilyPlayer(uuid);
             playerFam.update();
 
             Map<Integer, String> familyList = playerFam.getFamilyMap();
@@ -90,7 +89,7 @@ public class FamilyList extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
+        FamilyPlayerImpl player1Fam = getFamilyPlayer(player1UUID);
         Map<Integer, String> familyList = player1Fam.getFamilyMap();
         ComponentBuilder msg = Component.text();
         msg.append(getMessage(othersHeaderMK, false)
@@ -119,7 +118,7 @@ public class FamilyList extends Subcommand {
         for (int relationID : familyList.keySet()) {
             if (list.contains(familyList.get(relationID))) {
                 String relationString = familyList.get(relationID);
-                FamilyPlayerImpl relationFam = new FamilyPlayerImpl(relationID);
+                FamilyPlayerImpl relationFam = getFamilyPlayer(relationID);
                 String relationKey = relationString.replace("first_", "")
                         .replace("second_", "")
                         .replace("third_", "")

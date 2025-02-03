@@ -54,7 +54,7 @@ public class SiblingEmoji extends Subcommand {
 
         PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
 
         if (!playerFam.hasSibling()) {
             sender.sendMessage(getMessage(noSiblinghoodMK));

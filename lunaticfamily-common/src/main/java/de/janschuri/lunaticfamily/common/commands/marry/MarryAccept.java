@@ -79,11 +79,11 @@ public class MarryAccept extends Subcommand {
     private boolean proceedRequest(PlayerSender player) {
         UUID playerUUID = player.getUniqueId();
         int playerID = PlayerDataTable.getID(playerUUID);
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerID);
+        FamilyPlayerImpl playerFam = getFamilyPlayer(playerID);
 
         UUID partnerUUID = LunaticFamily.marryRequests.get(playerUUID);
         int partnerID = PlayerDataTable.getID(partnerUUID);
-        FamilyPlayerImpl partnerFam = new FamilyPlayerImpl(partnerID);
+        FamilyPlayerImpl partnerFam = getFamilyPlayer(partnerID);
         PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
 
         if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
@@ -103,9 +103,9 @@ public class MarryAccept extends Subcommand {
 
     private boolean proceedPriestRequest(PlayerSender player) {
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
         UUID partnerUUID = LunaticFamily.marryPriestRequests.get(playerUUID);
-        FamilyPlayerImpl partnerFam = new FamilyPlayerImpl(partnerUUID);
+        FamilyPlayerImpl partnerFam = getFamilyPlayer(partnerUUID);
         PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
 
         if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
@@ -174,8 +174,8 @@ public class MarryAccept extends Subcommand {
         UUID playerUUID = player.getUniqueId();
         UUID partnerUUID = partner.getUniqueId();
 
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
-        FamilyPlayerImpl partnerFam = new FamilyPlayerImpl(partnerUUID);
+        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayerImpl partnerFam = getFamilyPlayer(partnerUUID);
 
         if (!Utils.hasEnoughMoney(player.getServerName(), partnerUUID, WithdrawKey.MARRY_PROPOSED_PLAYER)) {
             player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
@@ -213,11 +213,11 @@ public class MarryAccept extends Subcommand {
         UUID playerUUID = player.getUniqueId();
         UUID partnerUUID = partner.getUniqueId();
 
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
-        FamilyPlayerImpl partnerFam = new FamilyPlayerImpl(partnerUUID);
+        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayerImpl partnerFam = getFamilyPlayer(partnerUUID);
 
         UUID priestUUID = LunaticFamily.marryPriests.get(partnerUUID);
-        FamilyPlayerImpl priestFam = new FamilyPlayerImpl(priestUUID);
+        FamilyPlayerImpl priestFam = getFamilyPlayer(priestUUID);
         PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
 
         if (!Utils.hasEnoughMoney(player.getServerName(), priestUUID, WithdrawKey.PRIEST_MARRY)) {

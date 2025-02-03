@@ -7,7 +7,6 @@ import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
 import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -81,7 +80,7 @@ public class FamilyDelete extends Subcommand {
 
         if (confirm) {
             UUID playerUUID = UUID.fromString(playerArg);
-            FamilyPlayer playerFam = new FamilyPlayerImpl(playerUUID);
+            FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
             MarriagesTable.deleteMarriage(playerFam.getId());
             AdoptionsTable.deleteAllAdoptions(playerFam.getId());
             SiblinghoodsTable.deleteSiblinghood(playerFam.getId());

@@ -81,13 +81,13 @@ public class SiblingList extends Subcommand {
         int index = 1 + (10*(page-1));
         Logger.debugLog("SiblingList: " + siblingList);
         for (Siblinghood e : siblingList) {
-            FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(e.getPlayer1ID());
-            FamilyPlayerImpl player2Fam = new FamilyPlayerImpl(e.getPlayer2ID());
+            FamilyPlayerImpl player1Fam = getFamilyPlayer(e.getPlayer1ID());
+            FamilyPlayerImpl player2Fam = getFamilyPlayer(e.getPlayer2ID());
 
 
             String hoverText = " (" + e.getDate() + ")";
             if (e.getPriest() > 0) {
-                hoverText = hoverText + " -> " + new FamilyPlayerImpl(e.getPriest()).getName();
+                hoverText = hoverText + " -> " + getFamilyPlayer(e.getPriest()).getName();
             }
 
             Component heart = Component.text(" " + Siblinghood.getDefaultEmoji() + " ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));

@@ -82,13 +82,13 @@ public class AdoptList extends Subcommand {
         int index = 1 + (10*(page-1));
         Logger.debugLog("AdoptList: " + adoptList);
         for (Adoption e : adoptList) {
-            FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(e.getParentID());
-            FamilyPlayerImpl player2Fam = new FamilyPlayerImpl(e.getChildID());
+            FamilyPlayerImpl player1Fam = getFamilyPlayer(e.getParentID());
+            FamilyPlayerImpl player2Fam = getFamilyPlayer(e.getChildID());
 
 
             String hoverText = " (" + e.getDate() + ")";
             if (e.getPriest() > 0) {
-                hoverText = hoverText + " -> " + new FamilyPlayerImpl(e.getPriest()).getName();
+                hoverText = hoverText + " -> " + getFamilyPlayer(e.getPriest()).getName();
             }
 
             Component heart = Component.text(" " + Adoption.getDefaultParentEmoji() + " ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));

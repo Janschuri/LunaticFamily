@@ -3,8 +3,11 @@ package de.janschuri.lunaticfamily.common.commands;
 
 import de.janschuri.lunaticfamily.LanguageConfig;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.common.command.AbstractLunaticCommand;
+
+import java.util.UUID;
 
 public abstract class Subcommand extends AbstractLunaticCommand {
 
@@ -41,5 +44,13 @@ public abstract class Subcommand extends AbstractLunaticCommand {
     @Override
     public LanguageConfig getLanguageConfig() {
         return LunaticFamily.getLanguageConfig();
+    }
+
+    protected static FamilyPlayerImpl getFamilyPlayer(UUID playerUUID) {
+        return FamilyPlayerImpl.getFamilyPlayer(playerUUID);
+    }
+
+    protected static FamilyPlayerImpl getFamilyPlayer(int playerID) {
+        return FamilyPlayerImpl.getFamilyPlayer(playerID);
     }
 }

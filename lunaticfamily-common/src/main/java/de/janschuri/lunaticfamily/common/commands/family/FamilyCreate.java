@@ -1,9 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
-import de.janschuri.lunaticfamily.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -81,7 +79,8 @@ public class FamilyCreate extends Subcommand {
         UUID playerUUID = UUID.fromString(playerUUIDArg);
 
         if (confirm) {
-            new FamilyPlayerImpl(playerUUID, playerName);
+            FamilyPlayerImpl familyPlayer = getFamilyPlayer(playerUUID).setName(playerName);
+
             sender.sendMessage(getMessage(createdMK)
                     .replaceText(getTextReplacementConfig("%uuid%", playerUUIDArg))
                     .replaceText(getTextReplacementConfig("%name%", playerName))

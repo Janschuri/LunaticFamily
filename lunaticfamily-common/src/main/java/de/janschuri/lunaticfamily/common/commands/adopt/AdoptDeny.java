@@ -53,7 +53,7 @@ public class AdoptDeny extends Subcommand {
 
         PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
 
         if (LunaticFamily.adoptRequests.containsKey(playerUUID)) {
             UUID partnerUUID = LunaticFamily.adoptRequests.get(playerUUID);

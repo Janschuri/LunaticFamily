@@ -1,7 +1,5 @@
 package de.janschuri.lunaticfamily.common.config;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticfamily.LanguageConfig;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticlib.common.config.LunaticLanguageConfigImpl;

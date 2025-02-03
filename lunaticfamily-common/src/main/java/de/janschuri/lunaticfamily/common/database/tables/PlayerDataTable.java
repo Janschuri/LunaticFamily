@@ -1,6 +1,7 @@
 package de.janschuri.lunaticfamily.common.database.tables;
 
 import de.janschuri.lunaticfamily.common.database.Database;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.common.database.Datatype;
 import de.janschuri.lunaticlib.common.database.Error;
@@ -37,6 +38,45 @@ public class PlayerDataTable {
 
     private static Connection getSQLConnection() {
         return Database.getDatabase().getSQLConnection();
+    }
+
+    public static FamilyPlayerImpl getFamilyPlayer(int id) {
+        Logger.debugLog("Accessing database: getFamilyPlayer(int id)");
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE id = ?;");
+            ps.setInt(1, id);
+
+            rs = ps.executeQuery();
+
+            UUID uuid = UUID.fromString(rs.getString("uuid"));
+            String name = rs.getString("name");
+            String skinURL = rs.getString("skinURL");
+            String gender = rs.getString("gender");
+            String background = rs.getString("background");
+
+            FamilyPlayerImpl familyPlayer = new FamilyPlayerImpl(id, uuid, name, skinURL, gender, background);
+
+            return familyPlayer;
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return null;
     }
 
     public static int getID(UUID uuid) {
@@ -271,21 +311,21 @@ public class PlayerDataTable {
         return null;
     }
 
-    public static void updatePlayerData(int id, String uuid, String name, String skinURL, String gender, String background) {
+    public static int update(int id, UUID uuid, String name, String skinURL, String gender, String background) {
         Logger.debugLog("Accessing database: updatePlayerData(int id, String uuid, String name, String skinURL, String gender, String background)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
             ps = conn.prepareStatement("UPDATE `" + NAME + "` SET uuid = ?, name = ?, skinURL = ?, gender = ?, background = ? WHERE id = ?");
-            ps.setString(1, uuid);
+            ps.setString(1, uuid.toString());
             ps.setString(2, name);
             ps.setString(3, skinURL);
             ps.setString(4, gender);
             ps.setString(5, background);
             ps.setInt(6, id);
             ps.executeUpdate();
-            return;
+            return id;
         } catch (SQLException ex) {
             Error.execute(ex);
         } finally {
@@ -298,22 +338,24 @@ public class PlayerDataTable {
                 Error.close(ex);
             }
         }
+
+        return -1;
     }
 
-    public static void savePlayerData(String uuid, String name, String skinURL, String gender, String background) {
+    public static int save(UUID uuid, String name, String skinURL, String gender, String background) {
         Logger.debugLog("Accessing database: savePlayerData(String uuid, String name, String skinURL, String gender, String background)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
             ps = conn.prepareStatement("INSERT INTO `" + NAME + "` (uuid,name,skinURL,gender,background) VALUES(?,?,?,?,?)");
-            ps.setString(1, uuid);
+            ps.setString(1, uuid.toString());
             ps.setString(2, name);
             ps.setString(3, skinURL);
             ps.setString(4, gender);
             ps.setString(5, background);
             ps.executeUpdate();
-            return;
+            return getID(uuid);
         } catch (SQLException ex) {
             Error.execute(ex);
         } finally {
@@ -326,6 +368,8 @@ public class PlayerDataTable {
                 Error.close(ex);
             }
         }
+
+        return -1;
     }
 
     public static void deletePlayerData(String uuid) {

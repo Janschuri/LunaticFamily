@@ -62,7 +62,7 @@ public class SiblingPropose extends Subcommand {
 
         PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
 
         if (playerFam.hasSibling()) {
             sender.sendMessage(getMessage(hasSiblingMK)
@@ -107,7 +107,7 @@ public class SiblingPropose extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl siblingFam = new FamilyPlayerImpl(siblingUUID);
+        FamilyPlayerImpl siblingFam = getFamilyPlayer(siblingUUID);
         if (playerFam.getId() == siblingFam.getId()) {
             sender.sendMessage(getMessage(selfRequestMK));
             return true;

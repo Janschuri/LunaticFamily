@@ -51,7 +51,7 @@ public class SiblingUnsibling extends Subcommand {
         }
         UUID playerUUID = player.getUniqueId();
         String name = player.getName();
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID, name);
+        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
 
         boolean confirm = false;
         boolean cancel = false;

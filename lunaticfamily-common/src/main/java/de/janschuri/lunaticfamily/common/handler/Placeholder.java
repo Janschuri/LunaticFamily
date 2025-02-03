@@ -15,6 +15,8 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import static de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl.getFamilyPlayer;
+
 public class Placeholder {
 
     public static String getPlaceholder(UUID uuid, String placeholder) {
@@ -23,7 +25,7 @@ public class Placeholder {
             return new GetPlaceholderRequest().get(uuid, placeholder);
         }
 
-        FamilyPlayerImpl player = new FamilyPlayerImpl(uuid);
+        FamilyPlayerImpl player = getFamilyPlayer(uuid);
 
         if (player == null) {
             return null;
@@ -80,7 +82,7 @@ public class Placeholder {
                 if (marriage.getPriest() < 1) {
                     return "";
                 }
-                return new FamilyPlayerImpl(marriage.getPriest()).getName();
+                return getFamilyPlayer(marriage.getPriest()).getName();
             }
 
             if (Objects.equals(type, "date")) {
@@ -131,7 +133,7 @@ public class Placeholder {
                 if (siblinghood.getPriest() < 1) {
                     return "";
                 }
-                return new FamilyPlayerImpl(siblinghood.getPriest()).getName();
+                return getFamilyPlayer(siblinghood.getPriest()).getName();
             }
 
             if (Objects.equals(type, "date")) {
@@ -181,7 +183,7 @@ public class Placeholder {
                 if (adoption.getPriest() < 1) {
                     return "";
                 }
-                return new FamilyPlayerImpl(adoption.getPriest()).getName();
+                return getFamilyPlayer(adoption.getPriest()).getName();
             }
 
             if (Objects.equals(type, "date")) {
@@ -231,7 +233,7 @@ public class Placeholder {
                 if (adoption.getPriest() < 1) {
                     return "";
                 }
-                return new FamilyPlayerImpl(adoption.getPriest()).getName();
+                return getFamilyPlayer(adoption.getPriest()).getName();
             }
 
             if (Objects.equals(type, "date")) {
@@ -286,7 +288,7 @@ public class Placeholder {
                 if (adoption.getPriest() < 1) {
                     return "";
                 }
-                return new FamilyPlayerImpl(adoption.getPriest()).getName();
+                return getFamilyPlayer(adoption.getPriest()).getName();
             }
 
             if (Objects.equals(type, "date")) {
@@ -324,11 +326,11 @@ public class Placeholder {
             }
 
             if (Objects.equals(type, "player1")) {
-                return new FamilyPlayerImpl(marriage.getPlayer1ID()).getName();
+                return getFamilyPlayer(marriage.getPlayer1ID()).getName();
             }
 
             if (Objects.equals(type, "player2")) {
-                return new FamilyPlayerImpl(marriage.getPlayer2ID()).getName();
+                return getFamilyPlayer(marriage.getPlayer2ID()).getName();
             }
 
             if (Objects.equals(type, "emoji")) {
@@ -339,7 +341,7 @@ public class Placeholder {
                 if (marriage.getPriest() < 1) {
                     return "";
                 }
-                return new FamilyPlayerImpl(marriage.getPriest()).getName();
+                return getFamilyPlayer(marriage.getPriest()).getName();
             }
 
             if (Objects.equals(type, "date")) {
@@ -361,11 +363,11 @@ public class Placeholder {
             }
 
             if (Objects.equals(type, "parent")) {
-                return new FamilyPlayerImpl(adoption.getParentID()).getName();
+                return getFamilyPlayer(adoption.getParentID()).getName();
             }
 
             if (Objects.equals(type, "child")) {
-                return new FamilyPlayerImpl(adoption.getChildID()).getName();
+                return getFamilyPlayer(adoption.getChildID()).getName();
             }
 
             if (Objects.equals(type, "emoji")) {
@@ -376,7 +378,7 @@ public class Placeholder {
                 if (adoption.getPriest() < 1) {
                     return "";
                 }
-                return new FamilyPlayerImpl(adoption.getPriest()).getName();
+                return getFamilyPlayer(adoption.getPriest()).getName();
             }
 
             if (Objects.equals(type, "date")) {
@@ -398,11 +400,11 @@ public class Placeholder {
             }
 
             if (Objects.equals(type, "parent")) {
-                return new FamilyPlayerImpl(siblinghood.getPlayer1ID()).getName();
+                return getFamilyPlayer(siblinghood.getPlayer1ID()).getName();
             }
 
             if (Objects.equals(type, "child")) {
-                return new FamilyPlayerImpl(siblinghood.getPlayer2ID()).getName();
+                return getFamilyPlayer(siblinghood.getPlayer2ID()).getName();
             }
 
             if (Objects.equals(type, "emoji")) {
@@ -413,7 +415,7 @@ public class Placeholder {
                 if (siblinghood.getPriest() < 1) {
                     return "";
                 }
-                return new FamilyPlayerImpl(siblinghood.getPriest()).getName();
+                return getFamilyPlayer(siblinghood.getPriest()).getName();
             }
 
             if (Objects.equals(type, "date")) {
@@ -430,8 +432,8 @@ public class Placeholder {
             return new GetRelationalPlaceholderRequest().get(uuid1, uuid2, placeholder);
         }
 
-        FamilyPlayerImpl player1 = new FamilyPlayerImpl(uuid1);
-        FamilyPlayerImpl player2 = new FamilyPlayerImpl(uuid2);
+        FamilyPlayerImpl player1 = getFamilyPlayer(uuid1);
+        FamilyPlayerImpl player2 = getFamilyPlayer(uuid2);
 
         if (placeholder.equalsIgnoreCase("relation")) {
 

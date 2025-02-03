@@ -48,7 +48,7 @@ public class MarryKiss extends Subcommand {
         }
         PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
 
         if (!playerFam.isMarried()) {
             sender.sendMessage(getMessage(noPartnerMK));

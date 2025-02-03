@@ -57,7 +57,7 @@ public class GenderInfo extends Subcommand {
 
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
-            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+            FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
             sender.sendMessage(getMessage(infoMK)
                     .replaceText(getTextReplacementConfig("%gender%", getGenderLang(playerFam.getGender()))));
             return true;
@@ -84,7 +84,7 @@ public class GenderInfo extends Subcommand {
             }
         }
 
-        FamilyPlayerImpl player = new FamilyPlayerImpl(playerUUID);
+        FamilyPlayerImpl player = getFamilyPlayer(playerUUID);
 
         sender.sendMessage(getMessage(infoOthersMK)
                 .replaceText(getTextReplacementConfig("%player%", player.getName()))

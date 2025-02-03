@@ -67,7 +67,7 @@ public class AdoptPropose extends Subcommand {
 
         PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
 
         boolean confirm = false;
         boolean cancel = false;
@@ -140,7 +140,7 @@ public class AdoptPropose extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl childFam = new FamilyPlayerImpl(childUUID);
+        FamilyPlayerImpl childFam = getFamilyPlayer(childUUID);
 
         if (args[0].equalsIgnoreCase(player.getName())) {
             player.sendMessage(getMessage(selfRequestMK));

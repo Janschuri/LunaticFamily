@@ -108,8 +108,8 @@ public class PriestSibling extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
-        FamilyPlayerImpl player2Fam = new FamilyPlayerImpl(player2UUID);
+        FamilyPlayerImpl player1Fam = getFamilyPlayer(player1UUID);
+        FamilyPlayerImpl player2Fam = getFamilyPlayer(player2UUID);
 
         player1Fam.update();
         player2Fam.update();

@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.commands.gender;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -78,7 +77,7 @@ public class GenderSet extends Subcommand {
             } else {
                 PlayerSender player = (PlayerSender) sender;
                 UUID playerUUID = player.getUniqueId();
-                FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+                FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
 
                 if (!LunaticFamily.getLanguageConfig().getGenders().contains(args[0].toLowerCase())) {
                     sender.sendMessage(getMessage(notExistMK));
@@ -113,7 +112,7 @@ public class GenderSet extends Subcommand {
 
             PlayerSender player1 = LunaticLib.getPlatform().getPlayerSender(player1UUID);
 
-            FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(player1UUID);
+            FamilyPlayerImpl player1Fam = getFamilyPlayer(player1UUID);
             if (player1Fam.getGender().equalsIgnoreCase(args[0])) {
                 sender.sendMessage(getMessage(adminAlreadyMK)
                         .replaceText(getTextReplacementConfig("%player%", player1.getName()))

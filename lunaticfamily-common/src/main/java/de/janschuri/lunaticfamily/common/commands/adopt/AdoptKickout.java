@@ -61,7 +61,7 @@ public class AdoptKickout extends Subcommand {
 
         PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
 
         if (playerFam.getChildren().isEmpty()) {
             sender.sendMessage(getMessage(noChildMK));
@@ -84,7 +84,7 @@ public class AdoptKickout extends Subcommand {
         }
 
         PlayerSender child = LunaticLib.getPlatform().getPlayerSender(childUUID);
-        FamilyPlayerImpl childFam = new FamilyPlayerImpl(childUUID);
+        FamilyPlayerImpl childFam = getFamilyPlayer(childUUID);
 
         if (!childFam.isChildOf(playerFam.getId())) {
             sender.sendMessage(getMessage(notYourChildMK).replaceText(getTextReplacementConfig("%player%", childFam.getName())));
