@@ -6,7 +6,7 @@ import com.google.common.io.ByteStreams;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.config.FamilyTreeJSON;
 import de.janschuri.lunaticfamily.common.utils.Logger;
-import de.janschuri.lunaticfamily.platform.FamilyTree;
+import de.janschuri.lunaticfamily.platform.FamilyTreeManager;
 import de.janschuri.lunaticlib.common.futurerequests.FutureRequest;
 
 import java.util.concurrent.CompletableFuture;
@@ -23,16 +23,16 @@ public class LoadFamilyTreeMapRequest extends FutureRequest<Boolean> {
 
     @Override
     protected void handleRequest(int requestId, ByteArrayDataInput in) {
-        FamilyTree familyTree = LunaticFamily.getPlatform().getFamilyTree();
+        FamilyTreeManager familyTreeManager = LunaticFamily.getPlatform().getFamilyTree();
 
         String content = in.readUTF();
 
         boolean success = false;
 
-        if (familyTree == null) {
+        if (familyTreeManager == null) {
             Logger.errorLog("FamilyTree is null. Please check if CrazyAdvancementsAPI is installed or disable it!");
         } else {
-            success = familyTree.loadFamilyTreeMap(content);
+            success = familyTreeManager.loadFamilyTreeMap(content);
         }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();

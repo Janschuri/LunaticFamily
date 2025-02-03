@@ -4,7 +4,7 @@ import de.janschuri.lunaticfamily.FamilyPlayer;
 
 import java.util.*;
 
-public interface FamilyTree {
+public interface FamilyTreeManager {
 
     default boolean update(String server, UUID uuid, int id) {
         FamilyPlayer familyPlayer = getFamilyPlayer(id);

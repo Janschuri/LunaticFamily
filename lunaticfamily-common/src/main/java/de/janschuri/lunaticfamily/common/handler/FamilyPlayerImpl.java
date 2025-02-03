@@ -9,7 +9,7 @@ import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
 import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
 import de.janschuri.lunaticfamily.common.utils.Logger;
-import de.janschuri.lunaticfamily.platform.FamilyTree;
+import de.janschuri.lunaticfamily.platform.FamilyTreeManager;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 
@@ -690,16 +690,16 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         }
 
         if (player.isOnline() && LunaticFamily.getConfig().isUseCrazyAdvancementAPI()) {
-            FamilyTree familyTree = LunaticFamily.getPlatform().getFamilyTree();
+            FamilyTreeManager familyTreeManager = LunaticFamily.getPlatform().getFamilyTree();
 
-            if (familyTree == null) {
+            if (familyTreeManager == null) {
                 Logger.errorLog("FamilyTree is null. Please check if CrazyAdvancementsAPI is installed or disable it!");
                 return false;
             } else {
 
                 String serverName = player.getServerName();
 
-                return familyTree.update(serverName, this.uuid, this.id);
+                return familyTreeManager.update(serverName, this.uuid, this.id);
             }
         }
         return true;

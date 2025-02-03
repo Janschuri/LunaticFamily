@@ -1,9 +1,8 @@
 package de.janschuri.lunaticfamily.platform.velocity;
 
 import com.velocitypowered.api.plugin.PluginContainer;
-import com.velocitypowered.api.proxy.ProxyServer;
 import de.janschuri.lunaticfamily.common.futurerequests.SpawnParticlesCloudRequest;
-import de.janschuri.lunaticfamily.platform.FamilyTree;
+import de.janschuri.lunaticfamily.platform.FamilyTreeManager;
 import de.janschuri.lunaticfamily.platform.Platform;
 import de.janschuri.lunaticfamily.platform.velocity.listener.JoinListener;
 import de.janschuri.lunaticfamily.platform.velocity.listener.QuitListener;
@@ -17,8 +16,8 @@ public class PlatformImpl implements Platform<PluginContainer> {
     }
 
     @Override
-    public FamilyTree getFamilyTree() {
-        return new FamilyTreeImpl();
+    public FamilyTreeManager getFamilyTree() {
+        return new FamilyTreeManagerImpl();
     }
 
     @Override

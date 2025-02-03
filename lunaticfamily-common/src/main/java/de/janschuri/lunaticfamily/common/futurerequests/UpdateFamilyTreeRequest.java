@@ -5,7 +5,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.utils.Logger;
-import de.janschuri.lunaticfamily.platform.FamilyTree;
+import de.janschuri.lunaticfamily.platform.FamilyTreeManager;
 import de.janschuri.lunaticlib.common.futurerequests.FutureRequest;
 
 import java.util.*;
@@ -46,12 +46,12 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
             relationLangs.put(relation, relationLang);
         }
 
-        FamilyTree familyTree = LunaticFamily.getPlatform().getFamilyTree();
+        FamilyTreeManager familyTreeManager = LunaticFamily.getPlatform().getFamilyTree();
 
-        if (familyTree == null) {
+        if (familyTreeManager == null) {
             Logger.errorLog("FamilyTree is null. Please check if CrazyAdvancementsAPI is installed or disable it!");
         } else {
-            success = familyTree.update("", uuid, background, familyList, names, skins, relationLangs);
+            success = familyTreeManager.update("", uuid, background, familyList, names, skins, relationLangs);
         }
 
         if (!success) {
