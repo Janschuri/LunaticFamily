@@ -1,15 +1,21 @@
 package de.janschuri.lunaticfamily.platform.bukkit;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class TreeAdvancement {
-    private String key;
-    private String title;
-    private String description;
-    private ItemStack icon;
+    private final String key;
+    private final TreeAdvancement parent_key;
+    private final float x;
+    private final float y;
+    private boolean hidden = true;
 
-    public TreeAdvancement(String key) {
+    public TreeAdvancement(@NotNull String key, TreeAdvancement parent_key, float x, float y) {
         this.key = key;
+        this.parent_key = parent_key;
+        this.x = x;
+        this.y = -y;
     }
 
     public String getKey() {
@@ -17,38 +23,74 @@ public class TreeAdvancement {
     }
 
     public String getTitle() {
-        return title;
-    }
-
-    public TreeAdvancement title(String title) {
-        this.title = title;
-        return this;
+        return key;
     }
 
     public String getDescription() {
-        return description;
-    }
-
-    public TreeAdvancement description(String description) {
-        this.description = description;
-        return this;
+        return key;
     }
 
     public ItemStack getIcon() {
-        return icon;
+        return new ItemStack(Material.STONE);
     }
 
-    public TreeAdvancement icon(ItemStack icon) {
-        this.icon = icon;
-        return this;
+    public float getX() {
+        return x;
     }
 
-    public static class RootTreeAdvancement extends TreeAdvancement {
-        private String background;
+    public float getY() {
+        return y;
+    }
 
-        public RootTreeAdvancement(String key, String background) {
-            super(key);
+    public TreeAdvancement getParent() {
+        return parent_key;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    protected void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public static class RelationAdvancement extends TreeAdvancement {
+
+        private final String title;
+        private final String description;
+        private final ItemStack icon;
+
+        public RelationAdvancement(String key, TreeAdvancement parent_key, String title, String description, ItemStack icon, float x, float y) {
+            super(key, parent_key, x, y);
+            this.title = title;
+            this.description = description;
+            this.icon = icon;
+            setHidden(false);
+        }
+
+        @Override
+        public String getTitle() {
+            return title;
+        }
+
+        @Override
+        public String getDescription() {
+            return description;
+        }
+
+        @Override
+        public ItemStack getIcon() {
+            return icon;
+        }
+    }
+
+    public static class RootTreeAdvancement extends RelationAdvancement {
+        private final String background;
+
+        public RootTreeAdvancement(String key, String background, TreeAdvancement parent_key, String title, String description, ItemStack icon, float x, float y) {
+            super(key, parent_key, title, description, icon, x, y);
             this.background = background;
+            setHidden(false);
         }
 
         public String getBackground() {

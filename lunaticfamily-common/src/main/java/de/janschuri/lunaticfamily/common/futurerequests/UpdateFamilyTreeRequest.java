@@ -25,38 +25,10 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
     protected void handleRequest(int requestId, ByteArrayDataInput in) {
         boolean success = false;
 
-        UUID uuid = UUID.fromString(in.readUTF());
-        String background = in.readUTF();
-        int size = in.readInt();
-
-        List<String> familyList = new ArrayList<>();
-        Map<String, String> names = new HashMap<>();
-        Map<String, String> skins = new HashMap<>();
-        Map<String, String> relationLangs = new HashMap<>();
-
-        for (int i = 0; i < size; i++) {
-            String relation = in.readUTF();
-            String name = in.readUTF();
-            String skinURL = in.readUTF();
-            String relationLang = in.readUTF();
-
-            familyList.add(relation);
-            names.put(relation, name);
-            skins.put(relation, skinURL);
-            relationLangs.put(relation, relationLang);
-        }
+        int familyPlayerID = in.readInt();
 
         FamilyTreeManager familyTreeManager = LunaticFamily.getPlatform().getFamilyTree();
-
-        if (familyTreeManager == null) {
-            Logger.errorLog("FamilyTree is null. Please check if CrazyAdvancementsAPI is installed or disable it!");
-        } else {
-            success = familyTreeManager.update("", uuid, background, familyList, names, skins, relationLangs);
-        }
-
-        if (!success) {
-            Logger.debugLog( "UpdateFamilyTreeRequest: Failed to update family tree for player with UUID " + uuid + ".");
-        }
+        success = familyTreeManager.update("", familyPlayerID);
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeBoolean(success);
@@ -69,7 +41,7 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
         completeRequest(requestId, success);
     }
 
-    public boolean get(String server, UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
+    public boolean get(String server, int familyPlayerID) {
         if (new IsFamilyTreeMapLoadedRequest().get(server)) {
             Logger.debugLog("FamilyTreeMap is loaded.");
         } else {
@@ -79,21 +51,7 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
 
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF(uuid.toString());
-        out.writeUTF(background);
-
-        Logger.debugLog("UpdateFamilyTreeRequest: " + familyList.toString());
-
-        int size = familyList.size();
-        out.writeInt(size);
-
-
-        for (String relation : familyList) {
-            out.writeUTF(relation);
-            out.writeUTF(names.get(relation));
-            out.writeUTF(skins.get(relation));
-            out.writeUTF(relationLangs.get(relation));
-        }
+        out.writeInt(familyPlayerID);
 
         return sendRequest(server, out.toByteArray());
     }

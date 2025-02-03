@@ -16,6 +16,7 @@ import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
 import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
 import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
 import de.janschuri.lunaticfamily.common.futurerequests.*;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.platform.Platform;
 import de.janschuri.lunaticlib.common.LunaticLib;
@@ -102,9 +103,6 @@ public final class LunaticFamily {
 
             FamilyTreeJSON.loadFamilyTreeJSON();
 
-            if (config.isUseCrazyAdvancementAPI()) {
-                platform.getFamilyTree().loadFamilyTreeMap(FamilyTreeJSON.getContent());
-            }
             registerCommands();
             platform.registerListener();
         }
@@ -176,5 +174,13 @@ public final class LunaticFamily {
 
     public static int getMarriedPlayersCount() {
         return MarriagesTable.getMarriagesCount()*2;
+    }
+
+    public static FamilyPlayerImpl getFamilyPlayer(UUID uuid) {
+        return FamilyPlayerImpl.getFamilyPlayer(uuid);
+    }
+
+    public static FamilyPlayerImpl getFamilyPlayer(int id) {
+        return FamilyPlayerImpl.getFamilyPlayer(id);
     }
 }

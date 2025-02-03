@@ -699,7 +699,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
                 String serverName = player.getServerName();
 
-                return familyTreeManager.update(serverName, this.uuid, this.id);
+                return familyTreeManager.update(serverName, this.id);
             }
         }
         return true;

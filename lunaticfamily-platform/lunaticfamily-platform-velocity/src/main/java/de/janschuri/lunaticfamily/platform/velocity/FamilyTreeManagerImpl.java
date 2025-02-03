@@ -12,30 +12,8 @@ import java.util.UUID;
 
 public class FamilyTreeManagerImpl implements FamilyTreeManager {
 
-
     @Override
-    public boolean isFamilyTreeMapLoaded() {
-        return true;
-    }
-
-    @Override
-    public boolean loadFamilyTreeMap(String JSONContent) {
-        return true;
-    }
-
-
-    @Override
-    public boolean update(String server, UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
-        return new UpdateFamilyTreeRequest().get(server, uuid, background, familyList, names, skins, relationLangs);
-    }
-
-    @Override
-    public FamilyPlayer getFamilyPlayer(int id) {
-        return FamilyPlayerImpl.getFamilyPlayer(id);
-    }
-
-    @Override
-    public String getRelation(String relation, String key) {
-        return LunaticFamily.getLanguageConfig().getRelation(relation, key);
+    public boolean update(String server, int familyPlayerID) {
+        return new UpdateFamilyTreeRequest().get(server, familyPlayerID);
     }
 }

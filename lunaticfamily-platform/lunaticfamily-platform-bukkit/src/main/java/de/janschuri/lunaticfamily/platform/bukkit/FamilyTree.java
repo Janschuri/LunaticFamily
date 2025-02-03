@@ -9,61 +9,48 @@ import eu.endercentral.crazy_advancements.advancement.AdvancementVisibility;
 import eu.endercentral.crazy_advancements.manager.AdvancementManager;
 import eu.endercentral.crazy_advancements.packet.AdvancementsPacket;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.*;
 
 public class FamilyTree {
 
-    private static final List<String> advancements = new ArrayList<>();
-    private static final List<NameKey> advancementNameKeys = new ArrayList<>();
-    private static final Map<String, Advancement> advancementMap= new HashMap<>();
+
+    private final Map<String, Advancement> advancementMap= new HashMap<>();
 
     private UUID uuid;
-    private String background;
     private TreeAdvancement.RootTreeAdvancement root;
-    private Map<String, TreeAdvancement> treeAdvancements = new HashMap<>();
     private Player player;
     private AdvancementManager manager;
 
-    public FamilyTree(UUID uuid, String background, TreeAdvancement.RootTreeAdvancement root) {
+    public FamilyTree(UUID uuid, TreeAdvancement.RootTreeAdvancement root) {
         this.uuid = uuid;
-        this.background = background;
         this.root = root;
         this.player = Bukkit.getPlayer(uuid);
 
-        AdvancementsPacket packet = new AdvancementsPacket(player, false, null, advancementNameKeys);
+        AdvancementsPacket packet = new AdvancementsPacket(player, false, null, List.of(new NameKey("family_tree", "ego")));
         packet.send();
 
         this.manager = new AdvancementManager(new NameKey("manager", uuid.toString()));
 
         manager.addPlayer(player);
 
-        Advancement ego = advancementMap.get("ego");
-        ego.getDisplay().setBackgroundTexture(background);
-        ego.getDisplay().setIcon(root.getIcon());
-        ego.getDisplay().setTitle(root.getTitle());
-        ego.getDisplay().setDescription(root.getDescription());
+        AdvancementDisplay.AdvancementFrame frame = AdvancementDisplay.AdvancementFrame.CHALLENGE;
+        AdvancementVisibility visibility = AdvancementVisibility.ALWAYS;
 
-        manager.addAdvancement(ego);
 
-    }
+        AdvancementDisplay display = new AdvancementDisplay(root.getIcon(), root.getTitle(), root.getDescription(), frame, visibility);
+        display.setBackgroundTexture(root.getBackground());
+        display.setX(root.getX());
+        display.setY(root.getY());
 
-    public static boolean isLoaded() {
-        if (advancementMap.isEmpty() || advancementNameKeys.isEmpty()) {
-            Logger.debugLog("FamilyTreeMap is not loaded.");
-            return false;
-        } else {
-            return true;
-        }
-    }
+        Advancement ego = new Advancement(new NameKey("family_tree", "ego"), display);
+        advancementMap.put(root.getKey(), ego);
 
-    public static List<String> getAdvancements() {
-        return advancements;
+        this.manager.addAdvancement(ego);
+
     }
 
     public Player getPlayer() {
@@ -71,80 +58,37 @@ public class FamilyTree {
     }
 
     public FamilyTree addTreeAdvancements(TreeAdvancement... treeAdvancements) {
-        Arrays.stream(treeAdvancements).forEach(treeAdvancement -> this.treeAdvancements.put(treeAdvancement.getKey(), treeAdvancement));
 
         for (TreeAdvancement treeAdvancement : treeAdvancements) {
-            Advancement advancement = advancementMap.get(treeAdvancement.getKey());
-            AdvancementDisplay display = advancement.getDisplay();
-            display.setTitle(treeAdvancement.getTitle());
-            display.setDescription(treeAdvancement.getDescription());
-            display.setIcon(treeAdvancement.getIcon());
-
+            Advancement advancement = createAdvancement(treeAdvancement);
             manager.addAdvancement(advancement);
+            advancementMap.put(treeAdvancement.getKey(), advancement);
         }
 
         return this;
     }
 
-    public static boolean load(JSONArray jsonArray) {
-        String title = "";
-        String description = "";
-        AdvancementDisplay.AdvancementFrame frame = AdvancementDisplay.AdvancementFrame.CHALLENGE;
-        AdvancementVisibility visibility = AdvancementVisibility.ALWAYS;
 
-        ItemStack icon = new ItemStack(Material.STONE);
-
-
-        AdvancementDisplay display = new AdvancementDisplay(icon, title, description, frame, visibility);
-        display.setBackgroundTexture("moss_block");
-        display.setX(13.5f);
-        display.setY(7.5f);
-
-        eu.endercentral.crazy_advancements.advancement.Advancement ego = new eu.endercentral.crazy_advancements.advancement.Advancement(new NameKey("family_tree", "ego"), display);
-        advancementMap.put("ego", ego);
-        advancementNameKeys.add(new NameKey("family_tree", "ego"));
-        advancements.add("ego");
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-            String parentKey = jsonObject.getString("parent");
-            String name = jsonObject.getString("name");
-            float x = (float) jsonObject.getDouble("x");
-            float y = (float) jsonObject.getDouble("y");
-
-            Advancement parent = advancementMap.get(parentKey);
-
-            Advancement treeAdvancement = createAdvancement(parent, name, x, y);
-            advancementMap.put(name, treeAdvancement);
-            advancements.add(name);
-            advancementNameKeys.add(new NameKey("family_tree", name));
-        }
-
-        return true;
-    }
-
-    private static Advancement createAdvancement(Advancement parent, String relation, Float x, Float y) {
+    private Advancement createAdvancement(TreeAdvancement treeAdvancement) {
         AdvancementDisplay.AdvancementFrame frame = AdvancementDisplay.AdvancementFrame.GOAL;
         AdvancementVisibility visibility = AdvancementVisibility.ALWAYS;
 
-        ItemStack icon = new ItemStack(Material.STONE);
-
-        String title = relation;
-        String description = relation;
-        eu.endercentral.crazy_advancements.advancement.Advancement advancement;
+        ItemStack icon = treeAdvancement.getIcon();
+        String title = treeAdvancement.getTitle();
+        String description = treeAdvancement.getDescription();
 
         AdvancementDisplay display = new AdvancementDisplay(icon, title, description, frame, visibility);
-        display.setPositionOrigin(parent);
-        display.setX(x);
-        display.setY(y);
+        Advancement ego = advancementMap.get("ego");
+        display.setPositionOrigin(ego);
+        display.setX(treeAdvancement.getX());
+        display.setY(treeAdvancement.getY());
 
-        if (relation.contains("holder")) {
-            advancement = new eu.endercentral.crazy_advancements.advancement.Advancement(parent, new NameKey("family_tree", relation), display, AdvancementFlag.SEND_WITH_HIDDEN_BOOLEAN);
+        Advancement parent = advancementMap.get(treeAdvancement.getParent().getKey());
+
+        if (treeAdvancement.isHidden()) {
+            return new Advancement(parent, new NameKey("family_tree", treeAdvancement.getKey()), display, AdvancementFlag.SEND_WITH_HIDDEN_BOOLEAN);
         } else {
-            advancement = new eu.endercentral.crazy_advancements.advancement.Advancement(parent, new NameKey("family_tree", relation), display);
+            return new Advancement(parent, new NameKey("family_tree", treeAdvancement.getKey()), display);
         }
-
-        return advancement;
     }
 }

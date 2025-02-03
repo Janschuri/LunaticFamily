@@ -27,12 +27,6 @@ public class IsFamilyTreeMapLoadedRequest extends FutureRequest<Boolean> {
 
             boolean success = false;
 
-            if (familyTreeManager == null) {
-                Logger.errorLog("FamilyTree is null. Please check if CrazyAdvancementsAPI is installed or disable it!");
-            } else {
-                success = (familyTreeManager.isFamilyTreeMapLoaded());
-            }
-
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeBoolean(success);
             sendResponse(requestId, out.toByteArray());

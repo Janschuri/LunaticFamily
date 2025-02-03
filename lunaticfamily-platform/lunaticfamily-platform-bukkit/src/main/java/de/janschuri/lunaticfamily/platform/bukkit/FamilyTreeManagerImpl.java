@@ -8,34 +8,18 @@ import de.janschuri.lunaticlib.platform.bukkit.util.ItemStackUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.json.JSONArray;
 
 import java.util.*;
 
 
 public class FamilyTreeManagerImpl implements FamilyTreeManager {
 
-    @Override
-    public boolean isFamilyTreeMapLoaded() {
-        return FamilyTree.isLoaded();
-    }
+    private static final Map<String, String> relationLangs = new HashMap<>();
 
     @Override
-    public boolean loadFamilyTreeMap(String JSONContent) {
-        JSONArray jsonArray = new JSONArray(JSONContent);
-
-        if (jsonArray.isEmpty()) {
-            return false;
-        }
-
-        return FamilyTree.load(jsonArray);
-    }
-
-    @Override
-    public boolean update(String server, UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
-        if (!isFamilyTreeMapLoaded()) {
-            return false;
-        }
+    public boolean update(String server, int familyPlayerID) {
+        FamilyPlayerImpl familyPlayer = LunaticFamily.getFamilyPlayer(familyPlayerID);
+        UUID uuid = familyPlayer.getUniqueId();
 
         Logger.debugLog("Creating FamilyTree for " + uuid);
         Player player = Bukkit.getPlayer(uuid);
@@ -47,16 +31,15 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
 
 
         String egoKey = "ego";
-        String egoLang = relationLangs.get(egoKey);
-        String egoTitle = names.get(egoKey);
-        ItemStack egoIcon = ItemStackUtils.getSkullFromURL(skins.get(egoKey));
+        String egoLang = getRelationLang(egoKey);
+        String egoTitle = familyPlayer.getName();
+        String background = familyPlayer.getBackground();
+        String egoSkinURL = familyPlayer.getSkinURL();
+        ItemStack egoIcon = ItemStackUtils.getSkullFromURL(egoSkinURL);
 
-        TreeAdvancement.RootTreeAdvancement root = (TreeAdvancement.RootTreeAdvancement) new TreeAdvancement.RootTreeAdvancement("ego", background)
-                .title(egoTitle)
-                .description(egoLang)
-                .icon(egoIcon);
+        TreeAdvancement.RootTreeAdvancement root = new TreeAdvancement.RootTreeAdvancement(egoKey,  background, null, egoTitle, egoLang, egoIcon, 13.5f, 7.5f);
 
-        FamilyTree familyTree = new FamilyTree(uuid, background, root);
+        FamilyTree familyTree = new FamilyTree(uuid, root);
 
         if (familyTree.getPlayer() == null) {
             return true;
@@ -64,30 +47,51 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
 
         List<TreeAdvancement> treeAdvancements = new ArrayList<>();
 
-        for (String advancementKey : FamilyTree.getAdvancements()) {
+        Map<Integer, Integer> leftRows = new HashMap<>();
+        Map<Integer, Integer> rightRows = new HashMap<>();
 
-            if (advancementKey.equalsIgnoreCase("ego")) {
-                continue;
-            }
+        FamilyPlayerImpl partnerFam = familyPlayer.getPartner();
 
-            String relationKey = advancementKey
-                    .replace("_first_holder", "")
-                    .replace("_second_holder", "")
-                    .replace("_third_holder", "")
-                    .replace("_holder", "");
+        if (partnerFam != null) {
+            String partnerKey = "partner";
+            String partnerLang = getRelationLang(partnerKey);
+            String partnerTitle = partnerFam.getName();
+            String partnerSkinURL = partnerFam.getSkinURL();
+            ItemStack partnerIcon = ItemStackUtils.getSkullFromURL(partnerSkinURL);
+            float partnerX = 2.0f;
+            float partnerY = 0.0f;
 
+            TreeAdvancement partnerAnchor = new TreeAdvancement(partnerKey+"_anchor", root,partnerX-0.5f, partnerY);
+            TreeAdvancement.RelationAdvancement partnerAdv = new TreeAdvancement.RelationAdvancement(partnerKey, partnerAnchor, partnerTitle, partnerLang, partnerIcon, partnerX, partnerY);
+            rightRows.put(0, 1);
 
-            if (familyList.contains(relationKey)) {
-                String relationLang = relationLangs.get(relationKey);
-                String title = names.get(relationKey);
-                ItemStack icon = ItemStackUtils.getSkullFromURL(skins.get(relationKey));
+            treeAdvancements.add(partnerAnchor);
+            treeAdvancements.add(partnerAdv);
 
-                TreeAdvancement relationAdv = new TreeAdvancement(advancementKey)
-                        .title(title)
-                        .description(relationLang)
-                        .icon(icon);
+            FamilyPlayerImpl partnerSiblingFam = partnerFam.getSibling();
 
-                treeAdvancements.add(relationAdv);
+            if (partnerSiblingFam != null) {
+                String partnerSiblingKey = "partner_sibling";
+                String partnerSiblingLang = getRelationLang(partnerSiblingKey);
+                String partnerSiblingTitle = partnerSiblingFam.getName();
+                String partnerSiblingSkinURL = partnerSiblingFam.getSkinURL();
+                ItemStack partnerSiblingIcon = ItemStackUtils.getSkullFromURL(partnerSiblingSkinURL);
+
+                TreeAdvancement partnerSiblingHolder1 = new TreeAdvancement(partnerSiblingKey+"_holder2", partnerAnchor,partnerAdv.getX()-0.5f, 1);
+                TreeAdvancement partnerSiblingHolder2 = new TreeAdvancement(partnerSiblingKey+"_holder3", partnerSiblingHolder1,partnerAdv.getX()+1.5f, 1);
+
+                TreeAdvancement partnerSiblingAnchor = new TreeAdvancement(partnerSiblingKey+"_anchor", partnerSiblingHolder2,partnerAdv.getX()+1.5f, 0);
+
+                TreeAdvancement.RelationAdvancement partnerSiblingAdvancement = new TreeAdvancement.RelationAdvancement(partnerSiblingKey, partnerSiblingAnchor, partnerSiblingTitle, partnerSiblingLang, partnerSiblingIcon, partnerAdv.getX()+2.0f, 0);
+
+                treeAdvancements.add(partnerSiblingHolder1);
+                treeAdvancements.add(partnerSiblingHolder2);
+                treeAdvancements.add(partnerSiblingAnchor);
+                treeAdvancements.add(partnerSiblingAdvancement);
+
+                rightRows.put(0, 2);
+
+                treeAdvancements.add(partnerSiblingAdvancement);
             }
         }
 
@@ -96,13 +100,13 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
         return true;
     }
 
-    @Override
-    public FamilyPlayerImpl getFamilyPlayer(int id) {
-        return FamilyPlayerImpl.getFamilyPlayer(id);
+    private List<TreeAdvancement> getTreeAdvancements(FamilyPlayerImpl familyPlayer, Map<Integer, Integer> rows) {
+        List<TreeAdvancement> treeAdvancements = new ArrayList<>();
+
+        return treeAdvancements;
     }
 
-    @Override
-    public String getRelation(String relation, String key) {
-        return LunaticFamily.getLanguageConfig().getRelation(relation, key);
+    private String getRelationLang(String key) {
+        return key;
     }
 }
