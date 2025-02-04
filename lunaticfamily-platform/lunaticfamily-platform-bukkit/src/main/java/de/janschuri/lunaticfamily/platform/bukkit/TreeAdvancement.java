@@ -4,6 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class TreeAdvancement {
     private final String key;
     private final TreeAdvancement parent_key;
@@ -16,7 +18,7 @@ public class TreeAdvancement {
     private final FamilyTree.Side side;
 
     protected TreeAdvancement(@NotNull String key, TreeAdvancement parent_key, String title, String description, ItemStack icon, float x, float y, FamilyTree.Side side) {
-        this.key = key;
+        this.key = Objects.requireNonNull(key);
         this.parent_key = parent_key;
         this.y = y;
         this.x = x;
@@ -31,11 +33,11 @@ public class TreeAdvancement {
     }
 
     public String getTitle() {
-        return title;
+        return title == null ? "no title" : title;
     }
 
     public String getDescription() {
-        return description;
+        return description == null ? "no description" : description;
     }
 
     public ItemStack getIcon() {

@@ -31,8 +31,8 @@ public class FamilyTree {
     private Map<Integer, Integer> leftRows = new HashMap<>();
     private Map<Integer, Integer> rightRows = new HashMap<>();
 
-    public FamilyTree(UUID uuid, TreeAdvancement.RootTreeAdvancement root) {
-        this.uuid = uuid;
+    public FamilyTree(FamilyPlayerImpl playerFam, TreeAdvancement.RootTreeAdvancement root) {
+        this.uuid = playerFam.getUniqueId();
         this.root = root;
         this.player = Bukkit.getPlayer(uuid);
 
@@ -93,8 +93,8 @@ public class FamilyTree {
 
         float anchorModifier = side == Side.LEFT ? 0.5f : -0.5f;
 
-        TreeAdvancement.HiddenAdvancement partnerAnchor = new TreeAdvancement.HiddenAdvancement(partnerKey+"_anchor", sourcePartnerAdv, x+anchorModifier, sourcePartnerAdv.getY(), side);
-        TreeAdvancement.RelationAdvancement partnerAdv = new TreeAdvancement.RelationAdvancement(partnerKey, partnerAnchor, partnerTitle, partnerLang, partnerIcon, x, partnerAnchor.getY(), side);
+        TreeAdvancement.HiddenAdvancement partnerAnchor = new TreeAdvancement.HiddenAdvancement(partnerKey+"_anchor", sourcePartnerAdv, x+anchorModifier, y, side);
+        TreeAdvancement.RelationAdvancement partnerAdv = new TreeAdvancement.RelationAdvancement(partnerKey, partnerAnchor, partnerTitle, partnerLang, partnerIcon, x, y, side);
 
 
         treeAdvancements.add(partnerAnchor);
@@ -166,7 +166,7 @@ public class FamilyTree {
             }
 
             leftRows.put(y, column + 1);
-            x = column * 2;
+            x = (column - 1) * 2;
         } else {
             int column = rightRows.getOrDefault(y, 0);
 
@@ -178,7 +178,6 @@ public class FamilyTree {
             x = (column + 1) * 2;
         }
 
-        Logger.debugLog("X: " + x);
 
         String parentLang = getRelationLang(parentKey);
         String parentTitle = parent.getName();
@@ -196,6 +195,64 @@ public class FamilyTree {
         treeAdvancements.add(parentAdv);
 
         return parentAnchor;
+    }
+
+    public TreeAdvancement.HiddenAdvancement addChildrenAnchor(TreeAdvancement anchor, Side side, String key) {
+        TreeAdvancement.HiddenAdvancement childrenHolder = new TreeAdvancement.HiddenAdvancement(key+"_children_holder", anchor, anchor.getX(), anchor.getY(), side);
+        TreeAdvancement.HiddenAdvancement childrenAnchor = new TreeAdvancement.HiddenAdvancement(key+"_children_anchor", childrenHolder, childrenHolder.getX(), childrenHolder.getY()-1.0f, side);
+
+
+        treeAdvancements.add(childrenHolder);
+        treeAdvancements.add(childrenAnchor);
+
+        return childrenAnchor;
+    }
+
+    public TreeAdvancement.HiddenAdvancement addChildAdvancement(TreeAdvancement childrenAnchor, Side side, FamilyPlayerImpl child, String childKey) {
+        int x;
+        int y = (int) (childrenAnchor.getY()-1);
+
+        if (side == Side.LEFT) {
+            int column = leftRows.getOrDefault(y, 1);
+
+            if (column < (int) childrenAnchor.getX() - 2) {
+                column = (int) childrenAnchor.getX() - 1;
+            }
+
+            x = (column - 1) * 2;
+
+            leftRows.put(y, column + 1);
+        } else {
+            int column = rightRows.getOrDefault(y, 0);
+
+            if (column < (int) childrenAnchor.getX() - 2) {
+                column = (int) childrenAnchor.getX() - 1;
+            }
+
+            x = (column + 1) * 2;
+
+            rightRows.put(y, column + 1);
+        }
+
+
+        String parentLang = getRelationLang(childKey);
+        String parentTitle = child.getName();
+        String siblingSkinURL = child.getSkinURL();
+        ItemStack parentIcon = ItemStackUtils.getSkullFromURL(siblingSkinURL);
+
+
+        float anchorModifier = side == Side.LEFT ? 0.5f : -0.5f;
+
+        TreeAdvancement.HiddenAdvancement childHolder = new TreeAdvancement.HiddenAdvancement(childKey+"_holder1", childrenAnchor, x+anchorModifier, y+1, side);
+        TreeAdvancement.HiddenAdvancement childAnchor = new TreeAdvancement.HiddenAdvancement(childKey+"_holder2", childHolder, x+anchorModifier, y, side);
+        TreeAdvancement.RelationAdvancement childAdv = new TreeAdvancement.RelationAdvancement(childKey, childAnchor, parentTitle, parentLang, parentIcon, x, y, side);
+
+
+        treeAdvancements.add(childHolder);
+        treeAdvancements.add(childAnchor);
+        treeAdvancements.add(childAdv);
+
+        return childAnchor;
     }
 
     public void send() {
@@ -231,6 +288,7 @@ public class FamilyTree {
 
     public static enum Side {
         LEFT,
-        RIGHT
+        RIGHT,
+        CENTER
     }
 }

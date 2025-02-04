@@ -39,7 +39,7 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
 
         TreeAdvancement.RootTreeAdvancement root = new TreeAdvancement.RootTreeAdvancement(egoKey,  background, null, egoTitle, egoLang, egoIcon, 13.5f, 7.5f, FamilyTree.Side.LEFT);
 
-        FamilyTree familyTree = new FamilyTree(uuid, root);
+        FamilyTree familyTree = new FamilyTree(familyPlayer, root);
 
         if (familyTree.getPlayer() == null) {
             return true;
@@ -94,6 +94,33 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
             }
         }
 
+        List<FamilyPlayerImpl> children = familyPlayer.getChildren();
+
+        if (children != null && !children.isEmpty()) {
+            TreeAdvancement.HiddenAdvancement childrenAnchor = familyTree.addChildrenAnchor(egoAnchor, FamilyTree.Side.CENTER, egoKey);
+
+            int i = 0;
+            for (FamilyPlayerImpl child : children) {
+                String childKey = "child_" + i;
+                FamilyTree.Side side = i % 2 == 0 ? FamilyTree.Side.LEFT : FamilyTree.Side.RIGHT;
+                TreeAdvancement.HiddenAdvancement childAnchor = familyTree.addChildAdvancement(childrenAnchor, side, child, childKey);
+
+                familyTree = addAllDownwards(familyTree, child, childAnchor, side, childKey);
+
+                i++;
+            }
+
+            for (FamilyPlayerImpl child : children) {
+                String childKey = "child_" + i;
+                FamilyTree.Side side = i % 2 == 0 ? FamilyTree.Side.LEFT : FamilyTree.Side.RIGHT;
+                TreeAdvancement.HiddenAdvancement childAnchor = familyTree.addChildAdvancement(childrenAnchor, side, child, childKey);
+
+                familyTree = addAllDownwards(familyTree, child, childAnchor, side, childKey);
+
+                i++;
+            }
+        }
+
         familyTree.send();
 
         return true;
@@ -108,5 +135,18 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
 
     public static String getRelationLang(String key) {
         return key;
+    }
+
+    public FamilyTree addAllDownwards(FamilyTree familyTree, FamilyPlayerImpl familyPlayer, TreeAdvancement.HiddenAdvancement anchor, FamilyTree.Side side, String key) {
+
+        FamilyPlayerImpl partnerFam = familyPlayer.getPartner();
+
+        if (partnerFam != null) {
+            String partnerKey = key + "_partner";
+
+            TreeAdvancement.HiddenAdvancement partnerAnchor = familyTree.addPartnerAdvancement(anchor, side, partnerFam, partnerKey);
+        }
+
+        return familyTree;
     }
 }

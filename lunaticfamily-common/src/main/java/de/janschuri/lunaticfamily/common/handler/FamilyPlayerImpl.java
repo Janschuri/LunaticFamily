@@ -247,8 +247,8 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         return list;
     }
 
-    public List<FamilyPlayer> getChildren() {
-        List<FamilyPlayer> list = new ArrayList<>();
+    public List<FamilyPlayerImpl> getChildren() {
+        List<FamilyPlayerImpl> list = new ArrayList<>();
 
         for (Adoption adoption : getAdoptionsAsParent()) {
             int childID = adoption.getChildID();
@@ -298,8 +298,8 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
         FamilyPlayerImpl playerFam = this;
         FamilyPlayerImpl partnerFam = getFamilyPlayer(partnerID);
-        List<FamilyPlayer> playerChildren = playerFam.getChildren();
-        List<FamilyPlayer> partnerChildren = partnerFam.getChildren();
+        List<FamilyPlayerImpl> playerChildren = playerFam.getChildren();
+        List<FamilyPlayerImpl> partnerChildren = partnerFam.getChildren();
 
         for (FamilyPlayer child : playerChildren) {
             partnerFam.saveAdoption(child.getId(), priestID);
@@ -309,7 +309,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         }
 
         if (playerChildren.size() == 1 && partnerChildren.size() == 1) {
-            FamilyPlayerImpl childFam = (FamilyPlayerImpl) playerChildren.get(0);
+            FamilyPlayerImpl childFam = playerChildren.get(0);
             childFam.saveSiblinghood(partnerChildren.get(0).getId(), priestID);
         }
 
@@ -323,7 +323,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         FamilyPlayerImpl playerFam = this;
         FamilyPlayerImpl partnerFam = playerFam.getPartner();
 
-        List<FamilyPlayer> playerChildren = playerFam.getChildren();
+        List<FamilyPlayerImpl> playerChildren = playerFam.getChildren();
         for (FamilyPlayer child : playerChildren) {
             playerFam.unadoptAdoption(child.getId());
         }
