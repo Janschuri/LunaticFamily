@@ -204,6 +204,21 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         return getFamilyPlayer(siblingID);
     }
 
+    public List<FamilyPlayerImpl> getSiblings() {
+        if (getSiblinghoods().isEmpty()) {
+            return null;
+        }
+
+        List<FamilyPlayerImpl> siblings = new ArrayList<>();
+
+        for (Siblinghood siblinghood : getSiblinghoods()) {
+            int siblingID = siblinghood.getSiblingID(id);
+            siblings.add(getFamilyPlayer(siblingID));
+        }
+
+        return siblings;
+    }
+
     public boolean hasSibling() {
         return !getSiblinghoods().isEmpty();
     }
@@ -221,8 +236,8 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         return false;
     }
 
-    public List<FamilyPlayer> getParents() {
-        List<FamilyPlayer> list = new ArrayList<>();
+    public List<FamilyPlayerImpl> getParents() {
+        List<FamilyPlayerImpl> list = new ArrayList<>();
 
         for (Adoption adoption : getAdoptionsAsChild()) {
             int parentID = adoption.getParentID();

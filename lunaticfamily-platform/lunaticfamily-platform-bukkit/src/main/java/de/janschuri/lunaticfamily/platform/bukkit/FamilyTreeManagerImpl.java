@@ -37,7 +37,7 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
         String egoSkinURL = familyPlayer.getSkinURL();
         ItemStack egoIcon = ItemStackUtils.getSkullFromURL(egoSkinURL);
 
-        TreeAdvancement.RootTreeAdvancement root = new TreeAdvancement.RootTreeAdvancement(egoKey,  background, null, egoTitle, egoLang, egoIcon, 13.5f, 7.5f);
+        TreeAdvancement.RootTreeAdvancement root = new TreeAdvancement.RootTreeAdvancement(egoKey,  background, null, egoTitle, egoLang, egoIcon, 13.5f, 7.5f, FamilyTree.Side.LEFT);
 
         FamilyTree familyTree = new FamilyTree(uuid, root);
 
@@ -45,57 +45,56 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
             return true;
         }
 
-        List<TreeAdvancement> treeAdvancements = new ArrayList<>();
-
-        Map<Integer, Integer> leftRows = new HashMap<>();
-        Map<Integer, Integer> rightRows = new HashMap<>();
+        TreeAdvancement.HiddenAdvancement egoAnchor = familyTree.addEgoAnchor();
 
         FamilyPlayerImpl partnerFam = familyPlayer.getPartner();
 
         if (partnerFam != null) {
             String partnerKey = "partner";
-            String partnerLang = getRelationLang(partnerKey);
-            String partnerTitle = partnerFam.getName();
-            String partnerSkinURL = partnerFam.getSkinURL();
-            ItemStack partnerIcon = ItemStackUtils.getSkullFromURL(partnerSkinURL);
-            float partnerX = 2.0f;
-            float partnerY = 0.0f;
 
-            TreeAdvancement partnerAnchor = new TreeAdvancement(partnerKey+"_anchor", root,partnerX-0.5f, partnerY);
-            TreeAdvancement.RelationAdvancement partnerAdv = new TreeAdvancement.RelationAdvancement(partnerKey, partnerAnchor, partnerTitle, partnerLang, partnerIcon, partnerX, partnerY);
-            rightRows.put(0, 1);
+            TreeAdvancement.HiddenAdvancement partnerAnchor = familyTree.addPartnerAdvancement(egoAnchor, FamilyTree.Side.RIGHT, partnerFam, partnerKey);
 
-            treeAdvancements.add(partnerAnchor);
-            treeAdvancements.add(partnerAdv);
+            List<FamilyPlayerImpl> partnerSiblings = partnerFam.getSiblings();
 
-            FamilyPlayerImpl partnerSiblingFam = partnerFam.getSibling();
+            if (partnerSiblings != null && !partnerSiblings.isEmpty()) {
+                TreeAdvancement.HiddenAdvancement partnerSiblingsAnchor = familyTree.addSiblingsAnchor(partnerAnchor, FamilyTree.Side.RIGHT, partnerKey);
 
-            if (partnerSiblingFam != null) {
-                String partnerSiblingKey = "partner_sibling";
-                String partnerSiblingLang = getRelationLang(partnerSiblingKey);
-                String partnerSiblingTitle = partnerSiblingFam.getName();
-                String partnerSiblingSkinURL = partnerSiblingFam.getSkinURL();
-                ItemStack partnerSiblingIcon = ItemStackUtils.getSkullFromURL(partnerSiblingSkinURL);
+                int i = 0;
+                for (FamilyPlayerImpl sibling : partnerSiblings) {
+                    String siblingKey = "partner_sibling_" + i;
+                    TreeAdvancement.HiddenAdvancement siblingAnchor = familyTree.addSiblingAdvancement(partnerSiblingsAnchor, FamilyTree.Side.RIGHT, sibling, siblingKey);
+                    i++;
+                }
+            }
 
-                TreeAdvancement partnerSiblingHolder1 = new TreeAdvancement(partnerSiblingKey+"_holder2", partnerAnchor,partnerAdv.getX()-0.5f, 1);
-                TreeAdvancement partnerSiblingHolder2 = new TreeAdvancement(partnerSiblingKey+"_holder3", partnerSiblingHolder1,partnerAdv.getX()+1.5f, 1);
+            List<FamilyPlayerImpl> partnerParents = partnerFam.getParents();
 
-                TreeAdvancement partnerSiblingAnchor = new TreeAdvancement(partnerSiblingKey+"_anchor", partnerSiblingHolder2,partnerAdv.getX()+1.5f, 0);
+            if (partnerParents != null && !partnerParents.isEmpty()) {
+                TreeAdvancement.HiddenAdvancement partnerParentsAnchor = familyTree.addParentsAnchor(partnerAnchor, FamilyTree.Side.RIGHT, partnerKey);
 
-                TreeAdvancement.RelationAdvancement partnerSiblingAdvancement = new TreeAdvancement.RelationAdvancement(partnerSiblingKey, partnerSiblingAnchor, partnerSiblingTitle, partnerSiblingLang, partnerSiblingIcon, partnerAdv.getX()+2.0f, 0);
-
-                treeAdvancements.add(partnerSiblingHolder1);
-                treeAdvancements.add(partnerSiblingHolder2);
-                treeAdvancements.add(partnerSiblingAnchor);
-                treeAdvancements.add(partnerSiblingAdvancement);
-
-                rightRows.put(0, 2);
-
-                treeAdvancements.add(partnerSiblingAdvancement);
+                int i = 0;
+                for (FamilyPlayerImpl parent : partnerParents) {
+                    String parentKey = "partner_parent_" + i;
+                    TreeAdvancement.HiddenAdvancement parentAnchor = familyTree.addParentAdvancement(partnerParentsAnchor, FamilyTree.Side.RIGHT, parent, parentKey);
+                    i++;
+                }
             }
         }
 
-        familyTree.addTreeAdvancements(treeAdvancements.toArray(new TreeAdvancement[0]));
+        List<FamilyPlayerImpl> parents = familyPlayer.getParents();
+
+        if (parents != null && !parents.isEmpty()) {
+            TreeAdvancement.HiddenAdvancement parentsAnchor = familyTree.addParentsAnchor(egoAnchor, FamilyTree.Side.LEFT, egoKey);
+
+            int i = 0;
+            for (FamilyPlayerImpl parent : parents) {
+                String parentKey = "parent_" + i;
+                TreeAdvancement.HiddenAdvancement parentAnchor = familyTree.addParentAdvancement(parentsAnchor, FamilyTree.Side.LEFT, parent, parentKey);
+                i++;
+            }
+        }
+
+        familyTree.send();
 
         return true;
     }
@@ -106,7 +105,8 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
         return treeAdvancements;
     }
 
-    private String getRelationLang(String key) {
+
+    public static String getRelationLang(String key) {
         return key;
     }
 }
