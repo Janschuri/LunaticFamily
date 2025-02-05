@@ -47,6 +47,20 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
 
         TreeAdvancement.HiddenAdvancement egoAnchor = familyTree.addEgoAnchor();
 
+        List<FamilyPlayerImpl> parents = familyPlayer.getParents();
+
+        if (parents != null && !parents.isEmpty()) {
+            TreeAdvancement.HiddenAdvancement parentsAnchor = familyTree.addParentsAnchor(egoAnchor, FamilyTree.Side.CENTER, egoKey);
+
+            int i = 0;
+            for (FamilyPlayerImpl parent : parents) {
+                String parentKey = "parent_" + i;
+                FamilyTree.Side parentSide = i % 2 == 0 ? FamilyTree.Side.LEFT : FamilyTree.Side.RIGHT;
+                TreeAdvancement.HiddenAdvancement parentAnchor = familyTree.addParentAdvancement(parentsAnchor, parentSide, parent, parentKey);
+                i++;
+            }
+        }
+
         FamilyPlayerImpl partnerFam = familyPlayer.getPartner();
 
         if (partnerFam != null) {
@@ -81,19 +95,6 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
             }
         }
 
-        List<FamilyPlayerImpl> parents = familyPlayer.getParents();
-
-        if (parents != null && !parents.isEmpty()) {
-            TreeAdvancement.HiddenAdvancement parentsAnchor = familyTree.addParentsAnchor(egoAnchor, FamilyTree.Side.LEFT, egoKey);
-
-            int i = 0;
-            for (FamilyPlayerImpl parent : parents) {
-                String parentKey = "parent_" + i;
-                TreeAdvancement.HiddenAdvancement parentAnchor = familyTree.addParentAdvancement(parentsAnchor, FamilyTree.Side.LEFT, parent, parentKey);
-                i++;
-            }
-        }
-
         List<FamilyPlayerImpl> children = familyPlayer.getChildren();
 
         if (children != null && !children.isEmpty()) {
@@ -105,7 +106,7 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
                 FamilyTree.Side side = i % 2 == 0 ? FamilyTree.Side.LEFT : FamilyTree.Side.RIGHT;
                 TreeAdvancement.HiddenAdvancement childAnchor = familyTree.addChildAdvancement(childrenAnchor, side, child, childKey);
 
-                familyTree = addAllDownwards(familyTree, child, childAnchor, side, childKey);
+                familyTree.addAllDownwards(child, childAnchor, side, childKey);
 
                 i++;
             }
@@ -115,7 +116,7 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
                 FamilyTree.Side side = i % 2 == 0 ? FamilyTree.Side.LEFT : FamilyTree.Side.RIGHT;
                 TreeAdvancement.HiddenAdvancement childAnchor = familyTree.addChildAdvancement(childrenAnchor, side, child, childKey);
 
-                familyTree = addAllDownwards(familyTree, child, childAnchor, side, childKey);
+                familyTree.addAllDownwards(child, childAnchor, side, childKey);
 
                 i++;
             }
@@ -126,27 +127,8 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
         return true;
     }
 
-    private List<TreeAdvancement> getTreeAdvancements(FamilyPlayerImpl familyPlayer, Map<Integer, Integer> rows) {
-        List<TreeAdvancement> treeAdvancements = new ArrayList<>();
-
-        return treeAdvancements;
-    }
-
 
     public static String getRelationLang(String key) {
         return key;
-    }
-
-    public FamilyTree addAllDownwards(FamilyTree familyTree, FamilyPlayerImpl familyPlayer, TreeAdvancement.HiddenAdvancement anchor, FamilyTree.Side side, String key) {
-
-        FamilyPlayerImpl partnerFam = familyPlayer.getPartner();
-
-        if (partnerFam != null) {
-            String partnerKey = key + "_partner";
-
-            TreeAdvancement.HiddenAdvancement partnerAnchor = familyTree.addPartnerAdvancement(anchor, side, partnerFam, partnerKey);
-        }
-
-        return familyTree;
     }
 }
