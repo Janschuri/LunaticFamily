@@ -56,22 +56,22 @@ public class ConfigImpl extends LunaticConfigImpl implements de.janschuri.lunati
             }
         }
 
-        useVault = getBoolean("use_vault");
-        useCrazyAdvancementAPI = getBoolean("use_crazy_advancement_api");
+        useVault = getBoolean("use_vault", false);
+        useCrazyAdvancementAPI = getBoolean("use_crazy_advancement_api", false);
 
-        allowSingleAdopt = getBoolean("allow_single_adopt");
-        defaultBackground = "textures/block/" + getString("default_background") + ".png";
-        defaultGender = getString("default_gender");
+        allowSingleAdopt = getBoolean("allow_single_adopt", true);
+        defaultBackground = "textures/block/" + getString("default_background", "moss_block") + ".png";
+        defaultGender = getString("default_gender", "fe");
         familyList = getStringList("family_list");
         backgrounds = getStringList("backgrounds");
-        languageKey = getString("language");
-        dateFormat = getString("date_format");
+        languageKey = getString("language", "en");
+        dateFormat = getString("date_format", "dd.MM.yyyy HH:mm:ss");
 
-        marryKissRange = getDouble("distances.marry_kiss_range");
-        marryProposeRange = getDouble("distances.marry_propose_range");
-        marryPriestRange = getDouble("distances.marry_priest_range");
-        adoptProposeRange = getDouble("distances.adopt_propose_range");
-        siblingProposeRange = getDouble("distances.sibling_propose_range");
+        marryKissRange = getDouble("distances.marry_kiss_range", 2.0);
+        marryProposeRange = getDouble("distances.marry_propose_range", 2.0);
+        marryPriestRange = getDouble("distances.marry_priest_range", 2.0);
+        adoptProposeRange = getDouble("distances.adopt_propose_range", 2.0);
+        siblingProposeRange = getDouble("distances.sibling_propose_range", 2.0);
 
         successCommands = getStringListMap("success_commands");
         commandWithdraws = getDoubleMap("command_withdraws");
