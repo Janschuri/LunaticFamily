@@ -121,20 +121,4 @@ public class FamilyDBList extends Subcommand {
 
         return msg.build();
     }
-
-    private static Map<Integer, Map<String, String>> sortMapByReverseInteger(Map<Integer, Map<String, String>> inputMap) {
-        // Convert map entries to a list
-        List<Map.Entry<Integer, Map<String, String>>> entryList = new ArrayList<>(inputMap.entrySet());
-
-        // Sort the list in reverse order based on the integer keys
-        entryList.sort((entry1, entry2) -> entry2.getKey().compareTo(entry1.getKey()));
-
-        // Convert the sorted list back to a map
-        Map<Integer, Map<String, String>> sortedMap = new LinkedHashMap<>();
-        for (Map.Entry<Integer, Map<String, String>> entry : entryList) {
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-
-        return sortedMap;
-    }
 }
