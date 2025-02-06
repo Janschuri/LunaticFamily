@@ -84,6 +84,8 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
         ids.put(uuid, id);
         familyPlayerMap.put(id, this);
+
+        update();
     }
 
     private FamilyPlayerImpl(@NotNull UUID uuid) {
