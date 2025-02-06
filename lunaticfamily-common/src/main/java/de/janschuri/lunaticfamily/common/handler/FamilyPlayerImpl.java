@@ -109,7 +109,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         this.adoptionsAsChild = AdoptionsTable.getPlayerAsChildAdoptions(id);
 
 
-//        loadFamilyMap();
+        loadFamilyMap();
     }
 
     public String getName() {
