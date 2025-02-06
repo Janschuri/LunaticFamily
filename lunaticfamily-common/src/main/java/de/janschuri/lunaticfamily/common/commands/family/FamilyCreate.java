@@ -5,9 +5,7 @@ import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
-import de.janschuri.lunaticlib.CommandMessageKey;
-import de.janschuri.lunaticlib.PlayerSender;
-import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.*;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
@@ -19,6 +17,8 @@ public class FamilyCreate extends Subcommand {
     private final CommandMessageKey confirmMK = new CommandMessageKey(this,"confirm");
     private final CommandMessageKey createdMK = new CommandMessageKey(this,"created");
     private final CommandMessageKey cancelMK = new CommandMessageKey(this, "cancel");
+    private final MessageKey createRandomMK = new CommandMessageKey(this, "createRandom")
+            .defaultMessage("You didn't specified a UUID. Do you want to create a random one?");
 
 
     @Override
@@ -48,9 +48,31 @@ public class FamilyCreate extends Subcommand {
             return true;
         }
 
-        if (args.length < 2) {
+        if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
             Logger.debugLog("FamilyCreate: Wrong usage");
+            return true;
+        }
+
+        String playerName = args[0];
+
+        if (args.length < 2) {
+            UUID randomUUID = UUID.randomUUID();
+
+            DecisionMessage decisionMessage = Utils.getClickableDecisionMessage(
+                    getPrefix(),
+                    getMessage(createRandomMK, false),
+                    getMessage(CONFIRM_MK, false),
+                    "/family create " + playerName + " " + randomUUID + " confirm",
+                    getMessage(CANCEL_MK, false),
+                    "/family create " + playerName + " " + randomUUID + " cancel"
+            );
+
+            player.sendMessage(
+                    decisionMessage,
+                    LunaticFamily.getConfig().decisionAsInvGUI()
+            );
+
             return true;
         }
 
@@ -65,8 +87,6 @@ public class FamilyCreate extends Subcommand {
                 cancel = true;
             }
         }
-
-        String playerName = args[0];
 
         String playerUUIDArg = args[1];
 
