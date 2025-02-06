@@ -68,7 +68,7 @@ public class TreeAdvancement {
         return side;
     }
 
-    protected void setHidden(boolean hidden) {
+    public void setHidden(boolean hidden) {
         this.hidden = hidden;
     }
 
@@ -93,7 +93,6 @@ public class TreeAdvancement {
     }
 
     public static class HiddenAdvancement extends TreeAdvancement {
-
         public HiddenAdvancement(String key, TreeAdvancement parent_key, float x, float y, FamilyTree.Side side) {
             super(key, parent_key, key, key, new ItemStack(Material.STONE), x, y, side);
             setHidden(true);

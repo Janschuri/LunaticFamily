@@ -2,18 +2,17 @@ package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FamilyDBList extends Subcommand {
 
@@ -74,21 +73,22 @@ public class FamilyDBList extends Subcommand {
     }
 
     private Component getPlayerList(int page) {
-        Map<Integer, Map<String, String>> players = sortMapByReverseInteger(PlayerDataTable.getPlayerList(page));
+        Map<Integer, FamilyPlayerImpl> players = PlayerDataTable.getPlayerList(page).stream()
+                .collect(LinkedHashMap::new, (m, v) -> m.put(v.getId(), v), LinkedHashMap::putAll);
 
         ComponentBuilder<TextComponent, TextComponent.Builder> msg = Component.text().append(getMessage(headerMK, false));
 
         int i = 1;
 
-        for (Map<String, String> player : players.values()) {
+        for (FamilyPlayerImpl player : players.values()) {
             msg.append(Component.newline());
 
-            String id = player.get("id") == null ? "null" : player.get("id");
-            String uuid = player.get("uuid") == null ? "null" : player.get("uuid");
-            String skinURL = player.get("skinURL") == null ? "null" : player.get("skinURL");
-            String background = player.get("background") == null ? "null" : player.get("background");
-            String name = player.get("name") == null ? "null" : player.get("name");
-            String gender = player.get("gender") == null ? "null" : player.get("gender");
+            int id = player.getId();
+            String uuid = player.getUniqueId() == null ? "null" : player.getUniqueId().toString();
+            String skinURL = player.getGender() == null ? "null" : player.getSkinURL();
+            String background = player.getBackground() == null ? "null" : player.getBackground();
+            String name = player.getName() == null ? "null" : player.getName();
+            String gender = player.getGender() == null ? "null" : player.getGender();
 
             ComponentBuilder<TextComponent, TextComponent.Builder> hover = Component.text()
                             .append(Component.text("ID: " + id))
@@ -109,6 +109,12 @@ public class FamilyDBList extends Subcommand {
                     .replaceText(nameRpl)
                     .replaceText(getTextReplacementConfig("%gender%", gender))
                     .replaceText(getTextReplacementConfig("%index%",  String.valueOf(page*i)));
+
+            Component delete = Component.text(" [X]")
+                    .clickEvent(ClickEvent.runCommand("/family delete " + uuid))
+                    .hoverEvent(HoverEvent.showText(Component.text("Delete " + name)));
+
+            row = row.append(delete);
 
             msg.append(row);
         }

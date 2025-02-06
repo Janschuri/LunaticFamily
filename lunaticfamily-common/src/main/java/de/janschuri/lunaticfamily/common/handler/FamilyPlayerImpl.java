@@ -1,6 +1,7 @@
 package de.janschuri.lunaticfamily.common.handler;
 
 import com.google.common.collect.BiMap;
+import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticfamily.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
@@ -12,6 +13,7 @@ import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.platform.FamilyTreeManager;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -24,10 +26,10 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     private String skinURL;
     private String gender;
     private String background;
-    private List<Marriage> marriages;
-    private List<Siblinghood> siblinghoods;
-    private List<Adoption> adoptionsAsParent;
-    private List<Adoption> adoptionsAsChild;
+    private List<Marriage> marriages = new ArrayList<>();
+    private List<Siblinghood> siblinghoods = new ArrayList<>();
+    private List<Adoption> adoptionsAsParent = new ArrayList<>();
+    private List<Adoption> adoptionsAsChild = new ArrayList<>();
 
     private final Map<Integer, String> familyMap = new HashMap<>();
 
@@ -53,7 +55,13 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         if (ids.containsKey(uuid)) {
             return getFamilyPlayer(ids.get(uuid));
         } else {
-            return new FamilyPlayerImpl(uuid);
+            FamilyPlayerImpl familyPlayer = PlayerDataTable.getFamilyPlayer(uuid);
+
+            if (familyPlayer == null) {
+                familyPlayer = new FamilyPlayerImpl(uuid);
+            }
+
+            return familyPlayer;
         }
     }
 
@@ -68,20 +76,21 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         this.id = id;
         this.uuid = uuid;
         this.name = name;
+        this.name = this.name == null ? "null" : this.name;
         this.skinURL = skinURL;
+        this.skinURL = this.skinURL == null ? DEFAULT_SKIN : this.skinURL;
         this.gender = gender;
         this.background = background;
 
         ids.put(uuid, id);
         familyPlayerMap.put(id, this);
-
-        update();
     }
 
-    private FamilyPlayerImpl(UUID uuid) {
+    private FamilyPlayerImpl(@NotNull UUID uuid) {
         this.uuid = uuid;
         PlayerSender player = LunaticLib.getPlatform().getPlayerSender(uuid);
         this.name = player.getName();
+        this.name = this.name == null ? "null" : this.name;
         this.skinURL = player.getSkinURL();
         this.skinURL = this.skinURL == null ? DEFAULT_SKIN : this.skinURL;
         this.gender = LunaticFamily.getConfig().getDefaultGender();
@@ -91,8 +100,6 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
         ids.put(uuid, this.id);
         familyPlayerMap.put(this.id, this);
-
-        update();
     }
 
     public void update() {
@@ -101,7 +108,8 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         this.adoptionsAsParent = AdoptionsTable.getPlayerAsParentAdoptions(id);
         this.adoptionsAsChild = AdoptionsTable.getPlayerAsChildAdoptions(id);
 
-        loadFamilyMap();
+
+//        loadFamilyMap();
     }
 
     public String getName() {
@@ -109,6 +117,14 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public FamilyPlayerImpl setName(String name) {
+        if (name == null) {
+            return this;
+        }
+
+        if (name.equals(this.name)) {
+            return this;
+        }
+
         this.name = name;
         save();
         return this;
@@ -123,11 +139,16 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     private int save() {
+        int idInsert;
         if (id < 1) {
-            return PlayerDataTable.save(uuid, getName(), getSkinURL(), getGender(), getBackground());
+            idInsert = PlayerDataTable.getID(uuid);
         } else {
-            return PlayerDataTable.update(id, uuid, getName(), getSkinURL(), getGender(), getBackground());
+            idInsert = id;
         }
+
+        Logger.debugLog("Saving FamilyPlayer: " + idInsert);
+
+        return PlayerDataTable.saveOrUpdate(idInsert, uuid, getName(), getSkinURL(), getGender(), getBackground());
     }
 
     private void saveMarriage(int partnerID, int priestID) {
@@ -603,7 +624,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
             }
         }
 
-        if (!this.getChildren().isEmpty()) {
+        if (!this.getChildren().isEmpty() && this.getChildren().get(0) != null) {
             int firstChild = this.getChildren().get(0).getId();
             familyList.put(firstChild, "first_child");
             FamilyPlayerImpl firstChildFam = getFamilyPlayer(firstChild);
@@ -648,7 +669,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
             }
         }
 
-        if (this.getChildren().size() > 1) {
+        if (this.getChildren().size() > 1 && this.getChildren().get(0) != null) {
             int secondChild = this.getChildren().get(1).getId();
             familyList.put(secondChild, "second_child");
             FamilyPlayerImpl secondChildFam = getFamilyPlayer(secondChild);

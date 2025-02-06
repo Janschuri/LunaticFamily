@@ -53,11 +53,61 @@ public class PlayerDataTable {
 
             rs = ps.executeQuery();
 
+            if (!rs.next()) {
+                return null;
+            }
+
             UUID uuid = UUID.fromString(rs.getString("uuid"));
             String name = rs.getString("name");
             String skinURL = rs.getString("skinURL");
             String gender = rs.getString("gender");
             String background = rs.getString("background");
+
+            Logger.debugLog("Player: " + id + " " + uuid + " " + name + " " + skinURL + " " + gender + " " + background);
+
+            FamilyPlayerImpl familyPlayer = new FamilyPlayerImpl(id, uuid, name, skinURL, gender, background);
+
+            return familyPlayer;
+        } catch (SQLException ex) {
+            Error.execute(ex);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                Error.close(ex);
+            }
+        }
+        return null;
+    }
+
+    public static FamilyPlayerImpl getFamilyPlayer(UUID uuid) {
+        Logger.debugLog("Accessing database: getFamilyPlayer(int id)");
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + NAME + " WHERE uuid = ?;");
+            ps.setString(1, uuid.toString());
+
+            rs = ps.executeQuery();
+
+            if (!rs.next()) {
+                return null;
+            }
+            int id = rs.getInt("id");
+            String name = rs.getString("name");
+            String skinURL = rs.getString("skinURL");
+            String gender = rs.getString("gender");
+            String background = rs.getString("background");
+
+            Logger.debugLog("Player: " + id + " " + uuid + " " + name + " " + skinURL + " " + gender + " " + background);
 
             FamilyPlayerImpl familyPlayer = new FamilyPlayerImpl(id, uuid, name, skinURL, gender, background);
 
@@ -311,64 +361,38 @@ public class PlayerDataTable {
         return null;
     }
 
-    public static int update(int id, UUID uuid, String name, String skinURL, String gender, String background) {
-        Logger.debugLog("Accessing database: updatePlayerData(int id, String uuid, String name, String skinURL, String gender, String background)");
+    public static int saveOrUpdate(int id, UUID uuid, String name, String skinURL, String gender, String background) {
+        Logger.debugLog("Accessing database: saveOrUpdatePlayerData(int id, UUID uuid, String name, String skinURL, String gender, String background)");
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("UPDATE `" + NAME + "` SET uuid = ?, name = ?, skinURL = ?, gender = ?, background = ? WHERE id = ?");
-            ps.setString(1, uuid.toString());
-            ps.setString(2, name);
-            ps.setString(3, skinURL);
-            ps.setString(4, gender);
-            ps.setString(5, background);
-            ps.setInt(6, id);
-            ps.executeUpdate();
-            return id;
-        } catch (SQLException ex) {
-            Error.execute(ex);
-        } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException ex) {
-                Error.close(ex);
+            String sql = "REPLACE INTO `" + NAME + "` (id, uuid, name, skinURL, gender, background) VALUES (?, ?, ?, ?, ?, ?)";
+
+            ps = conn.prepareStatement(sql);
+            if (id > 1) {
+                ps.setInt(1, id);
+            } else {
+                ps.setNull(1, java.sql.Types.INTEGER);
             }
-        }
-
-        return -1;
-    }
-
-    public static int save(UUID uuid, String name, String skinURL, String gender, String background) {
-        Logger.debugLog("Accessing database: savePlayerData(String uuid, String name, String skinURL, String gender, String background)");
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("INSERT INTO `" + NAME + "` (uuid,name,skinURL,gender,background) VALUES(?,?,?,?,?)");
-            ps.setString(1, uuid.toString());
-            ps.setString(2, name);
-            ps.setString(3, skinURL);
-            ps.setString(4, gender);
-            ps.setString(5, background);
+            ps.setString(2, uuid.toString());
+            ps.setString(3, name);
+            ps.setString(4, skinURL);
+            ps.setString(5, gender);
+            ps.setString(6, background);
             ps.executeUpdate();
+
             return getID(uuid);
         } catch (SQLException ex) {
             Error.execute(ex);
         } finally {
             try {
-                if (ps != null)
-                    ps.close();
-                if (conn != null)
-                    conn.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
             } catch (SQLException ex) {
                 Error.close(ex);
             }
         }
-
         return -1;
     }
 
@@ -395,13 +419,13 @@ public class PlayerDataTable {
         }
     }
 
-    public static Map<Integer, Map<String, String>> getPlayerList(int page) {
+    public static List<FamilyPlayerImpl> getPlayerList(int page) {
         Logger.debugLog("Accessing database: getPlayerList(int page)");
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        Map<Integer, Map<String, String>> players = new HashMap<>();
+        List<FamilyPlayerImpl> players = new ArrayList<>();
 
         try {
             conn = getSQLConnection();
@@ -412,15 +436,16 @@ public class PlayerDataTable {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                Map<String, String> player = new HashMap<>();
                 int id = rs.getInt("id");
-                player.put("id", String.valueOf(id));
-                player.put("uuid", rs.getString("uuid"));
-                player.put("name", rs.getString("name"));
-                player.put("skinURL", rs.getString("skinURL"));
-                player.put("gender", rs.getString("gender"));
-                player.put("background", rs.getString("background"));
-                players.put(id, player);
+                UUID uuid = UUID.fromString(rs.getString("uuid"));
+                String name = rs.getString("name");
+                String skinURL = rs.getString("skinURL");
+                String gender = rs.getString("gender");
+                String background = rs.getString("background");
+                Logger.debugLog("Player: " + id + " " + uuid + " " + name + " " + skinURL + " " + gender + " " + background);
+
+                FamilyPlayerImpl familyPlayer = new FamilyPlayerImpl(id, uuid, name, skinURL, gender, background);
+                players.add(familyPlayer);
             }
 
         } catch (SQLException ex) {
