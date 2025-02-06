@@ -20,33 +20,28 @@ import static de.janschuri.lunaticfamily.platform.bukkit.FamilyTreeManagerImpl.g
 
 public class FamilyTree {
 
-
-    private final Map<String, Advancement> advancementMap= new HashMap<>();
+    private static final Map<UUID, FamilyTree> familyTrees = new HashMap<>();
 
     private UUID uuid;
-    private TreeAdvancement.RootTreeAdvancement root;
-    private Player player;
+    private FamilyPlayerImpl familyPlayer;
     private AdvancementManager manager;
-    private List<TreeAdvancement> treeAdvancements = new ArrayList<>();
-    private List<Advancement> advancements = new ArrayList<>();
-    private Map<Integer, Integer> leftRows = new HashMap<>();
-    private Map<Integer, Integer> rightRows = new HashMap<>();
+    private final List<TreeAdvancement> treeAdvancements = new ArrayList<>();
+    private final Map<String, Advancement> advancementMap = new HashMap<>();
+    private final Map<Integer, Integer> leftRows = new HashMap<>();
+    private final Map<Integer, Integer> rightRows = new HashMap<>();
 
-    public FamilyTree(FamilyPlayerImpl playerFam, TreeAdvancement.RootTreeAdvancement root) {
+    private FamilyTree(FamilyPlayerImpl playerFam) {
         this.uuid = playerFam.getUniqueId();
-        this.root = root;
-        this.player = Bukkit.getPlayer(uuid);
-
         this.manager = new AdvancementManager(new NameKey("manager", uuid.toString()));
+        this.familyPlayer = playerFam;
 
-        manager.addPlayer(player);
-
-        treeAdvancements.add(root);
-        leftRows.put(0, 1);
+        familyTrees.put(uuid, this);
     }
 
-    public Player getPlayer() {
-        return player;
+    public static FamilyTree getFamilyTree(int playerFamId) {
+        FamilyPlayerImpl playerFam = FamilyPlayerImpl.getFamilyPlayer(playerFamId);
+
+        return familyTrees.getOrDefault(playerFam.getUniqueId(), new FamilyTree(playerFam));
     }
 
     private int getNextX(int y, Side side) {
@@ -77,7 +72,109 @@ public class FamilyTree {
         }
     }
 
-    public TreeAdvancement.HiddenAdvancement addEgoAnchor() {
+    public boolean update() {
+
+        Player player = Bukkit.getPlayer(uuid);
+
+        if (player == null) {
+            return false;
+        }
+
+
+        String egoKey = "ego";
+        String egoLang = getRelationLang(egoKey);
+        String egoTitle = familyPlayer.getName();
+        String background = familyPlayer.getBackground();
+        String egoSkinURL = familyPlayer.getSkinURL();
+        ItemStack egoIcon = ItemStackUtils.getSkullFromURL(egoSkinURL);
+
+        TreeAdvancement.RootTreeAdvancement root = new TreeAdvancement.RootTreeAdvancement(egoKey,  background, null, egoTitle, egoLang, egoIcon, 13.5f, 7.5f, FamilyTree.Side.LEFT);
+        treeAdvancements.add(root);
+        leftRows.put(0, 1);
+
+        TreeAdvancement.HiddenAdvancement egoAnchor = addEgoAnchor(root);
+
+        List<FamilyPlayerImpl> parents = familyPlayer.getParents();
+
+        if (parents != null && !parents.isEmpty()) {
+            TreeAdvancement.HiddenAdvancement parentsAnchor = addParentsAnchor(egoAnchor, FamilyTree.Side.CENTER, egoKey);
+
+            int i = 0;
+            for (FamilyPlayerImpl parent : parents) {
+                String parentKey = "parent_" + i;
+                FamilyTree.Side parentSide = i % 2 == 0 ? FamilyTree.Side.LEFT : FamilyTree.Side.RIGHT;
+                TreeAdvancement.HiddenAdvancement parentAnchor = addParentAdvancement(parentsAnchor, parentSide, parent, parentKey);
+                i++;
+            }
+        }
+
+        FamilyPlayerImpl partnerFam = familyPlayer.getPartner();
+
+        if (partnerFam != null) {
+            String partnerKey = "partner";
+
+            TreeAdvancement.HiddenAdvancement partnerAnchor = addPartnerAdvancement(egoAnchor, FamilyTree.Side.RIGHT, partnerFam, partnerKey);
+
+            List<FamilyPlayerImpl> partnerSiblings = partnerFam.getSiblings();
+
+            if (partnerSiblings != null && !partnerSiblings.isEmpty()) {
+                TreeAdvancement.HiddenAdvancement partnerSiblingsAnchor = addSiblingsAnchor(partnerAnchor, FamilyTree.Side.RIGHT, partnerKey);
+
+                int i = 0;
+                for (FamilyPlayerImpl sibling : partnerSiblings) {
+                    String siblingKey = "partner_sibling_" + i;
+                    TreeAdvancement.HiddenAdvancement siblingAnchor = addSiblingAdvancement(partnerSiblingsAnchor, FamilyTree.Side.RIGHT, sibling, siblingKey);
+                    i++;
+                }
+            }
+
+            List<FamilyPlayerImpl> partnerParents = partnerFam.getParents();
+
+            if (partnerParents != null && !partnerParents.isEmpty()) {
+                TreeAdvancement.HiddenAdvancement partnerParentsAnchor = addParentsAnchor(partnerAnchor, FamilyTree.Side.RIGHT, partnerKey);
+
+                int i = 0;
+                for (FamilyPlayerImpl parent : partnerParents) {
+                    String parentKey = "partner_parent_" + i;
+                    TreeAdvancement.HiddenAdvancement parentAnchor = addParentAdvancement(partnerParentsAnchor, FamilyTree.Side.RIGHT, parent, parentKey);
+                    i++;
+                }
+            }
+        }
+
+        List<FamilyPlayerImpl> children = familyPlayer.getChildren();
+
+        if (children != null && !children.isEmpty()) {
+            TreeAdvancement.HiddenAdvancement childrenAnchor = addChildrenAnchor(egoAnchor, FamilyTree.Side.CENTER, egoKey);
+
+            int i = 0;
+            for (FamilyPlayerImpl child : children) {
+                String childKey = "child_" + i;
+                FamilyTree.Side side = i % 2 == 0 ? FamilyTree.Side.LEFT : FamilyTree.Side.RIGHT;
+                TreeAdvancement.HiddenAdvancement childAnchor = addChildAdvancement(childrenAnchor, side, child, childKey);
+
+                addAllDownwards(child, childAnchor, side, childKey);
+
+                i++;
+            }
+
+            for (FamilyPlayerImpl child : children) {
+                String childKey = "child_" + i;
+                FamilyTree.Side side = i % 2 == 0 ? FamilyTree.Side.LEFT : FamilyTree.Side.RIGHT;
+                TreeAdvancement.HiddenAdvancement childAnchor = addChildAdvancement(childrenAnchor, side, child, childKey);
+
+                addAllDownwards(child, childAnchor, side, childKey);
+
+                i++;
+            }
+        }
+
+        send(player);
+
+        return true;
+    }
+
+    public TreeAdvancement.HiddenAdvancement addEgoAnchor(TreeAdvancement root) {
         TreeAdvancement.HiddenAdvancement egoAnchor = new TreeAdvancement.HiddenAdvancement(root.getKey()+"_anchor", root, 0.5f, 0, FamilyTree.Side.LEFT);
         treeAdvancements.add(egoAnchor);
         return egoAnchor;
@@ -270,21 +367,20 @@ public class FamilyTree {
         }
     }
 
-    public void send() {
-        reset();
+    public void send(Player player) {
+        reset(player);
 
         for (TreeAdvancement treeAdvancement : treeAdvancements) {
             Advancement advancement = createAdvancement(treeAdvancement);
-            advancements.add(advancement);
-            manager.addAdvancement(advancement);
             advancementMap.put(treeAdvancement.getKey(), advancement);
+            manager.addAdvancement(advancement);
         }
     }
 
-    public void reset() {
-        AdvancementsPacket packet = new AdvancementsPacket(player, false, advancements, null);
+    public void reset(Player player) {
+        AdvancementsPacket packet = new AdvancementsPacket(player, false, advancementMap.values().stream().toList(), null);
         packet.send();
-        advancements.clear();
+        advancementMap.clear();
     }
 
     private Advancement createAdvancement(TreeAdvancement treeAdvancement) {
