@@ -1,22 +1,36 @@
 package de.janschuri.lunaticfamily.common.handler;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
+//import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
+import io.ebean.Database;
+import io.ebean.annotation.Identity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 
 import java.sql.Timestamp;
 
+@Entity
 public class Adoption {
 
+    @Id
+    @Identity
     private final int id;
+    @ManyToMany
     private final int parentID;
+    @ManyToMany
     private final int childID;
+    @ManyToMany
     private final int priest;
-    private final String emoji;
+    private String emoji;
     private final Timestamp date;
+    @Column(name = "unadoptDate")
     private final Timestamp unadoptDate;
 
     public Adoption(int id) {
-        Adoption adoption = AdoptionsTable.getAdoption(id);
+        Adoption adoption = DatabaseRepository.getDatabase().find(Adoption.class).where().eq("id", id).findOne();
         assert adoption != null;
         this.id = adoption.id;
         this.parentID = adoption.parentID;
@@ -67,7 +81,8 @@ public class Adoption {
     }
 
     public void setEmojiColor(String color) {
-        AdoptionsTable.saveEmojiColor(this.id, color);
+        emoji = color;
+        DatabaseRepository.getDatabase().save(this);
     }
 
     public String getColoredParentEmoji() {

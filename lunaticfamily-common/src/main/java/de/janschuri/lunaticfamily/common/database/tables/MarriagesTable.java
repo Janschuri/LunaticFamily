@@ -1,7 +1,6 @@
 package de.janschuri.lunaticfamily.common.database.tables;
 
-import com.mysql.cj.log.Log;
-import de.janschuri.lunaticfamily.common.database.Database;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.common.database.Datatype;
@@ -39,7 +38,8 @@ public class MarriagesTable {
     }
 
     private static Connection getSQLConnection() {
-        return Database.getDatabase().getSQLConnection();
+        return null;
+//        return DatabaseRepository.getDatabase().getSQLConnection();
     }
 
     public static Marriage getMarriage(int id) {

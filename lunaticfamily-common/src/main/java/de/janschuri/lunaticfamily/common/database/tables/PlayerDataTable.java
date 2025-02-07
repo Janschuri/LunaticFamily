@@ -1,6 +1,6 @@
 package de.janschuri.lunaticfamily.common.database.tables;
 
-import de.janschuri.lunaticfamily.common.database.Database;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.common.database.Datatype;
@@ -37,7 +37,8 @@ public class PlayerDataTable {
     }
 
     private static Connection getSQLConnection() {
-        return Database.getDatabase().getSQLConnection();
+        return null;
+//        return DatabaseRepository.getDatabase().getSQLConnection();
     }
 
     public static FamilyPlayerImpl getFamilyPlayer(int id) {

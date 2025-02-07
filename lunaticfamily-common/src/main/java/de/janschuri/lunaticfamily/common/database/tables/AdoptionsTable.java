@@ -1,8 +1,7 @@
 package de.janschuri.lunaticfamily.common.database.tables;
 
-import de.janschuri.lunaticfamily.common.database.Database;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.Adoption;
-import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.common.database.Datatype;
 import de.janschuri.lunaticlib.common.database.Error;
@@ -157,9 +156,10 @@ public class AdoptionsTable {
     public static Table getTable() {
         return TABLE;
     }
-    
+
     public static Connection getSQLConnection() {
-        return Database.getDatabase().getSQLConnection();
+        return null;
+//        return DatabaseRepository.getDatabase().getSQLConnection();
     }
 
     public static void saveAdoption(int parentID, int childID, int priestID) {

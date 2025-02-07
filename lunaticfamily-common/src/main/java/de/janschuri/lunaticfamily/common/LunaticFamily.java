@@ -11,7 +11,7 @@ import de.janschuri.lunaticfamily.common.commands.sibling.Sibling;
 import de.janschuri.lunaticfamily.common.config.ConfigImpl;
 import de.janschuri.lunaticfamily.common.config.FamilyTreeJSON;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
-import de.janschuri.lunaticfamily.common.database.Database;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
 import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
 import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
@@ -95,7 +95,7 @@ public final class LunaticFamily {
         registerRequests();
 
         if (LunaticFamily.mode != Mode.BACKEND) {
-            if (Database.loadDatabase()) {
+            if (DatabaseRepository.loadDatabase()) {
                 Logger.infoLog("Database loaded.");
             } else {
                 Logger.errorLog("Database could not be loaded.");

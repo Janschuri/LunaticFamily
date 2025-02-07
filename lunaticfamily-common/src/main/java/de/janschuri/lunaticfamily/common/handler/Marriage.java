@@ -1,22 +1,35 @@
 package de.janschuri.lunaticfamily.common.handler;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
+//import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
+import io.ebean.annotation.Identity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 
 import java.sql.Timestamp;
 
+@Entity
 public class Marriage {
 
+    @Id
+    @Identity
     private final int id;
+    @ManyToMany(mappedBy = "playerData")
     private final int player1ID;
+    @ManyToMany(mappedBy = "playerData")
     private final int player2ID;
+    @ManyToMany(mappedBy = "playerData")
     private final int priest;
-    private final String emoji;
+    private String emoji;
     private final Timestamp date;
+    @Column(name = "divorceDate")
     private final Timestamp divorceDate;
 
     public Marriage(int id) {
-        Marriage marriage = MarriagesTable.getMarriage(id);
+        Marriage marriage = DatabaseRepository.getDatabase().find(Marriage.class).where().eq("id", id).findOne();
         this.id = marriage.id;
         this.player1ID = marriage.player1ID;
         this.player2ID = marriage.player2ID;
@@ -66,7 +79,8 @@ public class Marriage {
     }
 
     public void setEmojiColor(String color) {
-        MarriagesTable.saveEmojiColor(this.id, color);
+        emoji = color;
+        DatabaseRepository.getDatabase().save(this);
     }
 
     public String getColoredEmoji() {

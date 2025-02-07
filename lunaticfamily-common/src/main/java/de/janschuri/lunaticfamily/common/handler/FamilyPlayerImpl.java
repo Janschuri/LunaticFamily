@@ -1,34 +1,42 @@
 package de.janschuri.lunaticfamily.common.handler;
 
 import com.google.common.collect.BiMap;
-import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.HashBiMap;
 import de.janschuri.lunaticfamily.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
-import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
-import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.platform.FamilyTreeManager;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import io.ebean.annotation.Identity;
+import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+@Entity
+@Table(name = "playerData")
 public class FamilyPlayerImpl implements FamilyPlayer {
 
 
+    @Id
+    @Identity
     private final int id;
     private final UUID uuid;
     private String name;
+
+    @Column(name = "skinURL")
     private String skinURL;
     private String gender;
     private String background;
+    @ManyToMany
     private List<Marriage> marriages = new ArrayList<>();
+    @ManyToMany
     private List<Siblinghood> siblinghoods = new ArrayList<>();
+    @ManyToMany
     private List<Adoption> adoptionsAsParent = new ArrayList<>();
+    @ManyToMany
     private List<Adoption> adoptionsAsChild = new ArrayList<>();
 
     private final Map<Integer, String> familyMap = new HashMap<>();
@@ -42,7 +50,8 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         if (familyPlayerMap.containsKey(id)) {
             return familyPlayerMap.get(id);
         } else {
-            FamilyPlayerImpl familyPlayer = PlayerDataTable.getFamilyPlayer(id);
+//            FamilyPlayerImpl familyPlayer = PlayerDataTable.getFamilyPlayer(id);
+            FamilyPlayerImpl familyPlayer = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("id", id).findOne();
             if (familyPlayer == null) {
                 return null;
             }
@@ -55,7 +64,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         if (ids.containsKey(uuid)) {
             return getFamilyPlayer(ids.get(uuid));
         } else {
-            FamilyPlayerImpl familyPlayer = PlayerDataTable.getFamilyPlayer(uuid);
+            FamilyPlayerImpl familyPlayer = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("uuid", uuid).findOne();
 
             if (familyPlayer == null) {
                 familyPlayer = new FamilyPlayerImpl(uuid);
@@ -105,10 +114,26 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public void update() {
-        this.marriages = MarriagesTable.getPlayersMarriages(id);
-        this.siblinghoods = SiblinghoodsTable.getPlayersSiblinghoods(id);
-        this.adoptionsAsParent = AdoptionsTable.getPlayerAsParentAdoptions(id);
-        this.adoptionsAsChild = AdoptionsTable.getPlayerAsChildAdoptions(id);
+        this.marriages = DatabaseRepository.getDatabase().find(Marriage.class)
+                .where()
+                .eq("player1ID", id)
+                .or()
+                .eq("player2ID", id)
+                .findList();
+        this.siblinghoods = DatabaseRepository.getDatabase().find(Siblinghood.class)
+                .where()
+                .eq("player1ID", id)
+                .or()
+                .eq("player2ID", id)
+                .findList();
+        this.adoptionsAsParent = DatabaseRepository.getDatabase().find(Adoption.class)
+                .where()
+                .eq("parentID", id)
+                .findList();
+        this.adoptionsAsChild = DatabaseRepository.getDatabase().find(Adoption.class)
+                .where()
+                .eq("childID", id)
+                .findList();
 
 
         loadFamilyMap();
@@ -143,48 +168,57 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     private int save() {
         int idInsert;
         if (id < 1) {
-            idInsert = PlayerDataTable.getID(uuid);
+            FamilyPlayerImpl familyPlayer = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("uuid", uuid).findOne();
+            if (familyPlayer != null) {
+                idInsert = familyPlayer.id;
+            } else {
+                idInsert = -1;
+            }
+
         } else {
+            DatabaseRepository.getDatabase().update(this);
             idInsert = id;
         }
 
         Logger.debugLog("Saving FamilyPlayer: " + idInsert);
 
-        return PlayerDataTable.saveOrUpdate(idInsert, uuid, getName(), getSkinURL(), getGender(), getBackground());
+        DatabaseRepository.getDatabase().save(this);
+        int id = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("uuid", uuid).findOne().id;
+        return id;
     }
 
     private void saveMarriage(int partnerID, int priestID) {
-        MarriagesTable.saveMarriage(this.id, partnerID, priestID);
+//        MarriagesTable.saveMarriage(this.id, partnerID, priestID);
         update();
         updateAll();
     }
 
     private void divorceMarriage() {
-        MarriagesTable.divorceMarriage(this.id);
+//        MarriagesTable.divorceMarriage(this.id);
         update();
         updateAll();
     }
 
     private void saveSiblinghood(int siblingID, int priestID) {
-        SiblinghoodsTable.saveSiblinghood(this.id, siblingID, priestID);
+//        SiblinghoodsTable.saveSiblinghood(this.id, siblingID, priestID);
         update();
         updateAll();
     }
 
     private void unsiblingSiblinghood() {
-        SiblinghoodsTable.unsiblingSiblinghood(this.id);
+//        SiblinghoodsTable.unsiblingSiblinghood(this.id);
         update();
         updateAll();
     }
 
     private void saveAdoption(int childID, int priestID) {
-        AdoptionsTable.saveAdoption(this.id, childID, priestID);
+//        AdoptionsTable.saveAdoption(this.id, childID, priestID);
         update();
         updateAll();
     }
 
     private void unadoptAdoption(int childID) {
-        AdoptionsTable.unadoptAdoption(this.id, childID);
+//        AdoptionsTable.unadoptAdoption(this.id, childID);
         update();
         updateAll();
     }

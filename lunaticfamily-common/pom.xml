@@ -13,21 +13,46 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
+    <properties>
+        <ebean.version>15.8.1</ebean.version>
+    </properties>
+
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>io.ebean</groupId>
+                <artifactId>ebean-maven-plugin</artifactId>
+                <version>${ebean.version}</version> <!-- Use the version you are working with -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>enhance</goal> <!-- Enhances the entity classes -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.10.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path> <!-- generate ebean query beans -->
+                            <groupId>io.ebean</groupId>
+                            <artifactId>querybean-generator</artifactId>
+                            <version>${ebean.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.4.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -48,6 +73,11 @@
 
 
     <dependencies>
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean</artifactId>
+            <version>${ebean.version}</version>
+        </dependency>
         <dependency>
             <groupId>de.janschuri</groupId>
             <artifactId>lunaticfamily-platform-interface</artifactId>
