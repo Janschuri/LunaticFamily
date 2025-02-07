@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -84,7 +84,7 @@ public class MarryPropose extends Subcommand {
 
         String partnerName = args[0];
 
-        UUID partnerUUID = PlayerDataTable.getUUID(partnerName);
+        UUID partnerUUID = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("name", partnerName).findOne().getUniqueId();
 
         if (partnerUUID == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)

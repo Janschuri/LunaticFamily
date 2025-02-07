@@ -30,15 +30,20 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     private String skinURL;
     private String gender;
     private String background;
-    @ManyToMany
-    private List<Marriage> marriages = new ArrayList<>();
-    @ManyToMany
-    private List<Siblinghood> siblinghoods = new ArrayList<>();
-    @ManyToMany
+    @OneToMany(mappedBy = "player1", fetch = FetchType.EAGER)
+    private List<Marriage> marriagesAsPlayer1 = new ArrayList<>();
+    @OneToMany(mappedBy = "player2", fetch = FetchType.EAGER)
+    private List<Marriage> marriagesAsPlayer2 = new ArrayList<>();
+    @OneToMany(mappedBy = "player1", fetch = FetchType.EAGER)
+    private List<Siblinghood> siblinghoodsAsPlayer1 = new ArrayList<>();
+    @OneToMany(mappedBy = "player2", fetch = FetchType.EAGER)
+    private List<Siblinghood> siblinghoodsAsPlayer2 = new ArrayList<>();
+    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
     private List<Adoption> adoptionsAsParent = new ArrayList<>();
-    @ManyToMany
+    @OneToMany(mappedBy = "child", fetch = FetchType.EAGER)
     private List<Adoption> adoptionsAsChild = new ArrayList<>();
 
+    @Transient
     private final Map<Integer, String> familyMap = new HashMap<>();
 
     private static final BiMap<UUID, Integer> ids = HashBiMap.create();
@@ -50,7 +55,6 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         if (familyPlayerMap.containsKey(id)) {
             return familyPlayerMap.get(id);
         } else {
-//            FamilyPlayerImpl familyPlayer = PlayerDataTable.getFamilyPlayer(id);
             FamilyPlayerImpl familyPlayer = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("id", id).findOne();
             if (familyPlayer == null) {
                 return null;
@@ -114,26 +118,6 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public void update() {
-        this.marriages = DatabaseRepository.getDatabase().find(Marriage.class)
-                .where()
-                .eq("player1ID", id)
-                .or()
-                .eq("player2ID", id)
-                .findList();
-        this.siblinghoods = DatabaseRepository.getDatabase().find(Siblinghood.class)
-                .where()
-                .eq("player1ID", id)
-                .or()
-                .eq("player2ID", id)
-                .findList();
-        this.adoptionsAsParent = DatabaseRepository.getDatabase().find(Adoption.class)
-                .where()
-                .eq("parentID", id)
-                .findList();
-        this.adoptionsAsChild = DatabaseRepository.getDatabase().find(Adoption.class)
-                .where()
-                .eq("childID", id)
-                .findList();
 
 
         loadFamilyMap();
@@ -188,7 +172,10 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     private void saveMarriage(int partnerID, int priestID) {
-//        MarriagesTable.saveMarriage(this.id, partnerID, priestID);
+        Marriage marriage = new Marriage(this, getFamilyPlayer(partnerID));
+        marriage.setPriest(getFamilyPlayer(priestID));
+        DatabaseRepository.getDatabase().save(marriage);
+
         update();
         updateAll();
     }
@@ -239,9 +226,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         if (getMarriages().isEmpty()) {
             return null;
         }
-
-        int partnerID = getMarriages().get(0).getPartnerID(id);
-        return getFamilyPlayer(partnerID);
+        return getMarriages().get(0).getPartner(id);
     }
 
     public boolean isMarried() {
@@ -257,8 +242,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
             return null;
         }
 
-        int siblingID = getSiblinghoods().get(0).getSiblingID(id);
-        return getFamilyPlayer(siblingID);
+        return getSiblinghoods().get(0).getSibling(id);
     }
 
     public List<FamilyPlayerImpl> getSiblings() {
@@ -269,8 +253,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         List<FamilyPlayerImpl> siblings = new ArrayList<>();
 
         for (Siblinghood siblinghood : getSiblinghoods()) {
-            int siblingID = siblinghood.getSiblingID(id);
-            siblings.add(getFamilyPlayer(siblingID));
+            siblings.add(siblinghood.getSibling(id));
         }
 
         return siblings;
@@ -286,7 +269,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
 
     public boolean isChildOf(int parentID) {
         for (Adoption adoption : getAdoptionsAsChild()) {
-            if (adoption.getParentID() == parentID) {
+            if (adoption.getParent().getId() == parentID) {
                 return true;
             }
         }
@@ -297,8 +280,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         List<FamilyPlayerImpl> list = new ArrayList<>();
 
         for (Adoption adoption : getAdoptionsAsChild()) {
-            int parentID = adoption.getParentID();
-            list.add(getFamilyPlayer(parentID));
+            list.add(adoption.getParent());
         }
 
         return list;
@@ -308,8 +290,7 @@ public class FamilyPlayerImpl implements FamilyPlayer {
         List<FamilyPlayerImpl> list = new ArrayList<>();
 
         for (Adoption adoption : getAdoptionsAsParent()) {
-            int childID = adoption.getChildID();
-            list.add(getFamilyPlayer(childID));
+            list.add(adoption.getChild());
         }
 
         return list;
@@ -778,10 +759,20 @@ public class FamilyPlayerImpl implements FamilyPlayer {
     }
 
     public List<Marriage> getMarriages() {
+        List<Marriage> marriages = new ArrayList<>();
+
+        marriages.addAll(marriagesAsPlayer1);
+        marriages.addAll(marriagesAsPlayer2);
+
         return marriages;
     }
 
     public List<Siblinghood> getSiblinghoods() {
+        List<Siblinghood> siblinghoods = new ArrayList<>();
+
+        siblinghoods.addAll(siblinghoodsAsPlayer1);
+        siblinghoods.addAll(siblinghoodsAsPlayer2);
+
         return siblinghoods;
     }
 

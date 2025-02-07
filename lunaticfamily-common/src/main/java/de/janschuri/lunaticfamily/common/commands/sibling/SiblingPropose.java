@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -84,7 +84,7 @@ public class SiblingPropose extends Subcommand {
 
         String siblingName = args[0];
 
-        UUID siblingUUID = PlayerDataTable.getUUID(siblingName);
+        UUID siblingUUID = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("name", siblingName).findOne().getUniqueId();
 
         if (siblingUUID == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)

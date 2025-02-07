@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -105,7 +105,7 @@ public class AdoptPropose extends Subcommand {
 
         String childName = args[0];
 
-        UUID childUUID = PlayerDataTable.getUUID(childName);
+        UUID childUUID = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("name", childName).findOne().getUniqueId();
 
         if (childUUID == null) {
             player.sendMessage(getMessage(PLAYER_NOT_EXIST_MK).replaceText(getTextReplacementConfig("%player%", childName)));

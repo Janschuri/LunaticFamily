@@ -1,15 +1,12 @@
 package de.janschuri.lunaticfamily.common.utils;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
-import de.janschuri.lunaticlib.DecisionMessage;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.utils.Mode;
-import net.kyori.adventure.text.Component;
 
-import java.nio.file.LinkOption;
-import java.util.List;
 import java.util.UUID;
 
 public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
@@ -76,12 +73,12 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
 
             uuid = UUID.fromString(arg);
 
-            if (PlayerDataTable.getID(uuid) < 0) {
+            if (DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("uuid", uuid).findCount() == 0) {
                 uuid = null;
             }
         } else {
             Logger.debugLog("arg is not UUID");
-            uuid = PlayerDataTable.getUUID(arg);
+            uuid = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("name", arg).findOne().getUniqueId();
         }
 
         if (uuid == null) {

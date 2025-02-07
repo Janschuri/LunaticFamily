@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.priest;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -87,8 +87,8 @@ public class PriestMarry extends Subcommand {
         String player1Name = args[0];
         String player2Name = args[1];
 
-        UUID player1UUID = PlayerDataTable.getUUID(player1Name);
-        UUID player2UUID = PlayerDataTable.getUUID(player2Name);
+        UUID player1UUID = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("name", player1Name).findOne().getUniqueId();
+        UUID player2UUID = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("name", player2Name).findOne().getUniqueId();
 
         if (player1UUID == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)

@@ -1,7 +1,8 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
+
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -74,20 +75,20 @@ public class MarryList extends Subcommand {
     }
 
     private Component getMarryList(int page) {
-        List<Marriage> marryList = MarriagesTable.getMarriageList(page, 10);
+        List<Marriage> marryList = DatabaseRepository.getDatabase().find(Marriage.class).where().isNull("divorceDate").setFirstRow(10*(page-1)).setMaxRows(10).findList();
 
         Component msg = getMessage(headerMK, false);
 
         int index = 1 + (10*(page-1));
         Logger.debugLog("MarryList: " + marryList);
         for (Marriage e : marryList) {
-            FamilyPlayerImpl player1Fam = getFamilyPlayer(e.getPlayer1ID());
-            FamilyPlayerImpl player2Fam = getFamilyPlayer(e.getPlayer2ID());
+            FamilyPlayerImpl player1Fam = e.getPlayer1();
+            FamilyPlayerImpl player2Fam = e.getPlayer2();
 
 
             String hoverText = " (" + e.getDate() + ")";
-            if (e.getPriest() > 0) {
-                hoverText = hoverText + " -> " + getFamilyPlayer(e.getPriest()).getName();
+            if (e.getPriest() != null) {
+                hoverText = hoverText + " -> " + e.getPriest().getName();
             }
 
             Component heart = Component.text(" " + Marriage.getDefaultEmoji() + " ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));

@@ -26,7 +26,12 @@ public class DatabaseRepository {
         databaseConfig.load();
 
 
-        Set<Class<?>> classes = Set.of(QFamilyPlayerImpl.class, QAdoption.class, QMarriage.class, QSiblinghood.class);
+        Set<Class<?>> classes = Set.of(
+                QFamilyPlayerImpl.class,
+                QAdoption.class,
+                QMarriage.class,
+                QSiblinghood.class
+        );
 
         databaseConfig.load();
 

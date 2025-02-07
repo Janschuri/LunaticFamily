@@ -4,61 +4,65 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 //import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import io.ebean.annotation.Identity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import io.ebean.annotation.WhenCreated;
+import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 
 @Entity
+@Table(name = "marriages")
 public class Marriage {
 
     @Id
     @Identity
-    private final int id;
-    @ManyToMany(mappedBy = "playerData")
-    private final int player1ID;
-    @ManyToMany(mappedBy = "playerData")
-    private final int player2ID;
-    @ManyToMany(mappedBy = "playerData")
-    private final int priest;
+    private int id;
+    @ManyToOne
+    @JoinColumn(name = "player1ID")
+    private FamilyPlayerImpl player1;
+    @ManyToOne
+    @JoinColumn(name = "player2ID")
+    private FamilyPlayerImpl player2;
+    @ManyToOne
+    @JoinColumn(name = "priest")
+    private FamilyPlayerImpl priest;
+    @Column(name = "heart")
     private String emoji;
-    private final Timestamp date;
+    @WhenCreated
+    private Timestamp date;
     @Column(name = "divorceDate")
-    private final Timestamp divorceDate;
+    private Timestamp divorceDate;
 
     public Marriage(int id) {
         Marriage marriage = DatabaseRepository.getDatabase().find(Marriage.class).where().eq("id", id).findOne();
         this.id = marriage.id;
-        this.player1ID = marriage.player1ID;
-        this.player2ID = marriage.player2ID;
+        this.player1 = marriage.player1;
+        this.player2 = marriage.player2;
         this.emoji = marriage.emoji;
         this.priest = marriage.priest;
         this.date = marriage.date;
         this.divorceDate = marriage.divorceDate;
     }
 
-    public Marriage(int id, int player1ID, int player2ID, int priest, String emoji, Timestamp date, Timestamp divorceDate) {
-        this.id = id;
-        this.player1ID = player1ID;
-        this.player2ID = player2ID;
-        this.priest = priest;
-        this.emoji = emoji;
-        this.date = date;
-        this.divorceDate = divorceDate;
+    public Marriage(FamilyPlayerImpl player1, FamilyPlayerImpl player2) {
+        this.player1 = player1;
+        this.player2 = player2;
     }
 
-    public int getPlayer1ID() {
-        return player1ID;
+    public FamilyPlayerImpl getPlayer1() {
+        return player1;
     }
 
-    public int getPlayer2ID() {
-        return player2ID;
+    public FamilyPlayerImpl getPlayer2() {
+        return player2;
     }
 
-    public int getPriest() {
+    public FamilyPlayerImpl getPriest() {
         return priest;
+    }
+
+    public Marriage setPriest(FamilyPlayerImpl priest) {
+        this.priest = priest;
+        return this;
     }
 
     public Timestamp getDate() {
@@ -95,15 +99,15 @@ public class Marriage {
         return divorceDate != null;
     }
 
-    public int getPartnerID(int playerID) {
-        if (playerID == player1ID) {
-            return player2ID;
+    public FamilyPlayerImpl getPartner(int playerID) {
+        if (playerID == player1.getId()) {
+            return player2;
         }
 
-        if (playerID == player2ID) {
-            return player1ID;
+        if (playerID == player2.getId()) {
+            return player1;
         }
 
-        return -1;
+        return null;
     }
 }

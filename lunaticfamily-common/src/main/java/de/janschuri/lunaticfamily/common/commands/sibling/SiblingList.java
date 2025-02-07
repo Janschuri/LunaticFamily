@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -74,20 +74,20 @@ public class SiblingList extends Subcommand {
     }
 
     private Component getSiblingList(int page) {
-        List<Siblinghood> siblingList = SiblinghoodsTable.getSiblinghoodList(page, 10);
+        List<Siblinghood> siblingList = DatabaseRepository.getDatabase().find(Siblinghood.class).setFirstRow(10*(page-1)).setMaxRows(10).findList();
 
         Component msg = getMessage(headerMK, false);
 
         int index = 1 + (10*(page-1));
         Logger.debugLog("SiblingList: " + siblingList);
         for (Siblinghood e : siblingList) {
-            FamilyPlayerImpl player1Fam = getFamilyPlayer(e.getPlayer1ID());
-            FamilyPlayerImpl player2Fam = getFamilyPlayer(e.getPlayer2ID());
+            FamilyPlayerImpl player1Fam = e.getPlayer1();
+            FamilyPlayerImpl player2Fam = e.getPlayer2();
 
 
             String hoverText = " (" + e.getDate() + ")";
-            if (e.getPriest() > 0) {
-                hoverText = hoverText + " -> " + getFamilyPlayer(e.getPriest()).getName();
+            if (e.getPriest() != null) {
+                hoverText = hoverText + " -> " + e.getPriest().getName();
             }
 
             Component heart = Component.text(" " + Siblinghood.getDefaultEmoji() + " ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));

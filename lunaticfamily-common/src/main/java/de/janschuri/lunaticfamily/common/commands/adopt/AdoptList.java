@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.Adoption;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -75,20 +75,20 @@ public class AdoptList extends Subcommand {
     }
 
     private Component getAdoptList(int page) {
-        List<Adoption> adoptList = AdoptionsTable.getAdoptionList(page, 10);
+        List<Adoption> adoptList = DatabaseRepository.getDatabase().find(Adoption.class).where().isNull("unadoptDate").setFirstRow(10*(page-1)).setMaxRows(10).findList();
 
         Component msg = getMessage(headerMK, false);
 
         int index = 1 + (10*(page-1));
         Logger.debugLog("AdoptList: " + adoptList);
         for (Adoption e : adoptList) {
-            FamilyPlayerImpl player1Fam = getFamilyPlayer(e.getParentID());
-            FamilyPlayerImpl player2Fam = getFamilyPlayer(e.getChildID());
+            FamilyPlayerImpl player1Fam = e.getParent();
+            FamilyPlayerImpl player2Fam = e.getChild();
 
 
             String hoverText = " (" + e.getDate() + ")";
-            if (e.getPriest() > 0) {
-                hoverText = hoverText + " -> " + getFamilyPlayer(e.getPriest()).getName();
+            if (e.getPriest() == null) {
+                hoverText = hoverText + " -> " + e.getPriest().getName();
             }
 
             Component heart = Component.text(" " + Adoption.getDefaultParentEmoji() + " ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));

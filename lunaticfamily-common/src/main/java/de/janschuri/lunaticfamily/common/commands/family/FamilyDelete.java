@@ -3,10 +3,11 @@ package de.janschuri.lunaticfamily.common.commands.family;
 import de.janschuri.lunaticfamily.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
-import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
-import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
+import de.janschuri.lunaticfamily.common.handler.Adoption;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.Marriage;
+import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -80,11 +81,26 @@ public class FamilyDelete extends Subcommand {
 
         if (confirm) {
             UUID playerUUID = UUID.fromString(playerArg);
-            FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
-            MarriagesTable.deleteMarriage(playerFam.getId());
-            AdoptionsTable.deleteAllAdoptions(playerFam.getId());
-            SiblinghoodsTable.deleteSiblinghood(playerFam.getId());
-            PlayerDataTable.deletePlayerData(playerArg);
+            FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+
+            for (Marriage marriage : playerFam.getMarriages()) {
+                DatabaseRepository.getDatabase().delete(marriage);
+            }
+
+            for (Adoption adoption : playerFam.getAdoptionsAsChild()) {
+                DatabaseRepository.getDatabase().delete(adoption);
+            }
+
+            for (Adoption adoption : playerFam.getAdoptionsAsParent()) {
+                DatabaseRepository.getDatabase().delete(adoption);
+            }
+
+            for (Siblinghood siblinghood : playerFam.getSiblinghoods()) {
+                DatabaseRepository.getDatabase().delete(siblinghood);
+            }
+
+            DatabaseRepository.getDatabase().delete(playerFam);
+
             sender.sendMessage(getMessage(deletedMK).replaceText(getTextReplacementConfig("%uuid%", playerArg)));
             return true;
         }

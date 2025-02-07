@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
@@ -73,7 +73,7 @@ public class FamilyDBList extends Subcommand {
     }
 
     private Component getPlayerList(int page) {
-        Map<Integer, FamilyPlayerImpl> players = PlayerDataTable.getPlayerList(page).stream()
+        Map<Integer, FamilyPlayerImpl> players = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).findList().stream()
                 .collect(LinkedHashMap::new, (m, v) -> m.put(v.getId(), v), LinkedHashMap::putAll);
 
         ComponentBuilder<TextComponent, TextComponent.Builder> msg = Component.text().append(getMessage(headerMK, false));

@@ -4,25 +4,26 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 //import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import io.ebean.annotation.Identity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 
 @Entity
+@Table(name = "siblinghoods")
 public class Siblinghood {
 
     @Id
     @Identity
     private final int id;
-    @ManyToMany(mappedBy = "playerData")
-    private final int player1ID;
-    @ManyToMany(mappedBy = "playerData")
-    private final int player2ID;
-    @ManyToMany(mappedBy = "playerData")
-    private final int priest;
+    @ManyToOne
+    @JoinColumn(name = "player1ID")
+    private FamilyPlayerImpl player1;
+    @ManyToOne
+    @JoinColumn(name = "player2ID")
+    private FamilyPlayerImpl player2;
+    @ManyToOne
+    @JoinColumn(name = "priest")
+    private FamilyPlayerImpl priest;
     private String emoji;
     private final Timestamp date;
     @Column(name = "unsiblingDate")
@@ -32,33 +33,33 @@ public class Siblinghood {
         Siblinghood siblinghood = DatabaseRepository.getDatabase().find(Siblinghood.class).where().eq("id", id).findOne();
         assert siblinghood != null;
         this.id = siblinghood.id;
-        this.player1ID = siblinghood.player1ID;
-        this.player2ID = siblinghood.player2ID;
+        this.player1 = siblinghood.player1;
+        this.player2 = siblinghood.player2;
         this.priest = siblinghood.priest;
         this.emoji = siblinghood.emoji;
         this.date = siblinghood.date;
         this.unsiblingDate = siblinghood.unsiblingDate;
     }
 
-    public Siblinghood(int id, int player1ID, int player2ID, int priest, String emoji, Timestamp date, Timestamp unsiblingDate) {
+    public Siblinghood(int id, FamilyPlayerImpl player1, FamilyPlayerImpl player2, FamilyPlayerImpl priest, String emoji, Timestamp date, Timestamp unsiblingDate) {
         this.id = id;
-        this.player1ID = player1ID;
-        this.player2ID = player2ID;
+        this.player1 = player1;
+        this.player2 = player2;
         this.priest = priest;
         this.emoji = emoji;
         this.date = date;
         this.unsiblingDate = unsiblingDate;
     }
 
-    public int getPlayer1ID() {
-        return player1ID;
+    public FamilyPlayerImpl getPlayer1() {
+        return player1;
     }
 
-    public int getPlayer2ID() {
-        return player2ID;
+    public FamilyPlayerImpl getPlayer2() {
+        return player2;
     }
 
-    public int getPriest() {
+    public FamilyPlayerImpl getPriest() {
         return priest;
     }
 
@@ -91,15 +92,15 @@ public class Siblinghood {
         return "⭐";
     }
 
-    public int getSiblingID(int playerID) {
-        if (playerID == player1ID) {
-            return player2ID;
+    public FamilyPlayerImpl getSibling(int playerID) {
+        if (player1.getId() == playerID) {
+            return player2;
         }
 
-        if (playerID == player2ID) {
-            return player1ID;
+        if (player1.getId() == playerID) {
+            return player1;
         }
 
-        return -1;
+        return null;
     }
 }

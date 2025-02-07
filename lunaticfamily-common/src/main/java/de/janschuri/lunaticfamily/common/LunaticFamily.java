@@ -12,11 +12,11 @@ import de.janschuri.lunaticfamily.common.config.ConfigImpl;
 import de.janschuri.lunaticfamily.common.config.FamilyTreeJSON;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
-import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
-import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
-import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
 import de.janschuri.lunaticfamily.common.futurerequests.*;
+import de.janschuri.lunaticfamily.common.handler.Adoption;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.Marriage;
+import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.platform.Platform;
 import de.janschuri.lunaticlib.common.LunaticLib;
@@ -149,31 +149,31 @@ public final class LunaticFamily {
     }
 
     public static Map<String, Integer> getMarriagesStats() {
-        int totalMarriages = MarriagesTable.getTotalMarriagesCount();
-        int marriages = MarriagesTable.getMarriagesCount();
+        int totalMarriages = DatabaseRepository.getDatabase().find(Marriage.class).findCount();
+        int marriages = DatabaseRepository.getDatabase().find(Marriage.class).where().isNull("divorceDate").findCount();
         int divorced = totalMarriages - marriages;
 
         return Map.of("Marriages", marriages, "Divorced Marriages", divorced);
     }
 
     public static Map<String, Integer> getSiblinghoodsStats() {
-        int totalSiblings = SiblinghoodsTable.getTotalSiblinghoodsCount();
-        int siblings = SiblinghoodsTable.getSiblinghoodsCount();
+        int totalSiblings = DatabaseRepository.getDatabase().find(Siblinghood.class).findCount();
+        int siblings = DatabaseRepository.getDatabase().find(Siblinghood.class).where().isNull("unsiblingDate").findCount();
         int unsiblinged = totalSiblings - siblings;
 
         return Map.of("Siblings", siblings, "Unsiblinged Siblings", unsiblinged);
     }
 
     public static Map<String, Integer> getAdoptionsStats() {
-        int totalAdoptions = AdoptionsTable.getTotalAdoptionsCount();
-        int adoptions = AdoptionsTable.getAdoptionsCount();
+        int totalAdoptions = DatabaseRepository.getDatabase().find(Adoption.class).findCount();
+        int adoptions = DatabaseRepository.getDatabase().find(Adoption.class).where().isNull("unadoptDate").findCount();
         int unadopted = totalAdoptions - adoptions;
 
         return Map.of("Adoptions", adoptions, "Unadopted Adoptions", unadopted);
     }
 
     public static int getMarriedPlayersCount() {
-        return MarriagesTable.getMarriagesCount()*2;
+        return DatabaseRepository.getDatabase().find(Marriage.class).where().isNull("divorceDate").findCount() * 2;
     }
 
     public static FamilyPlayerImpl getFamilyPlayer(UUID uuid) {

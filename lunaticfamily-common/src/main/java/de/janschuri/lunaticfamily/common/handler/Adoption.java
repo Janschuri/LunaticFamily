@@ -1,29 +1,28 @@
 package de.janschuri.lunaticfamily.common.handler;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-//import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
-import io.ebean.Database;
 import io.ebean.annotation.Identity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 
 @Entity
+@Table(name = "adoptions")
 public class Adoption {
 
     @Id
     @Identity
     private final int id;
-    @ManyToMany
-    private final int parentID;
-    @ManyToMany
-    private final int childID;
-    @ManyToMany
-    private final int priest;
+    @ManyToOne
+    @JoinColumn(name = "parentID")
+    private FamilyPlayerImpl parent;
+    @ManyToOne
+    @JoinColumn(name = "childID")
+    private FamilyPlayerImpl child;
+    @ManyToOne
+    @JoinColumn(name = "priest")
+    private FamilyPlayerImpl priest;
     private String emoji;
     private final Timestamp date;
     @Column(name = "unadoptDate")
@@ -33,33 +32,33 @@ public class Adoption {
         Adoption adoption = DatabaseRepository.getDatabase().find(Adoption.class).where().eq("id", id).findOne();
         assert adoption != null;
         this.id = adoption.id;
-        this.parentID = adoption.parentID;
-        this.childID = adoption.childID;
+        this.parent = adoption.parent;
+        this.child = adoption.child;
         this.priest = adoption.priest;
         this.emoji = adoption.emoji;
         this.date = adoption.date;
         this.unadoptDate = adoption.unadoptDate;
     }
 
-    public Adoption(int id, int parentID, int childID, int priest, String emoji, Timestamp date, Timestamp unadoptDate) {
+    public Adoption(int id, FamilyPlayerImpl parent, FamilyPlayerImpl child, FamilyPlayerImpl priest, String emoji, Timestamp date, Timestamp unadoptDate) {
         this.id = id;
-        this.parentID = parentID;
-        this.childID = childID;
+        this.parent = parent;
+        this.child = child;
         this.priest = priest;
         this.emoji = emoji;
         this.date = date;
         this.unadoptDate = unadoptDate;
     }
 
-    public int getParentID() {
-        return parentID;
+    public FamilyPlayerImpl getParent() {
+        return parent;
     }
 
-    public int getChildID() {
-        return childID;
+    public FamilyPlayerImpl getChild() {
+        return child;
     }
 
-    public int getPriest() {
+    public FamilyPlayerImpl getPriest() {
         return priest;
     }
 
@@ -83,6 +82,10 @@ public class Adoption {
     public void setEmojiColor(String color) {
         emoji = color;
         DatabaseRepository.getDatabase().save(this);
+    }
+
+    public boolean hasPriest() {
+        return priest != null;
     }
 
     public String getColoredParentEmoji() {
