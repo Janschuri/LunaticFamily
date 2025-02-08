@@ -95,7 +95,7 @@ public final class LunaticFamily {
         registerRequests();
 
         if (LunaticFamily.mode != Mode.BACKEND) {
-            if (DatabaseRepository.loadDatabase()) {
+            if (DatabaseRepository.init()) {
                 Logger.infoLog("Database loaded.");
             } else {
                 Logger.errorLog("Database could not be loaded.");
