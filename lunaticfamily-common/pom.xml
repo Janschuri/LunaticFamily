@@ -78,6 +78,19 @@
             <artifactId>ebean</artifactId>
             <version>${ebean.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>3.17.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.10.2</version>
+        </dependency>
+
         <dependency>
             <groupId>de.janschuri</groupId>
             <artifactId>lunaticfamily-platform-interface</artifactId>
