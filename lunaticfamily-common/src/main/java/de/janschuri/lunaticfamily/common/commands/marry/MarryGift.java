@@ -39,7 +39,7 @@ public class MarryGift extends Subcommand {
 
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!(sender instanceof PlayerSender)) {
+        if (!(sender instanceof PlayerSender player)) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
             return true;
         }
@@ -49,8 +49,7 @@ public class MarryGift extends Subcommand {
             return true;
         }
 
-            PlayerSender player = (PlayerSender) sender;
-            UUID playerUUID = player.getUniqueId();
+        UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
             if (!playerFam.isMarried()) {

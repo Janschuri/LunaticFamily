@@ -39,7 +39,7 @@ public class AdoptMoveout extends Subcommand {
 
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!(sender instanceof PlayerSender)) {
+        if (!(sender instanceof PlayerSender player)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
             return true;
         }
@@ -49,7 +49,6 @@ public class AdoptMoveout extends Subcommand {
             return true;
         }
 
-        PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
         FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
@@ -159,7 +158,7 @@ public class AdoptMoveout extends Subcommand {
             return true;
         }
 
-        FamilyPlayer firstParentFam = (FamilyPlayer) playerFam.getParents().get(0);
+        FamilyPlayer firstParentFam = playerFam.getParents().get(0);
 
         if (playerFam.hasSiblings()) {
             FamilyPlayer siblingFam = playerFam.getSibling();

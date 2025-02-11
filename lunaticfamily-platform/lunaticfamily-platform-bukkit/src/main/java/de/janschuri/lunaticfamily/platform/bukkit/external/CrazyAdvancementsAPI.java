@@ -19,7 +19,7 @@ import java.util.*;
 
 public class CrazyAdvancementsAPI {
 
-    private static Map<UUID, AdvancementManager> managerMap = new HashMap<>();
+    private static final Map<UUID, AdvancementManager> managerMap = new HashMap<>();
 
     private static AdvancementManager getManager(Player player) {
         NameKey key = new NameKey("lunaticfamily", player.getUniqueId().toString());

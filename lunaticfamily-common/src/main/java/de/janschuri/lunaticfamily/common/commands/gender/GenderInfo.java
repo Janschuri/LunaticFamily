@@ -50,12 +50,11 @@ public class GenderInfo extends Subcommand {
         }
 
         if (args.length == 0) {
-            if (!(sender instanceof PlayerSender)) {
+            if (!(sender instanceof PlayerSender player)) {
                 sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
                 return true;
             }
 
-            PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
             sender.sendMessage(getMessage(infoMK,

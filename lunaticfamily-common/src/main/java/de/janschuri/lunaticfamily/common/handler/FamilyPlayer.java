@@ -39,7 +39,7 @@ public class FamilyPlayer {
     @Where(clause = "divorceDate IS NULL")
     private List<Marriage> marriagesAsPlayer2 = new ArrayList<>();
     @OneToMany(mappedBy = "priest")
-    private List<Marriage> marriagesAsPriest = new ArrayList<>();
+    private final List<Marriage> marriagesAsPriest = new ArrayList<>();
 
     @OneToMany(mappedBy = "player1")
     @Where(clause = "unsiblingDate IS NULL")
@@ -48,7 +48,7 @@ public class FamilyPlayer {
     @Where(clause = "unsiblingDate IS NULL")
     private List<Siblinghood> siblinghoodsAsPlayer2 = new ArrayList<>();
     @OneToMany(mappedBy = "priest")
-    private List<Siblinghood> siblinghoodsAsPriest = new ArrayList<>();
+    private final List<Siblinghood> siblinghoodsAsPriest = new ArrayList<>();
 
     @OneToMany(mappedBy = "parent")
     @Where(clause = "unadoptDate IS NULL")
@@ -57,7 +57,7 @@ public class FamilyPlayer {
     @Where(clause = "unadoptDate IS NULL")
     private List<Adoption> adoptionsAsChild = new ArrayList<>();
     @OneToMany(mappedBy = "priest")
-    private List<Adoption> adoptionsAsPriest = new ArrayList<>();
+    private final List<Adoption> adoptionsAsPriest = new ArrayList<>();
 
     private static final BiMap<UUID, Integer> ids = HashBiMap.create();
     private static final Map<Integer, FamilyPlayer> familyPlayerMap = new HashMap<>();

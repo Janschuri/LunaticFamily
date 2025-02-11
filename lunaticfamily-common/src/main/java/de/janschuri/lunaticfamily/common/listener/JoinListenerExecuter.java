@@ -22,7 +22,7 @@ public class JoinListenerExecuter {
     private static final CommandMessageKey MARRY_PARTNER_ONLINE_MK = new CommandMessageKey(new Marry(), "partner_online");
     private static final CommandMessageKey MARRY_PARTNER_JOINED_MK = new CommandMessageKey(new Marry(), "partner_joined");
 
-    private static List<String> registeredServers = new ArrayList<>();
+    private static final List<String> registeredServers = new ArrayList<>();
 
 
     public static boolean execute(PlayerSender sender) {

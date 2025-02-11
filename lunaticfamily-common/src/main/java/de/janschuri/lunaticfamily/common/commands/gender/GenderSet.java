@@ -73,10 +73,9 @@ public class GenderSet extends Subcommand {
         }
 
         if (args.length == 1) {
-            if (!(sender instanceof PlayerSender)) {
+            if (!(sender instanceof PlayerSender player)) {
                 sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
             } else {
-                PlayerSender player = (PlayerSender) sender;
                 UUID playerUUID = player.getUniqueId();
                 FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 

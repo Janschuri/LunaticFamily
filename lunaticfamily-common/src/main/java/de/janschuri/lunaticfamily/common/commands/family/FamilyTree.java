@@ -35,7 +35,7 @@ public class FamilyTree extends Subcommand {
 
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!(sender instanceof PlayerSender)) {
+        if (!(sender instanceof PlayerSender player)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
             return true;
         }
@@ -50,8 +50,7 @@ public class FamilyTree extends Subcommand {
             return true;
         }
 
-            PlayerSender player = (PlayerSender) sender;
-            UUID playerUUID = player.getUniqueId();
+        UUID playerUUID = player.getUniqueId();
             String name = player.getName();
             FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
             playerFam.save();

@@ -41,7 +41,7 @@ public class SiblingEmoji extends Subcommand {
     }
 
     public boolean execute(Sender sender, String[] args) {
-        if (!(sender instanceof PlayerSender)) {
+        if (!(sender instanceof PlayerSender player)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
             return true;
         }
@@ -52,7 +52,6 @@ public class SiblingEmoji extends Subcommand {
         }
 
 
-        PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
         FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 

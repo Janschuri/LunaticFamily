@@ -55,7 +55,7 @@ public class PriestAdopt extends Subcommand {
 
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!(sender instanceof PlayerSender)) {
+        if (!(sender instanceof PlayerSender player)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
             return true;
         }
@@ -65,7 +65,6 @@ public class PriestAdopt extends Subcommand {
             return true;
         }
 
-        PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
 
         if (args.length < 2) {

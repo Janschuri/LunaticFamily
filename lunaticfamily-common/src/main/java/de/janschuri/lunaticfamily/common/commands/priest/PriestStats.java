@@ -32,7 +32,7 @@ public class PriestStats extends Subcommand {
 
     @Override
     public boolean execute(Sender sender, String[] strings) {
-        if (!(sender instanceof PlayerSender)) {
+        if (!(sender instanceof PlayerSender player)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
             return true;
         }
@@ -46,7 +46,6 @@ public class PriestStats extends Subcommand {
 
         msg.append(getMessage(headerMK.noPrefix()));
 
-        PlayerSender player = (PlayerSender) sender;
         FamilyPlayer playerFam = getFamilyPlayer(player.getUniqueId());
 
         int totalAdoptions = playerFam.getAdoptionsAsPriest().size();
