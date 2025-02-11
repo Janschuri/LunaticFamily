@@ -59,9 +59,6 @@ public class FamilyPlayer {
     @OneToMany(mappedBy = "priest")
     private List<Adoption> adoptionsAsPriest = new ArrayList<>();
 
-    @Transient
-    private final FamilyTree familyTree = new FamilyTree(this);
-
     private static final BiMap<UUID, Integer> ids = HashBiMap.create();
     private static final Map<Integer, FamilyPlayer> familyPlayerMap = new HashMap<>();
 
@@ -123,9 +120,9 @@ public class FamilyPlayer {
         return Integer.hashCode(id);
     }
 
-    public void update() {
+    public boolean update() {
         DatabaseRepository.getDatabase().update(this);
-        updateFamilyTree();
+        return updateFamilyTree();
     }
 
     public String getName() {
@@ -562,18 +559,17 @@ public class FamilyPlayer {
             return false;
         }
 
-        return familyTree.isFamilyMember(familyPlayer);
-    }
-
-    public FamilyPlayer familyTreeOutdated() {
-        this.familyTree.setOutdated();
-        return this;
+        return getFamilyTree().isFamilyMember(familyPlayer);
     }
 
     public FamilyTree getFamilyTree() {
+        DatabaseRepository.getDatabase().update(this);
+        FamilyTree familyTree = new FamilyTree(this);
+
+        familyTree.update();
+
         return familyTree;
     }
-
 
     public boolean updateFamilyTree() {
         PlayerSender player = LunaticLib.getPlatform().getPlayerSender(this.uuid);
@@ -592,7 +588,7 @@ public class FamilyPlayer {
 
                 String serverName = player.getServerName();
 
-                return familyTreeManager.update(serverName, uuid, familyTree.getTreeAdvancements());
+                return familyTreeManager.update(serverName, uuid, getFamilyTree().getTreeAdvancements());
             }
         }
         return true;

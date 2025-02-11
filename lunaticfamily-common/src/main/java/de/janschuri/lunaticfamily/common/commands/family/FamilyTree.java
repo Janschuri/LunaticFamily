@@ -55,7 +55,6 @@ public class FamilyTree extends Subcommand {
             String name = player.getName();
             FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
             playerFam.save();
-            playerFam.update();
 
             if (playerFam.updateFamilyTree()) {
                 player.sendMessage(getMessage(reloadedMK));

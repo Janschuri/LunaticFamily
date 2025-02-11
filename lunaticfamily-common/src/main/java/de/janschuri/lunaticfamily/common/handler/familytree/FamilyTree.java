@@ -13,8 +13,6 @@ public class FamilyTree {
     private final Map<Integer, Integer> leftRows = new HashMap<>();
     private final Map<Integer, Integer> rightRows = new HashMap<>();
 
-    private boolean outdated = true;
-
     public FamilyTree(FamilyPlayer playerFam) {
         this.familyPlayer = playerFam;
     }
@@ -32,11 +30,6 @@ public class FamilyTree {
 
     private static String getRelationLang(String key) {
         return key;
-    }
-
-    public FamilyTree setOutdated() {
-        this.outdated = true;
-        return this;
     }
 
     private int getNextX(int y, TreeAdvancement.Side side) {
@@ -74,9 +67,7 @@ public class FamilyTree {
 
     public void update() {
 
-        if (!outdated) {
-            return;
-        }
+        treeAdvancements.clear();
 
         int egoId = familyPlayer.getId();
         UUID egoUUID = familyPlayer.getUUID();

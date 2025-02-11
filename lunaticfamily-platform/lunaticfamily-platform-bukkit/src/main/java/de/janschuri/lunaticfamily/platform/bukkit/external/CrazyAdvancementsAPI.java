@@ -1,21 +1,21 @@
 package de.janschuri.lunaticfamily.platform.bukkit.external;
 
 import de.janschuri.lunaticfamily.TreeAdvancement;
+import de.janschuri.lunaticfamily.common.handler.familytree.HiddenAdvancement;
 import de.janschuri.lunaticfamily.common.handler.familytree.RootAdvancement;
 import de.janschuri.lunaticlib.platform.bukkit.util.ItemStackUtils;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
 import eu.endercentral.crazy_advancements.advancement.AdvancementDisplay;
+import eu.endercentral.crazy_advancements.advancement.AdvancementFlag;
 import eu.endercentral.crazy_advancements.advancement.AdvancementVisibility;
 import eu.endercentral.crazy_advancements.manager.AdvancementManager;
 import eu.endercentral.crazy_advancements.packet.AdvancementsPacket;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class CrazyAdvancementsAPI {
 
@@ -51,7 +51,7 @@ public class CrazyAdvancementsAPI {
         String skinUrl = treeAdvancement.getSkinUrl();
 
         if (skinUrl == null) {
-            return null;
+            return new ItemStack(Material.STONE);
         }
 
         return ItemStackUtils.getSkullFromURL(skinUrl);
@@ -83,9 +83,15 @@ public class CrazyAdvancementsAPI {
             display.setBackgroundTexture(rootTreeAdvancement.getBackground());
         }
 
+        List<AdvancementFlag> flags = new ArrayList<>();
+
+        if (treeAdvancement instanceof HiddenAdvancement) {
+            flags.add(AdvancementFlag.SEND_WITH_HIDDEN_BOOLEAN);
+        }
+
         Advancement parent = treeAdvancement.getParent() == null ? null : advancementMap.get(treeAdvancement.getParent().getKey());
 
-        return new Advancement(parent, new NameKey("family_tree", treeAdvancement.getKey()), display);
+        return new Advancement(parent, new NameKey("family_tree", treeAdvancement.getKey()), display, flags.toArray(new AdvancementFlag[0]));
     }
 
 }
