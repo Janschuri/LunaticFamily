@@ -78,7 +78,7 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
             }
         } else {
             Logger.debugLog("arg is not UUID");
-            uuid = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", arg).findOne().getUUID();
+            uuid = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().ieq("name", arg).findOne().getUUID();
         }
 
         if (uuid == null) {
