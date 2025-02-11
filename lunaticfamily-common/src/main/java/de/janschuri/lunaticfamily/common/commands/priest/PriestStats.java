@@ -9,15 +9,13 @@ import de.janschuri.lunaticlib.Sender;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 
-import javax.xml.crypto.Data;
-
 public class PriestStats extends Subcommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey headerMK = new CommandMessageKey(this,"header");
-    private final CommandMessageKey adoptionsMK = new CommandMessageKey(this,"adoptions");
-    private final CommandMessageKey marriagesMK = new CommandMessageKey(this,"marriages");
-    private final CommandMessageKey siblingsMK = new CommandMessageKey(this,"siblings");
+    private final CommandMessageKey helpMK = new CommandMessageKey(this, "help");
+    private final CommandMessageKey headerMK = new CommandMessageKey(this, "header");
+    private final CommandMessageKey adoptionsMK = new CommandMessageKey(this, "adoptions");
+    private final CommandMessageKey marriagesMK = new CommandMessageKey(this, "marriages");
+    private final CommandMessageKey siblingsMK = new CommandMessageKey(this, "siblings");
 
 
     @Override
@@ -88,7 +86,6 @@ public class PriestStats extends Subcommand {
 
         player.sendMessage(msg.build());
         return true;
-
 
 
     }
