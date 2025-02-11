@@ -1,12 +1,13 @@
 package de.janschuri.lunaticfamily.platform;
 
-import de.janschuri.lunaticfamily.FamilyPlayer;
+import de.janschuri.lunaticfamily.TreeAdvancement;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 public interface FamilyTreeManager {
 
 
-    boolean update(String server, int familyPlayerID);
+    boolean update(String server, UUID uuid, List<TreeAdvancement> treeAdvancements);
 
 }

@@ -1,13 +1,10 @@
 package de.janschuri.lunaticfamily.platform.bukkit;
 
-import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
-import de.janschuri.lunaticfamily.common.utils.Logger;
+import de.janschuri.lunaticfamily.TreeAdvancement;
 import de.janschuri.lunaticfamily.platform.FamilyTreeManager;
-import de.janschuri.lunaticlib.platform.bukkit.util.ItemStackUtils;
+import de.janschuri.lunaticfamily.platform.bukkit.external.CrazyAdvancementsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -17,18 +14,16 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
     private static final Map<String, String> relationLangs = new HashMap<>();
 
     @Override
-    public boolean update(String server, int familyPlayerID) {
-        FamilyTree familyTree = FamilyTree.getFamilyTree(familyPlayerID);
+    public boolean update(String server, UUID uuid, List<TreeAdvancement> treeAdvancements) {
 
-        if (familyTree == null) {
+        Player player = Bukkit.getPlayer(uuid);
+
+        if (player == null) {
             return false;
         }
 
-        return familyTree.update();
-    }
+        CrazyAdvancementsAPI.send(player, treeAdvancements);
 
-
-    public static String getRelationLang(String key) {
-        return key;
+        return true;
     }
 }

@@ -17,7 +17,7 @@ public class PlatformImpl implements Platform<Plugin> {
     }
 
     @Override
-    public FamilyTreeManager getFamilyTree() {
+    public FamilyTreeManager getFamilyTreeManager() {
         return new FamilyTreeManagerImpl();
     }
 
