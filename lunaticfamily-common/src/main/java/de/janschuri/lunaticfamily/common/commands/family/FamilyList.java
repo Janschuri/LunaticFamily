@@ -2,7 +2,8 @@ package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.common.handler.familytree.RelationAdvancement;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
@@ -53,7 +54,6 @@ public class FamilyList extends Subcommand {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
             return true;
         }
-        List<String> list = LunaticFamily.getConfig().getFamilyList();
 
         if (!(sender instanceof PlayerSender) && args.length < 1) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
@@ -63,13 +63,13 @@ public class FamilyList extends Subcommand {
         if (args.length == 0) {
             PlayerSender player = (PlayerSender) sender;
             UUID uuid = player.getUniqueId();
-            FamilyPlayerImpl playerFam = getFamilyPlayer(uuid);
+            FamilyPlayer playerFam = getFamilyPlayer(uuid);
             playerFam.update();
 
-            Map<Integer, String> familyList = playerFam.getFamilyMap();
+            List<RelationAdvancement> relationAdvancements = playerFam.getFamilyTree().getRelationAdvancements();
             ComponentBuilder msg = Component.text().append(getMessage(headerMK, false));
 
-            sender.sendMessage(getFamilyListMessage(list, familyList, msg));
+            sender.sendMessage(getFamilyListMessage(relationAdvancements, msg));
             playerFam.updateFamilyTree();
             return true;
         }
@@ -89,13 +89,13 @@ public class FamilyList extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl player1Fam = getFamilyPlayer(player1UUID);
-        Map<Integer, String> familyList = player1Fam.getFamilyMap();
+        FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
+        List<RelationAdvancement> relationAdvancements = player1Fam.getFamilyTree().getRelationAdvancements();
         ComponentBuilder msg = Component.text();
         msg.append(getMessage(othersHeaderMK, false)
                 .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
 
-        sender.sendMessage(getFamilyListMessage(list, familyList, msg));
+        sender.sendMessage(getFamilyListMessage(relationAdvancements, msg));
         player1Fam.updateFamilyTree();
 
         return true;
@@ -113,23 +113,12 @@ public class FamilyList extends Subcommand {
         return List.of(getOnlinePlayersParam());
     }
 
-    private Component getFamilyListMessage(List<String> list, Map<Integer, String> familyList, ComponentBuilder msg) {
+    private Component getFamilyListMessage(List<RelationAdvancement> relationAdvancements, ComponentBuilder msg) {
 
-        for (int relationID : familyList.keySet()) {
-            if (list.contains(familyList.get(relationID))) {
-                String relationString = familyList.get(relationID);
-                FamilyPlayerImpl relationFam = getFamilyPlayer(relationID);
-                String relationKey = relationString.replace("first_", "")
-                        .replace("second_", "")
-                        .replace("third_", "")
-                        .replace("fourth_", "")
-                        .replace("fifth_", "")
-                        .replace("sixth_", "")
-                        .replace("seventh_", "")
-                        .replace("eighth_", "");
+        for (RelationAdvancement relationAdvancement : relationAdvancements) {
 
-                Component relation = LegacyComponentSerializer.legacyAmpersand().deserialize(getRelation(relationKey, relationFam.getGender()));
-                Component name = Component.text(relationFam.getName());
+                Component relation = Component.text(relationAdvancement.getDescription());
+                Component name = Component.text(relationAdvancement.getTitle());
 
                 TextReplacementConfig relationRpl = TextReplacementConfig.builder()
                         .match("%relation%")
@@ -145,7 +134,7 @@ public class FamilyList extends Subcommand {
 
                 msg.append(Component.newline())
                         .append(component);
-            }
+
         }
 
         return msg.build();

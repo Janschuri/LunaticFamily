@@ -5,7 +5,6 @@ import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import io.ebean.annotation.Identity;
 import io.ebean.annotation.NotNull;
 import io.ebean.annotation.WhenCreated;
-import io.ebean.typequery.Generated;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -21,14 +20,14 @@ public class Siblinghood {
     @ManyToOne
     @NotNull
     @JoinColumn(name = "player1ID")
-    private FamilyPlayerImpl player1;
+    private FamilyPlayer player1;
     @ManyToOne
     @NotNull
     @JoinColumn(name = "player2ID")
-    private FamilyPlayerImpl player2;
+    private FamilyPlayer player2;
     @ManyToOne
     @JoinColumn(name = "priest")
-    private FamilyPlayerImpl priest;
+    private FamilyPlayer priest;
     private String emoji;
     @NotNull
     @WhenCreated
@@ -36,7 +35,7 @@ public class Siblinghood {
     @Column(name = "unsiblingDate")
     private Timestamp unsiblingDate;
 
-    public Siblinghood(FamilyPlayerImpl player1, FamilyPlayerImpl player2) {
+    public Siblinghood(FamilyPlayer player1, FamilyPlayer player2) {
         this.player1 = player1;
         this.player2 = player2;
     }
@@ -46,19 +45,19 @@ public class Siblinghood {
         return this;
     }
 
-    public FamilyPlayerImpl getPlayer1() {
+    public FamilyPlayer getPlayer1() {
         return player1;
     }
 
-    public FamilyPlayerImpl getPlayer2() {
+    public FamilyPlayer getPlayer2() {
         return player2;
     }
 
-    public FamilyPlayerImpl getPriest() {
+    public FamilyPlayer getPriest() {
         return priest;
     }
 
-    public Siblinghood setPriest(FamilyPlayerImpl priest) {
+    public Siblinghood setPriest(FamilyPlayer priest) {
         this.priest = priest;
         return this;
     }
@@ -97,12 +96,12 @@ public class Siblinghood {
         return "⭐";
     }
 
-    public FamilyPlayerImpl getSibling(int playerID) {
-        if (player1.getId() == playerID) {
+    public FamilyPlayer getSibling(FamilyPlayer playerFam) {
+        if (player1.equals(playerFam)) {
             return player2;
         }
 
-        if (player1.getId() == playerID) {
+        if (player1.equals(playerFam)) {
             return player1;
         }
 

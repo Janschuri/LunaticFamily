@@ -3,7 +3,7 @@ package de.janschuri.lunaticfamily.common.commands.sibling;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
@@ -62,7 +62,7 @@ public class SiblingPropose extends Subcommand {
 
         PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         if (playerFam.hasSiblings()) {
             sender.sendMessage(getMessage(hasSiblingMK)
@@ -84,7 +84,7 @@ public class SiblingPropose extends Subcommand {
 
         String siblingName = args[0];
 
-        UUID siblingUUID = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("name", siblingName).findOne().getUniqueId();
+        UUID siblingUUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", siblingName).findOne().getUUID();
 
         if (siblingUUID == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
@@ -107,7 +107,7 @@ public class SiblingPropose extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl siblingFam = getFamilyPlayer(siblingUUID);
+        FamilyPlayer siblingFam = getFamilyPlayer(siblingUUID);
         if (playerFam.getId() == siblingFam.getId()) {
             sender.sendMessage(getMessage(selfRequestMK));
             return true;
@@ -115,7 +115,7 @@ public class SiblingPropose extends Subcommand {
 
         playerFam.update();
 
-        if (playerFam.isFamilyMember(siblingFam.getId())) {
+        if (playerFam.isFamilyMember(siblingFam)) {
             sender.sendMessage(getMessage(familyRequestMK)
                     .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
             return true;
@@ -123,7 +123,7 @@ public class SiblingPropose extends Subcommand {
 
         siblingFam.update();
 
-        if (siblingFam.isFamilyMember(playerFam.getId())) {
+        if (siblingFam.isFamilyMember(playerFam)) {
             sender.sendMessage(getMessage(familyRequestMK)
                     .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
             return true;

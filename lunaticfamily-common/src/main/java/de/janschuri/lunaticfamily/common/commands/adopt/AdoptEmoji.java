@@ -3,7 +3,7 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.handler.Adoption;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
@@ -54,7 +54,7 @@ public class AdoptEmoji extends Subcommand {
 
         PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         if (!playerFam.isAdopted()) {
             sender.sendMessage(getMessage(noAdoptionMK));

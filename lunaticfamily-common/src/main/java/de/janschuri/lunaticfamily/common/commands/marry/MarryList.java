@@ -3,7 +3,7 @@ package de.janschuri.lunaticfamily.common.commands.marry;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -82,8 +82,8 @@ public class MarryList extends Subcommand {
         int index = 1 + (10*(page-1));
         Logger.debugLog("MarryList: " + marryList);
         for (Marriage e : marryList) {
-            FamilyPlayerImpl player1Fam = e.getPlayer1();
-            FamilyPlayerImpl player2Fam = e.getPlayer2();
+            FamilyPlayer player1Fam = e.getPlayer1();
+            FamilyPlayer player2Fam = e.getPlayer2();
 
 
             String hoverText = " (" + e.getDate() + ")";

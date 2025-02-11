@@ -3,7 +3,7 @@ package de.janschuri.lunaticfamily.common.listener;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.marry.Marry;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl.findOrCreate;
+import static de.janschuri.lunaticfamily.common.handler.FamilyPlayer.findOrCreate;
 
 public class JoinListenerExecuter {
 
@@ -36,14 +36,15 @@ public class JoinListenerExecuter {
 
 
         LanguageConfigImpl languageConfig = LunaticFamily.getLanguageConfig();
-        FamilyPlayerImpl playerFam = findOrCreate(sender.getUniqueId());
+        FamilyPlayer playerFam = findOrCreate(sender.getUniqueId());
+        playerFam.save();
         playerFam.update();
 
         Runnable runnable = () -> {
             playerFam.updateFamilyTree();
 
             if (playerFam.isMarried()) {
-                PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUniqueId());
+                PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUUID());
 
                 if (partner.isOnline()) {
                     partner.sendMessage(languageConfig.getMessage(MARRY_PARTNER_JOINED_MK));

@@ -27,16 +27,16 @@ public class Adoption {
     @ManyToOne
     @NotNull
     @JoinColumn(name = "parentID")
-    private FamilyPlayerImpl parent;
+    private FamilyPlayer parent;
     @ManyToOne
     @NotNull
     @JoinColumn(name = "childID")
-    private FamilyPlayerImpl child;
+    private FamilyPlayer child;
     @ManyToOne
     @JoinColumn(name = "priest")
-    private FamilyPlayerImpl priest;
+    private FamilyPlayer priest;
 
-    public Adoption(FamilyPlayerImpl parent, FamilyPlayerImpl child) {
+    public Adoption(FamilyPlayer parent, FamilyPlayer child) {
         this.parent = parent;
         this.child = child;
     }
@@ -46,19 +46,19 @@ public class Adoption {
         return this;
     }
 
-    public FamilyPlayerImpl getParent() {
+    public FamilyPlayer getParent() {
         return parent;
     }
 
-    public FamilyPlayerImpl getChild() {
+    public FamilyPlayer getChild() {
         return child;
     }
 
-    public FamilyPlayerImpl getPriest() {
+    public FamilyPlayer getPriest() {
         return priest;
     }
 
-    public Adoption setPriest(FamilyPlayerImpl priest) {
+    public Adoption setPriest(FamilyPlayer priest) {
         this.priest = priest;
         return this;
     }

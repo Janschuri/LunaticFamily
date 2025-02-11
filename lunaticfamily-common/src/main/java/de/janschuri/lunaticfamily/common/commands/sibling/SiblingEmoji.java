@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -54,7 +54,7 @@ public class SiblingEmoji extends Subcommand {
 
         PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         if (!playerFam.hasSiblings()) {
             sender.sendMessage(getMessage(noSiblinghoodMK));

@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
@@ -53,7 +53,8 @@ public class FamilyTree extends Subcommand {
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             String name = player.getName();
-            FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+            FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+            playerFam.save();
             playerFam.update();
 
             if (playerFam.updateFamilyTree()) {

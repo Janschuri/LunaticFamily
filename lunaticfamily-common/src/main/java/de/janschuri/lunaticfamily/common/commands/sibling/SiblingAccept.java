@@ -3,7 +3,7 @@ package de.janschuri.lunaticfamily.common.commands.sibling;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.commands.priest.PriestSibling;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -79,9 +79,9 @@ public class SiblingAccept extends Subcommand {
 
     private boolean proceedPriestSiblingRequest(PlayerSender player) {
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
         UUID siblingUUID = LunaticFamily.siblingPriestRequests.get(playerUUID);
-        FamilyPlayerImpl siblingFam = getFamilyPlayer(siblingUUID);
+        FamilyPlayer siblingFam = getFamilyPlayer(siblingUUID);
         PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
 
         if (playerFam.isAdopted()) {
@@ -156,9 +156,9 @@ public class SiblingAccept extends Subcommand {
 
     private boolean proceedSiblingRequest(PlayerSender player) {
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
         UUID siblingUUID = LunaticFamily.siblingRequests.get(playerUUID);
-        FamilyPlayerImpl siblingFam = getFamilyPlayer(siblingUUID);
+        FamilyPlayer siblingFam = getFamilyPlayer(siblingUUID);
         PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
 
         if (playerFam.isAdopted()) {
@@ -196,9 +196,9 @@ public class SiblingAccept extends Subcommand {
 
     private boolean acceptSiblingRequest(PlayerSender player, PlayerSender sibling) {
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
         UUID siblingUUID = sibling.getUniqueId();
-        FamilyPlayerImpl siblingFam = getFamilyPlayer(siblingUUID);
+        FamilyPlayer siblingFam = getFamilyPlayer(siblingUUID);
 
         if (!Utils.hasEnoughMoney(player.getServerName(), siblingUUID, WithdrawKey.SIBLING_PROPOSED_PLAYER)) {
             player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
@@ -221,7 +221,7 @@ public class SiblingAccept extends Subcommand {
         LunaticFamily.siblingPriestRequests.remove(siblingUUID);
         LunaticFamily.siblingPriests.remove(siblingUUID);
 
-        playerFam.addSibling(siblingFam.getId());
+        playerFam.addSibling(siblingFam);
 
         for (String command : LunaticFamily.getConfig().getSuccessCommands("sibling")) {
             command = command.replace("%player1%", playerFam.getName()).replace("%player2%", siblingFam.getName());
@@ -233,12 +233,12 @@ public class SiblingAccept extends Subcommand {
 
     private boolean acceptPriestSiblingRequest(PlayerSender player, PlayerSender sibling) {
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
         UUID siblingUUID = sibling.getUniqueId();
-        FamilyPlayerImpl siblingFam = getFamilyPlayer(siblingUUID);
+        FamilyPlayer siblingFam = getFamilyPlayer(siblingUUID);
 
         UUID priestUUID = LunaticFamily.siblingPriests.get(siblingUUID);
-        FamilyPlayerImpl priestFam = getFamilyPlayer(priestUUID);
+        FamilyPlayer priestFam = getFamilyPlayer(priestUUID);
         PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
 
         if (!Utils.hasEnoughMoney(player.getServerName(), priestUUID, WithdrawKey.PRIEST_SIBLING)) {
@@ -276,7 +276,7 @@ public class SiblingAccept extends Subcommand {
         LunaticFamily.siblingPriestRequests.remove(siblingUUID);
         LunaticFamily.siblingPriests.remove(siblingUUID);
 
-        playerFam.addSibling(siblingFam.getId(), priestFam.getId());
+        playerFam.addSibling(siblingFam, priestFam);
 
         for (String command : LunaticFamily.getConfig().getSuccessCommands("sibling_priest")) {
             command = command.replace("%player1%", playerFam.getName()).replace("%player2%", siblingFam.getName()).replace("%priest%", priestFam.getName());

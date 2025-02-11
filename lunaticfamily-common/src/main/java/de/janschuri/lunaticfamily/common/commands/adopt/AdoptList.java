@@ -3,7 +3,7 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.Adoption;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
@@ -82,8 +82,8 @@ public class AdoptList extends Subcommand {
         int index = 1 + (10*(page-1));
         Logger.debugLog("AdoptList: " + adoptList);
         for (Adoption e : adoptList) {
-            FamilyPlayerImpl player1Fam = e.getParent();
-            FamilyPlayerImpl player2Fam = e.getChild();
+            FamilyPlayer player1Fam = e.getParent();
+            FamilyPlayer player2Fam = e.getChild();
 
 
             String hoverText = " (" + e.getDate() + ")";

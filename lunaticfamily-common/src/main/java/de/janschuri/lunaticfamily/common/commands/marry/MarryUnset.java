@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -54,14 +54,14 @@ public class MarryUnset extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl player1Fam = getFamilyPlayer(player1UUID);
+        FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
 
         if (!player1Fam.isMarried()) {
             sender.sendMessage(getMessage(noPartnerMK)
                     .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
             return true;
         }
-        FamilyPlayerImpl partnerFam = player1Fam.getPartner();
+        FamilyPlayer partnerFam = player1Fam.getPartner();
         player1Fam.divorce();
         sender.sendMessage(getMessage(divorcedMK)
                 .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))

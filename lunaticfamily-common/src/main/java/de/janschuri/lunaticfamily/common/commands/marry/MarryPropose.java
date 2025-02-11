@@ -3,7 +3,7 @@ package de.janschuri.lunaticfamily.common.commands.marry;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
@@ -63,7 +63,7 @@ public class MarryPropose extends Subcommand {
         }
         PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
@@ -84,7 +84,7 @@ public class MarryPropose extends Subcommand {
 
         String partnerName = args[0];
 
-        UUID partnerUUID = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("name", partnerName).findOne().getUniqueId();
+        UUID partnerUUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", partnerName).findOne().getUUID();
 
         if (partnerUUID == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
@@ -118,16 +118,16 @@ public class MarryPropose extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl partnerFam = getFamilyPlayer(partnerUUID);
+        FamilyPlayer partnerFam = getFamilyPlayer(partnerUUID);
         partnerFam.update();
 
-        if (playerFam.isFamilyMember(partnerFam.getId())) {
+        if (playerFam.isFamilyMember(partnerFam)) {
             sender.sendMessage(getMessage(familyRequestMK)
                     .replaceText(getTextReplacementConfig("%player%", partnerFam.getName())));
             return true;
         }
 
-        if (partnerFam.isFamilyMember(playerFam.getId())) {
+        if (partnerFam.isFamilyMember(playerFam)) {
             sender.sendMessage(getMessage(familyRequestMK)
                     .replaceText(getTextReplacementConfig("%player%", partnerFam.getName())));
             return true;

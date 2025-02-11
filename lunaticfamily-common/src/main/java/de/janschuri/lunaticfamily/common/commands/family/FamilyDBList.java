@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
 import net.kyori.adventure.text.Component;
@@ -73,18 +73,18 @@ public class FamilyDBList extends Subcommand {
     }
 
     private Component getPlayerList(int page) {
-        Map<Integer, FamilyPlayerImpl> players = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).findList().stream()
+        Map<Integer, FamilyPlayer> players = DatabaseRepository.getDatabase().find(FamilyPlayer.class).findList().stream()
                 .collect(LinkedHashMap::new, (m, v) -> m.put(v.getId(), v), LinkedHashMap::putAll);
 
         ComponentBuilder<TextComponent, TextComponent.Builder> msg = Component.text().append(getMessage(headerMK, false));
 
         int i = 1;
 
-        for (FamilyPlayerImpl player : players.values()) {
+        for (FamilyPlayer player : players.values()) {
             msg.append(Component.newline());
 
             int id = player.getId();
-            String uuid = player.getUniqueId() == null ? "null" : player.getUniqueId().toString();
+            String uuid = player.getUUID() == null ? "null" : player.getUUID().toString();
             String skinURL = player.getGender() == null ? "null" : player.getSkinURL();
             String background = player.getBackground() == null ? "null" : player.getBackground();
             String name = player.getName() == null ? "null" : player.getName();

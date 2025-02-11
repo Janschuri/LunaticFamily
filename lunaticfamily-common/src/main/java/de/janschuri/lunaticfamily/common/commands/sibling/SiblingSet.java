@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -71,20 +71,20 @@ public class SiblingSet extends Subcommand {
         }
 
 
-        FamilyPlayerImpl player1Fam = getFamilyPlayer(player1UUID);
-        FamilyPlayerImpl player2Fam = getFamilyPlayer(player2UUID);
+        FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
+        FamilyPlayer player2Fam = getFamilyPlayer(player2UUID);
 
         player1Fam.update();
         player2Fam.update();
 
-        if (player1Fam.isFamilyMember(player2Fam.getId())) {
+        if (player1Fam.isFamilyMember(player2Fam)) {
             sender.sendMessage(getMessage(sameFamilyMK)
                     .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
                     .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
             return true;
         }
 
-        if (player2Fam.isFamilyMember(player1Fam.getId())) {
+        if (player2Fam.isFamilyMember(player1Fam)) {
             sender.sendMessage(getMessage(sameFamilyMK)
                     .replaceText(getTextReplacementConfig("%player1%", player2Fam.getName()))
                     .replaceText(getTextReplacementConfig("%player2%", player1Fam.getName())));
@@ -119,7 +119,7 @@ public class SiblingSet extends Subcommand {
         sender.sendMessage(getMessage(addedMK)
                 .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
                 .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
-        player1Fam.addSibling(player2Fam.getId());
+        player1Fam.addSibling(player2Fam);
 
         return true;
     }

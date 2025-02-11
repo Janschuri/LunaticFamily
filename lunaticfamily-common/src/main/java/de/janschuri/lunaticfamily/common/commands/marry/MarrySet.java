@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -94,20 +94,20 @@ public class MarrySet extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl player2Fam = getFamilyPlayer(player2UUID);
-        FamilyPlayerImpl player1Fam = getFamilyPlayer(player1UUID);
+        FamilyPlayer player2Fam = getFamilyPlayer(player2UUID);
+        FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
 
         player1Fam.update();
         player2Fam.update();
 
-        if (player1Fam.isFamilyMember(player2Fam.getId())) {
+        if (player1Fam.isFamilyMember(player2Fam)) {
             sender.sendMessage(getMessage(sameFamilyMK)
                     .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
                     .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
             return true;
         }
 
-        if (player2Fam.isFamilyMember(player1Fam.getId())) {
+        if (player2Fam.isFamilyMember(player1Fam)) {
             sender.sendMessage(getMessage(sameFamilyMK)
                     .replaceText(getTextReplacementConfig("%player1%", player2Fam.getName()))
                     .replaceText(getTextReplacementConfig("%player2%", player1Fam.getName())));
@@ -144,7 +144,7 @@ public class MarrySet extends Subcommand {
         LunaticFamily.marryPriestRequests.remove(player1UUID);
         LunaticFamily.marryPriests.remove(player1UUID);
 
-        player1Fam.marry(player2Fam.getId());
+        player1Fam.marry(player2Fam);
         sender.sendMessage(getMessage(marriedMK)
                 .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
                 .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));

@@ -6,7 +6,7 @@ import de.janschuri.lunaticfamily.common.commands.marry.Marry;
 import de.janschuri.lunaticfamily.common.commands.marry.MarryDeny;
 import de.janschuri.lunaticfamily.common.commands.sibling.SiblingDeny;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
@@ -17,7 +17,7 @@ import net.kyori.adventure.text.TextReplacementConfig;
 
 import java.util.UUID;
 
-import static de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl.findOrCreate;
+import static de.janschuri.lunaticfamily.common.handler.FamilyPlayer.findOrCreate;
 
 public class QuitListenerExecuter {
 
@@ -34,7 +34,7 @@ public class QuitListenerExecuter {
 
         LanguageConfigImpl languageConfig = LunaticFamily.getLanguageConfig();
         UUID uuid = player.getUniqueId();
-        FamilyPlayerImpl playerFam = findOrCreate(uuid);
+        FamilyPlayer playerFam = findOrCreate(uuid);
 
         if (LunaticFamily.marryRequests.containsValue(uuid) || LunaticFamily.marryRequests.containsKey(uuid) || LunaticFamily.marryPriests.containsKey(uuid)) {
 
@@ -70,7 +70,7 @@ public class QuitListenerExecuter {
         }
 
         if (playerFam.isMarried()) {
-            PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUniqueId());
+            PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUUID());
             if (partner.isOnline()) {
                 partner.sendMessage(languageConfig.getMessage(MARRY_PARTNER_LEFT_MK));
             }

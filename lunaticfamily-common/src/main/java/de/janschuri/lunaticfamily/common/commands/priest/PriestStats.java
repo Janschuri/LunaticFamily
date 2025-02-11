@@ -1,11 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.priest;
 
-import de.janschuri.lunaticfamily.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
-import de.janschuri.lunaticfamily.common.handler.Adoption;
-import de.janschuri.lunaticfamily.common.handler.Marriage;
-import de.janschuri.lunaticfamily.common.handler.Siblinghood;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
@@ -51,10 +47,12 @@ public class PriestStats extends Subcommand {
         msg.append(getMessage(headerMK, false));
 
         PlayerSender player = (PlayerSender) sender;
-        FamilyPlayer familyPlayer = getFamilyPlayer(player.getUniqueId());
+        FamilyPlayer playerFam = getFamilyPlayer(player.getUniqueId());
 
-        int totalAdoptions = DatabaseRepository.getDatabase().find(Adoption.class).where().eq("priest", familyPlayer.getId()).findCount();
-        int activeAdoptions = DatabaseRepository.getDatabase().find(Adoption.class).where().eq("priest", familyPlayer.getId()).and().isNull("unadoptDate").findCount();
+        int totalAdoptions = playerFam.getAdoptionsAsPriest().size();
+        int activeAdoptions = playerFam.getAdoptionsAsPriest().stream()
+                .filter(adoption -> adoption.getUnadoptDate() != null)
+                .toList().size();
         String percentageAdoption = Utils.getPercentageAsString(activeAdoptions, totalAdoptions);
 
         msg.append(Component.newline());
@@ -64,8 +62,10 @@ public class PriestStats extends Subcommand {
                 .replaceText(getTextReplacementConfig("%percentage%", percentageAdoption)));
 
 
-        int totalMarriages = DatabaseRepository.getDatabase().find(Marriage.class).where().eq("priest", familyPlayer.getId()).findCount();
-        int activeMarriages = DatabaseRepository.getDatabase().find(Marriage.class).where().eq("priest", familyPlayer.getId()).and().isNull("divorceDate").findCount();
+        int totalMarriages = playerFam.getMarriagesAsPriest().size();
+        int activeMarriages = playerFam.getMarriagesAsPriest().stream()
+                .filter(marriage -> marriage.getDivorceDate() != null)
+                .toList().size();
         String percentageMarriage = Utils.getPercentageAsString(activeMarriages, totalMarriages);
 
         msg.append(Component.newline());
@@ -74,8 +74,10 @@ public class PriestStats extends Subcommand {
                 .replaceText(getTextReplacementConfig("%active%", String.valueOf(activeMarriages)))
                 .replaceText(getTextReplacementConfig("%percentage%", percentageMarriage)));
 
-        int totalSiblings = DatabaseRepository.getDatabase().find(Siblinghood.class).where().eq("priest", familyPlayer.getId()).findCount();
-        int activeSiblings = DatabaseRepository.getDatabase().find(Siblinghood.class).where().eq("priest", familyPlayer.getId()).and().isNull("unadoptDate").findCount();
+        int totalSiblings = playerFam.getSiblinghoodsAsPriest().size();
+        int activeSiblings = playerFam.getSiblinghoodsAsPriest().stream()
+                .filter(siblinghood -> siblinghood.getUnsiblingDate() != null)
+                .toList().size();
         String percentageSiblings = Utils.getPercentageAsString(activeSiblings, totalSiblings);
 
         msg.append(Component.newline());

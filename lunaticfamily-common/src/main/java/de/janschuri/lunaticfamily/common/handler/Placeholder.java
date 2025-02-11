@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.futurerequests.GetPlaceholderRequest;
 import de.janschuri.lunaticfamily.common.futurerequests.GetRelationalPlaceholderRequest;
+import de.janschuri.lunaticfamily.common.handler.familytree.RelationAdvancement;
 import de.janschuri.lunaticlib.common.utils.Mode;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import static de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl.findOrCreate;
+import static de.janschuri.lunaticfamily.common.handler.FamilyPlayer.findOrCreate;
 
 public class Placeholder {
 
@@ -22,7 +23,7 @@ public class Placeholder {
             return new GetPlaceholderRequest().get(uuid, placeholder);
         }
 
-        FamilyPlayerImpl player = findOrCreate(uuid);
+        FamilyPlayer player = findOrCreate(uuid);
 
         if (player == null) {
             return null;
@@ -429,18 +430,18 @@ public class Placeholder {
             return new GetRelationalPlaceholderRequest().get(uuid1, uuid2, placeholder);
         }
 
-        FamilyPlayerImpl player1 = findOrCreate(uuid1);
-        FamilyPlayerImpl player2 = findOrCreate(uuid2);
+        FamilyPlayer player1 = findOrCreate(uuid1);
+        FamilyPlayer player2 = findOrCreate(uuid2);
 
         if (placeholder.equalsIgnoreCase("relation")) {
 
 
-            if (player1.isFamilyMember(player2.getId())) {
-                Map<Integer, String> familyMap = player1.getFamilyMap();
-                String relation = familyMap.entrySet().stream()
-                        .filter(e -> e.getKey().equals(player2.getId()))
-                        .map(Map.Entry::getValue)
+            if (player1.isFamilyMember(player2)) {
+                List<RelationAdvancement> relationAdvancements = player1.getFamilyTree().getRelationAdvancements();
+                String relation = relationAdvancements.stream()
+                        .filter(relationAdvancement -> relationAdvancement.getId() == player2.getId())
                         .findFirst()
+                        .map(RelationAdvancement::getDescription)
                         .orElse("");
                 return LunaticFamily.getLanguageConfig().getRelation(relation, player2.getGender());
             } else {

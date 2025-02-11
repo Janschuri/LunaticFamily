@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -51,7 +51,7 @@ public class SiblingUnsibling extends Subcommand {
         }
         UUID playerUUID = player.getUniqueId();
         String name = player.getName();
-        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         boolean confirm = false;
         boolean cancel = false;
@@ -77,7 +77,7 @@ public class SiblingUnsibling extends Subcommand {
             return true;
         }
 
-        UUID siblingUUID = playerFam.getSibling().getUniqueId();
+        UUID siblingUUID = playerFam.getSibling().getUUID();
         PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
 
         if (playerFam.isAdopted()) {

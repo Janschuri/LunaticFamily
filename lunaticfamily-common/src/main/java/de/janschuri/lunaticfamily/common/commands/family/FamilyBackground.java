@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
@@ -76,7 +76,7 @@ public class FamilyBackground extends Subcommand {
         String backgroundArg = args[0];
         String background = "textures/block/" + backgroundArg + ".png";
 
-        FamilyPlayerImpl playerFam = FamilyPlayerImpl.findOrCreate(player.getUniqueId());
+        FamilyPlayer playerFam = FamilyPlayer.findOrCreate(player.getUniqueId());
 
 
         playerFam.setBackground(background);

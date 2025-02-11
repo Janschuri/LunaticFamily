@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -50,14 +50,14 @@ public class MarryGift extends Subcommand {
 
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
-            FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+            FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
             if (!playerFam.isMarried()) {
                 player.sendMessage(getMessage(noPartnerMK));
                 return true;
             }
 
-            UUID partnerUUID = playerFam.getPartner().getUniqueId();
+            UUID partnerUUID = playerFam.getPartner().getUUID();
             PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
 
             if (!partner.isOnline()) {

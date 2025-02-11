@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.gender;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
@@ -57,7 +57,7 @@ public class GenderInfo extends Subcommand {
 
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
-            FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+            FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
             sender.sendMessage(getMessage(infoMK)
                     .replaceText(getTextReplacementConfig("%gender%", getGenderLang(playerFam.getGender()))));
             return true;
@@ -67,20 +67,20 @@ public class GenderInfo extends Subcommand {
         UUID playerUUID;
 
 
-        FamilyPlayerImpl player;
+        FamilyPlayer player;
 
         if (Utils.isUUID(playerArg)) {
             playerUUID = UUID.fromString(playerArg);
 
-            if (DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("uniqueId", playerUUID).findCount() == 0) {
+            if (DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uniqueId", playerUUID).findCount() == 0) {
                 sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
                         .replaceText(getTextReplacementConfig("%player%", playerArg)));
                 return true;
             }
 
-            player = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("uniqueId", playerUUID).findOne();
+            player = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uniqueId", playerUUID).findOne();
         } else {
-            player = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("name", playerArg).findOne();
+            player = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", playerArg).findOne();
 
             if (player == null) {
                 sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)

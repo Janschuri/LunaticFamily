@@ -21,14 +21,14 @@ public class Marriage {
     @ManyToOne
     @JoinColumn(name = "player1ID")
     @NotNull
-    private FamilyPlayerImpl player1;
+    private FamilyPlayer player1;
     @ManyToOne
     @JoinColumn(name = "player2ID")
     @NotNull
-    private FamilyPlayerImpl player2;
+    private FamilyPlayer player2;
     @ManyToOne
     @JoinColumn(name = "priest")
-    private FamilyPlayerImpl priest;
+    private FamilyPlayer priest;
     @Column(name = "heart")
     private String emoji;
     @WhenCreated
@@ -37,7 +37,7 @@ public class Marriage {
     @Column(name = "divorceDate")
     private Timestamp divorceDate;
 
-    public Marriage(FamilyPlayerImpl player1, FamilyPlayerImpl player2) {
+    public Marriage(FamilyPlayer player1, FamilyPlayer player2) {
         this.player1 = player1;
         this.player2 = player2;
     }
@@ -47,19 +47,19 @@ public class Marriage {
         return this;
     }
 
-    public FamilyPlayerImpl getPlayer1() {
+    public FamilyPlayer getPlayer1() {
         return player1;
     }
 
-    public FamilyPlayerImpl getPlayer2() {
+    public FamilyPlayer getPlayer2() {
         return player2;
     }
 
-    public FamilyPlayerImpl getPriest() {
+    public FamilyPlayer getPriest() {
         return priest;
     }
 
-    public Marriage setPriest(FamilyPlayerImpl priest) {
+    public Marriage setPriest(FamilyPlayer priest) {
         this.priest = priest;
         return this;
     }
@@ -103,12 +103,12 @@ public class Marriage {
         return divorceDate != null;
     }
 
-    public FamilyPlayerImpl getPartner(int playerID) {
-        if (playerID == player1.getId()) {
+    public FamilyPlayer getPartner(FamilyPlayer playerFam) {
+        if (playerFam.equals(player1)) {
             return player2;
         }
 
-        if (playerID == player2.getId()) {
+        if (playerFam.equals(player2)) {
             return player1;
         }
 

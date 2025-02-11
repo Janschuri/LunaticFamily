@@ -3,7 +3,7 @@ package de.janschuri.lunaticfamily.common.commands.priest;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
@@ -89,8 +89,8 @@ public class PriestAdopt extends Subcommand {
         String player1Name = args[0];
         String player2Name = args[1];
 
-        UUID player1UUID = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("name", player1Name).findOne().getUniqueId();
-        UUID player2UUID = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("name", player2Name).findOne().getUniqueId();
+        UUID player1UUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", player1Name).findOne().getUUID();
+        UUID player2UUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", player2Name).findOne().getUUID();
 
         if (player1UUID == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
@@ -109,20 +109,20 @@ public class PriestAdopt extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl player1Fam = getFamilyPlayer(player1UUID);
-        FamilyPlayerImpl player2Fam = getFamilyPlayer(player2UUID);
+        FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
+        FamilyPlayer player2Fam = getFamilyPlayer(player2UUID);
 
         player1Fam.update();
         player2Fam.update();
 
-        if (player1Fam.isFamilyMember(player2Fam.getId())) {
+        if (player1Fam.isFamilyMember(player2Fam)) {
             sender.sendMessage(getMessage(familyRequestMK)
                     .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
                     .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
             return true;
         }
 
-        if (player2Fam.isFamilyMember(player1Fam.getId())) {
+        if (player2Fam.isFamilyMember(player1Fam)) {
             sender.sendMessage(getMessage(familyRequestMK)
                     .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
                     .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));

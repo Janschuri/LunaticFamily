@@ -4,7 +4,6 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.platform.FamilyTreeManager;
 import de.janschuri.lunaticlib.common.futurerequests.FutureRequest;
 
@@ -22,7 +21,7 @@ public class IsFamilyTreeMapLoadedRequest extends FutureRequest<Boolean> {
 
         @Override
         protected void handleRequest(int requestId, ByteArrayDataInput in) {
-            FamilyTreeManager familyTreeManager = LunaticFamily.getPlatform().getFamilyTree();
+            FamilyTreeManager familyTreeManager = LunaticFamily.getPlatform().getFamilyTreeManager();
 
 
             boolean success = false;

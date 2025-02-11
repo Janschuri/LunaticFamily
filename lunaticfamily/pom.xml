@@ -57,12 +57,12 @@
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>de.janschuri</groupId>
-            <artifactId>lunaticfamily-platform-all</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>de.janschuri</groupId>-->
+<!--            <artifactId>lunaticfamily-platform-all</artifactId>-->
+<!--            <version>1.0.0</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>de.janschuri</groupId>
             <artifactId>lunaticfamily-common</artifactId>

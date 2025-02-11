@@ -14,7 +14,7 @@ import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.futurerequests.*;
 import de.janschuri.lunaticfamily.common.handler.Adoption;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -115,6 +115,7 @@ public final class LunaticFamily {
     }
 
     public static void onDisable() {
+        DatabaseRepository.shutdown();
         LunaticFamily.unregisterRequests();
         Logger.infoLog("LunaticFamily disabled.");
     }
@@ -176,11 +177,11 @@ public final class LunaticFamily {
         return DatabaseRepository.getDatabase().find(Marriage.class).where().isNull("divorceDate").findCount() * 2;
     }
 
-    public static FamilyPlayerImpl getFamilyPlayer(UUID uuid) {
-        return FamilyPlayerImpl.findOrCreate(uuid);
+    public static FamilyPlayer getFamilyPlayer(UUID uuid) {
+        return FamilyPlayer.findOrCreate(uuid);
     }
 
-    public static FamilyPlayerImpl getFamilyPlayer(int id) {
-        return FamilyPlayerImpl.find(id);
+    public static FamilyPlayer getFamilyPlayer(int id) {
+        return FamilyPlayer.find(id);
     }
 }

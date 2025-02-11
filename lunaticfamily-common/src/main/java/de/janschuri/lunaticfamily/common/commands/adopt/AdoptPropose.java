@@ -3,7 +3,7 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
@@ -67,7 +67,7 @@ public class AdoptPropose extends Subcommand {
 
         PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         boolean confirm = false;
         boolean cancel = false;
@@ -105,7 +105,7 @@ public class AdoptPropose extends Subcommand {
 
         String childName = args[0];
 
-        UUID childUUID = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("name", childName).findOne().getUniqueId();
+        UUID childUUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", childName).findOne().getUUID();
 
         if (childUUID == null) {
             player.sendMessage(getMessage(PLAYER_NOT_EXIST_MK).replaceText(getTextReplacementConfig("%player%", childName)));
@@ -140,7 +140,7 @@ public class AdoptPropose extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl childFam = getFamilyPlayer(childUUID);
+        FamilyPlayer childFam = getFamilyPlayer(childUUID);
 
         if (args[0].equalsIgnoreCase(player.getName())) {
             player.sendMessage(getMessage(selfRequestMK));
@@ -149,7 +149,7 @@ public class AdoptPropose extends Subcommand {
 
         playerFam.update();
 
-        if (playerFam.isFamilyMember(childFam.getId())) {
+        if (playerFam.isFamilyMember(childFam)) {
             player.sendMessage(getMessage(familyRequestMK)
                     .replaceText(getTextReplacementConfig("%player%", childFam.getName())));
             return true;
@@ -222,7 +222,7 @@ public class AdoptPropose extends Subcommand {
             if (LunaticFamily.adoptRequests.containsKey(childUUID)) {
                 LunaticFamily.adoptRequests.remove(childUUID);
                 if (playerFam.isMarried()) {
-                    FamilyPlayerImpl partnerFam = playerFam.getPartner();
+                    FamilyPlayer partnerFam = playerFam.getPartner();
                     child.sendMessage(getMessage(requestExpiredMK)
                             .replaceText(getTextReplacementConfig("%player1%", playerFam.getName()))
                             .replaceText(getTextReplacementConfig("%player2%", partnerFam.getName())));

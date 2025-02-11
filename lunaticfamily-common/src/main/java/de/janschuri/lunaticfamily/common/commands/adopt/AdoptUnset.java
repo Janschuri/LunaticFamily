@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -57,17 +57,17 @@ public class AdoptUnset extends Subcommand {
         }
 
 
-        FamilyPlayerImpl childFam = getFamilyPlayer(childUUID);
+        FamilyPlayer childFam = getFamilyPlayer(childUUID);
 
         if (!childFam.isAdopted()) {
             sender.sendMessage(getMessage(notAdoptedMK)
                     .replaceText(getTextReplacementConfig("%player%", childFam.getName())));
             return true;
         }
-        FamilyPlayerImpl firstParentFam = (FamilyPlayerImpl) childFam.getParents().get(0);
+        FamilyPlayer firstParentFam = (FamilyPlayer) childFam.getParents().get(0);
 
         if (firstParentFam.isMarried()) {
-            FamilyPlayerImpl secondParentFam = firstParentFam.getPartner();
+            FamilyPlayer secondParentFam = firstParentFam.getPartner();
             sender.sendMessage(getMessage(unsetMK)
                     .replaceText(getTextReplacementConfig("%child%", childFam.getName()))
                     .replaceText(getTextReplacementConfig("%parent1%", firstParentFam.getName()))
@@ -78,7 +78,7 @@ public class AdoptUnset extends Subcommand {
                     .replaceText(getTextReplacementConfig("%parent%", firstParentFam.getName())));
         }
 
-        firstParentFam.unadopt(childFam.getId());
+        firstParentFam.unadopt(childFam);
 
 
 

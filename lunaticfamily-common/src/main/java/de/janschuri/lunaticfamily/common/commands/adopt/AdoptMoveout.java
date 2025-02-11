@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -51,7 +51,7 @@ public class AdoptMoveout extends Subcommand {
 
         PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         boolean confirm = false;
         boolean cancel = false;
@@ -101,7 +101,7 @@ public class AdoptMoveout extends Subcommand {
             return true;
         }
 
-        UUID parent1UUID = playerFam.getParents().get(0).getUniqueId();
+        UUID parent1UUID = playerFam.getParents().get(0).getUUID();
         PlayerSender firstParent = LunaticLib.getPlatform().getPlayerSender(parent1UUID);
 
         if (!force && playerFam.getParents().size() == 2 && !Utils.hasEnoughMoney(player.getServerName(), parent1UUID, 0.5, WithdrawKey.ADOPT_MOVEOUT_PARENT)) {
@@ -133,7 +133,7 @@ public class AdoptMoveout extends Subcommand {
         }
 
         if (playerFam.getParents().size() > 1) {
-            UUID parent2UUID = playerFam.getParents().get(1).getUniqueId();
+            UUID parent2UUID = playerFam.getParents().get(1).getUUID();
             PlayerSender secondParent = LunaticLib.getPlatform().getPlayerSender(parent2UUID);
 
             if (!force && !Utils.hasEnoughMoney(player.getServerName(), parent2UUID, 0.5, WithdrawKey.ADOPT_MOVEOUT_PARENT)) {
@@ -156,11 +156,11 @@ public class AdoptMoveout extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl firstParentFam = (FamilyPlayerImpl) playerFam.getParents().get(0);
+        FamilyPlayer firstParentFam = (FamilyPlayer) playerFam.getParents().get(0);
 
         if (playerFam.hasSiblings()) {
-            FamilyPlayerImpl siblingFam = playerFam.getSibling();
-            Sender sibling = LunaticLib.getPlatform().getPlayerSender(siblingFam.getUniqueId());
+            FamilyPlayer siblingFam = playerFam.getSibling();
+            Sender sibling = LunaticLib.getPlatform().getPlayerSender(siblingFam.getUUID());
             sibling.sendMessage(getMessage(siblingMK));
         }
 
@@ -169,7 +169,7 @@ public class AdoptMoveout extends Subcommand {
 
         firstParent.sendMessage(getMessage(childMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
         if (playerFam.getParents().size() > 1) {
-            UUID parent2UUID = playerFam.getParents().get(1).getUniqueId();
+            UUID parent2UUID = playerFam.getParents().get(1).getUUID();
             PlayerSender secondParent = LunaticLib.getPlatform().getPlayerSender(parent2UUID);
             secondParent.sendMessage(getMessage(childMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
         }
@@ -178,8 +178,8 @@ public class AdoptMoveout extends Subcommand {
             Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.ADOPT_MOVEOUT_CHILD, WithdrawKey.ADOPT_MOVEOUT_PARENT);
         } else {
             if (playerFam.getParents().size() > 1) {
-                UUID parent2UUID = playerFam.getParents().get(1).getUniqueId();
-                FamilyPlayerImpl secondParentFam = firstParentFam.getPartner();
+                UUID parent2UUID = playerFam.getParents().get(1).getUUID();
+                FamilyPlayer secondParentFam = firstParentFam.getPartner();
                 Utils.withdrawMoney(player.getServerName(), parent2UUID, 0.5, WithdrawKey.ADOPT_MOVEOUT_PARENT);
                 Utils.withdrawMoney(player.getServerName(), parent1UUID, 0.5, WithdrawKey.ADOPT_MOVEOUT_PARENT);
 
@@ -198,7 +198,7 @@ public class AdoptMoveout extends Subcommand {
             Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.ADOPT_MOVEOUT_CHILD);
         }
 
-        firstParentFam.unadopt(playerFam.getId());
+        firstParentFam.unadopt(playerFam);
 
 
 

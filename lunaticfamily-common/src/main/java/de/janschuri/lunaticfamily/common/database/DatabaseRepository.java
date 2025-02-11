@@ -3,7 +3,7 @@ package de.janschuri.lunaticfamily.common.database;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.config.DatabaseConfig;
 import de.janschuri.lunaticfamily.common.handler.query.QAdoption;
-import de.janschuri.lunaticfamily.common.handler.query.QFamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.query.QFamilyPlayer;
 import de.janschuri.lunaticfamily.common.handler.query.QMarriage;
 import de.janschuri.lunaticfamily.common.handler.query.QSiblinghood;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -54,6 +54,10 @@ public class DatabaseRepository {
     private static String getType() {
         // type can be either "sqlite" or "mysql"
         return databaseConfig.getType().toLowerCase();
+    }
+
+    public static void shutdown() {
+        db.shutdown();
     }
 
     private static void runMigrations() {
@@ -149,7 +153,7 @@ public class DatabaseRepository {
 
     private static void loadDatabase() {
         Set<Class<?>> classes = Set.of(
-                QFamilyPlayerImpl.class,
+                QFamilyPlayer.class,
                 QAdoption.class,
                 QMarriage.class,
                 QSiblinghood.class

@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.utils;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.utils.Mode;
@@ -73,12 +73,12 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
 
             uuid = UUID.fromString(arg);
 
-            if (DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("uuid", uuid).findCount() == 0) {
+            if (DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uuid", uuid).findCount() == 0) {
                 uuid = null;
             }
         } else {
             Logger.debugLog("arg is not UUID");
-            uuid = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("name", arg).findOne().getUniqueId();
+            uuid = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", arg).findOne().getUUID();
         }
 
         if (uuid == null) {

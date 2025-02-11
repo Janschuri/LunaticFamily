@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -60,7 +60,7 @@ public class SiblingUnset extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl player1Fam = getFamilyPlayer(player1UUID);
+        FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
 
 
         if (!player1Fam.hasSiblings()) {
@@ -70,7 +70,7 @@ public class SiblingUnset extends Subcommand {
         }
 
 
-        FamilyPlayerImpl siblingFam = player1Fam.getSibling();
+        FamilyPlayer siblingFam = player1Fam.getSibling();
         player1Fam.removeSiblings();
         sender.sendMessage(getMessage(unsetMK)
                 .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))

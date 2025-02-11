@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -114,12 +114,12 @@ public class AdoptSet extends Subcommand {
             return true;
         }
 
-        FamilyPlayerImpl firstParentFam = getFamilyPlayer(firstParentUUID);
-        FamilyPlayerImpl childFam = getFamilyPlayer(childUUID);
+        FamilyPlayer firstParentFam = getFamilyPlayer(firstParentUUID);
+        FamilyPlayer childFam = getFamilyPlayer(childUUID);
 
         firstParentFam.update();
 
-        if (firstParentFam.isFamilyMember(childFam.getId())) {
+        if (firstParentFam.isFamilyMember(childFam)) {
             sender.sendMessage(getMessage(sameFamilyMK)
                     .replaceText(getTextReplacementConfig("%player1%", firstParentFam.getName()))
                     .replaceText(getTextReplacementConfig("%player2%", child.getName())));
@@ -170,7 +170,7 @@ public class AdoptSet extends Subcommand {
                     .replaceText(getTextReplacementConfig("%child%", childFam.getName()))
                     .replaceText(getTextReplacementConfig("%parent%", firstParentFam.getName())));
         } else {
-            FamilyPlayerImpl secondParentFam = firstParentFam.getPartner();
+            FamilyPlayer secondParentFam = firstParentFam.getPartner();
             sender.sendMessage(getMessage(setMK)
                     .replaceText(getTextReplacementConfig("%child%", childFam.getName()))
                     .replaceText(getTextReplacementConfig("%parent1%", firstParentFam.getName()))
@@ -178,7 +178,7 @@ public class AdoptSet extends Subcommand {
         }
 
         LunaticFamily.adoptRequests.remove(childUUID);
-        firstParentFam.adopt(childFam.getId());
+        firstParentFam.adopt(childFam);
 
 
 

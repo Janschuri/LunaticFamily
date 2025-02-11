@@ -3,7 +3,7 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
@@ -61,7 +61,7 @@ public class AdoptKickout extends Subcommand {
 
         PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         if (playerFam.getChildren().isEmpty()) {
             sender.sendMessage(getMessage(noChildMK));
@@ -76,7 +76,7 @@ public class AdoptKickout extends Subcommand {
 
         String childName = args[0];
 
-        UUID childUUID = DatabaseRepository.getDatabase().find(FamilyPlayerImpl.class).where().eq("name", childName).findOne().getUniqueId();
+        UUID childUUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", childName).findOne().getUUID();
 
         if (childUUID == null) {
             player.sendMessage(getMessage(PLAYER_NOT_EXIST_MK).replaceText(getTextReplacementConfig("%player%", childName)));
@@ -84,9 +84,9 @@ public class AdoptKickout extends Subcommand {
         }
 
         PlayerSender child = LunaticLib.getPlatform().getPlayerSender(childUUID);
-        FamilyPlayerImpl childFam = getFamilyPlayer(childUUID);
+        FamilyPlayer childFam = getFamilyPlayer(childUUID);
 
-        if (!childFam.isChildOf(playerFam.getId())) {
+        if (childFam.isNotChildOf(playerFam)) {
             sender.sendMessage(getMessage(notYourChildMK).replaceText(getTextReplacementConfig("%player%", childFam.getName())));
             return true;
         }
@@ -155,7 +155,7 @@ public class AdoptKickout extends Subcommand {
         }
 
         if (!force && playerFam.isMarried()) {
-            UUID partnerUUID = playerFam.getPartner().getUniqueId();
+            UUID partnerUUID = playerFam.getPartner().getUUID();
             if (!Utils.hasEnoughMoney(player.getServerName(), partnerUUID, WithdrawKey.ADOPT_KICKOUT_PARENT)) {
                 player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK).replaceText(getTextReplacementConfig("%player%", playerFam.getPartner().getName())));
                 player.sendMessage(Utils.getClickableDecisionMessage(
@@ -174,13 +174,13 @@ public class AdoptKickout extends Subcommand {
         player.sendMessage(getMessage(kickoutMK).replaceText(getTextReplacementConfig("%player%", childFam.getName())));
 
         if (playerFam.isMarried()) {
-            PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUniqueId());
+            PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUUID());
             partner.sendMessage(getMessage(this.partnerMK).replaceText(getTextReplacementConfig("%player1%", playerFam.getName())).replaceText(getTextReplacementConfig("%player2%", childFam.getName())));
         }
 
         if (childFam.hasSiblings()) {
-            FamilyPlayerImpl siblingFam = childFam.getSibling();
-            PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingFam.getUniqueId());
+            FamilyPlayer siblingFam = childFam.getSibling();
+            PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingFam.getUUID());
             sibling.sendMessage(getMessage(siblingMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
         }
 
@@ -190,7 +190,7 @@ public class AdoptKickout extends Subcommand {
             Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.ADOPT_KICKOUT_PARENT, WithdrawKey.ADOPT_KICKOUT_CHILD);
         } else {
             if (playerFam.isMarried()) {
-                UUID partnerUUID = playerFam.getPartner().getUniqueId();
+                UUID partnerUUID = playerFam.getPartner().getUUID();
                 Utils.withdrawMoney(player.getServerName(), partnerUUID, 0.5, WithdrawKey.ADOPT_KICKOUT_PARENT);
                 Utils.withdrawMoney(player.getServerName(), playerUUID, 0.5, WithdrawKey.ADOPT_KICKOUT_PARENT);
 
@@ -210,7 +210,7 @@ public class AdoptKickout extends Subcommand {
             Utils.withdrawMoney(player.getServerName(), childUUID, WithdrawKey.ADOPT_KICKOUT_CHILD);
         }
 
-        playerFam.unadopt(childFam.getId());
+        playerFam.unadopt(childFam);
 
         return true;
     }
