@@ -201,7 +201,7 @@ public class PriestSibling extends Subcommand {
         }
 
 
-        if (player1Fam.hasSibling()) {
+        if (player1Fam.hasSiblings()) {
             sender.sendMessage(getMessage(alreadySiblingMK)
                     .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
             return true;

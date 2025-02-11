@@ -72,7 +72,7 @@ public class SiblingUnsibling extends Subcommand {
             }
         }
 
-        if (!playerFam.hasSibling()) {
+        if (!playerFam.hasSiblings()) {
             sender.sendMessage(getMessage(noSiblingMK));
             return true;
         }
@@ -138,7 +138,7 @@ public class SiblingUnsibling extends Subcommand {
             LunaticLib.getPlatform().sendConsoleCommand(command);
         }
 
-        playerFam.removeSibling();
+        playerFam.removeSiblings();
 
         return true;
     }

@@ -63,7 +63,7 @@ public class SiblingUnset extends Subcommand {
         FamilyPlayerImpl player1Fam = getFamilyPlayer(player1UUID);
 
 
-        if (!player1Fam.hasSibling()) {
+        if (!player1Fam.hasSiblings()) {
             sender.sendMessage(getMessage(noSiblingMK)
                     .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
             return true;
@@ -71,7 +71,7 @@ public class SiblingUnset extends Subcommand {
 
 
         FamilyPlayerImpl siblingFam = player1Fam.getSibling();
-        player1Fam.removeSibling();
+        player1Fam.removeSiblings();
         sender.sendMessage(getMessage(unsetMK)
                 .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
                 .replaceText(getTextReplacementConfig("%player2%", siblingFam.getName())));

@@ -47,10 +47,10 @@ public abstract class Subcommand extends AbstractLunaticCommand {
     }
 
     protected static FamilyPlayerImpl getFamilyPlayer(UUID playerUUID) {
-        return FamilyPlayerImpl.getFamilyPlayer(playerUUID);
+        return FamilyPlayerImpl.findOrCreate(playerUUID);
     }
 
     protected static FamilyPlayerImpl getFamilyPlayer(int playerID) {
-        return FamilyPlayerImpl.getFamilyPlayer(playerID);
+        return FamilyPlayerImpl.find(playerID);
     }
 }

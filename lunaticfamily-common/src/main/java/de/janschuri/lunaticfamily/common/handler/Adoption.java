@@ -3,6 +3,8 @@ package de.janschuri.lunaticfamily.common.handler;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import io.ebean.annotation.Identity;
+import io.ebean.annotation.NotNull;
+import io.ebean.annotation.WhenCreated;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -13,41 +15,35 @@ public class Adoption {
 
     @Id
     @Identity
-    private final int id;
+    @NotNull
+    private int id;
+    private String emoji;
+    @NotNull
+    @WhenCreated
+    private Timestamp date;
+    @Column(name = "unadoptDate")
+    private Timestamp unadoptDate;
+
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "parentID")
     private FamilyPlayerImpl parent;
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "childID")
     private FamilyPlayerImpl child;
     @ManyToOne
     @JoinColumn(name = "priest")
     private FamilyPlayerImpl priest;
-    private String emoji;
-    private final Timestamp date;
-    @Column(name = "unadoptDate")
-    private final Timestamp unadoptDate;
 
-    public Adoption(int id) {
-        Adoption adoption = DatabaseRepository.getDatabase().find(Adoption.class).where().eq("id", id).findOne();
-        assert adoption != null;
-        this.id = adoption.id;
-        this.parent = adoption.parent;
-        this.child = adoption.child;
-        this.priest = adoption.priest;
-        this.emoji = adoption.emoji;
-        this.date = adoption.date;
-        this.unadoptDate = adoption.unadoptDate;
-    }
-
-    public Adoption(int id, FamilyPlayerImpl parent, FamilyPlayerImpl child, FamilyPlayerImpl priest, String emoji, Timestamp date, Timestamp unadoptDate) {
-        this.id = id;
+    public Adoption(FamilyPlayerImpl parent, FamilyPlayerImpl child) {
         this.parent = parent;
         this.child = child;
-        this.priest = priest;
-        this.emoji = emoji;
-        this.date = date;
-        this.unadoptDate = unadoptDate;
+    }
+
+    public Adoption save() {
+        DatabaseRepository.getDatabase().save(this);
+        return this;
     }
 
     public FamilyPlayerImpl getParent() {
@@ -62,12 +58,21 @@ public class Adoption {
         return priest;
     }
 
+    public Adoption setPriest(FamilyPlayerImpl priest) {
+        this.priest = priest;
+        return this;
+    }
+
     public Timestamp getDate() {
         return date;
     }
 
     public Timestamp getUnadoptDate() {
         return unadoptDate;
+    }
+    public Adoption setUnadoptDate() {
+        this.unadoptDate = new Timestamp(System.currentTimeMillis());
+        return this;
     }
 
     public String getEmojiColor() {
@@ -79,9 +84,9 @@ public class Adoption {
         return color;
     }
 
-    public void setEmojiColor(String color) {
+    public Adoption setEmojiColor(String color) {
         emoji = color;
-        DatabaseRepository.getDatabase().save(this);
+        return this;
     }
 
     public boolean hasPriest() {

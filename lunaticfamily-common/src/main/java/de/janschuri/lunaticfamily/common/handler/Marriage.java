@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 //import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import io.ebean.annotation.Identity;
+import io.ebean.annotation.NotNull;
 import io.ebean.annotation.WhenCreated;
 import jakarta.persistence.*;
 
@@ -15,12 +16,15 @@ public class Marriage {
 
     @Id
     @Identity
+    @NotNull
     private int id;
     @ManyToOne
     @JoinColumn(name = "player1ID")
+    @NotNull
     private FamilyPlayerImpl player1;
     @ManyToOne
     @JoinColumn(name = "player2ID")
+    @NotNull
     private FamilyPlayerImpl player2;
     @ManyToOne
     @JoinColumn(name = "priest")
@@ -28,24 +32,19 @@ public class Marriage {
     @Column(name = "heart")
     private String emoji;
     @WhenCreated
+    @NotNull
     private Timestamp date;
     @Column(name = "divorceDate")
     private Timestamp divorceDate;
 
-    public Marriage(int id) {
-        Marriage marriage = DatabaseRepository.getDatabase().find(Marriage.class).where().eq("id", id).findOne();
-        this.id = marriage.id;
-        this.player1 = marriage.player1;
-        this.player2 = marriage.player2;
-        this.emoji = marriage.emoji;
-        this.priest = marriage.priest;
-        this.date = marriage.date;
-        this.divorceDate = marriage.divorceDate;
-    }
-
     public Marriage(FamilyPlayerImpl player1, FamilyPlayerImpl player2) {
         this.player1 = player1;
         this.player2 = player2;
+    }
+
+    public Marriage save() {
+        DatabaseRepository.getDatabase().save(this);
+        return this;
     }
 
     public FamilyPlayerImpl getPlayer1() {
@@ -71,6 +70,11 @@ public class Marriage {
 
     public Timestamp getDivorceDate() {
         return divorceDate;
+    }
+
+    public Marriage setDivorceDate() {
+        divorceDate = new Timestamp(System.currentTimeMillis());
+        return this;
     }
 
     public String getEmojiColor() {

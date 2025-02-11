@@ -178,7 +178,7 @@ public class AdoptKickout extends Subcommand {
             partner.sendMessage(getMessage(this.partnerMK).replaceText(getTextReplacementConfig("%player1%", playerFam.getName())).replaceText(getTextReplacementConfig("%player2%", childFam.getName())));
         }
 
-        if (childFam.hasSibling()) {
+        if (childFam.hasSiblings()) {
             FamilyPlayerImpl siblingFam = childFam.getSibling();
             PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingFam.getUniqueId());
             sibling.sendMessage(getMessage(siblingMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));

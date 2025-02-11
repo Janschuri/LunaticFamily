@@ -1,9 +1,11 @@
 package de.janschuri.lunaticfamily.common.handler;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-//import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import io.ebean.annotation.Identity;
+import io.ebean.annotation.NotNull;
+import io.ebean.annotation.WhenCreated;
+import io.ebean.typequery.Generated;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -14,41 +16,34 @@ public class Siblinghood {
 
     @Id
     @Identity
-    private final int id;
+    @NotNull
+    private int id;
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "player1ID")
     private FamilyPlayerImpl player1;
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "player2ID")
     private FamilyPlayerImpl player2;
     @ManyToOne
     @JoinColumn(name = "priest")
     private FamilyPlayerImpl priest;
     private String emoji;
-    private final Timestamp date;
+    @NotNull
+    @WhenCreated
+    private Timestamp date;
     @Column(name = "unsiblingDate")
-    private final Timestamp unsiblingDate;
+    private Timestamp unsiblingDate;
 
-    public Siblinghood(int id) {
-        Siblinghood siblinghood = DatabaseRepository.getDatabase().find(Siblinghood.class).where().eq("id", id).findOne();
-        assert siblinghood != null;
-        this.id = siblinghood.id;
-        this.player1 = siblinghood.player1;
-        this.player2 = siblinghood.player2;
-        this.priest = siblinghood.priest;
-        this.emoji = siblinghood.emoji;
-        this.date = siblinghood.date;
-        this.unsiblingDate = siblinghood.unsiblingDate;
-    }
-
-    public Siblinghood(int id, FamilyPlayerImpl player1, FamilyPlayerImpl player2, FamilyPlayerImpl priest, String emoji, Timestamp date, Timestamp unsiblingDate) {
-        this.id = id;
+    public Siblinghood(FamilyPlayerImpl player1, FamilyPlayerImpl player2) {
         this.player1 = player1;
         this.player2 = player2;
-        this.priest = priest;
-        this.emoji = emoji;
-        this.date = date;
-        this.unsiblingDate = unsiblingDate;
+    }
+
+    public Siblinghood save() {
+        DatabaseRepository.getDatabase().save(this);
+        return this;
     }
 
     public FamilyPlayerImpl getPlayer1() {
@@ -63,12 +58,22 @@ public class Siblinghood {
         return priest;
     }
 
+    public Siblinghood setPriest(FamilyPlayerImpl priest) {
+        this.priest = priest;
+        return this;
+    }
+
     public Timestamp getDate() {
         return date;
     }
 
     public Timestamp getUnsiblingDate() {
         return unsiblingDate;
+    }
+
+    public Siblinghood setUnsiblingDate() {
+        this.unsiblingDate = new Timestamp(System.currentTimeMillis());
+        return this;
     }
 
     public String getEmojiColor() {
@@ -79,9 +84,9 @@ public class Siblinghood {
         return color;
     }
 
-    public void setEmojiColor(String color) {
+    public Siblinghood setEmojiColor(String color) {
         emoji = color;
-        DatabaseRepository.getDatabase().save(this);
+        return this;
     }
 
     public String getColoredEmoji() {

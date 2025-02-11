@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import static de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl.getFamilyPlayer;
+import static de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl.findOrCreate;
 
 public class Placeholder {
 
@@ -22,7 +22,7 @@ public class Placeholder {
             return new GetPlaceholderRequest().get(uuid, placeholder);
         }
 
-        FamilyPlayerImpl player = getFamilyPlayer(uuid);
+        FamilyPlayerImpl player = findOrCreate(uuid);
 
         if (player == null) {
             return null;
@@ -98,7 +98,7 @@ public class Placeholder {
             String type = split[1];
 
             if (Objects.equals(type, "emojiStatus")) {
-                if (player.hasSibling()) {
+                if (player.hasSiblings()) {
                     return player.getSiblinghoods().get(0).getColoredEmoji();
                 }
 
@@ -106,7 +106,7 @@ public class Placeholder {
             }
 
             if (Objects.equals(type, "status")) {
-                return player.hasSibling() + "";
+                return player.hasSiblings() + "";
             }
 
 
@@ -429,8 +429,8 @@ public class Placeholder {
             return new GetRelationalPlaceholderRequest().get(uuid1, uuid2, placeholder);
         }
 
-        FamilyPlayerImpl player1 = getFamilyPlayer(uuid1);
-        FamilyPlayerImpl player2 = getFamilyPlayer(uuid2);
+        FamilyPlayerImpl player1 = findOrCreate(uuid1);
+        FamilyPlayerImpl player2 = findOrCreate(uuid2);
 
         if (placeholder.equalsIgnoreCase("relation")) {
 

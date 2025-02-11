@@ -3,7 +3,7 @@ package de.janschuri.lunaticfamily.common.commands.sibling;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.Subcommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
-import de.janschuri.lunaticfamily.common.utils.Logger;
+import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
@@ -56,7 +56,7 @@ public class SiblingEmoji extends Subcommand {
         UUID playerUUID = player.getUniqueId();
         FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
 
-        if (!playerFam.hasSibling()) {
+        if (!playerFam.hasSiblings()) {
             sender.sendMessage(getMessage(noSiblinghoodMK));
             return true;
         }
@@ -121,7 +121,12 @@ public class SiblingEmoji extends Subcommand {
 
         Component colorComponent = Component.text().content(colorMsg).color(TextColor.fromHexString(hexColor)).build();
 
-        playerFam.getSiblinghoods().get(0).setEmojiColor(hexColor);
+        List<Siblinghood> siblinghoods = playerFam.getSiblinghoods();
+        for (Siblinghood siblinghood : siblinghoods) {
+            siblinghood.setEmojiColor(hexColor);
+            siblinghood.save();
+        }
+
         TextReplacementConfig replacementConfig = TextReplacementConfig.builder().match("%color%").replacement(colorComponent).build();
 
         Component msg = getMessage(colorSetMK).replaceText(replacementConfig);

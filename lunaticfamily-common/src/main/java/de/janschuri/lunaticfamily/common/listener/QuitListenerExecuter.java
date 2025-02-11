@@ -17,7 +17,7 @@ import net.kyori.adventure.text.TextReplacementConfig;
 
 import java.util.UUID;
 
-import static de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl.getFamilyPlayer;
+import static de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl.findOrCreate;
 
 public class QuitListenerExecuter {
 
@@ -34,7 +34,7 @@ public class QuitListenerExecuter {
 
         LanguageConfigImpl languageConfig = LunaticFamily.getLanguageConfig();
         UUID uuid = player.getUniqueId();
-        FamilyPlayerImpl playerFam = getFamilyPlayer(uuid);
+        FamilyPlayerImpl playerFam = findOrCreate(uuid);
 
         if (LunaticFamily.marryRequests.containsValue(uuid) || LunaticFamily.marryRequests.containsKey(uuid) || LunaticFamily.marryPriests.containsKey(uuid)) {
 

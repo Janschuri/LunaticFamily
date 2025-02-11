@@ -64,7 +64,7 @@ public class SiblingPropose extends Subcommand {
         UUID playerUUID = player.getUniqueId();
         FamilyPlayerImpl playerFam = getFamilyPlayer(playerUUID);
 
-        if (playerFam.hasSibling()) {
+        if (playerFam.hasSiblings()) {
             sender.sendMessage(getMessage(hasSiblingMK)
                     .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
             return true;

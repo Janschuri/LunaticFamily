@@ -100,6 +100,7 @@ public class FamilyCreate extends Subcommand {
 
         if (confirm) {
             FamilyPlayerImpl familyPlayer = getFamilyPlayer(playerUUID).setName(playerName);
+            familyPlayer.save();
 
             sender.sendMessage(getMessage(createdMK)
                     .replaceText(getTextReplacementConfig("%uuid%", playerUUIDArg))

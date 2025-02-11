@@ -144,7 +144,7 @@ public class AdoptSet extends Subcommand {
             return true;
         }
 
-        if (childFam.hasSibling() && !confirm) {
+        if (childFam.hasSiblings() && !confirm) {
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
                     getMessage(hasSiblingMK, false)
@@ -158,7 +158,7 @@ public class AdoptSet extends Subcommand {
             return true;
         }
 
-        if (childFam.hasSibling() && firstParentFam.getChildrenAmount() > 0) {
+        if (childFam.hasSiblings() && firstParentFam.getChildrenAmount() > 0) {
             sender.sendMessage(getMessage(hasSiblingLimitMK)
                     .replaceText(getTextReplacementConfig("%player1%", childFam.getName()))
                     .replaceText(getTextReplacementConfig("%player2%", firstParentFam.getName())));

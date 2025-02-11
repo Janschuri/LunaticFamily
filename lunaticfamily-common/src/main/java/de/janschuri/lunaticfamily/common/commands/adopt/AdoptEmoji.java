@@ -122,10 +122,10 @@ public class AdoptEmoji extends Subcommand {
         Component colorComponent = Component.text().content(colorMsg).color(TextColor.fromHexString(hexColor)).build();
 
 
-        playerFam.getAdoptionsAsChild().get(0).setEmojiColor(hexColor);
 
         for (Adoption adoption : playerFam.getAdoptionsAsChild()) {
             adoption.setEmojiColor(hexColor);
+            adoption.save();
         }
 
         TextReplacementConfig replacementConfig = TextReplacementConfig.builder().match("%color%").replacement(colorComponent).build();

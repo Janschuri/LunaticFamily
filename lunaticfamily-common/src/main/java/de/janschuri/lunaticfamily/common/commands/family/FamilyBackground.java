@@ -76,10 +76,11 @@ public class FamilyBackground extends Subcommand {
         String backgroundArg = args[0];
         String background = "textures/block/" + backgroundArg + ".png";
 
-        FamilyPlayerImpl playerFam = FamilyPlayerImpl.getFamilyPlayer(player.getUniqueId());
+        FamilyPlayerImpl playerFam = FamilyPlayerImpl.findOrCreate(player.getUniqueId());
 
 
         playerFam.setBackground(background);
+        playerFam.save();
         sender.sendMessage(getMessage(setMK));
         playerFam.updateFamilyTree();
 

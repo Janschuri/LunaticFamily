@@ -158,7 +158,7 @@ public class AdoptMoveout extends Subcommand {
 
         FamilyPlayerImpl firstParentFam = (FamilyPlayerImpl) playerFam.getParents().get(0);
 
-        if (playerFam.hasSibling()) {
+        if (playerFam.hasSiblings()) {
             FamilyPlayerImpl siblingFam = playerFam.getSibling();
             Sender sibling = LunaticLib.getPlatform().getPlayerSender(siblingFam.getUniqueId());
             sibling.sendMessage(getMessage(siblingMK));

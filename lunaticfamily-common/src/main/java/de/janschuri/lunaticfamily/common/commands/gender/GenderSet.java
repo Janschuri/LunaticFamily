@@ -86,6 +86,7 @@ public class GenderSet extends Subcommand {
                             .replaceText(getTextReplacementConfig("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));
                 } else {
                     playerFam.setGender(args[0].toLowerCase());
+                    playerFam.save();
                     sender.sendMessage(getMessage(changedMK)
                             .replaceText(getTextReplacementConfig("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));
                 }
@@ -120,6 +121,7 @@ public class GenderSet extends Subcommand {
                 return true;
             }
             player1Fam.setGender(args[0].toLowerCase());
+            player1Fam.save();
             sender.sendMessage(getMessage(adminSetMK)
                     .replaceText(getTextReplacementConfig("%player%", player1.getName()))
                     .replaceText(getTextReplacementConfig("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));

@@ -39,7 +39,7 @@ public class FamilyTree {
     }
 
     public static FamilyTree getFamilyTree(int playerFamId) {
-        FamilyPlayerImpl playerFam = FamilyPlayerImpl.getFamilyPlayer(playerFamId);
+        FamilyPlayerImpl playerFam = FamilyPlayerImpl.find(playerFamId);
 
         return familyTrees.getOrDefault(playerFam.getUniqueId(), new FamilyTree(playerFam));
     }

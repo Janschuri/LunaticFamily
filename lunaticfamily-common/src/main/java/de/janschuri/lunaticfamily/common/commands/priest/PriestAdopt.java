@@ -208,7 +208,7 @@ public class PriestAdopt extends Subcommand {
             return true;
         }
 
-        if (player2Fam.hasSibling()) {
+        if (player2Fam.hasSiblings()) {
             sender.sendMessage(getMessage(playerAlreadyAdoptedMK)
                     .replaceText(getTextReplacementConfig("%player%", player2Fam.getName())));
             return true;

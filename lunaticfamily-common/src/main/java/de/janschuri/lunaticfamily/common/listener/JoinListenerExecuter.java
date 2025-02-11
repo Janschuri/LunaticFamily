@@ -12,10 +12,9 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl.getFamilyPlayer;
+import static de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl.findOrCreate;
 
 public class JoinListenerExecuter {
 
@@ -37,7 +36,7 @@ public class JoinListenerExecuter {
 
 
         LanguageConfigImpl languageConfig = LunaticFamily.getLanguageConfig();
-        FamilyPlayerImpl playerFam = getFamilyPlayer(sender.getUniqueId());
+        FamilyPlayerImpl playerFam = findOrCreate(sender.getUniqueId());
         playerFam.update();
 
         Runnable runnable = () -> {

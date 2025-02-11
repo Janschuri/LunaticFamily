@@ -177,10 +177,10 @@ public final class LunaticFamily {
     }
 
     public static FamilyPlayerImpl getFamilyPlayer(UUID uuid) {
-        return FamilyPlayerImpl.getFamilyPlayer(uuid);
+        return FamilyPlayerImpl.findOrCreate(uuid);
     }
 
     public static FamilyPlayerImpl getFamilyPlayer(int id) {
-        return FamilyPlayerImpl.getFamilyPlayer(id);
+        return FamilyPlayerImpl.find(id);
     }
 }
