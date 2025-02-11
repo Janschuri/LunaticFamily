@@ -451,7 +451,7 @@ public class FamilyPlayer {
     }
 
     private boolean canUnadopt(FamilyPlayer childFam) {
-        if (this.isNotChildOf(childFam)) {
+        if (childFam.isNotChildOf(this)) {
             Logger.errorLog("Cancelled unadoption. Player is not a child of the player.");
             return false;
         }
@@ -563,7 +563,7 @@ public class FamilyPlayer {
     }
 
     public FamilyTree getFamilyTree() {
-        DatabaseRepository.getDatabase().update(this);
+        DatabaseRepository.getDatabase().refresh(this);
         FamilyTree familyTree = new FamilyTree(this);
 
         familyTree.update();

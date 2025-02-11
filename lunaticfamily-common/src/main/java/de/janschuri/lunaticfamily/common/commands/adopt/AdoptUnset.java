@@ -64,7 +64,7 @@ public class AdoptUnset extends Subcommand {
                     .replaceText(getTextReplacementConfig("%player%", childFam.getName())));
             return true;
         }
-        FamilyPlayer firstParentFam = (FamilyPlayer) childFam.getParents().get(0);
+        FamilyPlayer firstParentFam = childFam.getParents().get(0);
 
         if (firstParentFam.isMarried()) {
             FamilyPlayer secondParentFam = firstParentFam.getPartner();
