@@ -58,27 +58,27 @@ public class MarryKiss extends Subcommand {
         PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUUID());
 
         if (!partner.isOnline()) {
-            sender.sendMessage(getMessage(PLAYER_OFFLINE_MK)
-                    .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+            sender.sendMessage(getMessage(PLAYER_OFFLINE_MK,
+                placeholder("%player%", partner.getName())));
             return true;
         }
 
         if (!Utils.isPlayerOnRegisteredServer(partner)) {
-            player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
-                    .replaceText(getTextReplacementConfig("%player%", partner.getName()))
-                    .replaceText(getTextReplacementConfig("%server%", partner.getServerName())));
+            player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK,
+                placeholder("%player%", partner.getName()),
+                placeholder("%server%", partner.getServerName())));
             return true;
         }
 
         if (!player.isSameServer(partner.getUniqueId())) {
-            sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK)
-                    .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+            sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK,
+                placeholder("%player%", partner.getName())));
             return true;
         }
 
         if (!player.isInRange(partner.getUniqueId(), LunaticFamily.getConfig().getMarryKissRange())) {
-            player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+            player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK,
+                placeholder("%player%", partner.getName())));
             return true;
         }
 
@@ -95,11 +95,11 @@ public class MarryKiss extends Subcommand {
             Utils.scheduleTask(runnable, i * 250L, TimeUnit.MILLISECONDS);
         }
 
-        player.sendMessage(getMessage(kissMK)
-                .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+        player.sendMessage(getMessage(kissMK,
+                placeholder("%player%", partner.getName())));
 
-        partner.sendMessage(getMessage(gotKissedMK)
-                .replaceText(getTextReplacementConfig("%player%", player.getName())));
+        partner.sendMessage(getMessage(gotKissedMK,
+                placeholder("%player%", player.getName())));
 
 
         return true;

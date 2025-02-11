@@ -67,7 +67,7 @@ public class FamilyList extends Subcommand {
             playerFam.update();
 
             List<RelationAdvancement> relationAdvancements = playerFam.getFamilyTree().getRelationAdvancements();
-            ComponentBuilder msg = Component.text().append(getMessage(headerMK, false));
+            ComponentBuilder msg = Component.text().append(getMessage(headerMK.noPrefix()));
 
             sender.sendMessage(getFamilyListMessage(relationAdvancements, msg));
             playerFam.updateFamilyTree();
@@ -78,8 +78,8 @@ public class FamilyList extends Subcommand {
         UUID player1UUID = Utils.getUUIDFromArg(playerName);
 
         if (player1UUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", playerName)));
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", playerName)));
             return true;
         }
 
@@ -92,8 +92,8 @@ public class FamilyList extends Subcommand {
         FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
         List<RelationAdvancement> relationAdvancements = player1Fam.getFamilyTree().getRelationAdvancements();
         ComponentBuilder msg = Component.text();
-        msg.append(getMessage(othersHeaderMK, false)
-                .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
+        msg.append(getMessage(othersHeaderMK.noPrefix(),
+                placeholder("%player%", player1Fam.getName())));
 
         sender.sendMessage(getFamilyListMessage(relationAdvancements, msg));
         player1Fam.updateFamilyTree();
@@ -104,7 +104,7 @@ public class FamilyList extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK, false)
+                getMessage(PLAYER_NAME_MK.noPrefix())
         );
     }
 
@@ -128,7 +128,7 @@ public class FamilyList extends Subcommand {
                         .match("%player%")
                         .replacement(name).build();
 
-                Component component = getMessage(relationsMK, false)
+                Component component = getMessage(relationsMK.noPrefix())
                         .replaceText(relationRpl)
                         .replaceText(nameRpl);
 

@@ -79,7 +79,8 @@ public class AdoptKickout extends Subcommand {
         UUID childUUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", childName).findOne().getUUID();
 
         if (childUUID == null) {
-            player.sendMessage(getMessage(PLAYER_NOT_EXIST_MK).replaceText(getTextReplacementConfig("%player%", childName)));
+            player.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", childName)));
             return true;
         }
 
@@ -87,7 +88,8 @@ public class AdoptKickout extends Subcommand {
         FamilyPlayer childFam = getFamilyPlayer(childUUID);
 
         if (childFam.isNotChildOf(playerFam)) {
-            sender.sendMessage(getMessage(notYourChildMK).replaceText(getTextReplacementConfig("%player%", childFam.getName())));
+            sender.sendMessage(getMessage(notYourChildMK,
+                placeholder("%player%", childFam.getName())));
             return true;
         }
 
@@ -119,8 +121,8 @@ public class AdoptKickout extends Subcommand {
             Logger.debugLog(child.getName());
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(confirmMK, false)
-                            .replaceText(getTextReplacementConfig("%player%", childFam.getName())),
+                    getMessage(confirmMK.noPrefix(),
+                placeholder("%player%", childFam.getName())),
                     getMessage(CONFIRM_MK),
                     "/family adopt kickout " + childName + " confirm",
                     getMessage(CANCEL_MK),
@@ -141,13 +143,14 @@ public class AdoptKickout extends Subcommand {
         }
 
         if (!Utils.hasEnoughMoney(player.getServerName(), childUUID, WithdrawKey.ADOPT_KICKOUT_CHILD)) {
-            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK).replaceText(getTextReplacementConfig("%player%", childFam.getName())));
+            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", childFam.getName())));
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(TAKE_PAYMENT_CONFIRM_MK, false),
-                    getMessage(CONFIRM_MK, false),
+                    getMessage(TAKE_PAYMENT_CONFIRM_MK.noPrefix()),
+                    getMessage(CONFIRM_MK.noPrefix()),
                     "/family adopt kickout confirm force",
-                    getMessage(CANCEL_MK, false),
+                    getMessage(CANCEL_MK.noPrefix()),
                     "/family adopt kickout confirm force"),
                     LunaticFamily.getConfig().decisionAsInvGUI()
             );
@@ -157,13 +160,14 @@ public class AdoptKickout extends Subcommand {
         if (!force && playerFam.isMarried()) {
             UUID partnerUUID = playerFam.getPartner().getUUID();
             if (!Utils.hasEnoughMoney(player.getServerName(), partnerUUID, WithdrawKey.ADOPT_KICKOUT_PARENT)) {
-                player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK).replaceText(getTextReplacementConfig("%player%", playerFam.getPartner().getName())));
+                player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", playerFam.getPartner().getName())));
                 player.sendMessage(Utils.getClickableDecisionMessage(
                         getPrefix(),
-                        getMessage(TAKE_PAYMENT_CONFIRM_MK, false),
-                        getMessage(CONFIRM_MK, false),
+                        getMessage(TAKE_PAYMENT_CONFIRM_MK.noPrefix()),
+                        getMessage(CONFIRM_MK.noPrefix()),
                         "/family adopt kickout confirm force",
-                        getMessage(CANCEL_MK, false),
+                        getMessage(CANCEL_MK.noPrefix()),
                         "/family adopt kickout confirm force"),
                         LunaticFamily.getConfig().decisionAsInvGUI()
                 );
@@ -171,20 +175,25 @@ public class AdoptKickout extends Subcommand {
             }
         }
 
-        player.sendMessage(getMessage(kickoutMK).replaceText(getTextReplacementConfig("%player%", childFam.getName())));
+        player.sendMessage(getMessage(kickoutMK,
+                placeholder("%player%", childFam.getName())));
 
         if (playerFam.isMarried()) {
             PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUUID());
-            partner.sendMessage(getMessage(this.partnerMK).replaceText(getTextReplacementConfig("%player1%", playerFam.getName())).replaceText(getTextReplacementConfig("%player2%", childFam.getName())));
+            partner.sendMessage(getMessage(this.partnerMK,
+                placeholder("%player1%", playerFam.getName()),
+                placeholder("%player2%", childFam.getName())));
         }
 
         if (childFam.hasSiblings()) {
             FamilyPlayer siblingFam = childFam.getSibling();
             PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingFam.getUUID());
-            sibling.sendMessage(getMessage(siblingMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+            sibling.sendMessage(getMessage(siblingMK,
+                placeholder("%player%", playerFam.getName())));
         }
 
-        child.sendMessage(getMessage(childMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+        child.sendMessage(getMessage(childMK,
+                placeholder("%player%", playerFam.getName())));
 
         if (force) {
             Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.ADOPT_KICKOUT_PARENT, WithdrawKey.ADOPT_KICKOUT_CHILD);
@@ -218,7 +227,7 @@ public class AdoptKickout extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK, false)
+                getMessage(PLAYER_NAME_MK.noPrefix())
         );
     }
 

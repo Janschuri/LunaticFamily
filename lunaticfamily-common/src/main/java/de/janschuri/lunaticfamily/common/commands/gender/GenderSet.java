@@ -63,8 +63,9 @@ public class GenderSet extends Subcommand {
                 msg.append(
                         Component.text("\n - " + LunaticFamily.getLanguageConfig().getGenderLang(gender))
                                 .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/family gender set " + gender))
-                                .hoverEvent(HoverEvent.showText(getMessage(setHoverMK, false)
-                                        .replaceText(getTextReplacementConfig("%gender%", getGenderLang(gender)))))
+                                .hoverEvent(HoverEvent.showText(getMessage(setHoverMK.noPrefix(),
+                                    placeholder("%gender%", getGenderLang(gender))
+                                )))
                 );
             }
             player.sendMessage(msg.build());
@@ -82,13 +83,14 @@ public class GenderSet extends Subcommand {
                 if (!LunaticFamily.getLanguageConfig().getGenders().contains(args[0].toLowerCase())) {
                     sender.sendMessage(getMessage(notExistMK));
                 } else if (playerFam.getGender().equalsIgnoreCase(args[0])) {
-                    player.sendMessage(getMessage(alreadyMK)
-                            .replaceText(getTextReplacementConfig("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));
+                    player.sendMessage(getMessage(alreadyMK,
+                placeholder("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));
                 } else {
                     playerFam.setGender(args[0].toLowerCase());
                     playerFam.save();
-                    sender.sendMessage(getMessage(changedMK)
-                            .replaceText(getTextReplacementConfig("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));
+                    sender.sendMessage(getMessage(changedMK,
+                        placeholder("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))
+                    ));
                 }
             }
             return true;
@@ -106,8 +108,8 @@ public class GenderSet extends Subcommand {
         String player1Arg = args[1];
         UUID player1UUID = Utils.getUUIDFromArg(player1Arg);
         if (player1UUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Arg)));
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", player1Arg)));
             return true;
         }
 
@@ -115,16 +117,16 @@ public class GenderSet extends Subcommand {
 
             FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
             if (player1Fam.getGender().equalsIgnoreCase(args[0])) {
-                sender.sendMessage(getMessage(adminAlreadyMK)
-                        .replaceText(getTextReplacementConfig("%player%", player1.getName()))
-                        .replaceText(getTextReplacementConfig("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));
+                sender.sendMessage(getMessage(adminAlreadyMK,
+                placeholder("%player%", player1.getName()),
+                placeholder("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));
                 return true;
             }
             player1Fam.setGender(args[0].toLowerCase());
             player1Fam.save();
-            sender.sendMessage(getMessage(adminSetMK)
-                    .replaceText(getTextReplacementConfig("%player%", player1.getName()))
-                    .replaceText(getTextReplacementConfig("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));
+            sender.sendMessage(getMessage(adminSetMK,
+                placeholder("%player%", player1.getName()),
+                placeholder("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));
 
         return true;
 
@@ -154,8 +156,8 @@ public class GenderSet extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(genderMK, false),
-                getMessage(PLAYER_NAME_MK, false)
+                getMessage(genderMK.noPrefix()),
+                getMessage(PLAYER_NAME_MK.noPrefix())
         );
     }
 }

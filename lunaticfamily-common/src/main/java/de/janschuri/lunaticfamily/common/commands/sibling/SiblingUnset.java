@@ -55,8 +55,8 @@ public class SiblingUnset extends Subcommand {
         String player1Name = args[0];
         UUID player1UUID = Utils.getUUIDFromArg(player1Name);
         if (player1UUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Name)));
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", player1Name)));
             return true;
         }
 
@@ -64,17 +64,17 @@ public class SiblingUnset extends Subcommand {
 
 
         if (!player1Fam.hasSiblings()) {
-            sender.sendMessage(getMessage(noSiblingMK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
+            sender.sendMessage(getMessage(noSiblingMK,
+                placeholder("%player%", player1Fam.getName())));
             return true;
         }
 
 
         FamilyPlayer siblingFam = player1Fam.getSibling();
         player1Fam.removeSiblings();
-        sender.sendMessage(getMessage(unsetMK)
-                .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                .replaceText(getTextReplacementConfig("%player2%", siblingFam.getName())));
+        sender.sendMessage(getMessage(unsetMK,
+                placeholder("%player1%", player1Fam.getName()),
+                placeholder("%player2%", siblingFam.getName())));
 
 
         return true;
@@ -83,7 +83,7 @@ public class SiblingUnset extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK, false)
+                getMessage(PLAYER_NAME_MK.noPrefix())
         );
     }
 

@@ -92,14 +92,14 @@ public class PriestSibling extends Subcommand {
         UUID player2UUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", player2Name).findOne().getUUID();
 
         if (player1UUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Name)));
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", player1Name)));
             return true;
         }
 
         if (player2UUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player2Name)));
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", player2Name)));
             return true;
         }
 
@@ -115,16 +115,16 @@ public class PriestSibling extends Subcommand {
         player2Fam.update();
 
         if (player1Fam.isFamilyMember(player2Fam)) {
-            sender.sendMessage(getMessage(familyRequestMK)
-                    .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
+            sender.sendMessage(getMessage(familyRequestMK,
+                placeholder("%player1%", player1Fam.getName()),
+                placeholder("%player2%", player2Fam.getName())));
             return true;
         }
 
         if (player2Fam.isFamilyMember(player1Fam)) {
-            sender.sendMessage(getMessage(familyRequestMK)
-                    .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
+            sender.sendMessage(getMessage(familyRequestMK,
+                placeholder("%player1%", player1Fam.getName()),
+                placeholder("%player2%", player2Fam.getName())));
             return true;
         }
 
@@ -132,114 +132,114 @@ public class PriestSibling extends Subcommand {
         PlayerSender player2 = LunaticLib.getPlatform().getPlayerSender(player2UUID);
 
         if (!player1.isOnline()) {
-            sender.sendMessage(getMessage(PLAYER_OFFLINE_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player1.getName())));
+            sender.sendMessage(getMessage(PLAYER_OFFLINE_MK,
+                placeholder("%player%", player1.getName())));
             return true;
         }
 
         if (!Utils.isPlayerOnRegisteredServer(player1)) {
-            player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player1.getName()))
-                    .replaceText(getTextReplacementConfig("%server%", player1.getServerName())));
+            player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK,
+                placeholder("%player%", player1.getName()),
+                placeholder("%server%", player1.getServerName())));
             return true;
         }
 
         if (!player2.isOnline()) {
-            sender.sendMessage(getMessage(PLAYER_OFFLINE_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player2.getName())));
+            sender.sendMessage(getMessage(PLAYER_OFFLINE_MK,
+                placeholder("%player%", player2.getName())));
             return true;
         }
 
         if (!Utils.isPlayerOnRegisteredServer(player2)) {
-            player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player2.getName()))
-                    .replaceText(getTextReplacementConfig("%server%", player2.getServerName())));
+            player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK,
+                placeholder("%player%", player2.getName()),
+                placeholder("%server%", player2.getServerName())));
 
             return true;
         }
 
         if (!player.isSameServer(player1.getUniqueId()) && LunaticFamily.getConfig().getAdoptPriestRange() >= 0) {
-            sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player1.getName())));
+            sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK,
+                placeholder("%player%", player1.getName())));
             return true;
         }
 
         if (!player.isSameServer(player2.getUniqueId()) && LunaticFamily.getConfig().getAdoptPriestRange() >= 0) {
-            sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player2.getName())));
+            sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK,
+                placeholder("%player%", player2.getName())));
             return true;
         }
 
         if (!player.isInRange(player1.getUniqueId(), LunaticFamily.getConfig().getAdoptPriestRange())) {
-            player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player1.getName())));
+            player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK,
+                placeholder("%player%", player1.getName())));
             return true;
         }
 
         if (!player.isInRange(player2.getUniqueId(), LunaticFamily.getConfig().getAdoptPriestRange())) {
-            player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player2.getName())));
+            player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK,
+                placeholder("%player%", player2.getName())));
             return true;
         }
 
         if (!Utils.hasEnoughMoney(player.getServerName(), player1UUID, WithdrawKey.PRIEST_SIBLING_PLAYER)) {
-            sender.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player1.getName())));
+            sender.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", player1.getName())));
             return true;
         }
 
         if (!Utils.hasEnoughMoney(player.getServerName(), player2UUID, WithdrawKey.PRIEST_SIBLING_PLAYER)) {
-            sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player2.getName())));
+            sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK,
+                placeholder("%player%", player2.getName())));
             return true;
         }
 
         if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.PRIEST_SIBLING)) {
-            sender.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player.getName())));
+            sender.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", player.getName())));
             return true;
         }
 
 
         if (player1Fam.hasSiblings()) {
-            sender.sendMessage(getMessage(alreadySiblingMK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
+            sender.sendMessage(getMessage(alreadySiblingMK,
+                placeholder("%player%", player1Fam.getName())));
             return true;
         }
 
         if (player2Fam.isMarried()) {
-            sender.sendMessage(getMessage(alreadySiblingMK)
-                    .replaceText(getTextReplacementConfig("%player%", player2Fam.getName())));
+            sender.sendMessage(getMessage(alreadySiblingMK,
+                placeholder("%player%", player2Fam.getName())));
             return true;
         }
 
         if (LunaticFamily.siblingRequests.containsKey(player1UUID) || LunaticFamily.siblingPriests.containsValue(player1UUID)) {
-            sender.sendMessage(getMessage(openRequestMK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
+            sender.sendMessage(getMessage(openRequestMK,
+                placeholder("%player%", player1Fam.getName())));
             return true;
         }
 
         if (LunaticFamily.siblingRequests.containsKey(player2UUID) || LunaticFamily.siblingPriests.containsValue(player2UUID)) {
-            sender.sendMessage(getMessage(openRequestMK)
-                    .replaceText(getTextReplacementConfig("%player%", player2Fam.getName())));
+            sender.sendMessage(getMessage(openRequestMK,
+                placeholder("%player%", player2Fam.getName())));
             return true;
         }
 
         if (player1Fam.isAdopted()) {
-            sender.sendMessage(getMessage(isAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
+            sender.sendMessage(getMessage(isAdoptedMK,
+                placeholder("%player1%", player1Fam.getName()),
+                placeholder("%player2%", player2Fam.getName())));
             return true;
         }
 
         if (player2Fam.isAdopted()) {
-            sender.sendMessage(getMessage(isAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player1%", player2Fam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", player1Fam.getName())));
+            sender.sendMessage(getMessage(isAdoptedMK,
+                placeholder("%player1%", player2Fam.getName()),
+                placeholder("%player2%", player1Fam.getName())));
             return true;
         }
 
-        player.chat(getLanguageConfig().getMessageAsString(requestMK, false)
+        player.chat(getLanguageConfig().getMessageAsString(requestMK.noPrefix())
                 .replace("%player1%", player1Fam.getName())
                 .replace("%player2%", player2Fam.getName()));
 
@@ -260,13 +260,13 @@ public class PriestSibling extends Subcommand {
             if (LunaticFamily.siblingPriestRequests.containsKey(player1UUID)) {
                 LunaticFamily.siblingPriestRequests.remove(player1UUID);
                 LunaticFamily.siblingPriests.remove(player1UUID);
-                player.sendMessage(getMessage(requestExpiredPriestMK)
-                        .replaceText(getTextReplacementConfig("%player1%", player1.getName()))
-                        .replaceText(getTextReplacementConfig("%player2%", player2.getName())));
-                player1.sendMessage(getMessage(requestExpiredPlayerMK)
-                        .replaceText(getTextReplacementConfig("%player%", player2.getName())));
-                player2.sendMessage(getMessage(requestExpiredPlayerMK)
-                        .replaceText(getTextReplacementConfig("%player%", player1.getName())));
+                player.sendMessage(getMessage(requestExpiredPriestMK,
+                placeholder("%player1%", player1.getName()),
+                placeholder("%player2%", player2.getName())));
+                player1.sendMessage(getMessage(requestExpiredPlayerMK,
+                placeholder("%player%", player2.getName())));
+                player2.sendMessage(getMessage(requestExpiredPlayerMK,
+                placeholder("%player%", player1.getName())));
             }
         };
 
@@ -278,8 +278,8 @@ public class PriestSibling extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK, false),
-                getMessage(PLAYER_NAME_MK, false)
+                getMessage(PLAYER_NAME_MK.noPrefix()),
+                getMessage(PLAYER_NAME_MK.noPrefix())
         );
     }
 

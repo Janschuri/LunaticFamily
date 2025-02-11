@@ -42,14 +42,14 @@ public class QuitListenerExecuter {
 
                 UUID priestUUID = LunaticFamily.marryPriests.get(uuid);
                 PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
-                priest.chat(languageConfig.getMessage(PLAYER_QUIT, false).replaceText(getTextReplacementConfig("%player%", playerFam.getName())) + " " + languageConfig.getMessage(MARRY_CANCEL_MK, false));
+                priest.chat(languageConfig.getMessage(PLAYER_QUIT.noPrefix()).replaceText(getTextReplacementConfig("%player%", playerFam.getName())) + " " + languageConfig.getMessage(MARRY_CANCEL_MK.noPrefix()));
             } else {
                 UUID partnerUUID = LunaticFamily.marryRequests.get(uuid);
                 PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
                 partner.sendMessage(languageConfig.getMessage(PLAYER_QUIT)
                         .replaceText(getTextReplacementConfig("%player%", playerFam.getName()))
                         .append(Component.space())
-                        .append(languageConfig.getMessage(MARRY_CANCEL_MK, false)));
+                        .append(languageConfig.getMessage(MARRY_CANCEL_MK.noPrefix())));
             }
         }
 

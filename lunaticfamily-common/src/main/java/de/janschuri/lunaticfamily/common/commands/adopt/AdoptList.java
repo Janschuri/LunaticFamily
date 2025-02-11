@@ -6,6 +6,7 @@ import de.janschuri.lunaticfamily.common.handler.Adoption;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.Placeholder;
 import de.janschuri.lunaticlib.Sender;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
@@ -49,8 +50,8 @@ public class AdoptList extends Subcommand {
             try {
                 page = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                sender.sendMessage(getMessage(NO_NUMBER_MK)
-                        .replaceText(getTextReplacementConfig("%input%", args[0])));
+                sender.sendMessage(getMessage(NO_NUMBER_MK,
+                placeholder("%input%", args[0])));
             }
         }
 
@@ -64,7 +65,7 @@ public class AdoptList extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(PAGE_MK, false)
+                getMessage(PAGE_MK.noPrefix())
         );
     }
 
@@ -77,7 +78,7 @@ public class AdoptList extends Subcommand {
     private Component getAdoptList(int page) {
         List<Adoption> adoptList = DatabaseRepository.getDatabase().find(Adoption.class).where().isNull("unadoptDate").setFirstRow(10*(page-1)).setMaxRows(10).findList();
 
-        Component msg = getMessage(headerMK, false);
+        Component msg = getMessage(headerMK.noPrefix());
 
         int index = 1 + (10*(page-1));
         Logger.debugLog("AdoptList: " + adoptList);
@@ -93,17 +94,14 @@ public class AdoptList extends Subcommand {
 
             Component heart = Component.text(" " + Adoption.getDefaultParentEmoji() + " ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));
 
-            TextReplacementConfig indexRpl = getTextReplacementConfig("%index%", String.valueOf(index));
-            TextReplacementConfig player1Rpl = getTextReplacementConfig("%parent%", player1Fam.getName());
-            TextReplacementConfig player2Rpl = getTextReplacementConfig("%child%", player2Fam.getName());
-            TextReplacementConfig heartRpl = TextReplacementConfig.builder().match("%emoji%").replacement(heart).build();
+            Placeholder heartRpl = placeholder("%emoji%", heart);
+
+            Placeholder indexRpl = placeholder("%index%", String.valueOf(index));
+            Placeholder player1Rpl = placeholder("%parent%", player1Fam.getName());
+            Placeholder player2Rpl = placeholder("%child%", player2Fam.getName());
 
             msg = msg.append(Component.newline())
-                    .append(getMessage(pairsMK, false)
-                            .replaceText(indexRpl)
-                            .replaceText(player1Rpl)
-                            .replaceText(player2Rpl)
-                            .replaceText(heartRpl));
+                    .append(getMessage(pairsMK.noPrefix(), heartRpl, indexRpl, player1Rpl, player2Rpl));
 
 
             index++;

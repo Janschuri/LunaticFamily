@@ -57,16 +57,16 @@ public class SiblingSet extends Subcommand {
         String player1Arg = args[0];
         UUID player1UUID = Utils.getUUIDFromArg(player1Arg);
         if (player1UUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Arg)));
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", player1Arg)));
             return true;
         }
 
         String player2Arg = args[1];
         UUID player2UUID = Utils.getUUIDFromArg(player2Arg);
         if (player2UUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player2Arg)));
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", player2Arg)));
             return true;
         }
 
@@ -78,16 +78,16 @@ public class SiblingSet extends Subcommand {
         player2Fam.update();
 
         if (player1Fam.isFamilyMember(player2Fam)) {
-            sender.sendMessage(getMessage(sameFamilyMK)
-                    .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
+            sender.sendMessage(getMessage(sameFamilyMK,
+                placeholder("%player1%", player1Fam.getName()),
+                placeholder("%player2%", player2Fam.getName())));
             return true;
         }
 
         if (player2Fam.isFamilyMember(player1Fam)) {
-            sender.sendMessage(getMessage(sameFamilyMK)
-                    .replaceText(getTextReplacementConfig("%player1%", player2Fam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", player1Fam.getName())));
+            sender.sendMessage(getMessage(sameFamilyMK,
+                placeholder("%player1%", player2Fam.getName()),
+                placeholder("%player2%", player1Fam.getName())));
             return true;
         }
 
@@ -98,27 +98,27 @@ public class SiblingSet extends Subcommand {
 
 
         if (player1Fam.isAdopted() && player2Fam.isAdopted()) {
-            sender.sendMessage(getMessage(setBothAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
+            sender.sendMessage(getMessage(setBothAdoptedMK,
+                placeholder("%player1%", player1Fam.getName()),
+                placeholder("%player2%", player2Fam.getName())));
             return true;
         }
 
         if (player1Fam.isAdopted()) {
-            sender.sendMessage(getMessage(isAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
+            sender.sendMessage(getMessage(isAdoptedMK,
+                placeholder("%player%", player1Fam.getName())));
             return true;
         }
 
         if (player2Fam.isAdopted()) {
-            sender.sendMessage(getMessage(isAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player%", player2Fam.getName())));
+            sender.sendMessage(getMessage(isAdoptedMK,
+                placeholder("%player%", player2Fam.getName())));
             return true;
         }
 
-        sender.sendMessage(getMessage(addedMK)
-                .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
+        sender.sendMessage(getMessage(addedMK,
+                placeholder("%player1%", player1Fam.getName()),
+                placeholder("%player2%", player2Fam.getName())));
         player1Fam.addSibling(player2Fam);
 
         return true;
@@ -127,8 +127,8 @@ public class SiblingSet extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK, false),
-                getMessage(PLAYER_NAME_MK, false)
+                getMessage(PLAYER_NAME_MK.noPrefix()),
+                getMessage(PLAYER_NAME_MK.noPrefix())
         );
     }
 

@@ -51,8 +51,8 @@ public class AdoptUnset extends Subcommand {
         String player1Arg = args[0];
         UUID childUUID = Utils.getUUIDFromArg(player1Arg);
         if (childUUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Arg)));
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", player1Arg)));
             return true;
         }
 
@@ -60,22 +60,22 @@ public class AdoptUnset extends Subcommand {
         FamilyPlayer childFam = getFamilyPlayer(childUUID);
 
         if (!childFam.isAdopted()) {
-            sender.sendMessage(getMessage(notAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player%", childFam.getName())));
+            sender.sendMessage(getMessage(notAdoptedMK,
+                placeholder("%player%", childFam.getName())));
             return true;
         }
         FamilyPlayer firstParentFam = childFam.getParents().get(0);
 
         if (firstParentFam.isMarried()) {
             FamilyPlayer secondParentFam = firstParentFam.getPartner();
-            sender.sendMessage(getMessage(unsetMK)
-                    .replaceText(getTextReplacementConfig("%child%", childFam.getName()))
-                    .replaceText(getTextReplacementConfig("%parent1%", firstParentFam.getName()))
-                    .replaceText(getTextReplacementConfig("%parent2%", secondParentFam.getName())));
+            sender.sendMessage(getMessage(unsetMK,
+                placeholder("%child%", childFam.getName()),
+                placeholder("%parent1%", firstParentFam.getName()),
+                placeholder("%parent2%", secondParentFam.getName())));
         } else {
-            sender.sendMessage(getMessage(unsetBySingleMK)
-                    .replaceText(getTextReplacementConfig("%child%", childFam.getName()))
-                    .replaceText(getTextReplacementConfig("%parent%", firstParentFam.getName())));
+            sender.sendMessage(getMessage(unsetBySingleMK,
+                placeholder("%child%", childFam.getName()),
+                placeholder("%parent%", firstParentFam.getName())));
         }
 
         firstParentFam.unadopt(childFam);
@@ -88,7 +88,7 @@ public class AdoptUnset extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK, false)
+                getMessage(PLAYER_NAME_MK.noPrefix())
         );
     }
 

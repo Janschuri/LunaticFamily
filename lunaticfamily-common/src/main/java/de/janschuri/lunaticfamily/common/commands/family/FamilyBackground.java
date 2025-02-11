@@ -33,7 +33,7 @@ public class FamilyBackground extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(backgroundMK, false)
+                getMessage(backgroundMK.noPrefix())
         );
     }
 

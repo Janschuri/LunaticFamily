@@ -20,10 +20,8 @@ public class MarrySet extends Subcommand {
     private final CommandMessageKey alreadyMarriedMK = new CommandMessageKey(this,"already_married");
     private final CommandMessageKey tooManyChildrenMK = new CommandMessageKey(this,"too_many_children");
     private final CommandMessageKey deniedMK = new CommandMessageKey(this,"denied");
-    private final CommandMessageKey confirmMK = new CommandMessageKey(this,"confirm");
     private final CommandMessageKey marriedMK = new CommandMessageKey(this,"married");
     private final CommandMessageKey sameFamilyMK = new CommandMessageKey(this,"same_family");
-
 
 
     @Override
@@ -47,13 +45,6 @@ public class MarrySet extends Subcommand {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
             return true;
         }
-        boolean force = false;
-
-        if (args.length > 2) {
-            if (args[2].equalsIgnoreCase("force")) {
-                force = true;
-            }
-        }
 
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
@@ -75,16 +66,18 @@ public class MarrySet extends Subcommand {
         String player1Arg = args[0];
         UUID player1UUID = Utils.getUUIDFromArg(player1Arg);
         if (player1UUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Arg)));
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK.noPrefix(),
+                    placeholder("%player%", player1Arg)
+            ));
             return true;
         }
 
         String player2Arg = args[1];
         UUID player2UUID = Utils.getUUIDFromArg(player2Arg);
         if (player2UUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player2Arg)));
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                    placeholder("%player%", player2Arg)
+            ));
             return true;
         }
 
@@ -101,37 +94,42 @@ public class MarrySet extends Subcommand {
         player2Fam.update();
 
         if (player1Fam.isFamilyMember(player2Fam)) {
-            sender.sendMessage(getMessage(sameFamilyMK)
-                    .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
+            sender.sendMessage(getMessage(sameFamilyMK,
+                placeholder("%player1%", player1Fam.getName()),
+                placeholder("%player2%", player2Fam.getName())
+            ));
             return true;
         }
 
         if (player2Fam.isFamilyMember(player1Fam)) {
-            sender.sendMessage(getMessage(sameFamilyMK)
-                    .replaceText(getTextReplacementConfig("%player1%", player2Fam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", player1Fam.getName())));
+            sender.sendMessage(getMessage(sameFamilyMK,
+                    placeholder("%player1%", player1Fam.getName()),
+                    placeholder("%player2%", player2Fam.getName())
+            ));
             return true;
         }
 
         if (player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() > 2) {
             int amountDiff = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() - 2;
-            sender.sendMessage(getMessage(tooManyChildrenMK)
-                    .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName()))
-                    .replaceText(getTextReplacementConfig("%amount%", Integer.toString(amountDiff))));
+            sender.sendMessage(getMessage(tooManyChildrenMK,
+                    placeholder("%player1%", player1Fam.getName()),
+                    placeholder("%player2%", player2Fam.getName()),
+                    placeholder("%amount%", Integer.toString(amountDiff))
+            ));
             return true;
         }
 
         if (player1Fam.isMarried()) {
-            sender.sendMessage(getMessage(alreadyMarriedMK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
+            sender.sendMessage(getMessage(alreadyMarriedMK,
+                    placeholder("%player%", player1Fam.getName())
+            ));
             return true;
         }
 
         if (player2Fam.isMarried()) {
-            sender.sendMessage(getMessage(alreadyMarriedMK)
-                    .replaceText(getTextReplacementConfig("%player%", player2Fam.getName())));
+            sender.sendMessage(getMessage(alreadyMarriedMK,
+                    placeholder("%player%", player2Fam.getName())
+            ));
             return true;
         }
 
@@ -145,17 +143,18 @@ public class MarrySet extends Subcommand {
         LunaticFamily.marryPriests.remove(player1UUID);
 
         player1Fam.marry(player2Fam);
-        sender.sendMessage(getMessage(marriedMK)
-                .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                .replaceText(getTextReplacementConfig("%player2%", player2Fam.getName())));
+        sender.sendMessage(getMessage(marriedMK,
+                placeholder("%player1%", player1Fam.getName()),
+                placeholder("%player2%", player2Fam.getName())
+        ));
         return true;
     }
 
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK, false),
-                getMessage(PLAYER_NAME_MK, false)
+                getMessage(PLAYER_NAME_MK.noPrefix()),
+                getMessage(PLAYER_NAME_MK.noPrefix())
         );
     }
 

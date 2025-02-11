@@ -61,10 +61,10 @@ public class FamilyCreate extends Subcommand {
 
             DecisionMessage decisionMessage = Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(createRandomMK, false),
-                    getMessage(CONFIRM_MK, false),
+                    getMessage(createRandomMK.noPrefix()),
+                    getMessage(CONFIRM_MK.noPrefix()),
                     "/family create " + playerName + " " + randomUUID + " confirm",
-                    getMessage(CANCEL_MK, false),
+                    getMessage(CANCEL_MK.noPrefix()),
                     "/family create " + playerName + " " + randomUUID + " cancel"
             );
 
@@ -91,8 +91,8 @@ public class FamilyCreate extends Subcommand {
         String playerUUIDArg = args[1];
 
         if (!Utils.isUUID(playerUUIDArg)) {
-            sender.sendMessage(getMessage(NO_UUID_MK)
-                    .replaceText(getTextReplacementConfig("%input%", playerUUIDArg)));
+            sender.sendMessage(getMessage(NO_UUID_MK,
+                placeholder("%input%", playerUUIDArg)));
             return true;
         }
 
@@ -102,17 +102,17 @@ public class FamilyCreate extends Subcommand {
             FamilyPlayer familyPlayer = getFamilyPlayer(playerUUID).setName(playerName);
             familyPlayer.save();
 
-            sender.sendMessage(getMessage(createdMK)
-                    .replaceText(getTextReplacementConfig("%uuid%", playerUUIDArg))
-                    .replaceText(getTextReplacementConfig("%name%", playerName))
+            sender.sendMessage(getMessage(createdMK,
+                placeholder("%uuid%", playerUUIDArg),
+                placeholder("%name%", playerName))
             );
             return true;
         }
 
         if (cancel) {
-            sender.sendMessage(getMessage(cancelMK)
-                    .replaceText(getTextReplacementConfig("%uuid%", playerUUIDArg))
-                    .replaceText(getTextReplacementConfig("%name%", playerName))
+            sender.sendMessage(getMessage(cancelMK,
+                placeholder("%uuid%", playerUUIDArg),
+                placeholder("%name%", playerName))
             );
             return true;
         }
@@ -120,13 +120,13 @@ public class FamilyCreate extends Subcommand {
 
         player.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
-                getMessage(confirmMK, false)
-                        .replaceText(getTextReplacementConfig("%uuid%", playerUUIDArg))
-                        .replaceText(getTextReplacementConfig("%name%", playerName))
+                getMessage(confirmMK.noPrefix(),
+                placeholder("%uuid%", playerUUIDArg),
+                placeholder("%name%", playerName))
                 ,
-                getMessage(CONFIRM_MK, false),
+                getMessage(CONFIRM_MK.noPrefix()),
                 "/family create " + playerName + " " + playerUUIDArg + " confirm",
-                getMessage(CANCEL_MK, false),
+                getMessage(CANCEL_MK.noPrefix()),
                 "/family create " + playerName + " " + playerUUIDArg + " cancel"),
                 LunaticFamily.getConfig().decisionAsInvGUI()
         );
@@ -138,7 +138,7 @@ public class FamilyCreate extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-            getMessage(PLAYER_NAME_MK, false),
+            getMessage(PLAYER_NAME_MK.noPrefix()),
             Component.text("UUID")
         );
     }

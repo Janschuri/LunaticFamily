@@ -5,6 +5,7 @@ import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.Placeholder;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
@@ -61,15 +62,16 @@ public class MarryGift extends Subcommand {
             PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
 
             if (!partner.isOnline()) {
-                player.sendMessage(getMessage(PLAYER_OFFLINE_MK)
-                        .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+                player.sendMessage(getMessage(PLAYER_OFFLINE_MK,
+                        placeholder("%player%", partner.getName())
+                ));
                 return true;
             }
 
             if (!Utils.isPlayerOnRegisteredServer(partner)) {
-                player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
-                        .replaceText(getTextReplacementConfig("%player%", partner.getName()))
-                        .replaceText(getTextReplacementConfig("%server%", partner.getServerName())));
+                player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK,
+                    placeholder("%player%", partner.getName())
+                ));
                 return true;
             }
 
@@ -82,10 +84,12 @@ public class MarryGift extends Subcommand {
                 byte[] item = player.getItemInMainHand();
                 if (partner.giveItemDrop(item)) {
                     player.removeItemInMainHand();
-                    player.sendMessage(getMessage(sentMK)
-                            .replaceText(getTextReplacementConfig("%player%", partner.getName())));
-                    partner.sendMessage(getMessage(gotMK)
-                            .replaceText(getTextReplacementConfig("%player%", player.getName())));
+                    player.sendMessage(getMessage(sentMK,
+                            placeholder("%player%", partner.getName())
+                    ));
+                    partner.sendMessage(getMessage(gotMK,
+                            placeholder("%player%", player.getName())
+                            ));
                 } else {
                     Logger.errorLog("Error while giving item to partner.");
                     Logger.errorLog("Item: " + item);

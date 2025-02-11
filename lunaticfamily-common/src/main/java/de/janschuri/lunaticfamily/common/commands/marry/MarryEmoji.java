@@ -132,7 +132,7 @@ public class MarryEmoji extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(COLOR_MK, false)
+                getMessage(COLOR_MK.noPrefix())
         );
     }
 

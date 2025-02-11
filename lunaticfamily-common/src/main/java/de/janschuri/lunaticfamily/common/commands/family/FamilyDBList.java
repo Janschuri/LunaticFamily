@@ -47,8 +47,8 @@ public class FamilyDBList extends Subcommand {
             try {
                 page = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                sender.sendMessage(getMessage(NO_NUMBER_MK)
-                        .replaceText(getTextReplacementConfig("%input%", args[0])));
+                sender.sendMessage(getMessage(NO_NUMBER_MK,
+                placeholder("%input%", args[0])));
             }
         }
 
@@ -62,7 +62,7 @@ public class FamilyDBList extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(PAGE_MK, false)
+                getMessage(PAGE_MK.noPrefix())
         );
     }
 
@@ -76,7 +76,7 @@ public class FamilyDBList extends Subcommand {
         Map<Integer, FamilyPlayer> players = DatabaseRepository.getDatabase().find(FamilyPlayer.class).findList().stream()
                 .collect(LinkedHashMap::new, (m, v) -> m.put(v.getId(), v), LinkedHashMap::putAll);
 
-        ComponentBuilder<TextComponent, TextComponent.Builder> msg = Component.text().append(getMessage(headerMK, false));
+        ComponentBuilder<TextComponent, TextComponent.Builder> msg = Component.text().append(getMessage(headerMK.noPrefix()));
 
         int i = 1;
 
@@ -105,10 +105,11 @@ public class FamilyDBList extends Subcommand {
 
             TextReplacementConfig nameRpl = TextReplacementConfig.builder().match("%name%").replacement(nameCmp).build();
 
-            Component row = getMessage(playersMK, false)
-                    .replaceText(nameRpl)
-                    .replaceText(getTextReplacementConfig("%gender%", gender))
-                    .replaceText(getTextReplacementConfig("%index%",  String.valueOf(page*i)));
+            Component row = getMessage(playersMK.noPrefix(),
+                placeholder("%name%", nameCmp),
+                placeholder("%gender%", gender),
+                placeholder("%index%", String.valueOf(page*i))
+            );
 
             Component delete = Component.text(" [X]")
                     .clickEvent(ClickEvent.runCommand("/family delete " + uuid))

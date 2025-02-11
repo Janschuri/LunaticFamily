@@ -82,10 +82,10 @@ public class MarryDivorce extends Subcommand {
         if (!confirm) {
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(confirmMK, false),
-                    LunaticFamily.getLanguageConfig().getMessage(CONFIRM_MK, false),
+                    getMessage(confirmMK.noPrefix()),
+                    LunaticFamily.getLanguageConfig().getMessage(CONFIRM_MK.noPrefix()),
                     "/family marry divorce confirm",
-                    LunaticFamily.getLanguageConfig().getMessage(CANCEL_MK, false),
+                    LunaticFamily.getLanguageConfig().getMessage(CANCEL_MK.noPrefix()),
                     "/family marry divorce cancel"),
                     LunaticFamily.getConfig().decisionAsInvGUI()
             );
@@ -100,14 +100,14 @@ public class MarryDivorce extends Subcommand {
         PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
 
         if (!force && !Utils.hasEnoughMoney(player.getServerName(), partnerUUID, WithdrawKey.MARRY_DIVORCE_LEFT_PLAYER)) {
-            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", playerFam.getPartner().getName())));
+            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", playerFam.getPartner().getName())));
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(TAKE_PAYMENT_CONFIRM_MK, false),
-                    LunaticFamily.getLanguageConfig().getMessage(CONFIRM_MK, false),
+                    getMessage(TAKE_PAYMENT_CONFIRM_MK.noPrefix()),
+                    LunaticFamily.getLanguageConfig().getMessage(CONFIRM_MK.noPrefix()),
                     "/family marry divorce confirm force",
-                    LunaticFamily.getLanguageConfig().getMessage(CANCEL_MK, false),
+                    LunaticFamily.getLanguageConfig().getMessage(CANCEL_MK.noPrefix()),
                     "/family marry divorce cancel"),
                     LunaticFamily.getConfig().decisionAsInvGUI()
             );

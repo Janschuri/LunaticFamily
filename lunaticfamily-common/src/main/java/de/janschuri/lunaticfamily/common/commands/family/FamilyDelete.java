@@ -73,8 +73,8 @@ public class FamilyDelete extends Subcommand {
         String playerArg = args[0];
 
         if (!Utils.isUUID(playerArg)) {
-            sender.sendMessage(getMessage(NO_UUID_MK)
-                    .replaceText(getTextReplacementConfig("%input%", playerArg)));
+            sender.sendMessage(getMessage(NO_UUID_MK,
+                placeholder("%input%", playerArg)));
             return true;
         }
 
@@ -100,22 +100,25 @@ public class FamilyDelete extends Subcommand {
 
             DatabaseRepository.getDatabase().delete(playerFam);
 
-            sender.sendMessage(getMessage(deletedMK).replaceText(getTextReplacementConfig("%uuid%", playerArg)));
+            sender.sendMessage(getMessage(deletedMK,
+                placeholder("%uuid%", playerArg)));
             return true;
         }
 
         if (cancel) {
-            sender.sendMessage(getMessage(cancelMK).replaceText(getTextReplacementConfig("%uuid%", playerArg)));
+            sender.sendMessage(getMessage(cancelMK,
+                placeholder("%uuid%", playerArg)));
             return true;
         }
 
 
         player.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
-                getMessage(confirmMK, false).replaceText(getTextReplacementConfig("%uuid%", playerArg)),
-                getMessage(CONFIRM_MK, false),
+                getMessage(confirmMK.noPrefix(),
+                placeholder("%uuid%", playerArg)),
+                getMessage(CONFIRM_MK.noPrefix()),
                 "/family delete " + playerArg + " confirm",
-                getMessage(CANCEL_MK, false),
+                getMessage(CANCEL_MK.noPrefix()),
                 "/family delete " + playerArg + " cancel"),
                 LunaticFamily.getConfig().decisionAsInvGUI()
         );

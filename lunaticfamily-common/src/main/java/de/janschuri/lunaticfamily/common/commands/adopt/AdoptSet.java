@@ -83,25 +83,25 @@ public class AdoptSet extends Subcommand {
         }
 
         if (cancel) {
-            sender.sendMessage(getMessage(cancelMK)
-                    .replaceText(getTextReplacementConfig("%parent%", args[0]))
-                    .replaceText(getTextReplacementConfig("%child%", args[1])));
+            sender.sendMessage(getMessage(cancelMK,
+                placeholder("%parent%", args[0]),
+                placeholder("%child%", args[1])));
             return true;
         }
 
         String firstParentArg = args[0];
         UUID firstParentUUID = Utils.getUUIDFromArg(firstParentArg);
         if (firstParentUUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", firstParentArg)));
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", firstParentArg)));
             return true;
         }
 
         String childArg = args[1];
         UUID childUUID = Utils.getUUIDFromArg(childArg);
         if (childUUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", childArg)));
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", childArg)));
             return true;
         }
 
@@ -120,38 +120,38 @@ public class AdoptSet extends Subcommand {
         firstParentFam.update();
 
         if (firstParentFam.isFamilyMember(childFam)) {
-            sender.sendMessage(getMessage(sameFamilyMK)
-                    .replaceText(getTextReplacementConfig("%player1%", firstParentFam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", child.getName())));
+            sender.sendMessage(getMessage(sameFamilyMK,
+                placeholder("%player1%", firstParentFam.getName()),
+                placeholder("%player2%", child.getName())));
             return true;
         }
 
         if (!firstParentFam.isMarried() && !LunaticFamily.getConfig().isAllowSingleAdopt()) {
-            sender.sendMessage(getMessage(noSingleAdoptMK)
-                    .replaceText(getTextReplacementConfig("%player%", firstParentFam.getName())));
+            sender.sendMessage(getMessage(noSingleAdoptMK,
+                placeholder("%player%", firstParentFam.getName())));
             return true;
         }
 
         if (childFam.isAdopted()) {
-            sender.sendMessage(getMessage(alreadyAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%child%", childFam.getName())));
+            sender.sendMessage(getMessage(alreadyAdoptedMK,
+                placeholder("%child%", childFam.getName())));
             return true;
         }
 
         if (firstParentFam.getChildrenAmount() > 1) {
-            sender.sendMessage(getMessage(adoptLimitMK)
-                    .replaceText(getTextReplacementConfig("%player%", firstParentFam.getName())));
+            sender.sendMessage(getMessage(adoptLimitMK,
+                placeholder("%player%", firstParentFam.getName())));
             return true;
         }
 
         if (childFam.hasSiblings() && !confirm) {
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(hasSiblingMK, false)
-                            .replaceText(getTextReplacementConfig("%player%", childFam.getName())),
-                    getMessage(CONFIRM_MK, false),
+                    getMessage(hasSiblingMK.noPrefix(),
+                placeholder("%player%", childFam.getName())),
+                    getMessage(CONFIRM_MK.noPrefix()),
                     "/family adopt set " + firstParentFam.getName() + " " + childFam.getName() + " force confirm",
-                    getMessage(CANCEL_MK, false),
+                    getMessage(CANCEL_MK.noPrefix()),
                     "/family adopt set " + firstParentFam.getName() + " " + child.getName() + "force cancel"),
                     LunaticFamily.getConfig().decisionAsInvGUI()
             );
@@ -159,22 +159,22 @@ public class AdoptSet extends Subcommand {
         }
 
         if (childFam.hasSiblings() && firstParentFam.getChildrenAmount() > 0) {
-            sender.sendMessage(getMessage(hasSiblingLimitMK)
-                    .replaceText(getTextReplacementConfig("%player1%", childFam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", firstParentFam.getName())));
+            sender.sendMessage(getMessage(hasSiblingLimitMK,
+                placeholder("%player1%", childFam.getName()),
+                placeholder("%player2%", firstParentFam.getName())));
             return true;
         }
 
         if (!firstParentFam.isMarried()) {
-            sender.sendMessage(getMessage(setBySingleMK)
-                    .replaceText(getTextReplacementConfig("%child%", childFam.getName()))
-                    .replaceText(getTextReplacementConfig("%parent%", firstParentFam.getName())));
+            sender.sendMessage(getMessage(setBySingleMK,
+                placeholder("%child%", childFam.getName()),
+                placeholder("%parent%", firstParentFam.getName())));
         } else {
             FamilyPlayer secondParentFam = firstParentFam.getPartner();
-            sender.sendMessage(getMessage(setMK)
-                    .replaceText(getTextReplacementConfig("%child%", childFam.getName()))
-                    .replaceText(getTextReplacementConfig("%parent1%", firstParentFam.getName()))
-                    .replaceText(getTextReplacementConfig("%parent2%", secondParentFam.getName())));
+            sender.sendMessage(getMessage(setMK,
+                placeholder("%child%", childFam.getName()),
+                placeholder("%parent1%", firstParentFam.getName()),
+                placeholder("%parent2%", secondParentFam.getName())));
         }
 
         LunaticFamily.adoptRequests.remove(childUUID);
@@ -188,8 +188,8 @@ public class AdoptSet extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK, false),
-                getMessage(PLAYER_NAME_MK, false)
+                getMessage(PLAYER_NAME_MK.noPrefix()),
+                getMessage(PLAYER_NAME_MK.noPrefix())
         );
     }
 

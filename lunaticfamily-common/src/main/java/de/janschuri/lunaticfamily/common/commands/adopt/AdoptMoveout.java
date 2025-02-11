@@ -86,10 +86,10 @@ public class AdoptMoveout extends Subcommand {
         if (!confirm) {
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(confirmMK, false),
-                    getMessage(CONFIRM_MK, false),
+                    getMessage(confirmMK.noPrefix()),
+                    getMessage(CONFIRM_MK.noPrefix()),
                     "/family adopt moveout confirm",
-                    getMessage(CANCEL_MK, false),
+                    getMessage(CANCEL_MK.noPrefix()),
                     "/family adopt moveout cancel"),
                     LunaticFamily.getConfig().decisionAsInvGUI()
             );
@@ -105,13 +105,14 @@ public class AdoptMoveout extends Subcommand {
         PlayerSender firstParent = LunaticLib.getPlatform().getPlayerSender(parent1UUID);
 
         if (!force && playerFam.getParents().size() == 2 && !Utils.hasEnoughMoney(player.getServerName(), parent1UUID, 0.5, WithdrawKey.ADOPT_MOVEOUT_PARENT)) {
-            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK).replaceText(getTextReplacementConfig("%player%", playerFam.getParents().get(1).getName())));
+            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", playerFam.getParents().get(1).getName())));
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(TAKE_PAYMENT_CONFIRM_MK, false),
-                    getMessage(CONFIRM_MK, false),
+                    getMessage(TAKE_PAYMENT_CONFIRM_MK.noPrefix()),
+                    getMessage(CONFIRM_MK.noPrefix()),
                     "/family adopt moveout confirm force",
-                    getMessage(CANCEL_MK, false),
+                    getMessage(CANCEL_MK.noPrefix()),
                     "/family adopt moveout cancel"),
                     LunaticFamily.getConfig().decisionAsInvGUI()
             );
@@ -119,13 +120,14 @@ public class AdoptMoveout extends Subcommand {
         }
 
         if (!force && playerFam.getParents().size() == 1 && !Utils.hasEnoughMoney(player.getServerName(), parent1UUID, WithdrawKey.ADOPT_MOVEOUT_PARENT)) {
-            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK).replaceText(getTextReplacementConfig("%player%", playerFam.getParents().get(0).getName())));
+            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", playerFam.getParents().get(0).getName())));
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(TAKE_PAYMENT_CONFIRM_MK, false),
-                    getMessage(CONFIRM_MK, false),
+                    getMessage(TAKE_PAYMENT_CONFIRM_MK.noPrefix()),
+                    getMessage(CONFIRM_MK.noPrefix()),
                     "/family adopt moveout confirm force",
-                    getMessage(CANCEL_MK, false),
+                    getMessage(CANCEL_MK.noPrefix()),
                     "/family adopt moveout cancel"),
                     LunaticFamily.getConfig().decisionAsInvGUI()
             );
@@ -137,13 +139,14 @@ public class AdoptMoveout extends Subcommand {
             PlayerSender secondParent = LunaticLib.getPlatform().getPlayerSender(parent2UUID);
 
             if (!force && !Utils.hasEnoughMoney(player.getServerName(), parent2UUID, 0.5, WithdrawKey.ADOPT_MOVEOUT_PARENT)) {
-                player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK).replaceText(getTextReplacementConfig("%player%", playerFam.getParents().get(1).getName())));
+                player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", playerFam.getParents().get(1).getName())));
                 player.sendMessage(Utils.getClickableDecisionMessage(
                                 getPrefix(),
-                                getMessage(TAKE_PAYMENT_CONFIRM_MK, false),
-                                getMessage(CONFIRM_MK, false),
+                                getMessage(TAKE_PAYMENT_CONFIRM_MK.noPrefix()),
+                                getMessage(CONFIRM_MK.noPrefix()),
                                 "/family adopt moveout confirm force",
-                                getMessage(CANCEL_MK, false),
+                                getMessage(CANCEL_MK.noPrefix()),
                                 "/family adopt moveout cancel"),
                         LunaticFamily.getConfig().decisionAsInvGUI()
                 );
@@ -167,11 +170,13 @@ public class AdoptMoveout extends Subcommand {
         sender.sendMessage(getMessage(moveoutMK));
 
 
-        firstParent.sendMessage(getMessage(childMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+        firstParent.sendMessage(getMessage(childMK,
+                placeholder("%player%", playerFam.getName())));
         if (playerFam.getParents().size() > 1) {
             UUID parent2UUID = playerFam.getParents().get(1).getUUID();
             PlayerSender secondParent = LunaticLib.getPlatform().getPlayerSender(parent2UUID);
-            secondParent.sendMessage(getMessage(childMK).replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+            secondParent.sendMessage(getMessage(childMK,
+                placeholder("%player%", playerFam.getName())));
         }
 
         if (force) {

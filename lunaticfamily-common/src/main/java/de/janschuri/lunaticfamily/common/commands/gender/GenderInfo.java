@@ -58,8 +58,8 @@ public class GenderInfo extends Subcommand {
             PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
-            sender.sendMessage(getMessage(infoMK)
-                    .replaceText(getTextReplacementConfig("%gender%", getGenderLang(playerFam.getGender()))));
+            sender.sendMessage(getMessage(infoMK,
+                placeholder("%gender%", getGenderLang(playerFam.getGender()))));
             return true;
         }
 
@@ -73,8 +73,8 @@ public class GenderInfo extends Subcommand {
             playerUUID = UUID.fromString(playerArg);
 
             if (DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uniqueId", playerUUID).findCount() == 0) {
-                sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                        .replaceText(getTextReplacementConfig("%player%", playerArg)));
+                sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", playerArg)));
                 return true;
             }
 
@@ -83,22 +83,22 @@ public class GenderInfo extends Subcommand {
             player = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", playerArg).findOne();
 
             if (player == null) {
-                sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                        .replaceText(getTextReplacementConfig("%player%", playerArg)));
+                sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", playerArg)));
                 return true;
             }
         }
 
-        sender.sendMessage(getMessage(infoOthersMK)
-                .replaceText(getTextReplacementConfig("%player%", player.getName()))
-                .replaceText(getTextReplacementConfig("%gender%", getGenderLang(player.getGender()))));
+        sender.sendMessage(getMessage(infoOthersMK,
+                placeholder("%player%", player.getName()),
+                placeholder("%gender%", getGenderLang(player.getGender()))));
         return true;
     }
 
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK, false)
+                getMessage(PLAYER_NAME_MK.noPrefix())
         );
     }
 

@@ -50,7 +50,7 @@ public class SiblingPropose extends Subcommand {
 
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!(sender instanceof PlayerSender)) {
+        if (!(sender instanceof PlayerSender player)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
             return true;
         }
@@ -60,19 +60,20 @@ public class SiblingPropose extends Subcommand {
             return true;
         }
 
-        PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
         FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         if (playerFam.hasSiblings()) {
-            sender.sendMessage(getMessage(hasSiblingMK)
-                    .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+            sender.sendMessage(getMessage(hasSiblingMK,
+                    placeholder("%player%", playerFam.getName())
+            ));
             return true;
         }
 
         if (playerFam.isAdopted()) {
-            sender.sendMessage(getMessage(isAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+            sender.sendMessage(getMessage(isAdoptedMK,
+                    placeholder("%player%", playerFam.getName())
+            ));
             return true;
         }
 
@@ -84,30 +85,33 @@ public class SiblingPropose extends Subcommand {
 
         String siblingName = args[0];
 
-        UUID siblingUUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", siblingName).findOne().getUUID();
+        FamilyPlayer siblingFam = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", siblingName).findOneOrEmpty().orElse(null);
 
-        if (siblingUUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", siblingName)));
+        if (siblingFam == null) {
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                    placeholder("%player%", siblingName)
+            ));
             return true;
         }
 
+        UUID siblingUUID = siblingFam.getUUID();
         PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
 
         if (!sibling.isOnline()) {
-            sender.sendMessage(getMessage(PLAYER_OFFLINE_MK)
-                    .replaceText(getTextReplacementConfig("%player%", sibling.getName())));
+            sender.sendMessage(getMessage(PLAYER_OFFLINE_MK,
+                    placeholder("%player%", sibling.getName())
+            ));
             return true;
         }
 
         if (!Utils.isPlayerOnRegisteredServer(sibling)) {
-            player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
-                    .replaceText(getTextReplacementConfig("%player%", sibling.getName()))
-                    .replaceText(getTextReplacementConfig("%server%", sibling.getServerName())));
+            player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK,
+                    placeholder("%player%", sibling.getName()),
+                    placeholder("%server%", sibling.getServerName())
+            ));
             return true;
         }
 
-        FamilyPlayer siblingFam = getFamilyPlayer(siblingUUID);
         if (playerFam.getId() == siblingFam.getId()) {
             sender.sendMessage(getMessage(selfRequestMK));
             return true;
@@ -116,28 +120,32 @@ public class SiblingPropose extends Subcommand {
         playerFam.update();
 
         if (playerFam.isFamilyMember(siblingFam)) {
-            sender.sendMessage(getMessage(familyRequestMK)
-                    .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
+            sender.sendMessage(getMessage(familyRequestMK,
+                    placeholder("%player%", siblingFam.getName())
+            ));
             return true;
         }
 
         siblingFam.update();
 
         if (siblingFam.isFamilyMember(playerFam)) {
-            sender.sendMessage(getMessage(familyRequestMK)
-                    .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
+            sender.sendMessage(getMessage(familyRequestMK,
+                    placeholder("%player%", siblingFam.getName())
+            ));
             return true;
         }
 
         if (siblingFam.isAdopted()) {
-            sender.sendMessage(getMessage(playerIsAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
+            sender.sendMessage(getMessage(playerIsAdoptedMK,
+                    placeholder("%player%", siblingFam.getName())
+            ));
             return true;
         }
 
         if (LunaticFamily.siblingRequests.containsKey(siblingUUID)) {
-            sender.sendMessage(getMessage(openRequestMK)
-                    .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
+            sender.sendMessage(getMessage(openRequestMK,
+                    placeholder("%player%", siblingFam.getName())
+            ));
             return true;
         }
 
@@ -147,41 +155,45 @@ public class SiblingPropose extends Subcommand {
         }
 
         if (!player.isSameServer(sibling.getUniqueId()) && LunaticFamily.getConfig().getSiblingProposeRange() >= 0) {
-            sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK)
-                    .replaceText(getTextReplacementConfig("%player%", sibling.getName())));
+            sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK,
+                    placeholder("%player%", sibling.getName())
+            ));
             return true;
         }
 
         if (!player.isInRange(sibling.getUniqueId(), LunaticFamily.getConfig().getSiblingProposeRange())) {
-            player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", sibling.getName())));
+            player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK,
+                    placeholder("%player%", sibling.getName())
+            ));
             return true;
         }
 
         sibling.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
-                getMessage(requestMK, false)
-                        .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())),
-                getMessage(ACCEPT_MK, false),
+                getMessage(requestMK.noPrefix(), placeholder("%player%", playerFam.getName())),
+                getMessage(ACCEPT_MK.noPrefix()),
                 "/family sibling accept",
-                getMessage(DENY_MK, false),
+                getMessage(DENY_MK.noPrefix()),
                 "/family sibling deny"),
                 LunaticFamily.getConfig().decisionAsInvGUI()
         );
 
         LunaticFamily.siblingRequests.put(siblingUUID, playerUUID);
 
-        sender.sendMessage(getMessage(requestSentMK)
-                .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
+        sender.sendMessage(getMessage(requestSentMK,
+                placeholder("%player%", siblingFam.getName())
+        ));
 
         Runnable runnable = () -> {
             if (LunaticFamily.siblingRequests.containsKey(siblingUUID)) {
                 LunaticFamily.siblingRequests.remove(siblingUUID);
-                sibling.sendMessage(getMessage(requestExpiredMK)
-                        .replaceText(getTextReplacementConfig("%player%", player.getName())));
+                sibling.sendMessage(getMessage(requestExpiredMK,
+                        placeholder("%player%", playerFam.getName())
+                ));
 
-                player.sendMessage(getMessage(requestSentExpiredMK)
-                        .replaceText(getTextReplacementConfig("%player%", sibling.getName())));
+                player.sendMessage(getMessage(requestSentExpiredMK,
+                        placeholder("%player%", sibling.getName())
+                ));
             }
         };
 
@@ -195,7 +207,7 @@ public class SiblingPropose extends Subcommand {
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK, false)
+                getMessage(PLAYER_NAME_MK.noPrefix())
         );
     }
 

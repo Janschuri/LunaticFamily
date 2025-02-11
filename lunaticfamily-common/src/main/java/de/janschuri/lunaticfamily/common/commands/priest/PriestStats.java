@@ -44,7 +44,7 @@ public class PriestStats extends Subcommand {
 
         ComponentBuilder msg = Component.text();
 
-        msg.append(getMessage(headerMK, false));
+        msg.append(getMessage(headerMK.noPrefix()));
 
         PlayerSender player = (PlayerSender) sender;
         FamilyPlayer playerFam = getFamilyPlayer(player.getUniqueId());
@@ -56,10 +56,10 @@ public class PriestStats extends Subcommand {
         String percentageAdoption = Utils.getPercentageAsString(activeAdoptions, totalAdoptions);
 
         msg.append(Component.newline());
-        msg.append(getMessage(adoptionsMK, false)
-                .replaceText(getTextReplacementConfig("%total%", String.valueOf(totalAdoptions)))
-                .replaceText(getTextReplacementConfig("%active%", String.valueOf(activeAdoptions)))
-                .replaceText(getTextReplacementConfig("%percentage%", percentageAdoption)));
+        msg.append(getMessage(adoptionsMK.noPrefix(),
+                placeholder("%total%", String.valueOf(totalAdoptions)),
+                placeholder("%active%", String.valueOf(activeAdoptions)),
+                placeholder("%percentage%", percentageAdoption)));
 
 
         int totalMarriages = playerFam.getMarriagesAsPriest().size();
@@ -69,10 +69,10 @@ public class PriestStats extends Subcommand {
         String percentageMarriage = Utils.getPercentageAsString(activeMarriages, totalMarriages);
 
         msg.append(Component.newline());
-        msg.append(getMessage(marriagesMK, false)
-                .replaceText(getTextReplacementConfig("%total%", String.valueOf(totalMarriages)))
-                .replaceText(getTextReplacementConfig("%active%", String.valueOf(activeMarriages)))
-                .replaceText(getTextReplacementConfig("%percentage%", percentageMarriage)));
+        msg.append(getMessage(marriagesMK.noPrefix(),
+                placeholder("%total%", String.valueOf(totalMarriages)),
+                placeholder("%active%", String.valueOf(activeMarriages)),
+                placeholder("%percentage%", percentageMarriage)));
 
         int totalSiblings = playerFam.getSiblinghoodsAsPriest().size();
         int activeSiblings = playerFam.getSiblinghoodsAsPriest().stream()
@@ -81,10 +81,10 @@ public class PriestStats extends Subcommand {
         String percentageSiblings = Utils.getPercentageAsString(activeSiblings, totalSiblings);
 
         msg.append(Component.newline());
-        msg.append(getMessage(siblingsMK, false)
-                .replaceText(getTextReplacementConfig("%total%", String.valueOf(totalSiblings)))
-                .replaceText(getTextReplacementConfig("%active%", String.valueOf(activeSiblings)))
-                .replaceText(getTextReplacementConfig("%percentage%", percentageSiblings)));
+        msg.append(getMessage(siblingsMK.noPrefix(),
+                placeholder("%total%", String.valueOf(totalSiblings)),
+                placeholder("%active%", String.valueOf(activeSiblings)),
+                placeholder("%percentage%", percentageSiblings)));
 
 
         player.sendMessage(msg.build());

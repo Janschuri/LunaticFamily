@@ -85,16 +85,16 @@ public class SiblingAccept extends Subcommand {
         PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
 
         if (playerFam.isAdopted()) {
-            player.sendMessage(getMessage(isAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player1%", playerFam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", siblingFam.getName())));
+            player.sendMessage(getMessage(isAdoptedMK,
+                placeholder("%player1%", playerFam.getName()),
+                placeholder("%player2%", siblingFam.getName())));
             return true;
         }
 
         if (siblingFam.isAdopted()) {
-            player.sendMessage(getMessage(isAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player1%", siblingFam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", playerFam.getName())));
+            player.sendMessage(getMessage(isAdoptedMK,
+                placeholder("%player1%", siblingFam.getName()),
+                placeholder("%player2%", playerFam.getName())));
             return true;
         }
 
@@ -102,13 +102,13 @@ public class SiblingAccept extends Subcommand {
         PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
 
         if (!Utils.hasEnoughMoney(player.getServerName(), siblingUUID, WithdrawKey.SIBLING_PROPOSING_PLAYER)) {
-            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", siblingFam.getName()))
+            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", siblingFam.getName()))
             );
             return true;
         } else if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.SIBLING_PROPOSED_PLAYER)) {
-            player.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player.getName()))
+            player.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", player.getName()))
             );
             return true;
         }
@@ -120,22 +120,22 @@ public class SiblingAccept extends Subcommand {
             if (LunaticFamily.siblingRequests.containsKey(siblingUUID)) {
                 LunaticFamily.siblingRequests.remove(siblingUUID);
                 LunaticFamily.siblingPriests.remove(siblingUUID);
-                priest.sendMessage(getMessage(priestRequestExpiredPriestMK)
-                        .replaceText(getTextReplacementConfig("%player1%", player.getName()))
-                        .replaceText(getTextReplacementConfig("%player2%", sibling.getName())));
-                player.sendMessage(getMessage(priestRequestExpiredPlayerMK)
-                        .replaceText(getTextReplacementConfig("%player%", sibling.getName())));
-                sibling.sendMessage(getMessage(priestRequestExpiredPlayerMK)
-                        .replaceText(getTextReplacementConfig("%player%", player.getName())));
+                priest.sendMessage(getMessage(priestRequestExpiredPriestMK,
+                placeholder("%player1%", player.getName()),
+                placeholder("%player2%", sibling.getName())));
+                player.sendMessage(getMessage(priestRequestExpiredPlayerMK,
+                placeholder("%player%", sibling.getName())));
+                sibling.sendMessage(getMessage(priestRequestExpiredPlayerMK,
+                placeholder("%player%", player.getName())));
             }
         };
 
         Utils.scheduleTask(runnable, 30L, TimeUnit.SECONDS);
 
-        player.chat(getLanguageConfig().getMessageAsString(priestYesMK, false));
+        player.chat(getLanguageConfig().getMessageAsString(priestYesMK.noPrefix()));
 
 
-        priest.chat(getLanguageConfig().getMessageAsString(priestRequestMK, false)
+        priest.chat(getLanguageConfig().getMessageAsString(priestRequestMK.noPrefix())
                 .replace("%player1%", siblingFam.getName())
                 .replace("%player2%", playerFam.getName()));
 
@@ -143,9 +143,9 @@ public class SiblingAccept extends Subcommand {
         sibling.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
                 Component.empty(),
-                getMessage(priestYesMK, false),
+                getMessage(priestYesMK.noPrefix()),
                 "/family sibling accept",
-                getMessage(priestNoMK, false),
+                getMessage(priestNoMK.noPrefix()),
                 "/family sibling deny"),
                 LunaticFamily.getConfig().decisionAsInvGUI()
         );
@@ -162,28 +162,28 @@ public class SiblingAccept extends Subcommand {
         PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
 
         if (playerFam.isAdopted()) {
-            player.sendMessage(getMessage(isAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player1%", playerFam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", siblingFam.getName())));
+            player.sendMessage(getMessage(isAdoptedMK,
+                placeholder("%player1%", playerFam.getName()),
+                placeholder("%player2%", siblingFam.getName())));
             return true;
         }
 
         if (siblingFam.isAdopted()) {
-            player.sendMessage(getMessage(isAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player1%", siblingFam.getName()))
-                    .replaceText(getTextReplacementConfig("%player2%", playerFam.getName())));
+            player.sendMessage(getMessage(isAdoptedMK,
+                placeholder("%player1%", siblingFam.getName()),
+                placeholder("%player2%", playerFam.getName())));
             return true;
         }
 
         if (!sibling.isOnline()) {
-            player.sendMessage(getMessage(PLAYER_OFFLINE_MK)
-                    .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
+            player.sendMessage(getMessage(PLAYER_OFFLINE_MK,
+                placeholder("%player%", siblingFam.getName())));
             return true;
         }
 
         if (!Utils.isPlayerOnRegisteredServer(sibling)) {
-            player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
-                    .replaceText(getTextReplacementConfig("%player%", sibling.getName().replace("%server%", sibling.getServerName()))));
+            player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK,
+                placeholder("%player%", sibling.getName().replace("%server%", sibling.getServerName()))));
             return true;
         }
 
@@ -201,14 +201,14 @@ public class SiblingAccept extends Subcommand {
         FamilyPlayer siblingFam = getFamilyPlayer(siblingUUID);
 
         if (!Utils.hasEnoughMoney(player.getServerName(), siblingUUID, WithdrawKey.SIBLING_PROPOSED_PLAYER)) {
-            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", siblingFam.getName())));
+            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", siblingFam.getName())));
             return true;
         }
 
         if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.SIBLING_PROPOSED_PLAYER)) {
-            player.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player.getName())));
+            player.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", player.getName())));
         }
 
         player.sendMessage(getMessage(completeMK));
@@ -242,22 +242,22 @@ public class SiblingAccept extends Subcommand {
         PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
 
         if (!Utils.hasEnoughMoney(player.getServerName(), priestUUID, WithdrawKey.PRIEST_SIBLING)) {
-            player.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", priestFam.getName()))
+            player.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", priestFam.getName()))
             );
             return true;
         }
 
         if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.PRIEST_SIBLING_PLAYER)) {
-            player.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player.getName()))
+            player.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", player.getName()))
             );
             return true;
         }
 
         if (!Utils.hasEnoughMoney(player.getServerName(), siblingUUID, WithdrawKey.PRIEST_SIBLING_PLAYER)) {
-            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", siblingFam.getName()))
+            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK,
+                placeholder("%player%", siblingFam.getName()))
             );
             return true;
         }
@@ -266,9 +266,9 @@ public class SiblingAccept extends Subcommand {
         Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.PRIEST_SIBLING_PLAYER);
         Utils.withdrawMoney(player.getServerName(), siblingUUID, WithdrawKey.PRIEST_SIBLING_PLAYER);
 
-        player.chat(getLanguageConfig().getMessageAsString(priestYesMK, false));
+        player.chat(getLanguageConfig().getMessageAsString(priestYesMK.noPrefix()));
 
-        priest.chat(getLanguageConfig().getMessageAsString(priestCompleteMK, false)
+        priest.chat(getLanguageConfig().getMessageAsString(priestCompleteMK.noPrefix())
                 .replace("%player1%", playerFam.getName())
                 .replace("%player2%", siblingFam.getName()));
 

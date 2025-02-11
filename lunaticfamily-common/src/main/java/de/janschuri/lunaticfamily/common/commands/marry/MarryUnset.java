@@ -49,30 +49,30 @@ public class MarryUnset extends Subcommand {
         String player1Arg = args[0];
         UUID player1UUID = Utils.getUUIDFromArg(player1Arg);
         if (player1UUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Arg)));
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", player1Arg)));
             return true;
         }
 
         FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
 
         if (!player1Fam.isMarried()) {
-            sender.sendMessage(getMessage(noPartnerMK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Fam.getName())));
+            sender.sendMessage(getMessage(noPartnerMK,
+                placeholder("%player%", player1Fam.getName())));
             return true;
         }
         FamilyPlayer partnerFam = player1Fam.getPartner();
         player1Fam.divorce();
-        sender.sendMessage(getMessage(divorcedMK)
-                .replaceText(getTextReplacementConfig("%player1%", player1Fam.getName()))
-                .replaceText(getTextReplacementConfig("%player2%", partnerFam.getName())));
+        sender.sendMessage(getMessage(divorcedMK,
+                placeholder("%player1%", player1Fam.getName()),
+                placeholder("%player2%", partnerFam.getName())));
         return true;
     }
 
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK, false)
+                getMessage(PLAYER_NAME_MK.noPrefix())
         );
     }
 

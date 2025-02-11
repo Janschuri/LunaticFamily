@@ -93,10 +93,10 @@ public class SiblingUnsibling extends Subcommand {
         if (!confirm) {
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(confirmMK, false),
-                    getMessage(CONFIRM_MK, false),
+                    getMessage(confirmMK.noPrefix()),
+                    getMessage(CONFIRM_MK.noPrefix()),
                     "/family sibling unsibling confirm",
-                    getMessage(CANCEL_MK, false),
+                    getMessage(CANCEL_MK.noPrefix()),
                     "/family sibling unsibling cancel"),
                     LunaticFamily.getConfig().decisionAsInvGUI()
             );
@@ -109,14 +109,15 @@ public class SiblingUnsibling extends Subcommand {
         }
 
         if (!force && !Utils.hasEnoughMoney(player.getServerName(), siblingUUID, WithdrawKey.SIBLING_UNSIBLING_LEFT_PLAYER)) {
-            sender.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", playerFam.getSibling().getName())));
+            sender.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK,
+                    placeholder("%player%", sibling.getName())
+                    ));
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(TAKE_PAYMENT_CONFIRM_MK, false),
-                    getMessage(CONFIRM_MK, false),
+                    getMessage(TAKE_PAYMENT_CONFIRM_MK.noPrefix()),
+                    getMessage(CONFIRM_MK.noPrefix()),
                     "/family sibling unsibling confirm force",
-                    getMessage(CANCEL_MK, false),
+                    getMessage(CANCEL_MK.noPrefix()),
                     "/family sibling unsibling cancel"),
                     LunaticFamily.getConfig().decisionAsInvGUI()
             );

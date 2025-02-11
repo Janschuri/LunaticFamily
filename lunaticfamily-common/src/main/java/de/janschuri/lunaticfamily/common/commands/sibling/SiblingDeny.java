@@ -59,17 +59,19 @@ public class SiblingDeny extends Subcommand {
             UUID partnerUUID = LunaticFamily.siblingRequests.get(playerUUID);
             PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
             if (!LunaticFamily.siblingPriests.containsKey(partnerUUID)) {
-                player.sendMessage(getMessage(denyMK)
-                        .replaceText(getTextReplacementConfig("%player%", sibling.getName())));
-                sibling.sendMessage(getMessage(deniedMK)
-                        .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+                player.sendMessage(getMessage(denyMK,
+                    placeholder("%player%", sibling.getName())
+                ));
+                sibling.sendMessage(getMessage(deniedMK,
+                    placeholder("%player%", playerFam.getName())
+                ));
             } else {
                 UUID priestUUID = LunaticFamily.siblingPriests.get(partnerUUID);
                 PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
-                player.chat(getLanguageConfig().getMessageAsString(priestNoMK, false));
+                player.chat(getLanguageConfig().getMessageAsString(priestNoMK.noPrefix()));
 
                 Runnable runnable = () -> {
-                    priest.chat(getLanguageConfig().getMessageAsString(priestCancelMK, false));
+                    priest.chat(getLanguageConfig().getMessageAsString(priestCancelMK.noPrefix()));
                 };
 
                 Utils.scheduleTask(runnable, 250, TimeUnit.MILLISECONDS);
@@ -82,10 +84,10 @@ public class SiblingDeny extends Subcommand {
         }
 
         if (LunaticFamily.siblingPriestRequests.containsKey(playerUUID)) {
-            player.chat(getLanguageConfig().getMessageAsString(priestNoMK, false));
+            player.chat(getLanguageConfig().getMessageAsString(priestNoMK.noPrefix()));
             UUID priestUUID = LunaticFamily.siblingPriests.get(playerUUID);
             PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
-            priest.chat(getLanguageConfig().getMessageAsString(priestCancelMK, false));
+            priest.chat(getLanguageConfig().getMessageAsString(priestCancelMK.noPrefix()));
             LunaticFamily.siblingPriestRequests.remove(playerUUID);
             LunaticFamily.siblingPriests.remove(playerUUID);
             return true;

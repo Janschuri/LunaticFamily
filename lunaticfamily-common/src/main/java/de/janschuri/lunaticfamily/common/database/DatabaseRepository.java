@@ -53,7 +53,7 @@ public class DatabaseRepository {
 
     private static String getType() {
         // type can be either "sqlite" or "mysql"
-        return databaseConfig.getType().toLowerCase();
+        return databaseConfig.getType();
     }
 
     public static void shutdown() {
@@ -234,7 +234,7 @@ public class DatabaseRepository {
     private static List<Migration> getMigrations() {
         Reflections reflections = new Reflections("de.janschuri.lunaticfamily.common.database.migrations");
 
-        List<Migration> migrations = reflections.getSubTypesOf(Migration.class).stream()
+        return reflections.getSubTypesOf(Migration.class).stream()
                 .filter(clazz -> !Modifier.isAbstract(clazz.getModifiers()))
                 .map(clazz -> {
                     try {
@@ -247,8 +247,6 @@ public class DatabaseRepository {
                 .filter(migration -> migration != null)
                 .sorted(Comparator.comparing((Migration m) -> m.getClass().getSimpleName()))
                 .collect(Collectors.toList());
-
-        return migrations;
     }
 }
 

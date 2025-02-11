@@ -58,17 +58,17 @@ public class MarryDeny extends Subcommand {
             UUID partnerUUID = LunaticFamily.marryRequests.get(playerUUID);
             PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
             if (!LunaticFamily.marryPriests.containsKey(partnerUUID)) {
-                player.sendMessage(getMessage(denyMK)
-                        .replaceText(getTextReplacementConfig("%player%", partner.getName())));
-                partner.sendMessage(getMessage(deniedMK)
-                        .replaceText(getTextReplacementConfig("%player%", playerFam.getName())));
+                player.sendMessage(getMessage(denyMK,
+                placeholder("%player%", partner.getName())));
+                partner.sendMessage(getMessage(deniedMK,
+                placeholder("%player%", playerFam.getName())));
             } else {
                 UUID priestUUID = LunaticFamily.marryPriests.get(partnerUUID);
                 PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
-                player.chat(getLanguageConfig().getMessageAsString(priestNoMK, false));
+                player.chat(getLanguageConfig().getMessageAsString(priestNoMK.noPrefix()));
 
                 Runnable runnable = () -> {
-                    priest.chat(getLanguageConfig().getMessageAsString(priestCancelMK, false));
+                    priest.chat(getLanguageConfig().getMessageAsString(priestCancelMK.noPrefix()));
                 };
 
                 Utils.scheduleTask(runnable, 250, TimeUnit.MILLISECONDS);
@@ -81,10 +81,10 @@ public class MarryDeny extends Subcommand {
         }
 
         if (LunaticFamily.marryPriestRequests.containsKey(playerUUID)) {
-            player.chat(getLanguageConfig().getMessageAsString(priestNoMK, false));
+            player.chat(getLanguageConfig().getMessageAsString(priestNoMK.noPrefix()));
             UUID priestUUID = LunaticFamily.marryPriests.get(playerUUID);
             PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
-            priest.chat(getLanguageConfig().getMessageAsString(priestCancelMK, false));
+            priest.chat(getLanguageConfig().getMessageAsString(priestCancelMK.noPrefix()));
             LunaticFamily.marryPriestRequests.remove(playerUUID);
             LunaticFamily.marryPriests.remove(playerUUID);
             return true;
