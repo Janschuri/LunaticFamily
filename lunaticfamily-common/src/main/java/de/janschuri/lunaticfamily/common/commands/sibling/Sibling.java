@@ -1,18 +1,21 @@
 package de.janschuri.lunaticfamily.common.commands.sibling;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.commands.family.Family;
 import de.janschuri.lunaticfamily.common.utils.Logger;
-import de.janschuri.lunaticlib.LunaticCommand;
+import de.janschuri.lunaticlib.Command;
+import de.janschuri.lunaticlib.common.command.HasHelpCommand;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
 import de.janschuri.lunaticlib.Sender;
+import net.kyori.adventure.text.Component;
 
 import java.util.List;
 
-public class Sibling extends Subcommand {
+public class Sibling extends FamilyCommand implements HasHelpCommand, HasParentCommand {
 
     @Override
-    public List<LunaticCommand> getSubcommands() {
+    public List<Command> getSubcommands() {
         return List.of(
                 new SiblingAccept(),
                 new SiblingDeny(),
@@ -48,6 +51,11 @@ public class Sibling extends Subcommand {
     }
 
     @Override
+    public Component pageParamName() {
+        return getMessage(PAGE_MK);
+    }
+
+    @Override
     public boolean execute(Sender sender, String[] args) {
         if (!sender.hasPermission(getPermission())) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
@@ -61,7 +69,7 @@ public class Sibling extends Subcommand {
 
         final String subcommand = args[0];
 
-        for (LunaticCommand sc : getSubcommands()) {
+        for (Command sc : getSubcommands()) {
             if (checkIsSubcommand(sc, subcommand)) {
                 String[] newArgs = new String[args.length - 1];
                 System.arraycopy(args, 1, newArgs, 0, args.length - 1);

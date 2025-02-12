@@ -1,21 +1,23 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 
 import java.util.UUID;
 
-public class FamilyTree extends Subcommand {
+public class FamilyTree extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey reloadedMK = new CommandMessageKey(this,"reloaded");
-    private final CommandMessageKey failedMK = new CommandMessageKey(this,"failed");
-    private final CommandMessageKey disabledMK = new CommandMessageKey(this,"disabled");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey reloadedMK = new LunaticCommandMessageKey(this,"reloaded");
+    private final CommandMessageKey failedMK = new LunaticCommandMessageKey(this,"failed");
+    private final CommandMessageKey disabledMK = new LunaticCommandMessageKey(this,"disabled");
 
 
     @Override

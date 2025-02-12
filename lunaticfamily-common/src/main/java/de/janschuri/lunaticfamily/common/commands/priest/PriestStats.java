@@ -1,21 +1,23 @@
 package de.janschuri.lunaticfamily.common.commands.priest;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 
-public class PriestStats extends Subcommand {
+public class PriestStats extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this, "help");
-    private final CommandMessageKey headerMK = new CommandMessageKey(this, "header");
-    private final CommandMessageKey adoptionsMK = new CommandMessageKey(this, "adoptions");
-    private final CommandMessageKey marriagesMK = new CommandMessageKey(this, "marriages");
-    private final CommandMessageKey siblingsMK = new CommandMessageKey(this, "siblings");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this, "help");
+    private final CommandMessageKey headerMK = new LunaticCommandMessageKey(this, "header");
+    private final CommandMessageKey adoptionsMK = new LunaticCommandMessageKey(this, "adoptions");
+    private final CommandMessageKey marriagesMK = new LunaticCommandMessageKey(this, "marriages");
+    private final CommandMessageKey siblingsMK = new LunaticCommandMessageKey(this, "siblings");
 
 
     @Override

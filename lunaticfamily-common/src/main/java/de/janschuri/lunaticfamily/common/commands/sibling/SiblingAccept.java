@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.commands.priest.PriestSibling;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -10,25 +10,27 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class SiblingAccept extends Subcommand {
+public class SiblingAccept extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey noRequestMK = new CommandMessageKey(this,"no_request");
-    private final CommandMessageKey completeMK = new CommandMessageKey(this,"complete");
-    private final CommandMessageKey openRequestSiblingMK = new CommandMessageKey(this,"open_request_sibling");
-    private final CommandMessageKey isAdoptedMK = new CommandMessageKey(new PriestSibling(),"is_adopted");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey noRequestMK = new LunaticCommandMessageKey(this,"no_request");
+    private final CommandMessageKey completeMK = new LunaticCommandMessageKey(this,"complete");
+    private final CommandMessageKey openRequestSiblingMK = new LunaticCommandMessageKey(this,"open_request_sibling");
+    private final CommandMessageKey isAdoptedMK = new LunaticCommandMessageKey(new PriestSibling(),"is_adopted");
 
-    private final CommandMessageKey priestRequestMK = new CommandMessageKey(new PriestSibling(),"request");
-    private final CommandMessageKey priestYesMK = new CommandMessageKey(new PriestSibling(),"yes");
-    private final CommandMessageKey priestNoMK = new CommandMessageKey(new PriestSibling(),"no");
-    private final CommandMessageKey priestCompleteMK = new CommandMessageKey(new PriestSibling(),"complete");
-    private final CommandMessageKey priestRequestExpiredPriestMK = new CommandMessageKey(new PriestSibling(),"request_expired_priest");
-    private final CommandMessageKey priestRequestExpiredPlayerMK = new CommandMessageKey(new PriestSibling(),"request_expired_player");
+    private final CommandMessageKey priestRequestMK = new LunaticCommandMessageKey(new PriestSibling(),"request");
+    private final CommandMessageKey priestYesMK = new LunaticCommandMessageKey(new PriestSibling(),"yes");
+    private final CommandMessageKey priestNoMK = new LunaticCommandMessageKey(new PriestSibling(),"no");
+    private final CommandMessageKey priestCompleteMK = new LunaticCommandMessageKey(new PriestSibling(),"complete");
+    private final CommandMessageKey priestRequestExpiredPriestMK = new LunaticCommandMessageKey(new PriestSibling(),"request_expired_priest");
+    private final CommandMessageKey priestRequestExpiredPlayerMK = new LunaticCommandMessageKey(new PriestSibling(),"request_expired_player");
 
 
     @Override

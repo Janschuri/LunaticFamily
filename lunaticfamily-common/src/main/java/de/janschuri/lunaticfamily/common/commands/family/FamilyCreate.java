@@ -1,23 +1,27 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.*;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-public class FamilyCreate extends Subcommand {
+public class FamilyCreate extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey confirmMK = new CommandMessageKey(this,"confirm");
-    private final CommandMessageKey createdMK = new CommandMessageKey(this,"created");
-    private final CommandMessageKey cancelMK = new CommandMessageKey(this, "cancel");
-    private final MessageKey createRandomMK = new CommandMessageKey(this, "createRandom")
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey confirmMK = new LunaticCommandMessageKey(this,"confirm");
+    private final CommandMessageKey createdMK = new LunaticCommandMessageKey(this,"created");
+    private final CommandMessageKey cancelMK = new LunaticCommandMessageKey(this, "cancel");
+    private final MessageKey createRandomMK = new LunaticCommandMessageKey(this, "createRandom")
             .defaultMessage("You didn't specified a UUID. Do you want to create a random one?");
 
 
@@ -141,5 +145,10 @@ public class FamilyCreate extends Subcommand {
             getMessage(PLAYER_NAME_MK.noPrefix()),
             Component.text("UUID")
         );
+    }
+
+    @Override
+    public List<Map<String, String>> getParams() {
+        return List.of();
     }
 }

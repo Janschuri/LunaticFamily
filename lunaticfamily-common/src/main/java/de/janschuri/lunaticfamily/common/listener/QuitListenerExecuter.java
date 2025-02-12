@@ -12,6 +12,8 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
+import de.janschuri.lunaticlib.common.command.LunaticMessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 
@@ -21,11 +23,11 @@ import static de.janschuri.lunaticfamily.common.handler.FamilyPlayer.findOrCreat
 
 public class QuitListenerExecuter {
 
-    private static final MessageKey PLAYER_QUIT = new MessageKey("player_quit");
-    private static final CommandMessageKey MARRY_CANCEL_MK = new CommandMessageKey(new MarryDeny(), "cancel");
-    private static final CommandMessageKey ADOPT_CANCEL_MK = new CommandMessageKey(new AdoptDeny(), "cancel");
-    private static final CommandMessageKey SIBLING_CANCEL_MK = new CommandMessageKey(new SiblingDeny(), "cancel");
-    private static final CommandMessageKey MARRY_PARTNER_LEFT_MK = new CommandMessageKey(new Marry(), "partner_left");
+    private static final MessageKey PLAYER_QUIT = new LunaticMessageKey("player_quit");
+    private static final CommandMessageKey MARRY_CANCEL_MK = new LunaticCommandMessageKey(new MarryDeny(), "cancel");
+    private static final CommandMessageKey ADOPT_CANCEL_MK = new LunaticCommandMessageKey(new AdoptDeny(), "cancel");
+    private static final CommandMessageKey SIBLING_CANCEL_MK = new LunaticCommandMessageKey(new SiblingDeny(), "cancel");
+    private static final CommandMessageKey MARRY_PARTNER_LEFT_MK = new LunaticCommandMessageKey(new Marry(), "partner_left");
 
 
     public static boolean execute(PlayerSender player) {

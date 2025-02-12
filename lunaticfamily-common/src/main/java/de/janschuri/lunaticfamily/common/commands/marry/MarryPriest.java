@@ -2,6 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.commands.priest.PriestMarry;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import de.janschuri.lunaticlib.common.logger.Logger;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class MarryPriest extends PriestMarry {
 
     @Override
     public Map<CommandMessageKey, String> getHelpMessages() {
-        return Map.of(new CommandMessageKey(new PriestMarry(), "help"), getPermission());
+        return Map.of(new LunaticCommandMessageKey(new PriestMarry(), "help"), getPermission());
     }
 
     @Override

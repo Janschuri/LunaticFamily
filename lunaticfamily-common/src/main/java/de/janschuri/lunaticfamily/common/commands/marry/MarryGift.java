@@ -1,25 +1,26 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
-import de.janschuri.lunaticlib.Placeholder;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 
 import java.util.UUID;
 
-public class MarryGift extends Subcommand {
+public class MarryGift extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey noPartnerMK = new CommandMessageKey(this,"no_partner");
-    private final CommandMessageKey emptyHandMK = new CommandMessageKey(this,"empty_hand");
-    private final CommandMessageKey partnerFullInvMK = new CommandMessageKey(this,"partner_full_inv");
-    private final CommandMessageKey sentMK = new CommandMessageKey(this,"sent");
-    private final CommandMessageKey gotMK = new CommandMessageKey(this,"got");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey noPartnerMK = new LunaticCommandMessageKey(this,"no_partner");
+    private final CommandMessageKey emptyHandMK = new LunaticCommandMessageKey(this,"empty_hand");
+    private final CommandMessageKey partnerFullInvMK = new LunaticCommandMessageKey(this,"partner_full_inv");
+    private final CommandMessageKey sentMK = new LunaticCommandMessageKey(this,"sent");
+    private final CommandMessageKey gotMK = new LunaticCommandMessageKey(this,"got");
 
 
     @Override

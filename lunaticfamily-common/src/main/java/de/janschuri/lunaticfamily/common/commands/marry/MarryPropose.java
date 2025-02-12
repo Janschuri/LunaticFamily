@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -11,6 +11,9 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
@@ -18,21 +21,21 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class MarryPropose extends Subcommand {
+public class MarryPropose extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey alreadyMarriedMK = new CommandMessageKey(this,"already_married");
-    private final CommandMessageKey playerAlreadyMarriedMK = new CommandMessageKey(this,"player_already_married");
-    private final CommandMessageKey requestMK = new CommandMessageKey(this,"request");
-    private final CommandMessageKey requestSentMK = new CommandMessageKey(this,"request_sent");
-    private final CommandMessageKey requestExpiredMK = new CommandMessageKey(this,"request_expired");
-    private final CommandMessageKey requestSentExpiredMK = new CommandMessageKey(this,"request_sent_expired");
-    private final CommandMessageKey openRequestMK = new CommandMessageKey(this,"open_request");
-    private final CommandMessageKey familyRequestMK = new CommandMessageKey(this,"family_request");
-    private final CommandMessageKey tooManyChildrenMK = new CommandMessageKey(this,"too_many_children");
-    private final CommandMessageKey selfRequestMK = new CommandMessageKey(this,"self_request");
-    private final CommandMessageKey marryYesMK = new CommandMessageKey(new Marry(),"yes");
-    private final CommandMessageKey marryNoMK = new CommandMessageKey(new Marry(),"no");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey alreadyMarriedMK = new LunaticCommandMessageKey(this,"already_married");
+    private final CommandMessageKey playerAlreadyMarriedMK = new LunaticCommandMessageKey(this,"player_already_married");
+    private final CommandMessageKey requestMK = new LunaticCommandMessageKey(this,"request");
+    private final CommandMessageKey requestSentMK = new LunaticCommandMessageKey(this,"request_sent");
+    private final CommandMessageKey requestExpiredMK = new LunaticCommandMessageKey(this,"request_expired");
+    private final CommandMessageKey requestSentExpiredMK = new LunaticCommandMessageKey(this,"request_sent_expired");
+    private final CommandMessageKey openRequestMK = new LunaticCommandMessageKey(this,"open_request");
+    private final CommandMessageKey familyRequestMK = new LunaticCommandMessageKey(this,"family_request");
+    private final CommandMessageKey tooManyChildrenMK = new LunaticCommandMessageKey(this,"too_many_children");
+    private final CommandMessageKey selfRequestMK = new LunaticCommandMessageKey(this,"self_request");
+    private final CommandMessageKey marryYesMK = new LunaticCommandMessageKey(new Marry(),"yes");
+    private final CommandMessageKey marryNoMK = new LunaticCommandMessageKey(new Marry(),"no");
 
 
     @Override

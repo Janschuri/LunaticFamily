@@ -1,17 +1,19 @@
 package de.janschuri.lunaticfamily.common.commands.priest;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.commands.family.Family;
-import de.janschuri.lunaticlib.LunaticCommand;
-import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
+import de.janschuri.lunaticlib.Command;
+import de.janschuri.lunaticlib.common.command.HasHelpCommand;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.Sender;
+import net.kyori.adventure.text.Component;
 
 import java.util.List;
 
-public class Priest extends Subcommand {
+public class Priest extends FamilyCommand implements HasParentCommand, HasHelpCommand {
 
     @Override
-    public List<LunaticCommand> getSubcommands() {
+    public List<Command> getSubcommands() {
         return List.of(
                 new PriestMarry(),
                 new PriestSibling(),
@@ -22,13 +24,18 @@ public class Priest extends Subcommand {
     }
 
     @Override
-    public LunaticHelpCommand getHelpCommand() {
-        return new LunaticHelpCommand(getLanguageConfig(), this);
+    public Component pageParamName() {
+        return getMessage(PAGE_MK);
     }
 
     @Override
     public Family getParentCommand() {
         return new Family();
+    }
+
+    @Override
+    public boolean isPrimaryCommand() {
+        return true;
     }
 
     @Override
@@ -54,7 +61,7 @@ public class Priest extends Subcommand {
 
         final String subcommand = args[0];
 
-        for (LunaticCommand sc : getSubcommands()) {
+        for (Command sc : getSubcommands()) {
             if (checkIsSubcommand(sc, subcommand)) {
                 String[] newArgs = new String[args.length - 1];
                 System.arraycopy(args, 1, newArgs, 0, args.length - 1);
@@ -62,11 +69,6 @@ public class Priest extends Subcommand {
             }
         }
         sender.sendMessage(getMessage(WRONG_USAGE_MK));
-        return true;
-    }
-
-    @Override
-    public boolean isPrimaryCommand() {
         return true;
     }
 

@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.commands.priest.PriestAdopt;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -9,19 +9,21 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class AdoptDeny extends Subcommand {
+public class AdoptDeny extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey deniedMK = new CommandMessageKey(this,"denied");
-    private final CommandMessageKey denyMK = new CommandMessageKey(this,"deny");
-    private final CommandMessageKey noRequestMK = new CommandMessageKey(this,"no_request");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey deniedMK = new LunaticCommandMessageKey(this,"denied");
+    private final CommandMessageKey denyMK = new LunaticCommandMessageKey(this,"deny");
+    private final CommandMessageKey noRequestMK = new LunaticCommandMessageKey(this,"no_request");
 
-    private final CommandMessageKey priestNoMK = new CommandMessageKey(new PriestAdopt(),"no");
-    private final CommandMessageKey priestCancelMK = new CommandMessageKey(new PriestAdopt(),"cancel");
+    private final CommandMessageKey priestNoMK = new LunaticCommandMessageKey(new PriestAdopt(),"no");
+    private final CommandMessageKey priestCancelMK = new LunaticCommandMessageKey(new PriestAdopt(),"cancel");
 
 
     @Override

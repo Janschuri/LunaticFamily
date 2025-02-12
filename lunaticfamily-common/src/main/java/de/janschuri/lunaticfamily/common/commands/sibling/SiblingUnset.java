@@ -1,22 +1,25 @@
 package de.janschuri.lunaticfamily.common.commands.sibling;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class SiblingUnset extends Subcommand {
+public class SiblingUnset extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey noSiblingMK = new CommandMessageKey(this,"no_sibling");
-    private final CommandMessageKey unsetMK = new CommandMessageKey(this,"unset");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey noSiblingMK = new LunaticCommandMessageKey(this,"no_sibling");
+    private final CommandMessageKey unsetMK = new LunaticCommandMessageKey(this,"unset");
 
 
     @Override

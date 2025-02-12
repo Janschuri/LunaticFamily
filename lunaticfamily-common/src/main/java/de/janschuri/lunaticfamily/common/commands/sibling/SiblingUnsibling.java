@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
@@ -9,18 +9,20 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 
 import java.util.UUID;
 
-public class SiblingUnsibling extends Subcommand {
+public class SiblingUnsibling extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey noSiblingMK = new CommandMessageKey(this,"no_sibling");
-    private final CommandMessageKey adoptedMK = new CommandMessageKey(this,"adopted");
-    private final CommandMessageKey confirmMK = new CommandMessageKey(this,"confirm");
-    private final CommandMessageKey cancelMK = new CommandMessageKey(this,"cancel");
-    private final CommandMessageKey completeMK = new CommandMessageKey(this,"complete");
-    private final CommandMessageKey unsiblingedCompleteMK = new CommandMessageKey(this,"unsiblinged_complete");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey noSiblingMK = new LunaticCommandMessageKey(this,"no_sibling");
+    private final CommandMessageKey adoptedMK = new LunaticCommandMessageKey(this,"adopted");
+    private final CommandMessageKey confirmMK = new LunaticCommandMessageKey(this,"confirm");
+    private final CommandMessageKey cancelMK = new LunaticCommandMessageKey(this,"cancel");
+    private final CommandMessageKey completeMK = new LunaticCommandMessageKey(this,"complete");
+    private final CommandMessageKey unsiblingedCompleteMK = new LunaticCommandMessageKey(this,"unsiblinged_complete");
 
 
     @Override

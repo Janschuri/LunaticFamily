@@ -1,29 +1,28 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
-import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.handler.familytree.RelationAdvancement;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextReplacementConfig;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class FamilyList extends Subcommand {
+public class FamilyList extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey helpOthersMK = new CommandMessageKey(this,"help_others");
-    private final CommandMessageKey headerMK = new CommandMessageKey(this,"header");
-    private final CommandMessageKey othersHeaderMK = new CommandMessageKey(this,"others_header");
-    private final CommandMessageKey relationsMK = new CommandMessageKey(this,"relations");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey helpOthersMK = new LunaticCommandMessageKey(this,"help_others");
+    private final CommandMessageKey headerMK = new LunaticCommandMessageKey(this,"header");
+    private final CommandMessageKey othersHeaderMK = new LunaticCommandMessageKey(this,"others_header");
+    private final CommandMessageKey relationsMK = new LunaticCommandMessageKey(this,"relations");
 
     @Override
     public String getPermission() {

@@ -9,6 +9,7 @@ import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +19,9 @@ import static de.janschuri.lunaticfamily.common.handler.FamilyPlayer.findOrCreat
 
 public class JoinListenerExecuter {
 
-    private static final CommandMessageKey MARRY_PARTNER_OFFLINE_MK = new CommandMessageKey(new Marry(), "partner_offline");
-    private static final CommandMessageKey MARRY_PARTNER_ONLINE_MK = new CommandMessageKey(new Marry(), "partner_online");
-    private static final CommandMessageKey MARRY_PARTNER_JOINED_MK = new CommandMessageKey(new Marry(), "partner_joined");
+    private static final CommandMessageKey MARRY_PARTNER_OFFLINE_MK = new LunaticCommandMessageKey(new Marry(), "partner_offline");
+    private static final CommandMessageKey MARRY_PARTNER_ONLINE_MK = new LunaticCommandMessageKey(new Marry(), "partner_online");
+    private static final CommandMessageKey MARRY_PARTNER_JOINED_MK = new LunaticCommandMessageKey(new Marry(), "partner_joined");
 
     private static final List<String> registeredServers = new ArrayList<>();
 

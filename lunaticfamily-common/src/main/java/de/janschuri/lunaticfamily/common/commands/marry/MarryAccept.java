@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.commands.priest.PriestMarry;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
@@ -11,24 +11,26 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class MarryAccept extends Subcommand {
+public class MarryAccept extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey openRequestPartnerMK = new CommandMessageKey(this,"open_request_partner");
-    private final CommandMessageKey noRequestMK = new CommandMessageKey(this,"no_request");
-    private final CommandMessageKey tooManyChildrenMK = new CommandMessageKey(this,"too_many_children");
-    private final CommandMessageKey completeMK = new CommandMessageKey(this,"complete");
-    private final CommandMessageKey priestRequestMK = new CommandMessageKey(new PriestMarry(),"request");
-    private final CommandMessageKey priestYesMK = new CommandMessageKey(new PriestMarry(),"yes");
-    private final CommandMessageKey priestNoMK = new CommandMessageKey(new PriestMarry(),"no");
-    private final CommandMessageKey priestCompleteMK = new CommandMessageKey(new PriestMarry(),"complete");
-    private final CommandMessageKey priestRequestExpiredPriestMK = new CommandMessageKey(new PriestMarry(),"request_expired_priest");
-    private final CommandMessageKey priestRequestExpiredPlayerMK = new CommandMessageKey(new PriestMarry(),"request_expired_player");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey openRequestPartnerMK = new LunaticCommandMessageKey(this,"open_request_partner");
+    private final CommandMessageKey noRequestMK = new LunaticCommandMessageKey(this,"no_request");
+    private final CommandMessageKey tooManyChildrenMK = new LunaticCommandMessageKey(this,"too_many_children");
+    private final CommandMessageKey completeMK = new LunaticCommandMessageKey(this,"complete");
+    private final CommandMessageKey priestRequestMK = new LunaticCommandMessageKey(new PriestMarry(),"request");
+    private final CommandMessageKey priestYesMK = new LunaticCommandMessageKey(new PriestMarry(),"yes");
+    private final CommandMessageKey priestNoMK = new LunaticCommandMessageKey(new PriestMarry(),"no");
+    private final CommandMessageKey priestCompleteMK = new LunaticCommandMessageKey(new PriestMarry(),"complete");
+    private final CommandMessageKey priestRequestExpiredPriestMK = new LunaticCommandMessageKey(new PriestMarry(),"request_expired_priest");
+    private final CommandMessageKey priestRequestExpiredPlayerMK = new LunaticCommandMessageKey(new PriestMarry(),"request_expired_player");
 
 
 

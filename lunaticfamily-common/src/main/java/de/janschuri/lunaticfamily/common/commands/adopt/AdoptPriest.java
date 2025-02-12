@@ -2,6 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.commands.priest.PriestAdopt;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import de.janschuri.lunaticlib.common.logger.Logger;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class AdoptPriest extends PriestAdopt {
 
     @Override
     public Map<CommandMessageKey, String> getHelpMessages() {
-        return Map.of(new CommandMessageKey(new PriestAdopt(), "help"), getPermission());
+        return Map.of(new LunaticCommandMessageKey(new PriestAdopt(), "help"), getPermission());
     }
 
     @Override

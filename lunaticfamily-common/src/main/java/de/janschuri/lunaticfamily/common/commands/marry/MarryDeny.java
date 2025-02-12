@@ -1,26 +1,28 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class MarryDeny extends Subcommand {
+public class MarryDeny extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey noRequestMK = new CommandMessageKey(this,"no_request");
-    private final CommandMessageKey deniedMK = new CommandMessageKey(this,"denied");
-    private final CommandMessageKey denyMK = new CommandMessageKey(this,"deny");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey noRequestMK = new LunaticCommandMessageKey(this,"no_request");
+    private final CommandMessageKey deniedMK = new LunaticCommandMessageKey(this,"denied");
+    private final CommandMessageKey denyMK = new LunaticCommandMessageKey(this,"deny");
 
-    private final CommandMessageKey priestCancelMK = new CommandMessageKey(this,"cancel");
-    private final CommandMessageKey priestNoMK = new CommandMessageKey(new Marry(),"no");
+    private final CommandMessageKey priestCancelMK = new LunaticCommandMessageKey(this,"cancel");
+    private final CommandMessageKey priestNoMK = new LunaticCommandMessageKey(new Marry(),"no");
 
     @Override
     public String getPermission() {

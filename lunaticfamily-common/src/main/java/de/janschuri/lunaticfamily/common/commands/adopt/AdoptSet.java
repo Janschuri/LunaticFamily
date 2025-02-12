@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -9,25 +9,28 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class AdoptSet extends Subcommand {
+public class AdoptSet extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey noSingleAdoptMK = new CommandMessageKey(this,"no_single_adopt");
-    private final CommandMessageKey adoptLimitMK = new CommandMessageKey(this,"adopt_limit");
-    private final CommandMessageKey samePlayerMK = new CommandMessageKey(this,"same_player");
-    private final CommandMessageKey alreadyAdoptedMK = new CommandMessageKey(this,"already_adopted");
-    private final CommandMessageKey hasSiblingMK = new CommandMessageKey(this,"has_sibling");
-    private final CommandMessageKey hasSiblingLimitMK = new CommandMessageKey(this,"has_sibling_limit");
-    private final CommandMessageKey cancelMK = new CommandMessageKey(this,"cancel");
-    private final CommandMessageKey setMK = new CommandMessageKey(this,"set");
-    private final CommandMessageKey setBySingleMK = new CommandMessageKey(this,"set_by_single");
-    private final CommandMessageKey sameFamilyMK = new CommandMessageKey(this,"same_family");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey noSingleAdoptMK = new LunaticCommandMessageKey(this,"no_single_adopt");
+    private final CommandMessageKey adoptLimitMK = new LunaticCommandMessageKey(this,"adopt_limit");
+    private final CommandMessageKey samePlayerMK = new LunaticCommandMessageKey(this,"same_player");
+    private final CommandMessageKey alreadyAdoptedMK = new LunaticCommandMessageKey(this,"already_adopted");
+    private final CommandMessageKey hasSiblingMK = new LunaticCommandMessageKey(this,"has_sibling");
+    private final CommandMessageKey hasSiblingLimitMK = new LunaticCommandMessageKey(this,"has_sibling_limit");
+    private final CommandMessageKey cancelMK = new LunaticCommandMessageKey(this,"cancel");
+    private final CommandMessageKey setMK = new LunaticCommandMessageKey(this,"set");
+    private final CommandMessageKey setBySingleMK = new LunaticCommandMessageKey(this,"set_by_single");
+    private final CommandMessageKey sameFamilyMK = new LunaticCommandMessageKey(this,"same_family");
 
 
 

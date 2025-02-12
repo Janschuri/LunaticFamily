@@ -1,13 +1,13 @@
 package de.janschuri.lunaticfamily.common.config;
 
-import de.janschuri.lunaticfamily.LanguageConfig;
+import de.janschuri.lunaticfamily.FamilyLanguageConfig;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticlib.common.config.LunaticLanguageConfigImpl;
+import de.janschuri.lunaticlib.common.config.LunaticLanguageConfig;
 
 import java.nio.file.Path;
 import java.util.*;
 
-public class LanguageConfigImpl extends LunaticLanguageConfigImpl implements LanguageConfig {
+public class LanguageConfigImpl extends LunaticLanguageConfig implements FamilyLanguageConfig {
     private Map<String, String> genderLang = new HashMap<>();
     private List<String> genders = new ArrayList<>();
     private Map<String, String> colorsTranslations = new HashMap<>();

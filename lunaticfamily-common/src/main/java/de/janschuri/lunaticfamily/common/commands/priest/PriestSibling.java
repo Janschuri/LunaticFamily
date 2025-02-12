@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.priest;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.commands.adopt.Adopt;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
@@ -12,6 +12,9 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
@@ -19,22 +22,22 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class PriestSibling extends Subcommand {
+public class PriestSibling extends FamilyCommand implements HasParentCommand, HasParams {
 
     private static final PriestSibling instance = new PriestSibling();
-    private final CommandMessageKey helpMK = new CommandMessageKey(instance,"help");
-    private final CommandMessageKey alreadyPriestMK = new CommandMessageKey(instance,"already_priest");
-    private final CommandMessageKey requestMK = new CommandMessageKey(instance,"request");
-    private final CommandMessageKey alreadySiblingMK = new CommandMessageKey(instance,"already_sibling");
-    private final CommandMessageKey isAdoptedMK = new CommandMessageKey(instance,"is_adopted");
-    private final CommandMessageKey selfRequestMK = new CommandMessageKey(instance,"self_request");
-    private final CommandMessageKey openRequestMK = new CommandMessageKey(instance,"open_request");
-    private final CommandMessageKey requestExpiredPriestMK = new CommandMessageKey(instance,"request_expired_priest");
-    private final CommandMessageKey requestExpiredPlayerMK = new CommandMessageKey(instance,"request_expired_player");
-    private final CommandMessageKey samePlayerMK = new CommandMessageKey(instance,"same_player");
-    private final CommandMessageKey yesMK = new CommandMessageKey(new Adopt(),"yes");
-    private final CommandMessageKey noMK = new CommandMessageKey(new Adopt(),"no");
-    private final CommandMessageKey familyRequestMK = new CommandMessageKey(instance,"family_request");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(instance,"help");
+    private final CommandMessageKey alreadyPriestMK = new LunaticCommandMessageKey(instance,"already_priest");
+    private final CommandMessageKey requestMK = new LunaticCommandMessageKey(instance,"request");
+    private final CommandMessageKey alreadySiblingMK = new LunaticCommandMessageKey(instance,"already_sibling");
+    private final CommandMessageKey isAdoptedMK = new LunaticCommandMessageKey(instance,"is_adopted");
+    private final CommandMessageKey selfRequestMK = new LunaticCommandMessageKey(instance,"self_request");
+    private final CommandMessageKey openRequestMK = new LunaticCommandMessageKey(instance,"open_request");
+    private final CommandMessageKey requestExpiredPriestMK = new LunaticCommandMessageKey(instance,"request_expired_priest");
+    private final CommandMessageKey requestExpiredPlayerMK = new LunaticCommandMessageKey(instance,"request_expired_player");
+    private final CommandMessageKey samePlayerMK = new LunaticCommandMessageKey(instance,"same_player");
+    private final CommandMessageKey yesMK = new LunaticCommandMessageKey(new Adopt(),"yes");
+    private final CommandMessageKey noMK = new LunaticCommandMessageKey(new Adopt(),"no");
+    private final CommandMessageKey familyRequestMK = new LunaticCommandMessageKey(instance,"family_request");
 
 
     @Override
@@ -48,7 +51,7 @@ public class PriestSibling extends Subcommand {
     }
 
     @Override
-    public Subcommand getParentCommand() {
+    public FamilyCommand getParentCommand() {
         return new Priest();
     }
 

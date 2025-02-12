@@ -1,24 +1,27 @@
 package de.janschuri.lunaticfamily.common.commands.gender;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class GenderInfo extends Subcommand {
+public class GenderInfo extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey helpOthersMK = new CommandMessageKey(this,"help_others");
-    private final CommandMessageKey infoMK = new CommandMessageKey(this,"info");
-    private final CommandMessageKey infoOthersMK = new CommandMessageKey(this,"info_others");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey helpOthersMK = new LunaticCommandMessageKey(this,"help_others");
+    private final CommandMessageKey infoMK = new LunaticCommandMessageKey(this,"info");
+    private final CommandMessageKey infoOthersMK = new LunaticCommandMessageKey(this,"info_others");
 
     @Override
     public Map<CommandMessageKey, String> getHelpMessages() {

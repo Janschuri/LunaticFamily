@@ -1,15 +1,14 @@
 package de.janschuri.lunaticfamily.common.commands.adopt;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.commands.family.Family;
-import de.janschuri.lunaticfamily.common.utils.Logger;
-import de.janschuri.lunaticlib.LunaticCommand;
-import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
-import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.Command;
+import de.janschuri.lunaticlib.common.command.*;
+import net.kyori.adventure.text.Component;
 
 import java.util.List;
 
-public class Adopt extends Subcommand {
+public class Adopt extends FamilyCommand implements HasHelpCommand, HasSubcommands, HasParentCommand {
 
     @Override
     public String getPermission() {
@@ -19,6 +18,11 @@ public class Adopt extends Subcommand {
     @Override
     public LunaticHelpCommand getHelpCommand() {
         return new LunaticHelpCommand(getLanguageConfig(), this);
+    }
+
+    @Override
+    public Component pageParamName() {
+        return getMessage(PAGE_MK);
     }
 
     @Override
@@ -32,7 +36,12 @@ public class Adopt extends Subcommand {
     }
 
     @Override
-    public List<LunaticCommand> getSubcommands() {
+    public boolean isPrimaryCommand() {
+        return true;
+    }
+
+    @Override
+    public List<Command> getSubcommands() {
         return List.of(
                 new AdoptAccept(),
                 new AdoptDeny(),
@@ -46,41 +55,6 @@ public class Adopt extends Subcommand {
                 new AdoptList(),
                 getHelpCommand()
         );
-    }
-
-    @Override
-    public boolean execute(Sender sender, String[] args) {
-        if (!sender.hasPermission(getPermission())) {
-            sender.sendMessage(getMessage(NO_PERMISSION_MK));
-            return true;
-        }
-
-
-        if (args.length == 0) {
-            getHelpCommand().execute(sender, args);
-            return true;
-        }
-
-
-        final String subcommand = args[0];
-
-        for (LunaticCommand sc : getSubcommands()) {
-            if (checkIsSubcommand(sc, subcommand)) {
-                String[] newArgs = new String[args.length - 1];
-                System.arraycopy(args, 1, newArgs, 0, args.length - 1);
-                return sc.execute(sender, newArgs);
-            }
-        }
-
-        sender.sendMessage(getMessage(WRONG_USAGE_MK));
-        Logger.debugLog("Adopt: Wrong usage");
-
-        return true;
-    }
-
-    @Override
-    public boolean isPrimaryCommand() {
-        return true;
     }
 
     @Override

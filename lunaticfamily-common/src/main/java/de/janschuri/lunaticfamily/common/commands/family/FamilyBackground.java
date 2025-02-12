@@ -1,23 +1,27 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
+import de.janschuri.lunaticlib.common.command.LunaticMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FamilyBackground extends Subcommand {
+public class FamilyBackground extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey setMK = new CommandMessageKey(this,"set");
-    private final MessageKey backgroundMK = new MessageKey("background");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey setMK = new LunaticCommandMessageKey(this,"set");
+    private final MessageKey backgroundMK = new LunaticMessageKey("background");
 
 
     @Override

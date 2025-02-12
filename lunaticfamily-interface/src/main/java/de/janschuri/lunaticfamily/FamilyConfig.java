@@ -1,11 +1,10 @@
 package de.janschuri.lunaticfamily;
 
-import de.janschuri.lunaticlib.LunaticConfig;
 
 import java.util.List;
 import java.util.Map;
 
-public interface Config extends LunaticConfig {
+public interface FamilyConfig {
 
     String getLanguageKey();
 

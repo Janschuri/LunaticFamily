@@ -1,23 +1,25 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class MarryKiss extends Subcommand {
+public class MarryKiss extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey noPartnerMK = new CommandMessageKey(this,"no_partner");
-    private final CommandMessageKey kissMK = new CommandMessageKey(this,"kiss");
-    private final CommandMessageKey gotKissedMK = new CommandMessageKey(this,"got_kissed");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey noPartnerMK = new LunaticCommandMessageKey(this,"no_partner");
+    private final CommandMessageKey kissMK = new LunaticCommandMessageKey(this,"kiss");
+    private final CommandMessageKey gotKissedMK = new LunaticCommandMessageKey(this,"got_kissed");
 
 
     @Override

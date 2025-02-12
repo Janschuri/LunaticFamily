@@ -1,27 +1,30 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class MarrySet extends Subcommand {
+public class MarrySet extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey samePlayerMK = new CommandMessageKey(this,"same_player");
-    private final CommandMessageKey alreadyMarriedMK = new CommandMessageKey(this,"already_married");
-    private final CommandMessageKey tooManyChildrenMK = new CommandMessageKey(this,"too_many_children");
-    private final CommandMessageKey deniedMK = new CommandMessageKey(this,"denied");
-    private final CommandMessageKey marriedMK = new CommandMessageKey(this,"married");
-    private final CommandMessageKey sameFamilyMK = new CommandMessageKey(this,"same_family");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey samePlayerMK = new LunaticCommandMessageKey(this,"same_player");
+    private final CommandMessageKey alreadyMarriedMK = new LunaticCommandMessageKey(this,"already_married");
+    private final CommandMessageKey tooManyChildrenMK = new LunaticCommandMessageKey(this,"too_many_children");
+    private final CommandMessageKey deniedMK = new LunaticCommandMessageKey(this,"denied");
+    private final CommandMessageKey marriedMK = new LunaticCommandMessageKey(this,"married");
+    private final CommandMessageKey sameFamilyMK = new LunaticCommandMessageKey(this,"same_family");
 
 
     @Override

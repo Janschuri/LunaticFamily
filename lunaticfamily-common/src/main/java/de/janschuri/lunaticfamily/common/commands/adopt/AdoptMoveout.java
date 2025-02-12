@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
@@ -9,18 +9,20 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 
 import java.util.UUID;
 
-public class AdoptMoveout extends Subcommand {
+public class AdoptMoveout extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey moveoutMK = new CommandMessageKey(this,"moveout");
-    private final CommandMessageKey confirmMK = new CommandMessageKey(this,"confirm");
-    private final CommandMessageKey childMK = new CommandMessageKey(this,"child");
-    private final CommandMessageKey noParentsMK = new CommandMessageKey(this,"no_parents");
-    private final CommandMessageKey siblingMK = new CommandMessageKey(this,"sibling");
-    private final CommandMessageKey cancelMK = new CommandMessageKey(this,"cancel");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey moveoutMK = new LunaticCommandMessageKey(this,"moveout");
+    private final CommandMessageKey confirmMK = new LunaticCommandMessageKey(this,"confirm");
+    private final CommandMessageKey childMK = new LunaticCommandMessageKey(this,"child");
+    private final CommandMessageKey noParentsMK = new LunaticCommandMessageKey(this,"no_parents");
+    private final CommandMessageKey siblingMK = new LunaticCommandMessageKey(this,"sibling");
+    private final CommandMessageKey cancelMK = new LunaticCommandMessageKey(this,"cancel");
 
     @Override
     public String getPermission() {

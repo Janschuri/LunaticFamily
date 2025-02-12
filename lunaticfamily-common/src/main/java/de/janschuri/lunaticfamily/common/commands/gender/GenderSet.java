@@ -1,13 +1,16 @@
 package de.janschuri.lunaticfamily.common.commands.gender;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -15,18 +18,18 @@ import net.kyori.adventure.text.event.HoverEvent;
 
 import java.util.*;
 
-public class GenderSet extends Subcommand {
+public class GenderSet extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey setMK = new CommandMessageKey(this,"set");
-    private final CommandMessageKey setHoverMK = new CommandMessageKey(this,"set_hover");
-    private final CommandMessageKey changedMK = new CommandMessageKey(this,"changed");
-    private final CommandMessageKey notExistMK = new CommandMessageKey(this,"not_exist");
-    private final CommandMessageKey alreadyMK = new CommandMessageKey(this,"already");
-    private final CommandMessageKey adminHelpMK = new CommandMessageKey(this,"admin_help");
-    private final CommandMessageKey adminSetMK = new CommandMessageKey(this,"admin_set");
-    private final CommandMessageKey adminAlreadyMK = new CommandMessageKey(this,"admin_already");
-    private final CommandMessageKey genderMK = new CommandMessageKey(this,"gender");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey setMK = new LunaticCommandMessageKey(this,"set");
+    private final CommandMessageKey setHoverMK = new LunaticCommandMessageKey(this,"set_hover");
+    private final CommandMessageKey changedMK = new LunaticCommandMessageKey(this,"changed");
+    private final CommandMessageKey notExistMK = new LunaticCommandMessageKey(this,"not_exist");
+    private final CommandMessageKey alreadyMK = new LunaticCommandMessageKey(this,"already");
+    private final CommandMessageKey adminHelpMK = new LunaticCommandMessageKey(this,"admin_help");
+    private final CommandMessageKey adminSetMK = new LunaticCommandMessageKey(this,"admin_set");
+    private final CommandMessageKey adminAlreadyMK = new LunaticCommandMessageKey(this,"admin_already");
+    private final CommandMessageKey genderMK = new LunaticCommandMessageKey(this,"gender");
 
 
     @Override

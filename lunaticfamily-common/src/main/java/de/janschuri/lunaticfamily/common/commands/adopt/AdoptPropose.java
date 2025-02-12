@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -11,6 +11,9 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
@@ -18,24 +21,24 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class AdoptPropose extends Subcommand {
+public class AdoptPropose extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey limitMK = new CommandMessageKey(this,"limit");
-    private final CommandMessageKey openRequestMK = new CommandMessageKey(this,"open_request");
-    private final CommandMessageKey requestMK = new CommandMessageKey(this,"request");
-    private final CommandMessageKey requestBySingleMK = new CommandMessageKey(this,"request_by_single");
-    private final CommandMessageKey requestSentMK = new CommandMessageKey(this,"request_sent");
-    private final CommandMessageKey requestExpiredMK = new CommandMessageKey(this,"request_expired");
-    private final CommandMessageKey requestSentExpiredMK = new CommandMessageKey(this,"request_sent_expired");
-    private final CommandMessageKey requestBySingleExpiredMK = new CommandMessageKey(this,"request_by_single_expired");
-    private final CommandMessageKey selfRequestMK = new CommandMessageKey(this,"self_request");
-    private final CommandMessageKey hasSiblingMK = new CommandMessageKey(this,"has_sibling");
-    private final CommandMessageKey hasSiblingLimitMK = new CommandMessageKey(this,"has_sibling_limit");
-    private final CommandMessageKey noSingleAdoptMK = new CommandMessageKey(this,"no_single_adopt");
-    private final CommandMessageKey alreadyAdoptedMK = new CommandMessageKey(this,"already_adopted");
-    private final CommandMessageKey familyRequestMK = new CommandMessageKey(this,"family_request");
-    private final CommandMessageKey cancelMK = new CommandMessageKey(this,"cancel");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey limitMK = new LunaticCommandMessageKey(this,"limit");
+    private final CommandMessageKey openRequestMK = new LunaticCommandMessageKey(this,"open_request");
+    private final CommandMessageKey requestMK = new LunaticCommandMessageKey(this,"request");
+    private final CommandMessageKey requestBySingleMK = new LunaticCommandMessageKey(this,"request_by_single");
+    private final CommandMessageKey requestSentMK = new LunaticCommandMessageKey(this,"request_sent");
+    private final CommandMessageKey requestExpiredMK = new LunaticCommandMessageKey(this,"request_expired");
+    private final CommandMessageKey requestSentExpiredMK = new LunaticCommandMessageKey(this,"request_sent_expired");
+    private final CommandMessageKey requestBySingleExpiredMK = new LunaticCommandMessageKey(this,"request_by_single_expired");
+    private final CommandMessageKey selfRequestMK = new LunaticCommandMessageKey(this,"self_request");
+    private final CommandMessageKey hasSiblingMK = new LunaticCommandMessageKey(this,"has_sibling");
+    private final CommandMessageKey hasSiblingLimitMK = new LunaticCommandMessageKey(this,"has_sibling_limit");
+    private final CommandMessageKey noSingleAdoptMK = new LunaticCommandMessageKey(this,"no_single_adopt");
+    private final CommandMessageKey alreadyAdoptedMK = new LunaticCommandMessageKey(this,"already_adopted");
+    private final CommandMessageKey familyRequestMK = new LunaticCommandMessageKey(this,"family_request");
+    private final CommandMessageKey cancelMK = new LunaticCommandMessageKey(this,"cancel");
 
 
     @Override

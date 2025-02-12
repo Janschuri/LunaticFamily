@@ -1,12 +1,15 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextReplacementConfig;
@@ -15,13 +18,13 @@ import net.kyori.adventure.text.format.TextColor;
 
 import java.util.*;
 
-public class MarryEmoji extends Subcommand {
+public class MarryEmoji extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey noColorMK = new CommandMessageKey(this,"no_color");
-    private final CommandMessageKey colorSetMK = new CommandMessageKey(this,"color_set");
-    private final CommandMessageKey noMarriageMK = new CommandMessageKey(this,"no_marriage");
-    private final CommandMessageKey headerMK = new CommandMessageKey(this,"header");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey noColorMK = new LunaticCommandMessageKey(this,"no_color");
+    private final CommandMessageKey colorSetMK = new LunaticCommandMessageKey(this,"color_set");
+    private final CommandMessageKey noMarriageMK = new LunaticCommandMessageKey(this,"no_marriage");
+    private final CommandMessageKey headerMK = new LunaticCommandMessageKey(this,"header");
 
 
     @Override

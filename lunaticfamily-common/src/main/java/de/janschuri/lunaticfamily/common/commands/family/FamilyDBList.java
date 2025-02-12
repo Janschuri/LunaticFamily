@@ -1,10 +1,13 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextComponent;
@@ -14,11 +17,11 @@ import net.kyori.adventure.text.event.HoverEvent;
 
 import java.util.*;
 
-public class FamilyDBList extends Subcommand {
+public class FamilyDBList extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey headerMK = new CommandMessageKey(this,"header");
-    private final CommandMessageKey playersMK = new CommandMessageKey(this,"players");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey headerMK = new LunaticCommandMessageKey(this,"header");
+    private final CommandMessageKey playersMK = new LunaticCommandMessageKey(this,"players");
 
 
     @Override
@@ -32,7 +35,7 @@ public class FamilyDBList extends Subcommand {
     }
 
     @Override
-    public Subcommand getParentCommand() {
+    public FamilyCommand getParentCommand() {
         return new Family();
     }
 

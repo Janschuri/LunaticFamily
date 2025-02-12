@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.commands.priest.PriestAdopt;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -10,28 +10,30 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class AdoptAccept extends Subcommand {
+public class AdoptAccept extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey gotAdoptedMK = new CommandMessageKey(this,"got_adopted");
-    private final CommandMessageKey adoptedBySingleMK = new CommandMessageKey(this,"adopted_by_single");
-    private final CommandMessageKey adoptedMK = new CommandMessageKey(this,"adopted");
-    private final CommandMessageKey parentLimitMK = new CommandMessageKey(this,"parent_limit");
-    private final CommandMessageKey noRequestMK = new CommandMessageKey(this,"no_request");
-    private final CommandMessageKey openRequestParentMK = new CommandMessageKey(this,"open_request_parent");
+    private final CommandMessageKey gotAdoptedMK = new LunaticCommandMessageKey(this,"got_adopted");
+    private final CommandMessageKey adoptedBySingleMK = new LunaticCommandMessageKey(this,"adopted_by_single");
+    private final CommandMessageKey adoptedMK = new LunaticCommandMessageKey(this,"adopted");
+    private final CommandMessageKey parentLimitMK = new LunaticCommandMessageKey(this,"parent_limit");
+    private final CommandMessageKey noRequestMK = new LunaticCommandMessageKey(this,"no_request");
+    private final CommandMessageKey openRequestParentMK = new LunaticCommandMessageKey(this,"open_request_parent");
 
-    private final CommandMessageKey priestYesMK = new CommandMessageKey(new PriestAdopt(),"yes");
-    private final CommandMessageKey priestNoMK = new CommandMessageKey(new PriestAdopt(),"no");
-    private final CommandMessageKey priestCompleteMK = new CommandMessageKey(new PriestAdopt(),"complete");
-    private final CommandMessageKey priestAlreadyAdoptedMK = new CommandMessageKey(new PriestAdopt(),"already_adopted");
-    private final CommandMessageKey priestRequestMK = new CommandMessageKey(new PriestAdopt(),"request");
-    private final CommandMessageKey priestRequestExpiredPriestMK = new CommandMessageKey(new PriestAdopt(),"request_expired_priest");
-    private final CommandMessageKey priestRequestExpiredParentMK = new CommandMessageKey(new PriestAdopt(),"request_expired_parent");
-    private final CommandMessageKey priestRequestExpiredChildMK = new CommandMessageKey(new PriestAdopt(),"request_expired_child");
+    private final CommandMessageKey priestYesMK = new LunaticCommandMessageKey(new PriestAdopt(),"yes");
+    private final CommandMessageKey priestNoMK = new LunaticCommandMessageKey(new PriestAdopt(),"no");
+    private final CommandMessageKey priestCompleteMK = new LunaticCommandMessageKey(new PriestAdopt(),"complete");
+    private final CommandMessageKey priestAlreadyAdoptedMK = new LunaticCommandMessageKey(new PriestAdopt(),"already_adopted");
+    private final CommandMessageKey priestRequestMK = new LunaticCommandMessageKey(new PriestAdopt(),"request");
+    private final CommandMessageKey priestRequestExpiredPriestMK = new LunaticCommandMessageKey(new PriestAdopt(),"request_expired_priest");
+    private final CommandMessageKey priestRequestExpiredParentMK = new LunaticCommandMessageKey(new PriestAdopt(),"request_expired_parent");
+    private final CommandMessageKey priestRequestExpiredChildMK = new LunaticCommandMessageKey(new PriestAdopt(),"request_expired_child");
 
 
     @Override

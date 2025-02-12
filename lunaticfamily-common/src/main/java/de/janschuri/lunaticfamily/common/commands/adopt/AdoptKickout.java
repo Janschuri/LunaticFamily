@@ -1,7 +1,7 @@
 package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -11,24 +11,27 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class AdoptKickout extends Subcommand {
+public class AdoptKickout extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey specifyChildMK = new CommandMessageKey(this,"specify_child");
-    private final CommandMessageKey kickoutMK = new CommandMessageKey(this,"kickout");
-    private final CommandMessageKey childMK = new CommandMessageKey(this,"child");
-    private final CommandMessageKey siblingMK = new CommandMessageKey(this,"sibling");
-    private final CommandMessageKey partnerMK = new CommandMessageKey(this,"partner");
-    private final CommandMessageKey confirmMK = new CommandMessageKey(this,"confirm");
-    private final CommandMessageKey notYourChildMK = new CommandMessageKey(this,"not_your_child");
-    private final CommandMessageKey noChildMK = new CommandMessageKey(this,"no_child");
-    private final CommandMessageKey cancelMK = new CommandMessageKey(this,"cancel");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey specifyChildMK = new LunaticCommandMessageKey(this,"specify_child");
+    private final CommandMessageKey kickoutMK = new LunaticCommandMessageKey(this,"kickout");
+    private final CommandMessageKey childMK = new LunaticCommandMessageKey(this,"child");
+    private final CommandMessageKey siblingMK = new LunaticCommandMessageKey(this,"sibling");
+    private final CommandMessageKey partnerMK = new LunaticCommandMessageKey(this,"partner");
+    private final CommandMessageKey confirmMK = new LunaticCommandMessageKey(this,"confirm");
+    private final CommandMessageKey notYourChildMK = new LunaticCommandMessageKey(this,"not_your_child");
+    private final CommandMessageKey noChildMK = new LunaticCommandMessageKey(this,"no_child");
+    private final CommandMessageKey cancelMK = new LunaticCommandMessageKey(this,"cancel");
 
 
     @Override

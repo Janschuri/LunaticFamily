@@ -1,25 +1,28 @@
 package de.janschuri.lunaticfamily.common.commands.sibling;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class SiblingSet extends Subcommand {
+public class SiblingSet extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey addedMK = new CommandMessageKey(this,"added");
-    private final CommandMessageKey isAdoptedMK = new CommandMessageKey(this,"is_adopted");
-    private final CommandMessageKey setBothAdoptedMK = new CommandMessageKey(this,"set_both_adopted");
-    private final CommandMessageKey sameFamilyMK = new CommandMessageKey(this,"same_family");
-    private final CommandMessageKey samePlayerMK = new CommandMessageKey(this,"same_player");
+    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private final CommandMessageKey addedMK = new LunaticCommandMessageKey(this,"added");
+    private final CommandMessageKey isAdoptedMK = new LunaticCommandMessageKey(this,"is_adopted");
+    private final CommandMessageKey setBothAdoptedMK = new LunaticCommandMessageKey(this,"set_both_adopted");
+    private final CommandMessageKey sameFamilyMK = new LunaticCommandMessageKey(this,"same_family");
+    private final CommandMessageKey samePlayerMK = new LunaticCommandMessageKey(this,"same_player");
 
 
 
