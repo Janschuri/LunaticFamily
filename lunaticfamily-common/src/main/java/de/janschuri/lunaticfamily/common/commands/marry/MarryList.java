@@ -11,17 +11,18 @@ import de.janschuri.lunaticlib.Placeholder;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
-import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 public class MarryList extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
+    private static final CommandMessageKey helpMK = new LunaticCommandMessageKey(new MarryList(),"help");
     private final CommandMessageKey headerMK = new LunaticCommandMessageKey(this,"header");
     private final CommandMessageKey pairsMK = new LunaticCommandMessageKey(this,"pairs");
 
@@ -47,13 +48,18 @@ public class MarryList extends FamilyCommand implements HasParentCommand, HasPar
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
             return true;
         }
+
+        Logger.debugLog("MarryList: " + Arrays.toString(args));
+
         int page = 1;
         if (args.length > 0) {
             try {
                 page = Integer.parseInt(args[0]);
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
+                Logger.debugLog("MarryList1: ");
                 sender.sendMessage(getMessage(NO_NUMBER_MK,
                 placeholder("%input%", args[0])));
+                return true;
             }
         }
 

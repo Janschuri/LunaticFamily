@@ -9,8 +9,8 @@ import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
-import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
-import de.janschuri.lunaticlib.common.command.LunaticMessageKey;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
+import de.janschuri.lunaticlib.common.config.LunaticMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.HashMap;

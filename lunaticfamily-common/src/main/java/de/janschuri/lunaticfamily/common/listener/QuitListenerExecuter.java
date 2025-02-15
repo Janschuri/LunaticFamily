@@ -12,8 +12,8 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
-import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
-import de.janschuri.lunaticlib.common.command.LunaticMessageKey;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
+import de.janschuri.lunaticlib.common.config.LunaticMessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 

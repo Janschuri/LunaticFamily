@@ -9,7 +9,7 @@ import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
-import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
 import java.util.ArrayList;
 import java.util.List;

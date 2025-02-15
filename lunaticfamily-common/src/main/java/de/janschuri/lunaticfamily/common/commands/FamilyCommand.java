@@ -7,14 +7,21 @@ import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.LunaticCommand;
-import de.janschuri.lunaticlib.common.command.LunaticMessageKey;
+import de.janschuri.lunaticlib.common.config.LunaticMessageKey;
 import net.kyori.adventure.text.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 public abstract class FamilyCommand extends LunaticCommand {
 
-    protected static final MessageKey NO_NUMBER_MK = new LunaticMessageKey("no_number");
+    protected static final MessageKey NO_NUMBER_MK = new LunaticMessageKey("no_number")
+            .keyBlockComment("This is a key block comment")
+            .keyInlineComment("This is a key inline comment")
+            .valueBlockComment("This is a value block comment")
+            .valueInlineComment("This is a value inline comment")
+            .defaultMessage("en", "Please enter a number.")
+            .defaultMessage("de", "Bitte gebe eine Zahl ein.");
     protected static final MessageKey WRONG_USAGE_MK = new LunaticMessageKey("wrong_usage");
     protected static final MessageKey PLAYER_NOT_EXIST_MK = new LunaticMessageKey("player_not_exist");
     protected static final MessageKey NOT_ENOUGH_MONEY_MK = new LunaticMessageKey("not_enough_money");

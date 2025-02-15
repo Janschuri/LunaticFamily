@@ -8,7 +8,7 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
-import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
 import java.util.UUID;
 

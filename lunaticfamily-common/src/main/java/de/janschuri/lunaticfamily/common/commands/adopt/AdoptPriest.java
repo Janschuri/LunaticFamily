@@ -2,7 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.commands.priest.PriestAdopt;
 import de.janschuri.lunaticlib.CommandMessageKey;
-import de.janschuri.lunaticlib.common.command.LunaticCommandMessageKey;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import de.janschuri.lunaticlib.common.logger.Logger;
 
 import java.util.List;
