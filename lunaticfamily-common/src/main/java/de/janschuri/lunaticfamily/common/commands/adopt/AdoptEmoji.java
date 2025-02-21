@@ -21,11 +21,23 @@ import java.util.*;
 
 public class AdoptEmoji extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey noColorMK = new LunaticCommandMessageKey(this,"no_color");
-    private final CommandMessageKey colorSetMK = new LunaticCommandMessageKey(this,"color_set");
-    private final CommandMessageKey noAdoptionMK = new LunaticCommandMessageKey(this,"no_adoption");
-    private final CommandMessageKey headerMK = new LunaticCommandMessageKey(this,"header");
+    private static final AdoptEmoji INSTANCE = new AdoptEmoji();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE,"help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Change the color of your emoji in the adoption list.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Ändere die Farbe deines Emojis in der Adoptionsliste.");
+    private static final CommandMessageKey NO_COLOR_MK = new LunaticCommandMessageKey(INSTANCE,"no_color")
+            .defaultMessage("en", "Please specify a valid color.")
+            .defaultMessage("de", "Bitte gib eine gültige Farbe an.");
+    private static final CommandMessageKey COLOR_SET_MK = new LunaticCommandMessageKey(INSTANCE,"color_set")
+            .defaultMessage("en", "You have chosen the color %color%.")
+            .defaultMessage("de", "Du hast die Farbe %color% gewählt.");
+    private static final CommandMessageKey NO_ADOPTION_MK = new LunaticCommandMessageKey(INSTANCE,"no_adoption")
+            .defaultMessage("en", "You are not adopted.")
+            .defaultMessage("de", "Du bist nicht adoptiert.");
+    private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE,"header")
+            .defaultMessage("en", "Choose a color:")
+            .defaultMessage("de", "Wähle eine Farbe:");
 
 
     @Override
@@ -59,13 +71,13 @@ public class AdoptEmoji extends FamilyCommand implements HasParentCommand, HasPa
         FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         if (!playerFam.isAdopted()) {
-            sender.sendMessage(getMessage(noAdoptionMK));
+            sender.sendMessage(getMessage(NO_ADOPTION_MK));
             return true;
         }
 
         if (args.length < 1) {
             ComponentBuilder builder = Component.text();
-            builder.append(getMessage(headerMK));
+            builder.append(getMessage(HEADER_MK));
             builder.append(Component.newline());
 
             for (String color : getParams().get(0).keySet()) {
@@ -91,7 +103,7 @@ public class AdoptEmoji extends FamilyCommand implements HasParentCommand, HasPa
         String color = args[0];
 
         if (!LunaticFamily.getConfig().getColors().containsKey(color) && !Utils.isValidHexCode(args[0])) {
-            sender.sendMessage(getMessage(noColorMK));
+            sender.sendMessage(getMessage(NO_COLOR_MK));
             return true;
         }
 
@@ -132,11 +144,18 @@ public class AdoptEmoji extends FamilyCommand implements HasParentCommand, HasPa
 
         TextReplacementConfig replacementConfig = TextReplacementConfig.builder().match("%color%").replacement(colorComponent).build();
 
-        Component msg = getMessage(colorSetMK).replaceText(replacementConfig);
+        Component msg = getMessage(COLOR_SET_MK).replaceText(replacementConfig);
 
         player.sendMessage(msg);
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
 

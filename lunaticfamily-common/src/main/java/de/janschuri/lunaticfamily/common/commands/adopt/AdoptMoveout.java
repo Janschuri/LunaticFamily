@@ -12,17 +12,34 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class AdoptMoveout extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey moveoutMK = new LunaticCommandMessageKey(this,"moveout");
-    private final CommandMessageKey confirmMK = new LunaticCommandMessageKey(this,"confirm");
-    private final CommandMessageKey childMK = new LunaticCommandMessageKey(this,"child");
-    private final CommandMessageKey noParentsMK = new LunaticCommandMessageKey(this,"no_parents");
-    private final CommandMessageKey siblingMK = new LunaticCommandMessageKey(this,"sibling");
-    private final CommandMessageKey cancelMK = new LunaticCommandMessageKey(this,"cancel");
+    private static final AdoptMoveout INSTANCE = new AdoptMoveout();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE,"help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Move out of your parents' house, to be no longer adopted.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Ziehe aus dem Haus deiner Eltern aus, um nicht mehr adoptiert zu sein.");
+    private static final CommandMessageKey MOVEOUT_MK = new LunaticCommandMessageKey(INSTANCE,"moveout")
+            .defaultMessage("en", "You have moved out of your parents' house. Du bist nun nicht mehr adoptiert.")
+            .defaultMessage("de", "Du bist aus dem Haus deiner Eltern ausgezogen. You are no longer adopted.");
+    private static final CommandMessageKey CONFIRM_MK = new LunaticCommandMessageKey(INSTANCE,"confirm")
+            .defaultMessage("en", "Are you sure you want to move out of your parents' house?")
+            .defaultMessage("de", "Bist du sicher, dass du aus dem Haus deiner Eltern ausziehen möchtest?");
+    private static final CommandMessageKey PARENT_MK = new LunaticCommandMessageKey(INSTANCE,"child")
+            .defaultMessage("en", "%player% has moved out of your house.")
+            .defaultMessage("de", "%player% ist aus deinem Haus ausgezogen.");
+    private static final CommandMessageKey NO_PARENTS_MK = new LunaticCommandMessageKey(INSTANCE,"no_parents")
+            .defaultMessage("en", "You are not adopted.")
+            .defaultMessage("de", "Du bist nicht adoptiert.");
+    private static final CommandMessageKey SIBLING_MK = new LunaticCommandMessageKey(INSTANCE,"sibling")
+            .defaultMessage("en", "Your sibling has moved out of your parents' house.")
+            .defaultMessage("de", "Dein Geschwister ist aus dem Haus deiner Eltern ausgezogen.");
+    private static final CommandMessageKey CANCEL_MK = new LunaticCommandMessageKey(INSTANCE,"cancel")
+            .defaultMessage("en", "You have canceled the move out.")
+            .defaultMessage("de", "Du hast den Auszug abgebrochen.");
 
     @Override
     public String getPermission() {
@@ -75,19 +92,19 @@ public class AdoptMoveout extends FamilyCommand implements HasParentCommand {
 
 
         if (!playerFam.isAdopted()) {
-            player.sendMessage(getMessage(noParentsMK));
+            player.sendMessage(getMessage(NO_PARENTS_MK));
             return true;
         }
 
         if (cancel) {
-            sender.sendMessage(getMessage(cancelMK));
+            sender.sendMessage(getMessage(CANCEL_MK));
             return true;
         }
 
         if (!confirm) {
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(confirmMK.noPrefix()),
+                    getMessage(CONFIRM_MK.noPrefix()),
                     getMessage(CONFIRM_MK.noPrefix()),
                     "/family adopt moveout confirm",
                     getMessage(CANCEL_MK.noPrefix()),
@@ -165,18 +182,18 @@ public class AdoptMoveout extends FamilyCommand implements HasParentCommand {
         if (playerFam.hasSiblings()) {
             FamilyPlayer siblingFam = playerFam.getSibling();
             Sender sibling = LunaticLib.getPlatform().getPlayerSender(siblingFam.getUUID());
-            sibling.sendMessage(getMessage(siblingMK));
+            sibling.sendMessage(getMessage(SIBLING_MK));
         }
 
-        sender.sendMessage(getMessage(moveoutMK));
+        sender.sendMessage(getMessage(MOVEOUT_MK));
 
 
-        firstParent.sendMessage(getMessage(childMK,
+        firstParent.sendMessage(getMessage(PARENT_MK,
                 placeholder("%player%", playerFam.getName())));
         if (playerFam.getParents().size() > 1) {
             UUID parent2UUID = playerFam.getParents().get(1).getUUID();
             PlayerSender secondParent = LunaticLib.getPlatform().getPlayerSender(parent2UUID);
-            secondParent.sendMessage(getMessage(childMK,
+            secondParent.sendMessage(getMessage(PARENT_MK,
                 placeholder("%player%", playerFam.getName())));
         }
 
@@ -209,5 +226,12 @@ public class AdoptMoveout extends FamilyCommand implements HasParentCommand {
 
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 }

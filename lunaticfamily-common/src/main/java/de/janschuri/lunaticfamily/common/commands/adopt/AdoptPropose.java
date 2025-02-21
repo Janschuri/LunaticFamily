@@ -23,22 +23,56 @@ import java.util.concurrent.TimeUnit;
 
 public class AdoptPropose extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey limitMK = new LunaticCommandMessageKey(this,"limit");
-    private final CommandMessageKey openRequestMK = new LunaticCommandMessageKey(this,"open_request");
-    private final CommandMessageKey requestMK = new LunaticCommandMessageKey(this,"request");
-    private final CommandMessageKey requestBySingleMK = new LunaticCommandMessageKey(this,"request_by_single");
-    private final CommandMessageKey requestSentMK = new LunaticCommandMessageKey(this,"request_sent");
-    private final CommandMessageKey requestExpiredMK = new LunaticCommandMessageKey(this,"request_expired");
-    private final CommandMessageKey requestSentExpiredMK = new LunaticCommandMessageKey(this,"request_sent_expired");
-    private final CommandMessageKey requestBySingleExpiredMK = new LunaticCommandMessageKey(this,"request_by_single_expired");
-    private final CommandMessageKey selfRequestMK = new LunaticCommandMessageKey(this,"self_request");
-    private final CommandMessageKey hasSiblingMK = new LunaticCommandMessageKey(this,"has_sibling");
-    private final CommandMessageKey hasSiblingLimitMK = new LunaticCommandMessageKey(this,"has_sibling_limit");
-    private final CommandMessageKey noSingleAdoptMK = new LunaticCommandMessageKey(this,"no_single_adopt");
-    private final CommandMessageKey alreadyAdoptedMK = new LunaticCommandMessageKey(this,"already_adopted");
-    private final CommandMessageKey familyRequestMK = new LunaticCommandMessageKey(this,"family_request");
-    private final CommandMessageKey cancelMK = new LunaticCommandMessageKey(this,"cancel");
+    private static final AdoptPropose INSTANCE = new AdoptPropose();
+
+    private static final CommandMessageKey helpMK = new LunaticCommandMessageKey(INSTANCE,"help")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Propose an adoption to a player.")
+            .defaultMessage("de", "&6/%command% %subcommand% &b<%param%> &7- Schlage einem Spieler eine Adoption vor.");
+    private static final CommandMessageKey limitMK = new LunaticCommandMessageKey(INSTANCE,"limit")
+            .defaultMessage("en", "You cannot adopt another child. You have already reached the limit of two children.")
+            .defaultMessage("de", "Du kannst kein weiteres Kind adoptieren. Du hast bereits das Limit von zwei Kindern erreicht.");
+    private static final CommandMessageKey openRequestMK = new LunaticCommandMessageKey(INSTANCE,"open_request")
+            .defaultMessage("en", "%player% already has an open adoption request.")
+            .defaultMessage("de", "%player% hat bereits eine offene Adoptionsanfrage.");
+    private static final CommandMessageKey requestMK = new LunaticCommandMessageKey(INSTANCE,"request")
+            .defaultMessage("en", "%player1% and %player2% want to adopt you. Do you accept?")
+            .defaultMessage("de", "%player1% und %player2% möchten dich adoptieren. Akzeptierst du?");
+    private static final CommandMessageKey requestBySingleMK = new LunaticCommandMessageKey(INSTANCE,"request_by_single")
+            .defaultMessage("en", "%player% wants to adopt you. Do you accept?")
+            .defaultMessage("de", "%player% möchte dich adoptieren. Akzeptierst du?");
+    private static final CommandMessageKey requestSentMK = new LunaticCommandMessageKey(INSTANCE,"request_sent")
+            .defaultMessage("en", "You have sent an adoption request to %player%.")
+            .defaultMessage("de", "Du hast eine Adoptionsanfrage an %player% gesendet.");
+    private static final CommandMessageKey requestExpiredMK = new LunaticCommandMessageKey(INSTANCE,"request_expired")
+            .defaultMessage("en", "The adoption request from %player1% and %player2% has expired.")
+            .defaultMessage("de", "Die Adoptionsanfrage von %player1% und %player2% ist abgelaufen.");
+    private static final CommandMessageKey requestSentExpiredMK = new LunaticCommandMessageKey(INSTANCE,"request_sent_expired")
+            .defaultMessage("en", "The adoption request to %player% has expired.")
+            .defaultMessage("de", "Die Adoptionsanfrage an %player% ist abgelaufen.");
+    private static final CommandMessageKey requestBySingleExpiredMK = new LunaticCommandMessageKey(INSTANCE,"request_by_single_expired")
+            .defaultMessage("en", "The adoption request by %player% has expired.")
+            .defaultMessage("de", "Die Adoptionsanfrage von %player% ist abgelaufen.");
+    private static final CommandMessageKey selfRequestMK = new LunaticCommandMessageKey(INSTANCE,"self_request")
+            .defaultMessage("en", "You cannot adopt yourself.")
+            .defaultMessage("de", "Du kannst dich nicht selbst adoptieren.");
+    private static final CommandMessageKey hasSiblingMK = new LunaticCommandMessageKey(INSTANCE,"has_sibling")
+            .defaultMessage("en", "%player1% and %player2% are siblings. Do you want to adopt both?")
+            .defaultMessage("de", "%player1% und %player2% sind Geschwister. Möchtest du beide adoptieren?");
+    private static final CommandMessageKey hasSiblingLimitMK = new LunaticCommandMessageKey(INSTANCE,"has_sibling_limit")
+            .defaultMessage("en", "%player1% and %player2% are siblings. You already have 1 child and can only have a total of 2 children.")
+            .defaultMessage("de", "%player1% und %player2% sind Geschwister. Du hast bereits 1 Kind und kannst insgesamt nur 2 Kinder haben.");
+    private static final CommandMessageKey noSingleAdoptMK = new LunaticCommandMessageKey(INSTANCE,"no_single_adopt")
+            .defaultMessage("en", "You cannot adopt a child as a single.")
+            .defaultMessage("de", "Du kannst kein Kind als Single adoptieren.");
+    private static final CommandMessageKey alreadyAdoptedMK = new LunaticCommandMessageKey(INSTANCE,"already_adopted")
+            .defaultMessage("en", "%player% is already adopted.")
+            .defaultMessage("de", "%player% ist bereits adoptiert.");
+    private static final CommandMessageKey familyRequestMK = new LunaticCommandMessageKey(INSTANCE,"family_request")
+            .defaultMessage("en", "%player% is already a family member.")
+            .defaultMessage("de", "%player% ist bereits ein Familienmitglied.");
+    private static final CommandMessageKey cancelMK = new LunaticCommandMessageKey(INSTANCE,"cancel")
+            .defaultMessage("en", "You have canceled the adoption request to %player%.")
+            .defaultMessage("de", "Du hast die Adoptionsanfrage an %player% abgebrochen.");
 
 
     @Override
@@ -247,6 +281,13 @@ public class AdoptPropose extends FamilyCommand implements HasParentCommand, Has
         Utils.scheduleTask(runnable, 30, TimeUnit.SECONDS);
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                helpMK, getPermission()
+        );
     }
 
     @Override

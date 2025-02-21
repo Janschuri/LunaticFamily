@@ -22,16 +22,38 @@ import java.util.UUID;
 
 public class AdoptKickout extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey specifyChildMK = new LunaticCommandMessageKey(this,"specify_child");
-    private final CommandMessageKey kickoutMK = new LunaticCommandMessageKey(this,"kickout");
-    private final CommandMessageKey childMK = new LunaticCommandMessageKey(this,"child");
-    private final CommandMessageKey siblingMK = new LunaticCommandMessageKey(this,"sibling");
-    private final CommandMessageKey partnerMK = new LunaticCommandMessageKey(this,"partner");
-    private final CommandMessageKey confirmMK = new LunaticCommandMessageKey(this,"confirm");
-    private final CommandMessageKey notYourChildMK = new LunaticCommandMessageKey(this,"not_your_child");
-    private final CommandMessageKey noChildMK = new LunaticCommandMessageKey(this,"no_child");
-    private final CommandMessageKey cancelMK = new LunaticCommandMessageKey(this,"cancel");
+    private static final AdoptKickout INSTANCE = new AdoptKickout();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE,"help")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Kick a child out of your family.")
+            .defaultMessage("de", "&6/%command% %subcommand% &b<%param%> &7- Kick ein Kind aus deiner Familie.");
+    private static final CommandMessageKey SPECIFY_CHILD_MK = new LunaticCommandMessageKey(INSTANCE,"specify_child")
+            .defaultMessage("en", "Please specify a child.")
+            .defaultMessage("de", "Bitte gib ein Kind an.");
+    private static final CommandMessageKey KICKOUT_MK = new LunaticCommandMessageKey(INSTANCE,"kickout")
+            .defaultMessage("en", "You kicked %player% out of your family.")
+            .defaultMessage("de", "Du hast %player% aus deiner Familie geworfen.");
+    private static final CommandMessageKey CHILD_MK = new LunaticCommandMessageKey(INSTANCE,"child")
+            .defaultMessage("en", "%player% kicked you out of their family.")
+            .defaultMessage("de", "%player% hat dich aus ihrer Familie geworfen.");
+    private static final CommandMessageKey SIBLING_MK = new LunaticCommandMessageKey(INSTANCE,"sibling")
+            .defaultMessage("en", "%player% kicked your sibling out of their family.")
+            .defaultMessage("de", "%player% hat dein Geschwisterkind aus ihrer Familie geworfen.");
+    private static final CommandMessageKey PARTNER_MK = new LunaticCommandMessageKey(INSTANCE,"partner")
+            .defaultMessage("en", "%player1% kicked %player2% out of their family.")
+            .defaultMessage("de", "%player1% hat %player2% aus ihrer Familie geworfen.");
+    private static final CommandMessageKey CONFIRM_MK = new LunaticCommandMessageKey(INSTANCE,"confirm")
+            .defaultMessage("en", "Please confirm, that you want to kick %player% out of your family.")
+            .defaultMessage("de", "Bitte bestätige, dass du %player% aus deiner Familie werfen möchtest.");
+    private static final CommandMessageKey NOT_YOUR_CHILD_MK = new LunaticCommandMessageKey(INSTANCE,"not_your_child")
+            .defaultMessage("en", "%player% is not your child.")
+            .defaultMessage("de", "%player% ist nicht dein Kind.");
+    private static final CommandMessageKey NO_CHILD_MK = new LunaticCommandMessageKey(INSTANCE,"no_child")
+            .defaultMessage("en", "You have no children.")
+            .defaultMessage("de", "Du hast keine Kinder.");
+    private static final CommandMessageKey CANCEL_MK = new LunaticCommandMessageKey(INSTANCE,"cancel")
+            .defaultMessage("en", "You haven't kicked %player% out of your family.")
+            .defaultMessage("de", "Du hast %player% nicht aus deiner Familie geworfen.");
 
 
     @Override
@@ -66,12 +88,12 @@ public class AdoptKickout extends FamilyCommand implements HasParentCommand, Has
         FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         if (playerFam.getChildren().isEmpty()) {
-            sender.sendMessage(getMessage(noChildMK));
+            sender.sendMessage(getMessage(NO_CHILD_MK));
             return true;
         }
 
         if (args.length == 0) {
-            player.sendMessage(getMessage(specifyChildMK));
+            player.sendMessage(getMessage(SPECIFY_CHILD_MK));
             return true;
         }
 
@@ -90,7 +112,7 @@ public class AdoptKickout extends FamilyCommand implements HasParentCommand, Has
         FamilyPlayer childFam = getFamilyPlayer(childUUID);
 
         if (childFam.isNotChildOf(playerFam)) {
-            sender.sendMessage(getMessage(notYourChildMK,
+            sender.sendMessage(getMessage(NOT_YOUR_CHILD_MK,
                 placeholder("%player%", childFam.getName())));
             return true;
         }
@@ -115,7 +137,7 @@ public class AdoptKickout extends FamilyCommand implements HasParentCommand, Has
         }
 
         if (cancel) {
-            player.sendMessage(getMessage(this.cancelMK));
+            player.sendMessage(getMessage(this.CANCEL_MK));
             return true;
         }
 
@@ -123,7 +145,7 @@ public class AdoptKickout extends FamilyCommand implements HasParentCommand, Has
             Logger.debugLog(child.getName());
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(confirmMK.noPrefix(),
+                    getMessage(CONFIRM_MK.noPrefix(),
                 placeholder("%player%", childFam.getName())),
                     getMessage(CONFIRM_MK),
                     "/family adopt kickout " + childName + " confirm",
@@ -177,12 +199,12 @@ public class AdoptKickout extends FamilyCommand implements HasParentCommand, Has
             }
         }
 
-        player.sendMessage(getMessage(kickoutMK,
+        player.sendMessage(getMessage(KICKOUT_MK,
                 placeholder("%player%", childFam.getName())));
 
         if (playerFam.isMarried()) {
             PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUUID());
-            partner.sendMessage(getMessage(this.partnerMK,
+            partner.sendMessage(getMessage(this.PARTNER_MK,
                 placeholder("%player1%", playerFam.getName()),
                 placeholder("%player2%", childFam.getName())));
         }
@@ -190,11 +212,11 @@ public class AdoptKickout extends FamilyCommand implements HasParentCommand, Has
         if (childFam.hasSiblings()) {
             FamilyPlayer siblingFam = childFam.getSibling();
             PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingFam.getUUID());
-            sibling.sendMessage(getMessage(siblingMK,
+            sibling.sendMessage(getMessage(SIBLING_MK,
                 placeholder("%player%", playerFam.getName())));
         }
 
-        child.sendMessage(getMessage(childMK,
+        child.sendMessage(getMessage(CHILD_MK,
                 placeholder("%player%", playerFam.getName())));
 
         if (force) {
@@ -224,6 +246,13 @@ public class AdoptKickout extends FamilyCommand implements HasParentCommand, Has
         playerFam.unadopt(childFam);
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     @Override

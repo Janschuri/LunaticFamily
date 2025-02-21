@@ -107,9 +107,4 @@ public abstract class FamilyCommand extends LunaticCommand implements HasMessage
     public Component noPermissionMessage(Sender sender, String[] strings) {
         return getMessage(NO_PERMISSION_MK);
     }
-
-    @Override
-    public Component noConsoleCommandMessage(Sender sender, String[] strings) {
-        return getMessage(NO_CONSOLE_COMMAND_MK);
-    }
 }

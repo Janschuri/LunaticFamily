@@ -65,6 +65,13 @@ public class AdoptList extends FamilyCommand implements HasParams, HasParentComm
     }
 
     @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                helpMK, getPermission()
+        );
+    }
+
+    @Override
     public List<Component> getParamsNames() {
         return List.of(
                 getMessage(PAGE_MK.noPrefix())
