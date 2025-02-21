@@ -137,7 +137,7 @@ public class AdoptKickout extends FamilyCommand implements HasParentCommand, Has
         }
 
         if (cancel) {
-            player.sendMessage(getMessage(this.CANCEL_MK));
+            player.sendMessage(getMessage(CANCEL_MK));
             return true;
         }
 
@@ -204,7 +204,7 @@ public class AdoptKickout extends FamilyCommand implements HasParentCommand, Has
 
         if (playerFam.isMarried()) {
             PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUUID());
-            partner.sendMessage(getMessage(this.PARTNER_MK,
+            partner.sendMessage(getMessage(PARTNER_MK,
                 placeholder("%player1%", playerFam.getName()),
                 placeholder("%player2%", childFam.getName())));
         }
