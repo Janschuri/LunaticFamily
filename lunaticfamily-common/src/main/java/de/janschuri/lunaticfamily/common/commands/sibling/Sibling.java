@@ -47,7 +47,7 @@ public class Sibling extends FamilyCommand implements HasHelpCommand, HasParentC
 
     @Override
     public LunaticHelpCommand getHelpCommand() {
-        return new LunaticHelpCommand(getLanguageConfig(), this);
+        return new LunaticHelpCommand(this);
     }
 
     @Override

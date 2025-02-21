@@ -17,7 +17,7 @@ public class Gender extends FamilyCommand implements HasHelpCommand, HasSubcomma
 
     @Override
     public LunaticHelpCommand getHelpCommand() {
-        return new LunaticHelpCommand(getLanguageConfig(), this);
+        return new LunaticHelpCommand(this);
     }
 
     @Override

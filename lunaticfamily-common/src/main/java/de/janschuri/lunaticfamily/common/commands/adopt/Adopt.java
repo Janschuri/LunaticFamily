@@ -17,7 +17,7 @@ public class Adopt extends FamilyCommand implements HasHelpCommand, HasSubcomman
 
     @Override
     public LunaticHelpCommand getHelpCommand() {
-        return new LunaticHelpCommand(getLanguageConfig(), this);
+        return new LunaticHelpCommand(this);
     }
 
     @Override

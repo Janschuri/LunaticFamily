@@ -32,6 +32,11 @@ public class LanguageConfigImpl extends LunaticLanguageConfig implements FamilyL
         colorsTranslations = getStringMap("color_translations");
     }
 
+    @Override
+    protected String getPackage() {
+        return "de.janschuri.lunaticfamily.common";
+    }
+
     public String getGenderLang(String key) {
         if (genderLang.containsKey(key)) {
             return translateAlternateColorCodes('&', genderLang.get(key.toLowerCase()));
