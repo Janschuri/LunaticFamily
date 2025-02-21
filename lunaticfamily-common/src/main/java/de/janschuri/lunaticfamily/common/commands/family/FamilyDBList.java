@@ -19,9 +19,17 @@ import java.util.*;
 
 public class FamilyDBList extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey headerMK = new LunaticCommandMessageKey(this,"header");
-    private final CommandMessageKey playersMK = new LunaticCommandMessageKey(this,"players");
+    private static final FamilyDBList INSTANCE = new FamilyDBList();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Show a list of all players in the database.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Zeige eine Liste aller Spieler in der Datenbank.");
+    private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "header")
+            .defaultMessage("en", "All players in the database:")
+            .defaultMessage("de", "Alle Spieler in der Datenbank:");
+    private static final CommandMessageKey PLAYERS_MK = new LunaticCommandMessageKey(INSTANCE, "players")
+            .defaultMessage("en", "&6%index%: &b%name% &7(%gender%)")
+            .defaultMessage("de", "&6%index%: &b%name% &7(%gender%)");
 
 
     @Override
@@ -41,10 +49,6 @@ public class FamilyDBList extends FamilyCommand implements HasParams, HasParentC
 
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!sender.hasPermission(getPermission())) {
-            sender.sendMessage(getMessage(NO_PERMISSION_MK));
-            return true;
-        }
         int page = 1;
         if (args.length > 0) {
             try {
@@ -60,6 +64,13 @@ public class FamilyDBList extends FamilyCommand implements HasParams, HasParentC
         sender.sendMessage(msg);
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     @Override
@@ -79,7 +90,7 @@ public class FamilyDBList extends FamilyCommand implements HasParams, HasParentC
         Map<Integer, FamilyPlayer> players = DatabaseRepository.getDatabase().find(FamilyPlayer.class).findList().stream()
                 .collect(LinkedHashMap::new, (m, v) -> m.put(v.getId(), v), LinkedHashMap::putAll);
 
-        ComponentBuilder<TextComponent, TextComponent.Builder> msg = Component.text().append(getMessage(headerMK.noPrefix()));
+        ComponentBuilder<TextComponent, TextComponent.Builder> msg = Component.text().append(getMessage(HEADER_MK.noPrefix()));
 
         int i = 1;
 
@@ -108,7 +119,7 @@ public class FamilyDBList extends FamilyCommand implements HasParams, HasParentC
 
             TextReplacementConfig nameRpl = TextReplacementConfig.builder().match("%name%").replacement(nameCmp).build();
 
-            Component row = getMessage(playersMK.noPrefix(),
+            Component row = getMessage(PLAYERS_MK.noPrefix(),
                 placeholder("%name%", nameCmp),
                 placeholder("%gender%", gender),
                 placeholder("%index%", String.valueOf(page*i))

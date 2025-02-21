@@ -19,11 +19,19 @@ import java.util.UUID;
 
 public class FamilyList extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey helpOthersMK = new LunaticCommandMessageKey(this,"help_others");
-    private final CommandMessageKey headerMK = new LunaticCommandMessageKey(this,"header");
-    private final CommandMessageKey othersHeaderMK = new LunaticCommandMessageKey(this,"others_header");
-    private final CommandMessageKey relationsMK = new LunaticCommandMessageKey(this,"relations");
+    private static final FamilyList INSTANCE = new FamilyList();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Show a list of all your family members.");
+    private static final CommandMessageKey HELP_OTHERS_MK = new LunaticCommandMessageKey(INSTANCE, "help_others")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Show a list of all the family members of a player.");
+    private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "header")
+            .defaultMessage("en", "Your family:");
+    private static final CommandMessageKey OTHERS_HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "others_header")
+            .defaultMessage("en", "%player%'s family:");
+    private static final CommandMessageKey RELATIONS_MK = new LunaticCommandMessageKey(INSTANCE, "relations")
+            .defaultMessage("en", "&6%relation%: &b%player%");
+
 
     @Override
     public String getPermission() {
@@ -43,8 +51,8 @@ public class FamilyList extends FamilyCommand implements HasParams, HasParentCom
     @Override
     public Map<CommandMessageKey, String> getHelpMessages() {
         return Map.of(
-                helpMK, getPermission(),
-                helpOthersMK, getPermission() + ".others"
+                HELP_MK, getPermission(),
+                HELP_OTHERS_MK, getPermission() + ".others"
         );
     }
 
@@ -67,7 +75,7 @@ public class FamilyList extends FamilyCommand implements HasParams, HasParentCom
             playerFam.update();
 
             List<RelationAdvancement> relationAdvancements = playerFam.getFamilyTree().getRelationAdvancements();
-            ComponentBuilder msg = Component.text().append(getMessage(headerMK.noPrefix()));
+            ComponentBuilder msg = Component.text().append(getMessage(HEADER_MK.noPrefix()));
 
             sender.sendMessage(getFamilyListMessage(relationAdvancements, msg));
             playerFam.updateFamilyTree();
@@ -92,7 +100,7 @@ public class FamilyList extends FamilyCommand implements HasParams, HasParentCom
         FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
         List<RelationAdvancement> relationAdvancements = player1Fam.getFamilyTree().getRelationAdvancements();
         ComponentBuilder msg = Component.text();
-        msg.append(getMessage(othersHeaderMK.noPrefix(),
+        msg.append(getMessage(OTHERS_HEADER_MK.noPrefix(),
                 placeholder("%player%", player1Fam.getName())));
 
         sender.sendMessage(getFamilyListMessage(relationAdvancements, msg));
@@ -128,7 +136,7 @@ public class FamilyList extends FamilyCommand implements HasParams, HasParentCom
                         .match("%player%")
                         .replacement(name).build();
 
-                Component component = getMessage(relationsMK.noPrefix())
+                Component component = getMessage(RELATIONS_MK.noPrefix())
                         .replaceText(relationRpl)
                         .replaceText(nameRpl);
 

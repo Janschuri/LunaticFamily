@@ -23,22 +23,48 @@ import java.util.concurrent.TimeUnit;
 
 public class PriestAdopt extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private static final PriestAdopt instance = new PriestAdopt();
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(instance,"help");
-    private final CommandMessageKey alreadyPriestMK = new LunaticCommandMessageKey(instance,"already_priest");
-    private final CommandMessageKey requestMK = new LunaticCommandMessageKey(instance,"request");
+    private static final PriestAdopt INSTANCE = new PriestAdopt();
 
-    private final CommandMessageKey playerAlreadyAdoptedMK = new LunaticCommandMessageKey(instance,"player_already_adopted");
-    private final CommandMessageKey tooManyChildrenMK = new LunaticCommandMessageKey(instance,"too_many_children");
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% <%param%> <%param%> &7- Arrange the adoption of a child by a player.")
+            .defaultMessage("de", "&6/%command% %subcommand% <%param%> <%param%> &7- Arrangiere die Adoption eines Kindes durch einen Spieler.");
+    private static final CommandMessageKey ALREADY_PRIEST_MK = new LunaticCommandMessageKey(INSTANCE, "already_priest")
+            .defaultMessage("en", "You are already a priest in another action.")
+            .defaultMessage("de", "Du bist bereits Priester in einer anderen Aktion.");
+    private static final CommandMessageKey REQUEST_MK = new LunaticCommandMessageKey(INSTANCE, "request")
+            .defaultMessage("en", "%player1%, would you like to adopt %player2% on this Minecraft server?")
+            .defaultMessage("de", "%player1%, möchtest du %player2% auf diesem Minecraft-Server adoptieren?");
+    private static final CommandMessageKey PLAYER_ALREADY_ADOPTED_MK = new LunaticCommandMessageKey(INSTANCE, "player_already_adopted")
+            .defaultMessage("en", "%player% is already adopted.")
+            .defaultMessage("de", "%player% ist bereits adoptiert.");
+    private static final CommandMessageKey TOO_MANY_CHILDREN_MK = new LunaticCommandMessageKey(INSTANCE, "too_many_children")
+            .defaultMessage("en", "%player% already has two children.")
+            .defaultMessage("de", "%player% hat bereits zwei Kinder.");
+    private static final CommandMessageKey SELF_REQUEST_MK = new LunaticCommandMessageKey(INSTANCE, "self_request")
+            .defaultMessage("en", "You cannot adopt yourself.")
+            .defaultMessage("de", "Du kannst dich nicht selbst adoptieren.");
+    private static final CommandMessageKey OPEN_REQUEST_MK = new LunaticCommandMessageKey(INSTANCE, "open_request")
+            .defaultMessage("en", "%player% already has an open adoption request.")
+            .defaultMessage("de", "%player% hat bereits eine offene Adoptionsanfrage.");
+    private static final CommandMessageKey SAME_PLAYER_MK = new LunaticCommandMessageKey(INSTANCE, "same_player")
+            .defaultMessage("en", "You cannot make someone their own child.")
+            .defaultMessage("de", "Du kannst niemanden zu seinem eigenen Kind machen.");
+    private static final CommandMessageKey REQUEST_EXPIRED_PRIEST_MK = new LunaticCommandMessageKey(INSTANCE, "request_expired_priest")
+            .defaultMessage("en", "The adoption of %player2% by %player1% has been canceled.")
+            .defaultMessage("de", "Die Adoption von %player2% durch %player1% wurde abgebrochen.");
+    private static final CommandMessageKey REQUEST_EXPIRED_PLAYER_MK = new LunaticCommandMessageKey(INSTANCE, "request_expired_player")
+            .defaultMessage("en", "Your adoption has been canceled.")
+            .defaultMessage("de", "Deine Adoption wurde abgebrochen.");
+    private static final CommandMessageKey FAMILY_REQUEST_MK = new LunaticCommandMessageKey(INSTANCE, "family_request")
+            .defaultMessage("en", "%player1% cannot adopt %player2%. These players already belong to the same family.")
+            .defaultMessage("de", "%player1% kann %player2% nicht adoptieren. Diese Spieler gehören bereits zur selben Familie.");
+    private static final CommandMessageKey YES_MK = new LunaticCommandMessageKey(INSTANCE, "yes")
+            .defaultMessage("en", "Yes. I do!")
+            .defaultMessage("de", "Ja. Ich will!");
+    private static final CommandMessageKey NO_MK = new LunaticCommandMessageKey(INSTANCE, "no")
+            .defaultMessage("en", "No. I don't want to.")
+            .defaultMessage("de", "Nein. Ich will nicht.");
 
-    private final CommandMessageKey selfRequestMK = new LunaticCommandMessageKey(instance,"self_request");
-    private final CommandMessageKey openRequestMK = new LunaticCommandMessageKey(instance,"open_request");
-    private final CommandMessageKey requestExpiredPriestMK = new LunaticCommandMessageKey(instance,"request_expired_priest");
-    private final CommandMessageKey requestExpiredPlayerMK = new LunaticCommandMessageKey(instance,"request_expired_player");
-    private final CommandMessageKey samePlayerMK = new LunaticCommandMessageKey(instance,"same_player");
-    private final CommandMessageKey yesMK = new LunaticCommandMessageKey(instance,"yes");
-    private final CommandMessageKey noMK = new LunaticCommandMessageKey(instance,"no");
-    private final CommandMessageKey familyRequestMK = new LunaticCommandMessageKey(instance,"family_request");
 
 
     @Override
@@ -77,12 +103,12 @@ public class PriestAdopt extends FamilyCommand implements HasParentCommand, HasP
         }
 
         if (Utils.isPriest(playerUUID)) {
-            sender.sendMessage(getMessage(alreadyPriestMK));
+            sender.sendMessage(getMessage(ALREADY_PRIEST_MK));
             return true;
         }
 
         if (args[0].equalsIgnoreCase(player.getName()) || args[1].equalsIgnoreCase(player.getName())) {
-            player.sendMessage(getMessage(selfRequestMK));
+            player.sendMessage(getMessage(SELF_REQUEST_MK));
             return true;
         }
 
@@ -109,7 +135,7 @@ public class PriestAdopt extends FamilyCommand implements HasParentCommand, HasP
         }
 
         if (player1UUID.equals(player2UUID)) {
-            sender.sendMessage(getMessage(samePlayerMK));
+            sender.sendMessage(getMessage(SAME_PLAYER_MK));
             return true;
         }
 
@@ -120,7 +146,7 @@ public class PriestAdopt extends FamilyCommand implements HasParentCommand, HasP
         player2Fam.update();
 
         if (player1Fam.isFamilyMember(player2Fam)) {
-            sender.sendMessage(getMessage(familyRequestMK,
+            sender.sendMessage(getMessage(FAMILY_REQUEST_MK,
                 placeholder("%player1%", player1Fam.getName()),
                 placeholder("%player2%", player2Fam.getName())
             ));
@@ -128,7 +154,7 @@ public class PriestAdopt extends FamilyCommand implements HasParentCommand, HasP
         }
 
         if (player2Fam.isFamilyMember(player1Fam)) {
-            sender.sendMessage(getMessage(familyRequestMK,
+            sender.sendMessage(getMessage(FAMILY_REQUEST_MK,
                 placeholder("%player1%", player1Fam.getName()),
                 placeholder("%player2%", player2Fam.getName())
             ));
@@ -213,31 +239,31 @@ public class PriestAdopt extends FamilyCommand implements HasParentCommand, HasP
         }
 
         if (player1Fam.getChildrenAmount() > 2) {
-            sender.sendMessage(getMessage(tooManyChildrenMK,
+            sender.sendMessage(getMessage(TOO_MANY_CHILDREN_MK,
                 placeholder("%player%", player1Fam.getName()))
             );
             return true;
         }
 
         if (player2Fam.hasSiblings()) {
-            sender.sendMessage(getMessage(playerAlreadyAdoptedMK,
+            sender.sendMessage(getMessage(PLAYER_ALREADY_ADOPTED_MK,
                 placeholder("%player%", player2Fam.getName())));
             return true;
         }
 
         if (LunaticFamily.adoptRequests.containsKey(player1UUID) || LunaticFamily.adoptPriests.containsValue(player1UUID)) {
-            sender.sendMessage(getMessage(openRequestMK,
+            sender.sendMessage(getMessage(OPEN_REQUEST_MK,
                 placeholder("%player%", player1Fam.getName())));
             return true;
         }
 
         if (LunaticFamily.adoptRequests.containsKey(player2UUID) || LunaticFamily.adoptPriests.containsValue(player2UUID)) {
-            sender.sendMessage(getMessage(openRequestMK,
+            sender.sendMessage(getMessage(OPEN_REQUEST_MK,
                 placeholder("%player%", player2Fam.getName())));
             return true;
         }
 
-        player.chat(getLanguageConfig().getMessageAsString(requestMK.noPrefix(),
+        player.chat(getLanguageConfig().getMessageAsString(REQUEST_MK.noPrefix(),
                 placeholder("%player1%", player1Fam.getName()),
                 placeholder("%player2%", player2Fam.getName())
         ));
@@ -245,9 +271,9 @@ public class PriestAdopt extends FamilyCommand implements HasParentCommand, HasP
         player1.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
                 Component.empty(),
-                getMessage(yesMK),
+                getMessage(YES_MK),
                 "/family adopt accept",
-                getMessage(noMK),
+                getMessage(NO_MK),
                 "/family adopt deny"),
                 LunaticFamily.getConfig().decisionAsInvGUI()
         );
@@ -259,12 +285,12 @@ public class PriestAdopt extends FamilyCommand implements HasParentCommand, HasP
             if (LunaticFamily.adoptPriestRequests.containsKey(player1UUID)) {
                 LunaticFamily.adoptPriestRequests.remove(player1UUID);
                 LunaticFamily.adoptPriests.remove(player1UUID);
-                player.sendMessage(getMessage(requestExpiredPriestMK,
+                player.sendMessage(getMessage(REQUEST_EXPIRED_PRIEST_MK,
                 placeholder("%player1%", player1.getName()),
                 placeholder("%player2%", player2.getName())));
-                player1.sendMessage(getMessage(requestExpiredPlayerMK,
+                player1.sendMessage(getMessage(REQUEST_EXPIRED_PLAYER_MK,
                 placeholder("%player%", player2.getName())));
-                player2.sendMessage(getMessage(requestExpiredPlayerMK,
+                player2.sendMessage(getMessage(REQUEST_EXPIRED_PLAYER_MK,
                 placeholder("%player%", player1.getName())));
             }
         };
@@ -272,6 +298,13 @@ public class PriestAdopt extends FamilyCommand implements HasParentCommand, HasP
         Utils.scheduleTask(runnable, 30L, TimeUnit.SECONDS);
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     @Override

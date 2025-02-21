@@ -17,9 +17,17 @@ import java.util.UUID;
 
 public class SiblingUnset extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey noSiblingMK = new LunaticCommandMessageKey(this,"no_sibling");
-    private final CommandMessageKey unsetMK = new LunaticCommandMessageKey(this,"unset");
+    private static final SiblingUnset INSTANCE = new SiblingUnset();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Unset the siblinghood between two players.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Entferne die Geschwisterschaft zwischen zwei Spielern.");
+    private static final CommandMessageKey NO_SIBLING_MK = new LunaticCommandMessageKey(INSTANCE, "no_sibling")
+            .defaultMessage("en", "%player% has no sibling.")
+            .defaultMessage("de", "%player% hat keinen Bruder/keine Schwester.");
+    private static final CommandMessageKey UNSET_MK = new LunaticCommandMessageKey(INSTANCE, "unset")
+            .defaultMessage("en", "You have unset the sibling relationship between %player1% and %player2%.")
+            .defaultMessage("de", "Du hast die Geschwisterbeziehung zwischen %player1% und %player2% entfernt.");
 
 
     @Override
@@ -67,7 +75,7 @@ public class SiblingUnset extends FamilyCommand implements HasParentCommand, Has
 
 
         if (!player1Fam.hasSiblings()) {
-            sender.sendMessage(getMessage(noSiblingMK,
+            sender.sendMessage(getMessage(NO_SIBLING_MK,
                 placeholder("%player%", player1Fam.getName())));
             return true;
         }
@@ -75,12 +83,19 @@ public class SiblingUnset extends FamilyCommand implements HasParentCommand, Has
 
         FamilyPlayer siblingFam = player1Fam.getSibling();
         player1Fam.removeSiblings();
-        sender.sendMessage(getMessage(unsetMK,
+        sender.sendMessage(getMessage(UNSET_MK,
                 placeholder("%player1%", player1Fam.getName()),
                 placeholder("%player2%", siblingFam.getName())));
 
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     @Override

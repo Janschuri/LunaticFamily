@@ -19,9 +19,12 @@ import java.util.Map;
 
 public class FamilyBackground extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey setMK = new LunaticCommandMessageKey(this,"set");
-    private final MessageKey backgroundMK = new LunaticMessageKey("background");
+    private static final FamilyBackground INSTANCE = new FamilyBackground();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Change the background of your family tree.");
+    private static final CommandMessageKey SET_MK = new LunaticCommandMessageKey(INSTANCE, "set")
+            .defaultMessage("en", "Background has been reset.");
 
 
     @Override
@@ -37,7 +40,7 @@ public class FamilyBackground extends FamilyCommand implements HasParams, HasPar
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(backgroundMK.noPrefix())
+                getMessage(BACKGROUND_MK.noPrefix())
         );
     }
 
@@ -73,7 +76,7 @@ public class FamilyBackground extends FamilyCommand implements HasParams, HasPar
         }
 
         if (args.length == 0) {
-            sender.sendMessage(getMessage(helpMK));
+            sender.sendMessage(getMessage(HELP_MK));
             return true;
         }
 
@@ -85,9 +88,16 @@ public class FamilyBackground extends FamilyCommand implements HasParams, HasPar
 
         playerFam.setBackground(background);
         playerFam.save();
-        sender.sendMessage(getMessage(setMK));
+        sender.sendMessage(getMessage(SET_MK));
         playerFam.updateFamilyTree();
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 }

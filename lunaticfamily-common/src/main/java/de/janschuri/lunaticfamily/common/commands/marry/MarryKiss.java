@@ -11,15 +11,27 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class MarryKiss extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey noPartnerMK = new LunaticCommandMessageKey(this,"no_partner");
-    private final CommandMessageKey kissMK = new LunaticCommandMessageKey(this,"kiss");
-    private final CommandMessageKey gotKissedMK = new LunaticCommandMessageKey(this,"got_kissed");
+    private static final MarryKiss INSTANCE = new MarryKiss();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Kiss your partner.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Küss deinen Partner.");
+    private static final CommandMessageKey NO_PARTNER_MK = new LunaticCommandMessageKey(INSTANCE, "no_partner")
+            .defaultMessage("en", "You are not married!")
+            .defaultMessage("de", "Du bist nicht verheiratet!");
+    private static final CommandMessageKey KISS_MK = new LunaticCommandMessageKey(INSTANCE, "kiss")
+            .defaultMessage("en", "You have kissed %player%.")
+            .defaultMessage("de", "Du hast %player% geküsst.");
+    private static final CommandMessageKey GOT_KISSED_MK = new LunaticCommandMessageKey(INSTANCE, "got_kissed")
+            .defaultMessage("en", "%player% has kissed you.")
+            .defaultMessage("de", "%player% hat dich geküsst.");
+
 
 
     @Override
@@ -52,7 +64,7 @@ public class MarryKiss extends FamilyCommand implements HasParentCommand {
         FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         if (!playerFam.isMarried()) {
-            sender.sendMessage(getMessage(noPartnerMK));
+            sender.sendMessage(getMessage(NO_PARTNER_MK));
             return true;
         }
 
@@ -96,13 +108,20 @@ public class MarryKiss extends FamilyCommand implements HasParentCommand {
             Utils.scheduleTask(runnable, i * 250L, TimeUnit.MILLISECONDS);
         }
 
-        player.sendMessage(getMessage(kissMK,
+        player.sendMessage(getMessage(KISS_MK,
                 placeholder("%player%", partner.getName())));
 
-        partner.sendMessage(getMessage(gotKissedMK,
+        partner.sendMessage(getMessage(GOT_KISSED_MK,
                 placeholder("%player%", player.getName())));
 
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 }

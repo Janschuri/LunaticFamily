@@ -18,13 +18,33 @@ import java.util.UUID;
 
 public class MarrySet extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey samePlayerMK = new LunaticCommandMessageKey(this,"same_player");
-    private final CommandMessageKey alreadyMarriedMK = new LunaticCommandMessageKey(this,"already_married");
-    private final CommandMessageKey tooManyChildrenMK = new LunaticCommandMessageKey(this,"too_many_children");
-    private final CommandMessageKey deniedMK = new LunaticCommandMessageKey(this,"denied");
-    private final CommandMessageKey marriedMK = new LunaticCommandMessageKey(this,"married");
-    private final CommandMessageKey sameFamilyMK = new LunaticCommandMessageKey(this,"same_family");
+    private static final MarrySet INSTANCE = new MarrySet();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> <%param%> &7- Set the marriage between a couple.")
+            .defaultMessage("de", "&6/%command% %subcommand% &b<%param%> <%param%> &7- Setze die Ehe zwischen einem Paar.");
+    private static final CommandMessageKey SAME_PLAYER_MK = new LunaticCommandMessageKey(INSTANCE, "same_player")
+            .defaultMessage("en", "A player cannot be their own partner.")
+            .defaultMessage("de", "Ein Spieler kann nicht sein eigener Partner sein.");
+    private static final CommandMessageKey ALREADY_MARRIED_MK = new LunaticCommandMessageKey(INSTANCE, "already_married")
+            .defaultMessage("en", "%player% is already married.")
+            .defaultMessage("de", "%player% ist bereits verheiratet.");
+    private static final CommandMessageKey TOO_MANY_CHILDREN_MK = new LunaticCommandMessageKey(INSTANCE, "too_many_children")
+            .defaultMessage("en", "%player1% and %player2% have more than 2 children together. %amount% children must be removed before %player1% and %player2% can marry.")
+            .defaultMessage("de", "%player1% und %player2% haben zusammen mehr als 2 Kinder. %amount% Kinder müssen entfernt werden, bevor %player1% und %player2% heiraten können.");
+    private static final CommandMessageKey DENIED_MK = new LunaticCommandMessageKey(INSTANCE, "denied")
+            .defaultMessage("en", "You have cancelled the marriage setting.")
+            .defaultMessage("de", "Du hast das Einstellen der Ehe abgebrochen.");
+    private static final CommandMessageKey CONFIRM_MK = new LunaticCommandMessageKey(INSTANCE, "confirm")
+            .defaultMessage("en", "Do you still want to set the marriage?")
+            .defaultMessage("de", "Möchtest du die Ehe wirklich einstellen?");
+    private static final CommandMessageKey MARRIED_MK = new LunaticCommandMessageKey(INSTANCE, "married")
+            .defaultMessage("en", "You have married %player1% and %player2%.")
+            .defaultMessage("de", "Du hast %player1% und %player2% verheiratet.");
+    private static final CommandMessageKey SAME_FAMILY_MK = new LunaticCommandMessageKey(INSTANCE, "same_family")
+            .defaultMessage("en", "%player1% and %player2% are already family.")
+            .defaultMessage("de", "%player1% und %player2% sind bereits Familie.");
+
 
 
     @Override
@@ -56,7 +76,7 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
         }
 
         if (args[0].equalsIgnoreCase("deny")) {
-            sender.sendMessage(getMessage(deniedMK));
+            sender.sendMessage(getMessage(DENIED_MK));
             return true;
         }
 
@@ -86,7 +106,7 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
 
 
         if (player1UUID.equals(player2UUID)) {
-            sender.sendMessage(getMessage(samePlayerMK));
+            sender.sendMessage(getMessage(SAME_PLAYER_MK));
             return true;
         }
 
@@ -97,7 +117,7 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
         player2Fam.update();
 
         if (player1Fam.isFamilyMember(player2Fam)) {
-            sender.sendMessage(getMessage(sameFamilyMK,
+            sender.sendMessage(getMessage(SAME_FAMILY_MK,
                 placeholder("%player1%", player1Fam.getName()),
                 placeholder("%player2%", player2Fam.getName())
             ));
@@ -105,7 +125,7 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
         }
 
         if (player2Fam.isFamilyMember(player1Fam)) {
-            sender.sendMessage(getMessage(sameFamilyMK,
+            sender.sendMessage(getMessage(SAME_FAMILY_MK,
                     placeholder("%player1%", player1Fam.getName()),
                     placeholder("%player2%", player2Fam.getName())
             ));
@@ -114,7 +134,7 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
 
         if (player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() > 2) {
             int amountDiff = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() - 2;
-            sender.sendMessage(getMessage(tooManyChildrenMK,
+            sender.sendMessage(getMessage(TOO_MANY_CHILDREN_MK,
                     placeholder("%player1%", player1Fam.getName()),
                     placeholder("%player2%", player2Fam.getName()),
                     placeholder("%amount%", Integer.toString(amountDiff))
@@ -123,14 +143,14 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
         }
 
         if (player1Fam.isMarried()) {
-            sender.sendMessage(getMessage(alreadyMarriedMK,
+            sender.sendMessage(getMessage(ALREADY_MARRIED_MK,
                     placeholder("%player%", player1Fam.getName())
             ));
             return true;
         }
 
         if (player2Fam.isMarried()) {
-            sender.sendMessage(getMessage(alreadyMarriedMK,
+            sender.sendMessage(getMessage(ALREADY_MARRIED_MK,
                     placeholder("%player%", player2Fam.getName())
             ));
             return true;
@@ -146,11 +166,18 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
         LunaticFamily.marryPriests.remove(player1UUID);
 
         player1Fam.marry(player2Fam);
-        sender.sendMessage(getMessage(marriedMK,
+        sender.sendMessage(getMessage(MARRIED_MK,
                 placeholder("%player1%", player1Fam.getName()),
                 placeholder("%player2%", player2Fam.getName())
         ));
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     @Override

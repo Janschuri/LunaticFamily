@@ -15,23 +15,50 @@ import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class MarryAccept extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey openRequestPartnerMK = new LunaticCommandMessageKey(this,"open_request_partner");
-    private final CommandMessageKey noRequestMK = new LunaticCommandMessageKey(this,"no_request");
-    private final CommandMessageKey tooManyChildrenMK = new LunaticCommandMessageKey(this,"too_many_children");
-    private final CommandMessageKey completeMK = new LunaticCommandMessageKey(this,"complete");
-    private final CommandMessageKey priestRequestMK = new LunaticCommandMessageKey(new PriestMarry(),"request");
-    private final CommandMessageKey priestYesMK = new LunaticCommandMessageKey(new PriestMarry(),"yes");
-    private final CommandMessageKey priestNoMK = new LunaticCommandMessageKey(new PriestMarry(),"no");
-    private final CommandMessageKey priestCompleteMK = new LunaticCommandMessageKey(new PriestMarry(),"complete");
-    private final CommandMessageKey priestRequestExpiredPriestMK = new LunaticCommandMessageKey(new PriestMarry(),"request_expired_priest");
-    private final CommandMessageKey priestRequestExpiredPlayerMK = new LunaticCommandMessageKey(new PriestMarry(),"request_expired_player");
+    private static final MarryAccept INSTANCE = new MarryAccept();
 
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Accept a marriage proposal.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Eine Heiratsanfrage annehmen.");
+    private static final CommandMessageKey OPEN_REQUEST_PARTNER_MK = new LunaticCommandMessageKey(INSTANCE, "open_request_partner")
+            .defaultMessage("en", "You must wait for your future partner's response!")
+            .defaultMessage("de", "Du musst auf die Antwort deines zukünftigen Partners warten!");
+    private static final CommandMessageKey NO_REQUEST_MK = new LunaticCommandMessageKey(INSTANCE, "no_request")
+            .defaultMessage("en", "You have no marriage proposal.")
+            .defaultMessage("de", "Du hast keine Heiratsanfrage.");
+    private static final CommandMessageKey TOO_MANY_CHILDREN_MK = new LunaticCommandMessageKey(INSTANCE, "too_many_children")
+            .defaultMessage("en", "%player1% and %player2% have more than 2 children together. %player1% and %player2% must remove %amount% children before they can marry.")
+            .defaultMessage("de", "%player1% und %player2% haben zusammen mehr als 2 Kinder. %player1% und %player2% müssen %amount% Kinder entfernen, bevor sie heiraten können.");
+    private static final CommandMessageKey COMPLETE_MK = new LunaticCommandMessageKey(INSTANCE, "complete")
+            .defaultMessage("en", "You are married! You may now kiss!")
+            .defaultMessage("de", "Ihr seid verheiratet! Ihr dürft euch jetzt küssen!");
+
+    private final static PriestMarry PRIEST_MARRY_INSTANCE = new PriestMarry();
+
+    private final static CommandMessageKey PRIEST_REQUEST_MK = new LunaticCommandMessageKey(PRIEST_MARRY_INSTANCE, "request")
+            .defaultMessage("en", "%player1%, would you like to be siblings with %player2% on this Minecraft server?")
+            .defaultMessage("de", "%player1%, möchtest du mit %player2% auf diesem Minecraft-Server Geschwister sein?");
+    private final static CommandMessageKey PRIEST_NO_MK = new LunaticCommandMessageKey(PRIEST_MARRY_INSTANCE, "no")
+            .defaultMessage("en", "No. I don't want to.")
+            .defaultMessage("de", "Nein. Ich möchte nicht.");
+    private final static CommandMessageKey PRIEST_YES_MK = new LunaticCommandMessageKey(PRIEST_MARRY_INSTANCE, "yes")
+            .defaultMessage("en", "Yes. I do!")
+            .defaultMessage("de", "Ja. Ich möchte!");
+    private final static CommandMessageKey PRIEST_COMPLETE_MK = new LunaticCommandMessageKey(PRIEST_MARRY_INSTANCE, "complete")
+            .defaultMessage("en", "You are siblings!")
+            .defaultMessage("de", "Ihr seid Geschwister!");
+    private final static CommandMessageKey PRIEST_REQUEST_EXPIRED_PRIEST_MK = new LunaticCommandMessageKey(PRIEST_MARRY_INSTANCE, "request_expired_priest")
+            .defaultMessage("en", "The siblinghood between %player1% and %player2% has been canceled.")
+            .defaultMessage("de", "Die Geschwisterbeziehung zwischen %player1% und %player2% wurde abgebrochen.");
+    private final static CommandMessageKey PRIEST_REQUEST_EXPIRED_PLAYER_MK = new LunaticCommandMessageKey(PRIEST_MARRY_INSTANCE, "request_expired_player")
+            .defaultMessage("en", "Your siblinghood with %player% has been canceled.")
+            .defaultMessage("de", "Deine Geschwisterbeziehung mit %player% wurde abgebrochen.");
 
 
     @Override
@@ -62,7 +89,7 @@ public class MarryAccept extends FamilyCommand implements HasParentCommand {
         }
 
         if (LunaticFamily.marryPriestRequests.containsValue(player.getUniqueId())) {
-            sender.sendMessage(getMessage(openRequestPartnerMK));
+            sender.sendMessage(getMessage(OPEN_REQUEST_PARTNER_MK));
             return true;
         }
 
@@ -74,8 +101,15 @@ public class MarryAccept extends FamilyCommand implements HasParentCommand {
             return proceedPriestRequest(player);
         }
 
-        sender.sendMessage(getMessage(noRequestMK));
+        sender.sendMessage(getMessage(NO_REQUEST_MK));
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     private boolean proceedRequest(PlayerSender player) {
@@ -90,7 +124,7 @@ public class MarryAccept extends FamilyCommand implements HasParentCommand {
 
         if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
             int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
-            player.sendMessage(getMessage(tooManyChildrenMK,
+            player.sendMessage(getMessage(TOO_MANY_CHILDREN_MK,
                 placeholder("%partner%", partnerFam.getName()),
                 placeholder("%amount%", Integer.toString(amountDiff))));
             return true;
@@ -112,7 +146,7 @@ public class MarryAccept extends FamilyCommand implements HasParentCommand {
 
         if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
             int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
-            player.sendMessage(getMessage(tooManyChildrenMK,
+            player.sendMessage(getMessage(TOO_MANY_CHILDREN_MK,
                 placeholder("%partner%", partnerFam.getName()),
                 placeholder("%amount%", Integer.toString(amountDiff))));
             return true;
@@ -139,22 +173,22 @@ public class MarryAccept extends FamilyCommand implements HasParentCommand {
             if (LunaticFamily.marryRequests.containsKey(partnerUUID)) {
                 LunaticFamily.marryRequests.remove(partnerUUID);
                 LunaticFamily.marryPriests.remove(partnerUUID);
-                priest.sendMessage(getMessage(priestRequestExpiredPriestMK,
+                priest.sendMessage(getMessage(PRIEST_REQUEST_EXPIRED_PRIEST_MK,
                 placeholder("%player1%", player.getName()),
                 placeholder("%player2%", partner.getName())));
-                player.sendMessage(getMessage(priestRequestExpiredPlayerMK,
+                player.sendMessage(getMessage(PRIEST_REQUEST_EXPIRED_PLAYER_MK,
                 placeholder("%player%", partner.getName())));
-                partner.sendMessage(getMessage(priestRequestExpiredPlayerMK,
+                partner.sendMessage(getMessage(PRIEST_REQUEST_EXPIRED_PLAYER_MK,
                 placeholder("%player%", player.getName())));
             }
         };
 
         Utils.scheduleTask(runnable, 30L, TimeUnit.SECONDS);
 
-        player.chat(getLanguageConfig().getMessageAsString(priestYesMK.noPrefix()));
+        player.chat(getLanguageConfig().getMessageAsString(PRIEST_YES_MK.noPrefix()));
 
 
-        priest.chat(getLanguageConfig().getMessageAsString(priestRequestMK.noPrefix())
+        priest.chat(getLanguageConfig().getMessageAsString(PRIEST_REQUEST_MK.noPrefix())
                 .replace("%player1%", partnerFam.getName())
                 .replace("%player2%", playerFam.getName()));
 
@@ -162,9 +196,9 @@ public class MarryAccept extends FamilyCommand implements HasParentCommand {
         partner.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
                 Component.empty(),
-                getMessage(priestYesMK.noPrefix()),
+                getMessage(PRIEST_YES_MK.noPrefix()),
                 "/family marry accept",
-                getMessage(priestNoMK.noPrefix()),
+                getMessage(PRIEST_NO_MK.noPrefix()),
                 "/family marry deny"),
                 LunaticFamily.getConfig().decisionAsInvGUI()
         );
@@ -191,8 +225,8 @@ public class MarryAccept extends FamilyCommand implements HasParentCommand {
             return true;
         }
 
-        player.sendMessage(getMessage(completeMK));
-        partner.sendMessage(getMessage(completeMK));
+        player.sendMessage(getMessage(COMPLETE_MK));
+        partner.sendMessage(getMessage(COMPLETE_MK));
 
         Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.MARRY_PROPOSED_PLAYER);
         Utils.withdrawMoney(player.getServerName(), partnerUUID, WithdrawKey.MARRY_PROPOSING_PLAYER);
@@ -246,9 +280,9 @@ public class MarryAccept extends FamilyCommand implements HasParentCommand {
         Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.PRIEST_MARRY_PLAYER);
         Utils.withdrawMoney(player.getServerName(), partnerUUID, WithdrawKey.PRIEST_MARRY_PLAYER);
 
-        player.chat(getLanguageConfig().getMessageAsString(priestYesMK.noPrefix()));
+        player.chat(getLanguageConfig().getMessageAsString(PRIEST_YES_MK.noPrefix()));
 
-        priest.chat(getLanguageConfig().getMessageAsString(priestCompleteMK.noPrefix())
+        priest.chat(getLanguageConfig().getMessageAsString(PRIEST_COMPLETE_MK.noPrefix())
                 .replace("%player1%", playerFam.getName())
                 .replace("%player2%", partnerFam.getName()));
 

@@ -12,15 +12,24 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class MarryDivorce extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey noPartnerMK = new LunaticCommandMessageKey(this,"no_partner");
-    private final CommandMessageKey divorcedMK = new LunaticCommandMessageKey(this,"divorced");
-    private final CommandMessageKey confirmMK = new LunaticCommandMessageKey(this,"confirm");
-    private final CommandMessageKey cancelMK = new LunaticCommandMessageKey(this,"cancel");
+    private static final MarryDivorce INSTANCE = new MarryDivorce();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Get divorced.");
+    private static final CommandMessageKey NO_PARTNER_MK = new LunaticCommandMessageKey(INSTANCE, "no_partner")
+            .defaultMessage("en", "You are not married!");
+    private static final CommandMessageKey DIVORCED_MK = new LunaticCommandMessageKey(INSTANCE, "divorced")
+            .defaultMessage("en", "You are now divorced!");
+    private static final CommandMessageKey CONFIRM_MK = new LunaticCommandMessageKey(INSTANCE, "confirm")
+            .defaultMessage("en", "Please confirm that you want to divorce.");
+    private static final CommandMessageKey CANCEL_MK = new LunaticCommandMessageKey(INSTANCE, "cancel")
+            .defaultMessage("en", "You have cancelled the divorce!");
+
 
     @Override
     public String getPermission() {
@@ -73,17 +82,17 @@ public class MarryDivorce extends FamilyCommand implements HasParentCommand {
 
 
         if (!playerFam.isMarried()) {
-            player.sendMessage(getMessage(noPartnerMK));
+            player.sendMessage(getMessage(NO_PARTNER_MK));
             return true;
         }
         if (cancel) {
-            sender.sendMessage(getMessage(cancelMK));
+            sender.sendMessage(getMessage(CANCEL_MK));
             return true;
         }
         if (!confirm) {
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(confirmMK.noPrefix()),
+                    getMessage(CONFIRM_MK.noPrefix()),
                     LunaticFamily.getLanguageConfig().getMessage(CONFIRM_MK.noPrefix()),
                     "/family marry divorce confirm",
                     LunaticFamily.getLanguageConfig().getMessage(CANCEL_MK.noPrefix()),
@@ -121,8 +130,8 @@ public class MarryDivorce extends FamilyCommand implements HasParentCommand {
         }
 
 
-        sender.sendMessage(getMessage(divorcedMK));
-        partner.sendMessage(getMessage(divorcedMK));
+        sender.sendMessage(getMessage(DIVORCED_MK));
+        partner.sendMessage(getMessage(DIVORCED_MK));
 
         for (String command : LunaticFamily.getConfig().getSuccessCommands("divorce")) {
             command = command.replace("%player1%", playerFam.getName()).replace("%player2%", playerFam.getPartner().getName());
@@ -138,5 +147,12 @@ public class MarryDivorce extends FamilyCommand implements HasParentCommand {
 
         playerFam.divorce();
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 }

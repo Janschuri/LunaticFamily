@@ -11,16 +11,26 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class MarryGift extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey noPartnerMK = new LunaticCommandMessageKey(this,"no_partner");
-    private final CommandMessageKey emptyHandMK = new LunaticCommandMessageKey(this,"empty_hand");
-    private final CommandMessageKey partnerFullInvMK = new LunaticCommandMessageKey(this,"partner_full_inv");
-    private final CommandMessageKey sentMK = new LunaticCommandMessageKey(this,"sent");
-    private final CommandMessageKey gotMK = new LunaticCommandMessageKey(this,"got");
+    private static final MarryGift INSTANCE = new MarryGift();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Gift the item in your hand to your partner.");
+    private static final CommandMessageKey NO_PARTNER_MK = new LunaticCommandMessageKey(INSTANCE, "no_partner")
+            .defaultMessage("en", "You are not married!");
+    private static final CommandMessageKey EMPTY_HAND_MK = new LunaticCommandMessageKey(INSTANCE, "empty_hand")
+            .defaultMessage("en", "You must be holding an item in your hand.");
+    private static final CommandMessageKey PARTNER_FULL_INV_MK = new LunaticCommandMessageKey(INSTANCE, "partner_full_inv")
+            .defaultMessage("en", "Your partner has no space in their inventory.");
+    private static final CommandMessageKey SENT_MK = new LunaticCommandMessageKey(INSTANCE, "sent")
+            .defaultMessage("en", "You have gifted something to your partner.");
+    private static final CommandMessageKey GOT_MK = new LunaticCommandMessageKey(INSTANCE, "got")
+            .defaultMessage("en", "Your partner has gifted you something.");
+
 
 
     @Override
@@ -54,7 +64,7 @@ public class MarryGift extends FamilyCommand implements HasParentCommand {
             FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
             if (!playerFam.isMarried()) {
-                player.sendMessage(getMessage(noPartnerMK));
+                player.sendMessage(getMessage(NO_PARTNER_MK));
                 return true;
             }
 
@@ -76,7 +86,7 @@ public class MarryGift extends FamilyCommand implements HasParentCommand {
             }
 
             if (!player.hasItemInMainHand()) {
-                player.sendMessage(getMessage(emptyHandMK));
+                player.sendMessage(getMessage(EMPTY_HAND_MK));
                 return true;
             }
 
@@ -84,10 +94,10 @@ public class MarryGift extends FamilyCommand implements HasParentCommand {
                 byte[] item = player.getItemInMainHand();
                 if (partner.giveItemDrop(item)) {
                     player.removeItemInMainHand();
-                    player.sendMessage(getMessage(sentMK,
+                    player.sendMessage(getMessage(SENT_MK,
                             placeholder("%player%", partner.getName())
                     ));
-                    partner.sendMessage(getMessage(gotMK,
+                    partner.sendMessage(getMessage(GOT_MK,
                             placeholder("%player%", player.getName())
                             ));
                 } else {
@@ -96,5 +106,12 @@ public class MarryGift extends FamilyCommand implements HasParentCommand {
                     return false;
                 }
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 }

@@ -20,9 +20,15 @@ import java.util.Map;
 
 public class SiblingList extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey headerMK = new LunaticCommandMessageKey(this,"header");
-    private final CommandMessageKey pairsMK = new LunaticCommandMessageKey(this,"siblings");
+    private static final SiblingList INSTANCE = new SiblingList();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- List all siblinghoods.");
+    private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "header")
+            .defaultMessage("en", "All siblinghoods on this server: ");
+    private static final CommandMessageKey SIBLINGS_MK = new LunaticCommandMessageKey(INSTANCE, "siblings")
+            .defaultMessage("en", "&6%index%: &b%player1% %emoji% &b%player2%");
+
 
 
     @Override
@@ -65,6 +71,13 @@ public class SiblingList extends FamilyCommand implements HasParams, HasParentCo
     }
 
     @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
+    }
+
+    @Override
     public List<Component> getParamsNames() {
         return List.of(
                 getMessage(PAGE_MK.noPrefix())
@@ -80,7 +93,7 @@ public class SiblingList extends FamilyCommand implements HasParams, HasParentCo
     private Component getSiblingList(int page) {
         List<Siblinghood> siblingList = DatabaseRepository.getDatabase().find(Siblinghood.class).setFirstRow(10*(page-1)).setMaxRows(10).findList();
 
-        Component msg = getMessage(headerMK.noPrefix());
+        Component msg = getMessage(HEADER_MK.noPrefix());
 
         int index = 1 + (10*(page-1));
         Logger.debugLog("SiblingList: " + siblingList);
@@ -102,7 +115,7 @@ public class SiblingList extends FamilyCommand implements HasParams, HasParentCo
             Placeholder heartRpl = placeholder("%emoji%", heart);
 
             msg = msg.append(Component.newline())
-                    .append(getMessage(pairsMK.noPrefix(), indexRpl, player1Rpl, player2Rpl, heartRpl));
+                    .append(getMessage(SIBLINGS_MK.noPrefix(), indexRpl, player1Rpl, player2Rpl, heartRpl));
 
             index++;
         }

@@ -10,14 +10,21 @@ import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class FamilyTree extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey reloadedMK = new LunaticCommandMessageKey(this,"reloaded");
-    private final CommandMessageKey failedMK = new LunaticCommandMessageKey(this,"failed");
-    private final CommandMessageKey disabledMK = new LunaticCommandMessageKey(this,"disabled");
+    private static final FamilyTree INSTANCE = new FamilyTree();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Update your family tree.");
+    private static final CommandMessageKey RELOADED_MK = new LunaticCommandMessageKey(INSTANCE, "reloaded")
+            .defaultMessage("en", "Your family tree has been reloaded.");
+    private static final CommandMessageKey FAILED_MK = new LunaticCommandMessageKey(INSTANCE, "failed")
+            .defaultMessage("en", "Failed to reload your family tree.");
+    private static final CommandMessageKey DISABLED_MK = new LunaticCommandMessageKey(INSTANCE, "disabled")
+            .defaultMessage("en", "The family tree is disabled.");
 
 
     @Override
@@ -48,7 +55,7 @@ public class FamilyTree extends FamilyCommand implements HasParentCommand {
         }
 
         if (!LunaticFamily.getConfig().isUseCrazyAdvancementAPI()){
-            sender.sendMessage(getMessage(disabledMK));
+            sender.sendMessage(getMessage(DISABLED_MK));
             return true;
         }
 
@@ -58,14 +65,21 @@ public class FamilyTree extends FamilyCommand implements HasParentCommand {
             playerFam.save();
 
             if (playerFam.updateFamilyTree()) {
-                player.sendMessage(getMessage(reloadedMK));
+                player.sendMessage(getMessage(RELOADED_MK));
             } else {
-                sender.sendMessage(getMessage(failedMK));
+                sender.sendMessage(getMessage(FAILED_MK));
                 Logger.errorLog("Failed to reload family tree for player " + name + " (" + playerUUID + ").");
                 Logger.errorLog("Is the correct version of CrazyAdvancementsAPI installed?");
                 return false;
             }
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 }

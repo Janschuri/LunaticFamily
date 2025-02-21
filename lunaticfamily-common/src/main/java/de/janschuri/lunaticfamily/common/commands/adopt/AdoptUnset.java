@@ -17,10 +17,17 @@ import java.util.UUID;
 
 public class AdoptUnset extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey notAdoptedMK = new LunaticCommandMessageKey(this,"not_adopted");
-    private final CommandMessageKey unsetMK = new LunaticCommandMessageKey(this,"unset");
-    private final CommandMessageKey unsetBySingleMK = new LunaticCommandMessageKey(this,"unset_by_single");
+    private static final AdoptUnset INSTANCE = new AdoptUnset();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Unset the adoption of a child by a player.");
+    private static final CommandMessageKey NOT_ADOPTED_MK = new LunaticCommandMessageKey(INSTANCE, "not_adopted")
+            .defaultMessage("en", "%player% is not adopted.");
+    private static final CommandMessageKey UNSET_MK = new LunaticCommandMessageKey(INSTANCE, "unset")
+            .defaultMessage("en", "You have dissolved the adoption of %child% by %parent1% and %parent2%.");
+    private static final CommandMessageKey UNSET_BY_SINGLE_MK = new LunaticCommandMessageKey(INSTANCE, "unset_by_single")
+            .defaultMessage("en", "You have dissolved the adoption of %child% by %parent%.");
+
 
 
     @Override
@@ -63,7 +70,7 @@ public class AdoptUnset extends FamilyCommand implements HasParentCommand, HasPa
         FamilyPlayer childFam = getFamilyPlayer(childUUID);
 
         if (!childFam.isAdopted()) {
-            sender.sendMessage(getMessage(notAdoptedMK,
+            sender.sendMessage(getMessage(NOT_ADOPTED_MK,
                 placeholder("%player%", childFam.getName())));
             return true;
         }
@@ -71,12 +78,12 @@ public class AdoptUnset extends FamilyCommand implements HasParentCommand, HasPa
 
         if (firstParentFam.isMarried()) {
             FamilyPlayer secondParentFam = firstParentFam.getPartner();
-            sender.sendMessage(getMessage(unsetMK,
+            sender.sendMessage(getMessage(UNSET_MK,
                 placeholder("%child%", childFam.getName()),
                 placeholder("%parent1%", firstParentFam.getName()),
                 placeholder("%parent2%", secondParentFam.getName())));
         } else {
-            sender.sendMessage(getMessage(unsetBySingleMK,
+            sender.sendMessage(getMessage(UNSET_BY_SINGLE_MK,
                 placeholder("%child%", childFam.getName()),
                 placeholder("%parent%", firstParentFam.getName())));
         }
@@ -86,6 +93,13 @@ public class AdoptUnset extends FamilyCommand implements HasParentCommand, HasPa
 
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     @Override

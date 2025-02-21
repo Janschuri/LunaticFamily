@@ -17,12 +17,27 @@ import java.util.UUID;
 
 public class SiblingSet extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey addedMK = new LunaticCommandMessageKey(this,"added");
-    private final CommandMessageKey isAdoptedMK = new LunaticCommandMessageKey(this,"is_adopted");
-    private final CommandMessageKey setBothAdoptedMK = new LunaticCommandMessageKey(this,"set_both_adopted");
-    private final CommandMessageKey sameFamilyMK = new LunaticCommandMessageKey(this,"same_family");
-    private final CommandMessageKey samePlayerMK = new LunaticCommandMessageKey(this,"same_player");
+    private static final SiblingSet INSTANCE = new SiblingSet();
+
+    private static final CommandMessageKey SAME_PLAYER_MK = new LunaticCommandMessageKey(INSTANCE, "same_player")
+            .defaultMessage("en", "You cannot be your own sibling.")
+            .defaultMessage("de", "Du kannst nicht dein eigenes Geschwisterkind sein.");
+    private static final CommandMessageKey SAME_FAMILY_MK = new LunaticCommandMessageKey(INSTANCE, "same_family")
+            .defaultMessage("en", "%player1% and %player2% are already family.")
+            .defaultMessage("de", "%player1% und %player2% sind bereits Familie.");
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Set the siblinghood between two players.")
+            .defaultMessage("de", "&6/%command% %subcommand% &b<%param%> &7- Setze die Geschwisterschaft zwischen zwei Spielern.");
+    private static final CommandMessageKey ADDED_MK = new LunaticCommandMessageKey(INSTANCE, "added")
+            .defaultMessage("en", "The siblings %player1% and %player2% have been successfully added!")
+            .defaultMessage("de", "Die Geschwister %player1% und %player2% wurden erfolgreich hinzugefügt!");
+    private static final CommandMessageKey IS_ADOPTED_MK = new LunaticCommandMessageKey(INSTANCE, "is_adopted")
+            .defaultMessage("en", "%player% is adopted. Set the adoption by the parents to make %player% a sibling.")
+            .defaultMessage("de", "%player% ist adoptiert. Setze die Adoption durch die Eltern, um %player% zu einem Geschwisterking zu machen.");
+    private static final CommandMessageKey SET_BOTH_ADOPTED_MK = new LunaticCommandMessageKey(INSTANCE, "set_both_adopted")
+            .defaultMessage("en", "%player1% and %player2% are adopted. Set the adoption by the parents or marry the parents to make %player1% and %player2% siblings.")
+            .defaultMessage("de", "%player1% und %player2% sind adoptiert. Setze die Adoption durch die Eltern oder verheirate die Eltern, um %player1% und %player2% zu Geschwistern zu machen.");
+
 
 
 
@@ -81,50 +96,57 @@ public class SiblingSet extends FamilyCommand implements HasParentCommand, HasPa
         player2Fam.update();
 
         if (player1Fam.isFamilyMember(player2Fam)) {
-            sender.sendMessage(getMessage(sameFamilyMK,
+            sender.sendMessage(getMessage(SAME_FAMILY_MK,
                 placeholder("%player1%", player1Fam.getName()),
                 placeholder("%player2%", player2Fam.getName())));
             return true;
         }
 
         if (player2Fam.isFamilyMember(player1Fam)) {
-            sender.sendMessage(getMessage(sameFamilyMK,
+            sender.sendMessage(getMessage(SAME_FAMILY_MK,
                 placeholder("%player1%", player2Fam.getName()),
                 placeholder("%player2%", player1Fam.getName())));
             return true;
         }
 
         if (args[0].equalsIgnoreCase(args[1])) {
-            sender.sendMessage(getMessage(samePlayerMK));
+            sender.sendMessage(getMessage(SAME_PLAYER_MK));
             return true;
         }
 
 
         if (player1Fam.isAdopted() && player2Fam.isAdopted()) {
-            sender.sendMessage(getMessage(setBothAdoptedMK,
+            sender.sendMessage(getMessage(SET_BOTH_ADOPTED_MK,
                 placeholder("%player1%", player1Fam.getName()),
                 placeholder("%player2%", player2Fam.getName())));
             return true;
         }
 
         if (player1Fam.isAdopted()) {
-            sender.sendMessage(getMessage(isAdoptedMK,
+            sender.sendMessage(getMessage(IS_ADOPTED_MK,
                 placeholder("%player%", player1Fam.getName())));
             return true;
         }
 
         if (player2Fam.isAdopted()) {
-            sender.sendMessage(getMessage(isAdoptedMK,
+            sender.sendMessage(getMessage(IS_ADOPTED_MK,
                 placeholder("%player%", player2Fam.getName())));
             return true;
         }
 
-        sender.sendMessage(getMessage(addedMK,
+        sender.sendMessage(getMessage(ADDED_MK,
                 placeholder("%player1%", player1Fam.getName()),
                 placeholder("%player2%", player2Fam.getName())));
         player1Fam.addSibling(player2Fam);
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     @Override

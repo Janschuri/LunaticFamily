@@ -17,11 +17,17 @@ import java.util.UUID;
 
 public class FamilyCreate extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey confirmMK = new LunaticCommandMessageKey(this,"confirm");
-    private final CommandMessageKey createdMK = new LunaticCommandMessageKey(this,"created");
-    private final CommandMessageKey cancelMK = new LunaticCommandMessageKey(this, "cancel");
-    private final MessageKey createRandomMK = new LunaticCommandMessageKey(this, "createRandom")
+    private static final FamilyCreate INSTANCE = new FamilyCreate();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Create a player in the database.");
+    private static final CommandMessageKey CREATED_MK = new LunaticCommandMessageKey(INSTANCE, "created")
+            .defaultMessage("en", "You have created %name% with the UUID %uuid%.");
+    private static final CommandMessageKey CONFIRM_MK = new LunaticCommandMessageKey(INSTANCE, "confirm")
+            .defaultMessage("en", "Do you really want to create %name% with the UUID %uuid%?");
+    private static final CommandMessageKey CANCEL_MK = new LunaticCommandMessageKey(INSTANCE, "cancel")
+            .defaultMessage("en", "You have canceled the creation of %name% with the UUID %uuid%.");
+    private static final MessageKey createRandomMK = new LunaticCommandMessageKey(INSTANCE, "createRandom")
             .defaultMessage("You didn't specified a UUID. Do you want to create a random one?");
 
 
@@ -106,7 +112,7 @@ public class FamilyCreate extends FamilyCommand implements HasParentCommand, Has
             FamilyPlayer familyPlayer = getFamilyPlayer(playerUUID).setName(playerName);
             familyPlayer.save();
 
-            sender.sendMessage(getMessage(createdMK,
+            sender.sendMessage(getMessage(CREATED_MK,
                 placeholder("%uuid%", playerUUIDArg),
                 placeholder("%name%", playerName))
             );
@@ -114,7 +120,7 @@ public class FamilyCreate extends FamilyCommand implements HasParentCommand, Has
         }
 
         if (cancel) {
-            sender.sendMessage(getMessage(cancelMK,
+            sender.sendMessage(getMessage(CANCEL_MK,
                 placeholder("%uuid%", playerUUIDArg),
                 placeholder("%name%", playerName))
             );
@@ -124,7 +130,7 @@ public class FamilyCreate extends FamilyCommand implements HasParentCommand, Has
 
         player.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
-                getMessage(confirmMK.noPrefix(),
+                getMessage(CONFIRM_MK.noPrefix(),
                 placeholder("%uuid%", playerUUIDArg),
                 placeholder("%name%", playerName))
                 ,
@@ -137,6 +143,13 @@ public class FamilyCreate extends FamilyCommand implements HasParentCommand, Has
 
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+            HELP_MK, getPermission()
+        );
     }
 
     @Override

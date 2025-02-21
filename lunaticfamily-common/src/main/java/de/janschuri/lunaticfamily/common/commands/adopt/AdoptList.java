@@ -20,9 +20,17 @@ import java.util.Map;
 
 public class AdoptList extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey headerMK = new LunaticCommandMessageKey(this,"header");
-    private final CommandMessageKey pairsMK = new LunaticCommandMessageKey(this,"pairs");
+    private static final AdoptList INSTANCE = new AdoptList();
+
+    private static final CommandMessageKey helpMK = new LunaticCommandMessageKey(INSTANCE,"help")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Show the list of all adoptions.")
+            .defaultMessage("de", "&6/%command% %subcommand% &b<%param%> &7- Zeige die Liste aller Adoptionen.");
+    private static final CommandMessageKey headerMK = new LunaticCommandMessageKey(INSTANCE,"header")
+            .defaultMessage("en", "All adoptions: ")
+            .defaultMessage("de", "Alle Adoptionen: ");
+    private static final CommandMessageKey pairsMK = new LunaticCommandMessageKey(INSTANCE,"pairs")
+            .defaultMessage("en", "&6%index%: &b%parent% %emoji% &b%child%")
+            .defaultMessage("de", "&6%index%: &b%parent% %emoji% &b%child%");
 
 
     @Override

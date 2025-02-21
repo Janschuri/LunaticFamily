@@ -14,23 +14,51 @@ import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class SiblingAccept extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey noRequestMK = new LunaticCommandMessageKey(this,"no_request");
-    private final CommandMessageKey completeMK = new LunaticCommandMessageKey(this,"complete");
-    private final CommandMessageKey openRequestSiblingMK = new LunaticCommandMessageKey(this,"open_request_sibling");
-    private final CommandMessageKey isAdoptedMK = new LunaticCommandMessageKey(new PriestSibling(),"is_adopted");
+    private static final SiblingAccept INSTANCE = new SiblingAccept();
 
-    private final CommandMessageKey priestRequestMK = new LunaticCommandMessageKey(new PriestSibling(),"request");
-    private final CommandMessageKey priestYesMK = new LunaticCommandMessageKey(new PriestSibling(),"yes");
-    private final CommandMessageKey priestNoMK = new LunaticCommandMessageKey(new PriestSibling(),"no");
-    private final CommandMessageKey priestCompleteMK = new LunaticCommandMessageKey(new PriestSibling(),"complete");
-    private final CommandMessageKey priestRequestExpiredPriestMK = new LunaticCommandMessageKey(new PriestSibling(),"request_expired_priest");
-    private final CommandMessageKey priestRequestExpiredPlayerMK = new LunaticCommandMessageKey(new PriestSibling(),"request_expired_player");
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Accept a sibling request.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Akzeptiere eine Geschwister Anfrage.");
+    private static final CommandMessageKey NO_REQUEST_MK = new LunaticCommandMessageKey(INSTANCE, "no_request")
+            .defaultMessage("en", "You have no sibling request.")
+            .defaultMessage("de", "Du hast keine Geschwister Anfrage.");
+    private static final CommandMessageKey COMPLETE_MK = new LunaticCommandMessageKey(INSTANCE, "complete")
+            .defaultMessage("en", "You and %player% are now siblings!")
+            .defaultMessage("de", "Du und %player% seid jetzt Geschwister!");
+    private static final CommandMessageKey IS_ADOPTED_MK = new LunaticCommandMessageKey(INSTANCE, "is_adopted")
+            .defaultMessage("en", "You are adopted. Your parents can adopt a sibling for you.")
+            .defaultMessage("de", "Du bist adoptiert. Deine Eltern können ein Geschwister für dich adoptieren.");
+
+
+    private static final PriestSibling PRIEST_SIBLING_INSTANCE = new PriestSibling();
+
+    private static final CommandMessageKey PRIEST_REQUEST_MK = new LunaticCommandMessageKey(PRIEST_SIBLING_INSTANCE,"request")
+            .defaultMessage("en", "%player1%, would you like to be siblings with %player2% on this Minecraft server?")
+            .defaultMessage("de", "%player1%, möchtest du Geschwister mit %player2% auf diesem Minecraft Server sein?");
+    private static final CommandMessageKey PRIEST_YES_MK = new LunaticCommandMessageKey(PRIEST_SIBLING_INSTANCE,"yes")
+            .defaultMessage("en", "Yes. I do!")
+            .defaultMessage("de", "Ja. Ich will!");
+    private static final CommandMessageKey PRIEST_NO_MK = new LunaticCommandMessageKey(PRIEST_SIBLING_INSTANCE,"no")
+            .defaultMessage("en", "No. I don't want to.")
+            .defaultMessage("de", "Nein. Ich will nicht.");
+    private static final CommandMessageKey PRIEST_COMPLETE_MK = new LunaticCommandMessageKey(PRIEST_SIBLING_INSTANCE,"complete")
+            .defaultMessage("en", "You are siblings!")
+            .defaultMessage("de", "Ihr seid Geschwister!");
+    private static final CommandMessageKey PRIEST_REQUEST_EXPIRED_PRIEST_MK = new LunaticCommandMessageKey(PRIEST_SIBLING_INSTANCE,"request_expired_priest")
+            .defaultMessage("en", "The siblinghood between %player1% and %player2% has been canceled.")
+            .defaultMessage("de", "Die Geschwisterschaft zwischen %player1% und %player2% wurde abgebrochen.");
+    private static final CommandMessageKey PRIEST_REQUEST_EXPIRED_PLAYER_MK = new LunaticCommandMessageKey(PRIEST_SIBLING_INSTANCE,"request_expired_player")
+            .defaultMessage("en", "Your siblinghood with %player% has been canceled.")
+            .defaultMessage("de", "Deine Geschwisterschaft mit %player% wurde abgebrochen.");
+    private static final CommandMessageKey PRIEST_IS_ADOPTED_MK = new LunaticCommandMessageKey(INSTANCE, "is_adopted")
+            .defaultMessage("en", "You are adopted. Your parents can adopt a sibling for you.")
+            .defaultMessage("de", "Du bist adoptiert. Deine Eltern können ein Geschwister für dich adoptieren.");
 
 
     @Override
@@ -62,11 +90,6 @@ public class SiblingAccept extends FamilyCommand implements HasParentCommand {
 
         UUID playerUUID = player.getUniqueId();
 
-        if (LunaticFamily.siblingPriestRequests.containsValue(playerUUID)) {
-            sender.sendMessage(getMessage(openRequestSiblingMK));
-            return true;
-        }
-
         if (LunaticFamily.siblingRequests.containsKey(playerUUID)) {
             return proceedSiblingRequest(player);
         }
@@ -75,8 +98,15 @@ public class SiblingAccept extends FamilyCommand implements HasParentCommand {
             return proceedPriestSiblingRequest(player);
         }
 
-        sender.sendMessage(getMessage(noRequestMK));
+        sender.sendMessage(getMessage(NO_REQUEST_MK));
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     private boolean proceedPriestSiblingRequest(PlayerSender player) {
@@ -87,14 +117,14 @@ public class SiblingAccept extends FamilyCommand implements HasParentCommand {
         PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
 
         if (playerFam.isAdopted()) {
-            player.sendMessage(getMessage(isAdoptedMK,
+            player.sendMessage(getMessage(PRIEST_IS_ADOPTED_MK,
                 placeholder("%player1%", playerFam.getName()),
                 placeholder("%player2%", siblingFam.getName())));
             return true;
         }
 
         if (siblingFam.isAdopted()) {
-            player.sendMessage(getMessage(isAdoptedMK,
+            player.sendMessage(getMessage(PRIEST_IS_ADOPTED_MK,
                 placeholder("%player1%", siblingFam.getName()),
                 placeholder("%player2%", playerFam.getName())));
             return true;
@@ -122,22 +152,22 @@ public class SiblingAccept extends FamilyCommand implements HasParentCommand {
             if (LunaticFamily.siblingRequests.containsKey(siblingUUID)) {
                 LunaticFamily.siblingRequests.remove(siblingUUID);
                 LunaticFamily.siblingPriests.remove(siblingUUID);
-                priest.sendMessage(getMessage(priestRequestExpiredPriestMK,
+                priest.sendMessage(getMessage(PRIEST_REQUEST_EXPIRED_PRIEST_MK,
                 placeholder("%player1%", player.getName()),
                 placeholder("%player2%", sibling.getName())));
-                player.sendMessage(getMessage(priestRequestExpiredPlayerMK,
+                player.sendMessage(getMessage(PRIEST_REQUEST_EXPIRED_PLAYER_MK,
                 placeholder("%player%", sibling.getName())));
-                sibling.sendMessage(getMessage(priestRequestExpiredPlayerMK,
+                sibling.sendMessage(getMessage(PRIEST_REQUEST_EXPIRED_PLAYER_MK,
                 placeholder("%player%", player.getName())));
             }
         };
 
         Utils.scheduleTask(runnable, 30L, TimeUnit.SECONDS);
 
-        player.chat(getLanguageConfig().getMessageAsString(priestYesMK.noPrefix()));
+        player.chat(getLanguageConfig().getMessageAsString(PRIEST_YES_MK.noPrefix()));
 
 
-        priest.chat(getLanguageConfig().getMessageAsString(priestRequestMK.noPrefix())
+        priest.chat(getLanguageConfig().getMessageAsString(PRIEST_REQUEST_MK.noPrefix())
                 .replace("%player1%", siblingFam.getName())
                 .replace("%player2%", playerFam.getName()));
 
@@ -145,9 +175,9 @@ public class SiblingAccept extends FamilyCommand implements HasParentCommand {
         sibling.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
                 Component.empty(),
-                getMessage(priestYesMK.noPrefix()),
+                getMessage(PRIEST_YES_MK.noPrefix()),
                 "/family sibling accept",
-                getMessage(priestNoMK.noPrefix()),
+                getMessage(PRIEST_NO_MK.noPrefix()),
                 "/family sibling deny"),
                 LunaticFamily.getConfig().decisionAsInvGUI()
         );
@@ -164,14 +194,14 @@ public class SiblingAccept extends FamilyCommand implements HasParentCommand {
         PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
 
         if (playerFam.isAdopted()) {
-            player.sendMessage(getMessage(isAdoptedMK,
+            player.sendMessage(getMessage(IS_ADOPTED_MK,
                 placeholder("%player1%", playerFam.getName()),
                 placeholder("%player2%", siblingFam.getName())));
             return true;
         }
 
         if (siblingFam.isAdopted()) {
-            player.sendMessage(getMessage(isAdoptedMK,
+            player.sendMessage(getMessage(IS_ADOPTED_MK,
                 placeholder("%player1%", siblingFam.getName()),
                 placeholder("%player2%", playerFam.getName())));
             return true;
@@ -213,8 +243,9 @@ public class SiblingAccept extends FamilyCommand implements HasParentCommand {
                 placeholder("%player%", player.getName())));
         }
 
-        player.sendMessage(getMessage(completeMK));
-        sibling.sendMessage(getMessage(completeMK));
+        player.sendMessage(getMessage(COMPLETE_MK,
+            placeholder("%player%", siblingFam.getName())));
+        sibling.sendMessage(getMessage(COMPLETE_MK));
 
         Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.SIBLING_PROPOSED_PLAYER);
         Utils.withdrawMoney(player.getServerName(), siblingUUID, WithdrawKey.SIBLING_PROPOSING_PLAYER);
@@ -268,9 +299,9 @@ public class SiblingAccept extends FamilyCommand implements HasParentCommand {
         Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.PRIEST_SIBLING_PLAYER);
         Utils.withdrawMoney(player.getServerName(), siblingUUID, WithdrawKey.PRIEST_SIBLING_PLAYER);
 
-        player.chat(getLanguageConfig().getMessageAsString(priestYesMK.noPrefix()));
+        player.chat(getLanguageConfig().getMessageAsString(PRIEST_YES_MK.noPrefix()));
 
-        priest.chat(getLanguageConfig().getMessageAsString(priestCompleteMK.noPrefix())
+        priest.chat(getLanguageConfig().getMessageAsString(PRIEST_COMPLETE_MK.noPrefix())
                 .replace("%player1%", playerFam.getName())
                 .replace("%player2%", siblingFam.getName()));
 

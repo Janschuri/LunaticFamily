@@ -22,9 +22,14 @@ import java.util.Map;
 
 public class MarryList extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private static final CommandMessageKey helpMK = new LunaticCommandMessageKey(new MarryList(),"help");
-    private final CommandMessageKey headerMK = new LunaticCommandMessageKey(this,"header");
-    private final CommandMessageKey pairsMK = new LunaticCommandMessageKey(this,"pairs");
+    private static final MarryList INSTANCE = new MarryList();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- List all married couples.");
+    private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "header")
+            .defaultMessage("en", "All married couples on this server: ");
+    private static final CommandMessageKey PAIRS_MK = new LunaticCommandMessageKey(INSTANCE, "pairs")
+            .defaultMessage("en", "&6%index%: &b%player1% %emoji% &b%player2%");
 
 
     @Override
@@ -71,6 +76,13 @@ public class MarryList extends FamilyCommand implements HasParentCommand, HasPar
     }
 
     @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
+    }
+
+    @Override
     public List<Component> getParamsNames() {
         return List.of(
                 getMessage(PAGE_MK.noPrefix())
@@ -86,7 +98,7 @@ public class MarryList extends FamilyCommand implements HasParentCommand, HasPar
     private Component getMarryList(int page) {
         List<Marriage> marryList = DatabaseRepository.getDatabase().find(Marriage.class).where().isNull("divorceDate").setFirstRow(10*(page-1)).setMaxRows(10).findList();
 
-        Component msg = getMessage(headerMK.noPrefix());
+        Component msg = getMessage(HEADER_MK.noPrefix());
 
         int index = 1 + (10*(page-1));
         Logger.debugLog("MarryList: " + marryList);
@@ -108,7 +120,7 @@ public class MarryList extends FamilyCommand implements HasParentCommand, HasPar
             Placeholder heartRpl = placeholder("%emoji%", heart);
 
             msg = msg.append(Component.newline())
-                    .append(getMessage(pairsMK.noPrefix(),
+                    .append(getMessage(PAIRS_MK.noPrefix(),
                             indexRpl,
                             player1Rpl,
                             player2Rpl,

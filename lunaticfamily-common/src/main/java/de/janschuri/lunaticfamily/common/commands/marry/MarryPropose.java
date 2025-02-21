@@ -23,19 +23,48 @@ import java.util.concurrent.TimeUnit;
 
 public class MarryPropose extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey alreadyMarriedMK = new LunaticCommandMessageKey(this,"already_married");
-    private final CommandMessageKey playerAlreadyMarriedMK = new LunaticCommandMessageKey(this,"player_already_married");
-    private final CommandMessageKey requestMK = new LunaticCommandMessageKey(this,"request");
-    private final CommandMessageKey requestSentMK = new LunaticCommandMessageKey(this,"request_sent");
-    private final CommandMessageKey requestExpiredMK = new LunaticCommandMessageKey(this,"request_expired");
-    private final CommandMessageKey requestSentExpiredMK = new LunaticCommandMessageKey(this,"request_sent_expired");
-    private final CommandMessageKey openRequestMK = new LunaticCommandMessageKey(this,"open_request");
-    private final CommandMessageKey familyRequestMK = new LunaticCommandMessageKey(this,"family_request");
-    private final CommandMessageKey tooManyChildrenMK = new LunaticCommandMessageKey(this,"too_many_children");
-    private final CommandMessageKey selfRequestMK = new LunaticCommandMessageKey(this,"self_request");
-    private final CommandMessageKey marryYesMK = new LunaticCommandMessageKey(new Marry(),"yes");
-    private final CommandMessageKey marryNoMK = new LunaticCommandMessageKey(new Marry(),"no");
+    private static final MarryPropose INSTANCE = new MarryPropose();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Propose marriage to a player.")
+            .defaultMessage("de", "&6/%command% %subcommand% &b<%param%> &7- Mache einem Spieler einen Heiratsantrag.");
+    private static final CommandMessageKey ALREADY_MARRIED_MK = new LunaticCommandMessageKey(INSTANCE, "already_married")
+            .defaultMessage("en", "You are already married to %player%.")
+            .defaultMessage("de", "Du bist bereits mit %player% verheiratet.");
+    private static final CommandMessageKey PLAYER_ALREADY_MARRIED_MK = new LunaticCommandMessageKey(INSTANCE, "player_already_married")
+            .defaultMessage("en", "%player% is already married.")
+            .defaultMessage("de", "%player% ist bereits verheiratet.");
+    private static final CommandMessageKey REQUEST_MK = new LunaticCommandMessageKey(INSTANCE, "request")
+            .defaultMessage("en", "%player1%, would you like to marry %player2% on this Minecraft server?")
+            .defaultMessage("de", "%player1%, möchtest du %player2% auf diesem Minecraft-Server heiraten?");
+    private static final CommandMessageKey REQUEST_SENT_MK = new LunaticCommandMessageKey(INSTANCE, "request_sent")
+            .defaultMessage("en", "You have proposed marriage to %player%.")
+            .defaultMessage("de", "Du hast %player% einen Heiratsantrag gemacht.");
+    private static final CommandMessageKey REQUEST_EXPIRED_MK = new LunaticCommandMessageKey(INSTANCE, "request_expired")
+            .defaultMessage("en", "The marriage proposal from %player% has expired.")
+            .defaultMessage("de", "Der Heiratsantrag von %player% ist abgelaufen.");
+    private static final CommandMessageKey REQUEST_SENT_EXPIRED_MK = new LunaticCommandMessageKey(INSTANCE, "request_sent_expired")
+            .defaultMessage("en", "Your marriage proposal to %player% has expired.")
+            .defaultMessage("de", "Dein Heiratsantrag an %player% ist abgelaufen.");
+    private static final CommandMessageKey OPEN_REQUEST_MK = new LunaticCommandMessageKey(INSTANCE, "open_request")
+            .defaultMessage("en", "%player% already has an open proposal.")
+            .defaultMessage("de", "%player% hat bereits einen offenen Antrag.");
+    private static final CommandMessageKey FAMILY_REQUEST_MK = new LunaticCommandMessageKey(INSTANCE, "family_request")
+            .defaultMessage("en", "You cannot marry %player%. This player already belongs to your family.")
+            .defaultMessage("de", "Du kannst %player% nicht heiraten. Dieser Spieler gehört bereits zu deiner Familie.");
+    private static final CommandMessageKey TOO_MANY_CHILDREN_MK = new LunaticCommandMessageKey(INSTANCE, "too_many_children")
+            .defaultMessage("en", "You and %player% have more than two children together. You must remove %amount% children before you and %player% can marry.")
+            .defaultMessage("de", "Du und %player% habt zusammen mehr als zwei Kinder. Du musst %amount% Kinder entfernen, bevor du und %player% heiraten können.");
+    private static final CommandMessageKey SELF_REQUEST_MK = new LunaticCommandMessageKey(INSTANCE, "self_request")
+            .defaultMessage("en", "You cannot marry yourself!")
+            .defaultMessage("de", "Du kannst dich nicht selbst heiraten!");
+    private static final CommandMessageKey MARRY_NO_MK = new LunaticCommandMessageKey(INSTANCE, "marry_no")
+            .defaultMessage("en", "No, I don't want to.")
+            .defaultMessage("de", "Nein, ich möchte nicht.");
+    private static final CommandMessageKey MARRY_YES_MK = new LunaticCommandMessageKey(INSTANCE, "marry_yes")
+            .defaultMessage("en", "Yes, I do.")
+            .defaultMessage("de", "Ja, ich will.");
+
 
 
     @Override
@@ -74,12 +103,12 @@ public class MarryPropose extends FamilyCommand implements HasParentCommand, Has
         }
 
         if (playerFam.getName().equalsIgnoreCase(args[0])) {
-            sender.sendMessage(getMessage(selfRequestMK));
+            sender.sendMessage(getMessage(SELF_REQUEST_MK));
             return true;
         }
 
         if (playerFam.isMarried()) {
-            sender.sendMessage(getMessage(alreadyMarriedMK,
+            sender.sendMessage(getMessage(ALREADY_MARRIED_MK,
                 placeholder("%player%", playerFam.getName())));
             return true;
         }
@@ -124,32 +153,32 @@ public class MarryPropose extends FamilyCommand implements HasParentCommand, Has
         partnerFam.update();
 
         if (playerFam.isFamilyMember(partnerFam)) {
-            sender.sendMessage(getMessage(familyRequestMK,
+            sender.sendMessage(getMessage(FAMILY_REQUEST_MK,
                 placeholder("%player%", partnerFam.getName())));
             return true;
         }
 
         if (partnerFam.isFamilyMember(playerFam)) {
-            sender.sendMessage(getMessage(familyRequestMK,
+            sender.sendMessage(getMessage(FAMILY_REQUEST_MK,
                 placeholder("%player%", partnerFam.getName())));
             return true;
         }
 
         if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
             int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
-            sender.sendMessage(getMessage(tooManyChildrenMK,
+            sender.sendMessage(getMessage(TOO_MANY_CHILDREN_MK,
                 placeholder("%player%", partnerFam.getName()),
                 placeholder("%amount%", Integer.toString(amountDiff))));
         }
 
         if (LunaticFamily.marryRequests.containsKey(partner.getUniqueId()) || LunaticFamily.marryPriests.containsKey(partner.getUniqueId())) {
-            sender.sendMessage(getMessage(openRequestMK,
+            sender.sendMessage(getMessage(OPEN_REQUEST_MK,
                 placeholder("%player%", partnerFam.getName())));
             return true;
         }
 
         if (partnerFam.isMarried()) {
-            sender.sendMessage(getMessage(playerAlreadyMarriedMK,
+            sender.sendMessage(getMessage(PLAYER_ALREADY_MARRIED_MK,
                 placeholder("%player%", partnerFam.getName())));
             return true;
         }
@@ -162,12 +191,12 @@ public class MarryPropose extends FamilyCommand implements HasParentCommand, Has
 
         partner.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
-                getMessage(requestMK.noPrefix(),
+                getMessage(REQUEST_MK.noPrefix(),
                 placeholder("%player1%", partnerFam.getName()),
                 placeholder("%player2%", playerFam.getName())),
-                getMessage(marryYesMK.noPrefix()),
+                getMessage(MARRY_YES_MK.noPrefix()),
                 "/family marry accept",
-                getMessage(marryNoMK.noPrefix()),
+                getMessage(MARRY_NO_MK.noPrefix()),
                 "/family marry deny"),
                 LunaticFamily.getConfig().decisionAsInvGUI()
         );
@@ -175,16 +204,16 @@ public class MarryPropose extends FamilyCommand implements HasParentCommand, Has
 
         LunaticFamily.marryRequests.put(partnerUUID, playerUUID);
 
-        sender.sendMessage(getMessage(requestSentMK,
+        sender.sendMessage(getMessage(REQUEST_SENT_MK,
                 placeholder("%player%", partnerFam.getName())
         ));
 
         Runnable runnable = () -> {
             if (LunaticFamily.marryRequests.containsKey(partnerUUID)) {
                 LunaticFamily.marryRequests.remove(partnerUUID);
-                player.sendMessage(getMessage(requestSentExpiredMK,
+                player.sendMessage(getMessage(REQUEST_SENT_EXPIRED_MK,
                 placeholder("%player%", partner.getName())));
-                partner.sendMessage(getMessage(requestExpiredMK,
+                partner.sendMessage(getMessage(REQUEST_EXPIRED_MK,
                 placeholder("%player%", player.getName())));
             }
         };
@@ -193,6 +222,13 @@ public class MarryPropose extends FamilyCommand implements HasParentCommand, Has
 
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     @Override

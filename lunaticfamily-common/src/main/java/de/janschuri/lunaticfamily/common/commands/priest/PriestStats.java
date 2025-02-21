@@ -11,13 +11,23 @@ import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 
+import java.util.Map;
+
 public class PriestStats extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this, "help");
-    private final CommandMessageKey headerMK = new LunaticCommandMessageKey(this, "header");
-    private final CommandMessageKey adoptionsMK = new LunaticCommandMessageKey(this, "adoptions");
-    private final CommandMessageKey marriagesMK = new LunaticCommandMessageKey(this, "marriages");
-    private final CommandMessageKey siblingsMK = new LunaticCommandMessageKey(this, "siblings");
+    private static final PriestStats INSTANCE = new PriestStats();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Show your statistics as a priest.");
+    private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "header")
+            .defaultMessage("en", "Your statistics:");
+    private static final CommandMessageKey MARRIAGES_MK = new LunaticCommandMessageKey(INSTANCE, "marriages")
+            .defaultMessage("en", "&6Marriages: &b%active%/%total% &7(%percentage%%)");
+    private static final CommandMessageKey ADOPTIONS_MK = new LunaticCommandMessageKey(INSTANCE, "adoptions")
+            .defaultMessage("en", "&6Adoptions: &b%active%/%total% &7(%percentage%%)");
+    private static final CommandMessageKey SIBLINGS_MK = new LunaticCommandMessageKey(INSTANCE, "siblings")
+            .defaultMessage("en", "&6Siblinghoods: &b%active%/%total% &7(%percentage%%)");
+
 
 
     @Override
@@ -44,7 +54,7 @@ public class PriestStats extends FamilyCommand implements HasParentCommand {
 
         ComponentBuilder msg = Component.text();
 
-        msg.append(getMessage(headerMK.noPrefix()));
+        msg.append(getMessage(HEADER_MK.noPrefix()));
 
         FamilyPlayer playerFam = getFamilyPlayer(player.getUniqueId());
 
@@ -55,7 +65,7 @@ public class PriestStats extends FamilyCommand implements HasParentCommand {
         String percentageAdoption = Utils.getPercentageAsString(activeAdoptions, totalAdoptions);
 
         msg.append(Component.newline());
-        msg.append(getMessage(adoptionsMK.noPrefix(),
+        msg.append(getMessage(ADOPTIONS_MK.noPrefix(),
                 placeholder("%total%", String.valueOf(totalAdoptions)),
                 placeholder("%active%", String.valueOf(activeAdoptions)),
                 placeholder("%percentage%", percentageAdoption)));
@@ -68,7 +78,7 @@ public class PriestStats extends FamilyCommand implements HasParentCommand {
         String percentageMarriage = Utils.getPercentageAsString(activeMarriages, totalMarriages);
 
         msg.append(Component.newline());
-        msg.append(getMessage(marriagesMK.noPrefix(),
+        msg.append(getMessage(MARRIAGES_MK.noPrefix(),
                 placeholder("%total%", String.valueOf(totalMarriages)),
                 placeholder("%active%", String.valueOf(activeMarriages)),
                 placeholder("%percentage%", percentageMarriage)));
@@ -80,7 +90,7 @@ public class PriestStats extends FamilyCommand implements HasParentCommand {
         String percentageSiblings = Utils.getPercentageAsString(activeSiblings, totalSiblings);
 
         msg.append(Component.newline());
-        msg.append(getMessage(siblingsMK.noPrefix(),
+        msg.append(getMessage(SIBLINGS_MK.noPrefix(),
                 placeholder("%total%", String.valueOf(totalSiblings)),
                 placeholder("%active%", String.valueOf(activeSiblings)),
                 placeholder("%percentage%", percentageSiblings)));
@@ -90,6 +100,13 @@ public class PriestStats extends FamilyCommand implements HasParentCommand {
         return true;
 
 
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     @Override

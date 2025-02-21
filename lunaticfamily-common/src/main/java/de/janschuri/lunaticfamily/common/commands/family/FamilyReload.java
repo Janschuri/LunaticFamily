@@ -7,10 +7,17 @@ import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
+import java.util.Map;
+
 public class FamilyReload extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey reloadedMK = new LunaticCommandMessageKey(this,"reloaded");
+    private static final FamilyReload INSTANCE = new FamilyReload();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Reload the configuration.");
+    private static final CommandMessageKey RELOADED_MK = new LunaticCommandMessageKey(INSTANCE, "reloaded")
+            .defaultMessage("en", "The configuration has been reloaded.");
+
 
     @Override
     public String getPermission() {
@@ -36,7 +43,14 @@ public class FamilyReload extends FamilyCommand implements HasParentCommand {
 
 
         LunaticFamily.loadConfig();
-        sender.sendMessage(getMessage(reloadedMK));
+        sender.sendMessage(getMessage(RELOADED_MK));
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 }

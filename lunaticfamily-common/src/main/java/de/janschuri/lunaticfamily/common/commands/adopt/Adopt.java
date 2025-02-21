@@ -15,7 +15,9 @@ import java.util.Map;
 public class Adopt extends FamilyCommand implements HasHelpCommand, HasSubcommands, HasParentCommand {
 
     private static final Adopt INSTANCE = new Adopt();
-    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help");
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Show the adopt help page.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Zeige die Adopt Hilfe Seite.");
 
     @Override
     public String getPermission() {

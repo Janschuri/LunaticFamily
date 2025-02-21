@@ -75,6 +75,9 @@ public abstract class FamilyCommand extends LunaticCommand implements HasMessage
     protected static final MessageKey PAGE_MK = new LunaticMessageKey("page")
             .defaultMessage("en", "Page")
             .defaultMessage("de", "Seite");
+    protected static final MessageKey BACKGROUND_MK = new LunaticMessageKey("background")
+            .defaultMessage("en", "Background")
+            .defaultMessage("de", "Hintergrund");
 
 
     protected static String getRelation(String mainCommand, String subcommand) {

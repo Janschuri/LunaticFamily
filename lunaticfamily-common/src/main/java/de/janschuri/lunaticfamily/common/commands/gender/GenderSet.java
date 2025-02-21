@@ -20,16 +20,29 @@ import java.util.*;
 
 public class GenderSet extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey setMK = new LunaticCommandMessageKey(this,"set");
-    private final CommandMessageKey setHoverMK = new LunaticCommandMessageKey(this,"set_hover");
-    private final CommandMessageKey changedMK = new LunaticCommandMessageKey(this,"changed");
-    private final CommandMessageKey notExistMK = new LunaticCommandMessageKey(this,"not_exist");
-    private final CommandMessageKey alreadyMK = new LunaticCommandMessageKey(this,"already");
-    private final CommandMessageKey adminHelpMK = new LunaticCommandMessageKey(this,"admin_help");
-    private final CommandMessageKey adminSetMK = new LunaticCommandMessageKey(this,"admin_set");
-    private final CommandMessageKey adminAlreadyMK = new LunaticCommandMessageKey(this,"admin_already");
-    private final CommandMessageKey genderMK = new LunaticCommandMessageKey(this,"gender");
+    private static final GenderSet INSTANCE = new GenderSet();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &3(<%param%>) &7- Set your gender.");
+    private static final CommandMessageKey SET_MK = new LunaticCommandMessageKey(INSTANCE, "set")
+            .defaultMessage("en", "Choose your gender: ");
+    private static final CommandMessageKey SET_HOVER_MK = new LunaticCommandMessageKey(INSTANCE, "set_hover")
+            .defaultMessage("en", "Set your gender to %gender%.");
+    private static final CommandMessageKey CHANGED_MK = new LunaticCommandMessageKey(INSTANCE, "changed")
+            .defaultMessage("en", "You have changed your gender to %gender%.");
+    private static final CommandMessageKey NOT_EXIST_MK = new LunaticCommandMessageKey(INSTANCE, "not_exist")
+            .defaultMessage("en", "This gender does not exist.");
+    private static final CommandMessageKey ALREADY_MK = new LunaticCommandMessageKey(INSTANCE, "already")
+            .defaultMessage("en", "Your gender is already %gender%.");
+    private static final CommandMessageKey ADMIN_HELP_MK = new LunaticCommandMessageKey(INSTANCE, "admin_help")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Set the gender of a player.");
+    private static final CommandMessageKey ADMIN_SET_MK = new LunaticCommandMessageKey(INSTANCE, "admin_set")
+            .defaultMessage("en", "You have changed the gender of %player% to %gender%.");
+    private static final CommandMessageKey ADMIN_ALREADY_MK = new LunaticCommandMessageKey(INSTANCE, "admin_already")
+            .defaultMessage("en", "The gender of %player% is already %gender%.");
+    private static final CommandMessageKey GENDER_MK = new LunaticCommandMessageKey(INSTANCE, "gender")
+            .defaultMessage("en", "gender");
+
 
 
     @Override
@@ -60,13 +73,13 @@ public class GenderSet extends FamilyCommand implements HasParams, HasParentComm
             }
             PlayerSender player = (PlayerSender) sender;
 
-            ComponentBuilder msg = Component.text().append(getMessage(setMK));
+            ComponentBuilder msg = Component.text().append(getMessage(SET_MK));
 
             for (String gender : LunaticFamily.getLanguageConfig().getGenders()) {
                 msg.append(
                         Component.text("\n - " + LunaticFamily.getLanguageConfig().getGenderLang(gender))
                                 .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/family gender set " + gender))
-                                .hoverEvent(HoverEvent.showText(getMessage(setHoverMK.noPrefix(),
+                                .hoverEvent(HoverEvent.showText(getMessage(SET_HOVER_MK.noPrefix(),
                                     placeholder("%gender%", getGenderLang(gender))
                                 )))
                 );
@@ -83,14 +96,14 @@ public class GenderSet extends FamilyCommand implements HasParams, HasParentComm
                 FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
                 if (!LunaticFamily.getLanguageConfig().getGenders().contains(args[0].toLowerCase())) {
-                    sender.sendMessage(getMessage(notExistMK));
+                    sender.sendMessage(getMessage(NOT_EXIST_MK));
                 } else if (playerFam.getGender().equalsIgnoreCase(args[0])) {
-                    player.sendMessage(getMessage(alreadyMK,
+                    player.sendMessage(getMessage(ALREADY_MK,
                 placeholder("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));
                 } else {
                     playerFam.setGender(args[0].toLowerCase());
                     playerFam.save();
-                    sender.sendMessage(getMessage(changedMK,
+                    sender.sendMessage(getMessage(CHANGED_MK,
                         placeholder("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))
                     ));
                 }
@@ -103,7 +116,7 @@ public class GenderSet extends FamilyCommand implements HasParams, HasParentComm
         }
 
         if (!LunaticFamily.getLanguageConfig().getGenders().contains(args[0].toLowerCase())) {
-            sender.sendMessage(getMessage(notExistMK));
+            sender.sendMessage(getMessage(NOT_EXIST_MK));
             return true;
         }
 
@@ -119,14 +132,14 @@ public class GenderSet extends FamilyCommand implements HasParams, HasParentComm
 
             FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
             if (player1Fam.getGender().equalsIgnoreCase(args[0])) {
-                sender.sendMessage(getMessage(adminAlreadyMK,
+                sender.sendMessage(getMessage(ADMIN_ALREADY_MK,
                 placeholder("%player%", player1.getName()),
                 placeholder("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));
                 return true;
             }
             player1Fam.setGender(args[0].toLowerCase());
             player1Fam.save();
-            sender.sendMessage(getMessage(adminSetMK,
+            sender.sendMessage(getMessage(ADMIN_SET_MK,
                 placeholder("%player%", player1.getName()),
                 placeholder("%gender%", LunaticFamily.getLanguageConfig().getGenderLang(args[0]))));
 
@@ -150,15 +163,15 @@ public class GenderSet extends FamilyCommand implements HasParams, HasParentComm
     @Override
     public Map<CommandMessageKey, String> getHelpMessages() {
         return Map.of(
-                helpMK, getPermission(),
-                adminHelpMK, "lunaticfamily.admin.gender"
+                HELP_MK, getPermission(),
+                ADMIN_HELP_MK, "lunaticfamily.admin.gender"
         );
     }
 
     @Override
     public List<Component> getParamsNames() {
         return List.of(
-                getMessage(genderMK.noPrefix()),
+                getMessage(GENDER_MK.noPrefix()),
                 getMessage(PLAYER_NAME_MK.noPrefix())
         );
     }

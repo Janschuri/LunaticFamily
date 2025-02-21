@@ -4,16 +4,28 @@ import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.commands.family.Family;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.Command;
+import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.common.command.HasHelpCommand;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.command.HasSubcommands;
 import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
+import java.util.Map;
 
 public class Gender extends FamilyCommand implements HasHelpCommand, HasSubcommands, HasParentCommand {
+
+    private static final Gender INSTANCE = new Gender();
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Show the gender help page.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Zeige die Gender-Hilfe.");
+    private static final CommandMessageKey HELP_HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "help_header")
+            .defaultMessage("en", "Gender-Help")
+            .defaultMessage("de", "Gender-Hilfe");
 
     @Override
     public LunaticHelpCommand getHelpCommand() {
@@ -21,8 +33,13 @@ public class Gender extends FamilyCommand implements HasHelpCommand, HasSubcomma
     }
 
     @Override
-    public Component pageParamName() {
-        return getMessage(PAGE_MK);
+    public MessageKey pageParamName() {
+        return PAGE_MK;
+    }
+
+    @Override
+    public MessageKey getHelpHeader() {
+        return HELP_HEADER_MK;
     }
 
     @Override
@@ -72,6 +89,11 @@ public class Gender extends FamilyCommand implements HasHelpCommand, HasSubcomma
         Logger.debugLog("Gender: Wrong usage");
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of();
     }
 
     @Override

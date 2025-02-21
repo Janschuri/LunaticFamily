@@ -23,10 +23,17 @@ import java.util.UUID;
 
 public class FamilyDelete extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey confirmMK = new LunaticCommandMessageKey(this,"confirm");
-    private final CommandMessageKey deletedMK = new LunaticCommandMessageKey(this,"deleted");
-    private final CommandMessageKey cancelMK = new LunaticCommandMessageKey(this, "cancel");
+    private static final FamilyDelete INSTANCE = new FamilyDelete();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Delete a player from the database.");
+    private static final CommandMessageKey CONFIRM_MK = new LunaticCommandMessageKey(INSTANCE, "confirm")
+            .defaultMessage("en", "Do you really want to delete %uuid% from the database?");
+    private static final CommandMessageKey DELETED_MK = new LunaticCommandMessageKey(INSTANCE, "deleted")
+            .defaultMessage("en", "You have deleted %uuid% from the database.");
+    private static final CommandMessageKey CANCEL_MK = new LunaticCommandMessageKey(INSTANCE, "cancel")
+            .defaultMessage("en", "You have canceled the deletion of %uuid%.");
+
 
 
     @Override
@@ -104,13 +111,13 @@ public class FamilyDelete extends FamilyCommand implements HasParentCommand, Has
 
             DatabaseRepository.getDatabase().delete(playerFam);
 
-            sender.sendMessage(getMessage(deletedMK,
+            sender.sendMessage(getMessage(DELETED_MK,
                 placeholder("%uuid%", playerArg)));
             return true;
         }
 
         if (cancel) {
-            sender.sendMessage(getMessage(cancelMK,
+            sender.sendMessage(getMessage(CANCEL_MK,
                 placeholder("%uuid%", playerArg)));
             return true;
         }
@@ -118,7 +125,7 @@ public class FamilyDelete extends FamilyCommand implements HasParentCommand, Has
 
         player.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
-                getMessage(confirmMK.noPrefix(),
+                getMessage(CONFIRM_MK.noPrefix(),
                 placeholder("%uuid%", playerArg)),
                 getMessage(CONFIRM_MK.noPrefix()),
                 "/family delete " + playerArg + " confirm",
@@ -129,6 +136,13 @@ public class FamilyDelete extends FamilyCommand implements HasParentCommand, Has
 
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+            HELP_MK, getPermission()
+        );
     }
 
     @Override

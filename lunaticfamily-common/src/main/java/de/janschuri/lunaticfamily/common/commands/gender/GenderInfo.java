@@ -18,16 +18,23 @@ import java.util.UUID;
 
 public class GenderInfo extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey helpOthersMK = new LunaticCommandMessageKey(this,"help_others");
-    private final CommandMessageKey infoMK = new LunaticCommandMessageKey(this,"info");
-    private final CommandMessageKey infoOthersMK = new LunaticCommandMessageKey(this,"info_others");
+    private static final GenderInfo INSTANCE = new GenderInfo();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Show your gender.");
+    private static final CommandMessageKey HELP_OTHERS_MK = new LunaticCommandMessageKey(INSTANCE, "help_others")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Show the gender of a player.");
+    private static final CommandMessageKey INFO_MK = new LunaticCommandMessageKey(INSTANCE, "info")
+            .defaultMessage("en", "Your gender is %gender%.");
+    private static final CommandMessageKey INFO_OTHERS_MK = new LunaticCommandMessageKey(INSTANCE, "info_others")
+            .defaultMessage("en", "%player%'s gender is %gender%.");
+
 
     @Override
     public Map<CommandMessageKey, String> getHelpMessages() {
         return Map.of(
-                helpMK, getPermission(),
-                helpOthersMK, getPermission() + ".others"
+                HELP_MK, getPermission(),
+                HELP_OTHERS_MK, getPermission() + ".others"
         );
     }
 
@@ -60,7 +67,7 @@ public class GenderInfo extends FamilyCommand implements HasParentCommand, HasPa
 
             UUID playerUUID = player.getUniqueId();
             FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
-            sender.sendMessage(getMessage(infoMK,
+            sender.sendMessage(getMessage(INFO_MK,
                 placeholder("%gender%", getGenderLang(playerFam.getGender()))));
             return true;
         }
@@ -91,7 +98,7 @@ public class GenderInfo extends FamilyCommand implements HasParentCommand, HasPa
             }
         }
 
-        sender.sendMessage(getMessage(infoOthersMK,
+        sender.sendMessage(getMessage(INFO_OTHERS_MK,
                 placeholder("%player%", player.getName()),
                 placeholder("%gender%", getGenderLang(player.getGender()))));
         return true;

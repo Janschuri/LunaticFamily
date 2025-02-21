@@ -7,14 +7,25 @@ import de.janschuri.lunaticfamily.common.commands.marry.Marry;
 import de.janschuri.lunaticfamily.common.commands.priest.Priest;
 import de.janschuri.lunaticfamily.common.commands.sibling.Sibling;
 import de.janschuri.lunaticlib.Command;
+import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.common.command.HasHelpCommand;
 import de.janschuri.lunaticlib.common.command.HasSubcommands;
 import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
-import net.kyori.adventure.text.Component;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
 import java.util.List;
+import java.util.Map;
 
 public class Family extends FamilyCommand implements HasHelpCommand, HasSubcommands {
+
+    private static final Family INSTANCE = new Family();
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Show the family help page.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Zeige die Familien Hilfe Seite.");
+    private static final CommandMessageKey HELP_HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "help_header")
+            .defaultMessage("en", "Family-Help")
+            .defaultMessage("de", "Familien-Hilfe");
 
     @Override
     public LunaticHelpCommand getHelpCommand() {
@@ -22,8 +33,13 @@ public class Family extends FamilyCommand implements HasHelpCommand, HasSubcomma
     }
 
     @Override
-    public Component pageParamName() {
-        return getMessage(PAGE_MK);
+    public MessageKey pageParamName() {
+        return PAGE_MK;
+    }
+
+    @Override
+    public MessageKey getHelpHeader() {
+        return HELP_HEADER_MK;
     }
 
     @Override
@@ -48,6 +64,13 @@ public class Family extends FamilyCommand implements HasHelpCommand, HasSubcomma
     @Override
     public String getPermission() {
         return "lunaticfamily.family";
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     @Override

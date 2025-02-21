@@ -20,11 +20,19 @@ import java.util.*;
 
 public class MarryEmoji extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey noColorMK = new LunaticCommandMessageKey(this,"no_color");
-    private final CommandMessageKey colorSetMK = new LunaticCommandMessageKey(this,"color_set");
-    private final CommandMessageKey noMarriageMK = new LunaticCommandMessageKey(this,"no_marriage");
-    private final CommandMessageKey headerMK = new LunaticCommandMessageKey(this,"header");
+    private static final MarryEmoji INSTANCE = new MarryEmoji();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% <%param%> &7- Change the color of your heart in the marriage list.");
+    private static final CommandMessageKey NO_COLOR_MK = new LunaticCommandMessageKey(INSTANCE, "no_color")
+            .defaultMessage("en", "You must specify a color.");
+    private static final CommandMessageKey COLOR_SET_MK = new LunaticCommandMessageKey(INSTANCE, "color_set")
+            .defaultMessage("en", "You have chosen the color %color%.");
+    private static final CommandMessageKey NO_MARRIAGE_MK = new LunaticCommandMessageKey(INSTANCE, "no_marriage")
+            .defaultMessage("en", "You are not married!");
+    private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "header")
+            .defaultMessage("en", "Available colors:");
+
 
 
     @Override
@@ -58,13 +66,13 @@ public class MarryEmoji extends FamilyCommand implements HasParentCommand, HasPa
         FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         if (!playerFam.isMarried()) {
-            sender.sendMessage(getMessage(noMarriageMK));
+            sender.sendMessage(getMessage(NO_MARRIAGE_MK));
             return true;
         }
 
         if (args.length < 1) {
             ComponentBuilder builder = Component.text();
-            builder.append(getMessage(headerMK));
+            builder.append(getMessage(HEADER_MK));
             builder.append(Component.newline());
 
             for (String color : getParams().get(0).keySet()) {
@@ -90,7 +98,7 @@ public class MarryEmoji extends FamilyCommand implements HasParentCommand, HasPa
         String color = args[0];
 
         if (!LunaticFamily.getConfig().getColors().containsKey(color) && !Utils.isValidHexCode(color)) {
-            sender.sendMessage(getMessage(noColorMK));
+            sender.sendMessage(getMessage(NO_COLOR_MK));
             return true;
         }
 
@@ -122,12 +130,19 @@ public class MarryEmoji extends FamilyCommand implements HasParentCommand, HasPa
 
         TextReplacementConfig replacementConfig = TextReplacementConfig.builder().match("%color%").replacement(colorComponent).build();
 
-        Component msg = getMessage(colorSetMK).replaceText(replacementConfig);
+        Component msg = getMessage(COLOR_SET_MK).replaceText(replacementConfig);
 
         player.sendMessage(msg);
         playerFam.getMarriages().get(0).setEmojiColor(hexColor);
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
 

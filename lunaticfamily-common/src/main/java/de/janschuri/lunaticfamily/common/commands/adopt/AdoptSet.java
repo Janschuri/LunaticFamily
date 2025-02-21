@@ -20,18 +20,41 @@ import java.util.UUID;
 
 public class AdoptSet extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new LunaticCommandMessageKey(this,"help");
-    private final CommandMessageKey noSingleAdoptMK = new LunaticCommandMessageKey(this,"no_single_adopt");
-    private final CommandMessageKey adoptLimitMK = new LunaticCommandMessageKey(this,"adopt_limit");
-    private final CommandMessageKey samePlayerMK = new LunaticCommandMessageKey(this,"same_player");
-    private final CommandMessageKey alreadyAdoptedMK = new LunaticCommandMessageKey(this,"already_adopted");
-    private final CommandMessageKey hasSiblingMK = new LunaticCommandMessageKey(this,"has_sibling");
-    private final CommandMessageKey hasSiblingLimitMK = new LunaticCommandMessageKey(this,"has_sibling_limit");
-    private final CommandMessageKey cancelMK = new LunaticCommandMessageKey(this,"cancel");
-    private final CommandMessageKey setMK = new LunaticCommandMessageKey(this,"set");
-    private final CommandMessageKey setBySingleMK = new LunaticCommandMessageKey(this,"set_by_single");
-    private final CommandMessageKey sameFamilyMK = new LunaticCommandMessageKey(this,"same_family");
+    private static final AdoptSet INSTANCE = new AdoptSet();
 
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Set the adoption of a child by a player.")
+            .defaultMessage("de", "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Setze die Adoption eines Kindes durch einen Spieler.");
+    private static final CommandMessageKey NO_SINGLE_ADOPT_MK = new LunaticCommandMessageKey(INSTANCE, "no_single_adopt")
+            .defaultMessage("en", "%player% is not married. You must be married to adopt a child.")
+            .defaultMessage("de", "%player% ist nicht verheiratet. Du musst verheiratet sein, um ein Kind zu adoptieren.");
+    private static final CommandMessageKey ADOPT_LIMIT_MK = new LunaticCommandMessageKey(INSTANCE, "adopt_limit")
+            .defaultMessage("en", "%player% already has two children.")
+            .defaultMessage("de", "%player% hat bereits zwei Kinder.");
+    private static final CommandMessageKey SAME_PLAYER_MK = new LunaticCommandMessageKey(INSTANCE, "same_player")
+            .defaultMessage("en", "A player cannot be their own child.")
+            .defaultMessage("de", "Ein Spieler kann nicht sein eigenes Kind sein.");
+    private static final CommandMessageKey ALREADY_ADOPTED_MK = new LunaticCommandMessageKey(INSTANCE, "already_adopted")
+            .defaultMessage("en", "%player% is already adopted.")
+            .defaultMessage("de", "%player% ist bereits adoptiert.");
+    private static final CommandMessageKey HAS_SIBLING_MK = new LunaticCommandMessageKey(INSTANCE, "has_sibling")
+            .defaultMessage("en", "%player% already has a sibling. Should that also be adopted?")
+            .defaultMessage("de", "%player% hat bereits ein Geschwister. Soll das auch adoptiert werden?");
+    private static final CommandMessageKey HAS_SIBLING_LIMIT_MK = new LunaticCommandMessageKey(INSTANCE, "has_sibling_limit")
+            .defaultMessage("en", "%player% already has a sibling. %player2% cannot adopt both as one child has already been adopted.")
+            .defaultMessage("de", "%player% hat bereits ein Geschwister. %player2% kann nicht beide adoptieren, da bereits ein Kind adoptiert wurde.");
+    private static final CommandMessageKey CANCEL_MK = new LunaticCommandMessageKey(INSTANCE, "cancel")
+            .defaultMessage("en", "You have canceled the adoption of %child% by %parent%.")
+            .defaultMessage("de", "Du hast die Adoption von %child% durch %parent% abgebrochen.");
+    private static final CommandMessageKey SET_MK = new LunaticCommandMessageKey(INSTANCE, "set")
+            .defaultMessage("en", "You have set the adoption of %child% by %parent1% and %parent2%.")
+            .defaultMessage("de", "Du hast die Adoption von %child% durch %parent1% und %parent2% festgelegt.");
+    private static final CommandMessageKey SET_BY_SINGLE_MK = new LunaticCommandMessageKey(INSTANCE, "set_by_single")
+            .defaultMessage("en", "You have set the adoption of %child% by %parent%.")
+            .defaultMessage("de", "Du hast die Adoption von %child% durch %parent% festgelegt.");
+    private static final CommandMessageKey SAME_FAMILY_MK = new LunaticCommandMessageKey(INSTANCE, "same_family")
+            .defaultMessage("en", "%player1% and %player2% are already family.")
+            .defaultMessage("de", "%player1% und %player2% sind bereits Familie.");
 
 
     @Override
@@ -86,7 +109,7 @@ public class AdoptSet extends FamilyCommand implements HasParams, HasParentComma
         }
 
         if (cancel) {
-            sender.sendMessage(getMessage(cancelMK,
+            sender.sendMessage(getMessage(CANCEL_MK,
                 placeholder("%parent%", args[0]),
                 placeholder("%child%", args[1])));
             return true;
@@ -113,7 +136,7 @@ public class AdoptSet extends FamilyCommand implements HasParams, HasParentComma
 
 
         if (args[0].equalsIgnoreCase(args[1])) {
-            sender.sendMessage(getMessage(samePlayerMK));
+            sender.sendMessage(getMessage(SAME_PLAYER_MK));
             return true;
         }
 
@@ -123,26 +146,26 @@ public class AdoptSet extends FamilyCommand implements HasParams, HasParentComma
         firstParentFam.update();
 
         if (firstParentFam.isFamilyMember(childFam)) {
-            sender.sendMessage(getMessage(sameFamilyMK,
+            sender.sendMessage(getMessage(SAME_FAMILY_MK,
                 placeholder("%player1%", firstParentFam.getName()),
                 placeholder("%player2%", child.getName())));
             return true;
         }
 
         if (!firstParentFam.isMarried() && !LunaticFamily.getConfig().isAllowSingleAdopt()) {
-            sender.sendMessage(getMessage(noSingleAdoptMK,
+            sender.sendMessage(getMessage(NO_SINGLE_ADOPT_MK,
                 placeholder("%player%", firstParentFam.getName())));
             return true;
         }
 
         if (childFam.isAdopted()) {
-            sender.sendMessage(getMessage(alreadyAdoptedMK,
+            sender.sendMessage(getMessage(ALREADY_ADOPTED_MK,
                 placeholder("%child%", childFam.getName())));
             return true;
         }
 
         if (firstParentFam.getChildrenAmount() > 1) {
-            sender.sendMessage(getMessage(adoptLimitMK,
+            sender.sendMessage(getMessage(ADOPT_LIMIT_MK,
                 placeholder("%player%", firstParentFam.getName())));
             return true;
         }
@@ -150,7 +173,7 @@ public class AdoptSet extends FamilyCommand implements HasParams, HasParentComma
         if (childFam.hasSiblings() && !confirm) {
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(hasSiblingMK.noPrefix(),
+                    getMessage(HAS_SIBLING_MK.noPrefix(),
                 placeholder("%player%", childFam.getName())),
                     getMessage(CONFIRM_MK.noPrefix()),
                     "/family adopt set " + firstParentFam.getName() + " " + childFam.getName() + " force confirm",
@@ -162,19 +185,19 @@ public class AdoptSet extends FamilyCommand implements HasParams, HasParentComma
         }
 
         if (childFam.hasSiblings() && firstParentFam.getChildrenAmount() > 0) {
-            sender.sendMessage(getMessage(hasSiblingLimitMK,
+            sender.sendMessage(getMessage(HAS_SIBLING_LIMIT_MK,
                 placeholder("%player1%", childFam.getName()),
                 placeholder("%player2%", firstParentFam.getName())));
             return true;
         }
 
         if (!firstParentFam.isMarried()) {
-            sender.sendMessage(getMessage(setBySingleMK,
+            sender.sendMessage(getMessage(SET_BY_SINGLE_MK,
                 placeholder("%child%", childFam.getName()),
                 placeholder("%parent%", firstParentFam.getName())));
         } else {
             FamilyPlayer secondParentFam = firstParentFam.getPartner();
-            sender.sendMessage(getMessage(setMK,
+            sender.sendMessage(getMessage(SET_MK,
                 placeholder("%child%", childFam.getName()),
                 placeholder("%parent1%", firstParentFam.getName()),
                 placeholder("%parent2%", secondParentFam.getName())));
@@ -186,6 +209,13 @@ public class AdoptSet extends FamilyCommand implements HasParams, HasParentComma
 
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     @Override
