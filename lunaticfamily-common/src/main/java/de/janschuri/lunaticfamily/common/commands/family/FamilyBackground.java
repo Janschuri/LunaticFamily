@@ -76,7 +76,7 @@ public class FamilyBackground extends FamilyCommand implements HasParams, HasPar
         }
 
         if (args.length == 0) {
-            sender.sendMessage(getMessage(HELP_MK));
+            sender.sendMessage(getReplacedHelpMessage(HELP_MK, sender, getParentCommand(), this));
             return true;
         }
 
