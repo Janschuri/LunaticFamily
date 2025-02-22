@@ -24,11 +24,11 @@ public class AdoptDeny extends FamilyCommand implements HasParentCommand {
             .defaultMessage("en", "&6/%command% %subcommand% &7- Deny an adoption request.")
             .defaultMessage("de", "&6/%command% %subcommand% &7- Lehne eine Adoptionsanfrage ab.");
     private static final CommandMessageKey DENIED_MK = new LunaticCommandMessageKey(INSTANCE,"denied")
-            .defaultMessage("en", "Sorry, %player% denied your adoption request.")
-            .defaultMessage("de", "Entschuldigung, %player% hat deine Adoptionsanfrage abgelehnt.");
+            .defaultMessage("en", "Sorry, %child% denied your adoption request.")
+            .defaultMessage("de", "Entschuldigung, %child% hat deine Adoptionsanfrage abgelehnt.");
     private static final CommandMessageKey DENY_MK = new LunaticCommandMessageKey(INSTANCE,"deny")
-            .defaultMessage("en", "You denied the adoption request from %player%.")
-            .defaultMessage("de", "Du hast die Adoptionsanfrage von %player% abgelehnt.");
+            .defaultMessage("en", "You denied the adoption request from %parent%.")
+            .defaultMessage("de", "Du hast die Adoptionsanfrage von %parent% abgelehnt.");
     private static final CommandMessageKey NO_REQUEST_MK = new LunaticCommandMessageKey(INSTANCE,"no_request")
             .defaultMessage("en", "You have no pending adoption requests.")
             .defaultMessage("de", "Du hast keine ausstehenden Adoptionsanfragen.");
@@ -79,9 +79,9 @@ public class AdoptDeny extends FamilyCommand implements HasParentCommand {
             PlayerSender parent = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
             if (!LunaticFamily.adoptPriests.containsKey(partnerUUID)) {
                 player.sendMessage(getMessage(DENY_MK,
-                placeholder("%player%", playerFam.getName())));
+                placeholder("%parent%", parent.getName())));
                 parent.sendMessage(getMessage(DENIED_MK,
-                placeholder("%player%", parent.getName())));
+                placeholder("%child%", playerFam.getName())));
             } else {
                 UUID priestUUID = LunaticFamily.adoptPriests.get(partnerUUID);
                 PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
