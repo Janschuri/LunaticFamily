@@ -66,7 +66,7 @@ public class SiblingSet extends FamilyCommand implements HasParentCommand, HasPa
         if (!sender.hasPermission("lunaticfamily.admin.sibling")) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
             return true;
-        } else if (args.length < 1) {
+        } else if (args.length < 2) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
             Logger.debugLog("SiblingSetSubcommand: Wrong usage");
             return true;
