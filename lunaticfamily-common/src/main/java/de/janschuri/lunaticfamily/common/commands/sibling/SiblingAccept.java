@@ -245,7 +245,8 @@ public class SiblingAccept extends FamilyCommand implements HasParentCommand {
 
         player.sendMessage(getMessage(COMPLETE_MK,
             placeholder("%player%", siblingFam.getName())));
-        sibling.sendMessage(getMessage(COMPLETE_MK));
+        sibling.sendMessage(getMessage(COMPLETE_MK,
+                placeholder("%player%", playerFam.getName())));
 
         Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.SIBLING_PROPOSED_PLAYER);
         Utils.withdrawMoney(player.getServerName(), siblingUUID, WithdrawKey.SIBLING_PROPOSING_PLAYER);
