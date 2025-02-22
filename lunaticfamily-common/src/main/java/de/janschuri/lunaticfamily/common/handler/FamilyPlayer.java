@@ -243,6 +243,8 @@ public class FamilyPlayer {
 
         for (Adoption adoption : getAdoptionsAsChild()) {
             list.add(adoption.getParent());
+
+            Logger.debugLog("Adoption: " + adoption.getParent().getName());
         }
 
         return list;

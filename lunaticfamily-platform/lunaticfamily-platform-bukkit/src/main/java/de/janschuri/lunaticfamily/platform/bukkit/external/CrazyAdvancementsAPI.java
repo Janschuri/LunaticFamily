@@ -85,8 +85,10 @@ public class CrazyAdvancementsAPI {
 
         List<AdvancementFlag> flags = new ArrayList<>();
 
-        if (treeAdvancement instanceof HiddenAdvancement) {
-            flags.add(AdvancementFlag.SEND_WITH_HIDDEN_BOOLEAN);
+        if (treeAdvancement instanceof HiddenAdvancement hiddenAdvancement) {
+            if (!hiddenAdvancement.isDebug()) {
+                flags.add(AdvancementFlag.SEND_WITH_HIDDEN_BOOLEAN);
+            }
         }
 
         Advancement parent = treeAdvancement.getParent() == null ? null : advancementMap.get(treeAdvancement.getParent().getKey());

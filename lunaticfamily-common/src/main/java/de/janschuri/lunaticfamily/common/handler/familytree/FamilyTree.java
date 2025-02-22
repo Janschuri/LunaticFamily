@@ -94,6 +94,7 @@ public class FamilyTree {
                 String parentKey = "parent_" + i;
                 TreeAdvancement.Side parentSide = i % 2 == 0 ? TreeAdvancement.Side.LEFT : TreeAdvancement.Side.RIGHT;
                 HiddenAdvancement parentAnchor = addParentAdvancement(parentsAnchor, parentSide, parent, parentKey);
+                addAllUpwards(parent, parentAnchor, parentSide, parentKey);
                 i++;
             }
         }
@@ -228,7 +229,7 @@ public class FamilyTree {
         Logger.debugLog("Anchor X: " + anchor.getX());
 
         int x = (int) anchor.getX();
-        if (x <= rowAbove && side != TreeAdvancement.Side.CENTER) {
+        if (x < rowAbove && side != TreeAdvancement.Side.CENTER) {
             modifier = (rowAbove - (int) anchor.getX()) + 3;
         }
 
@@ -331,7 +332,7 @@ public class FamilyTree {
 
         if (partnerFam != null) {
             String partnerKey = key + "_partner";
-            HiddenAdvancement partnerAnchor = addPartnerAdvancement(anchor, side, partnerFam, partnerKey);
+            addPartnerAdvancement(anchor, side, partnerFam, partnerKey);
         }
 
         List<FamilyPlayer> children = familyPlayer.getChildren();
@@ -349,5 +350,41 @@ public class FamilyTree {
                 i++;
             }
         }
+    }
+
+    public void addAllUpwards(FamilyPlayer familyPlayer, HiddenAdvancement anchor, TreeAdvancement.Side side, String key) {
+
+        List<FamilyPlayer> siblings = familyPlayer.getSiblings();
+
+        if (siblings != null && !siblings.isEmpty()) {
+            HiddenAdvancement siblingsAnchor = addSiblingsAnchor(anchor, side, key);
+
+            int i = 0;
+            for (FamilyPlayer sibling : siblings) {
+                if (sibling == null) {
+                    Logger.errorLog("Sibling is null");
+                    continue;
+                }
+
+                String siblingKey = key + "_sibling_" + i;
+                HiddenAdvancement siblingAnchor = addSiblingAdvancement(siblingsAnchor, side, sibling, siblingKey);
+                i++;
+            }
+        }
+
+        List<FamilyPlayer> parents = familyPlayer.getParents();
+
+        if (parents != null && !parents.isEmpty()) {
+            HiddenAdvancement parentsAnchor = addParentsAnchor(anchor, side, key);
+
+            int i = 0;
+            for (FamilyPlayer parent : parents) {
+                String parentKey = key + "_parent_" + i;
+                HiddenAdvancement parentAnchor = addParentAdvancement(parentsAnchor, side, parent, parentKey);
+                addAllUpwards(parent, parentAnchor, side, parentKey);
+                i++;
+            }
+        }
+
     }
 }

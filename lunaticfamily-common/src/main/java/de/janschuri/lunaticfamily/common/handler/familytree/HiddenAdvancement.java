@@ -10,6 +10,8 @@ public class HiddenAdvancement implements TreeAdvancement {
     private final Side side;
     private float x;
 
+    boolean isDebug = false;
+
     public HiddenAdvancement(String key, TreeAdvancement parentKey, float x, float y, Side side) {
         this.key = key;
         this.parent = parentKey;
@@ -62,5 +64,14 @@ public class HiddenAdvancement implements TreeAdvancement {
     @Override
     public Side getSide() {
         return side;
+    }
+
+    public HiddenAdvancement setDebug(boolean debug) {
+        isDebug = debug;
+        return this;
+    }
+
+    public boolean isDebug() {
+        return isDebug;
     }
 }

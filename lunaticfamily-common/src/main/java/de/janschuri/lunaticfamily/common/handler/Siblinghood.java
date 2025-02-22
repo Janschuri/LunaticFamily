@@ -2,6 +2,7 @@ package de.janschuri.lunaticfamily.common.handler;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import io.ebean.annotation.Identity;
 import io.ebean.annotation.NotNull;
 import io.ebean.annotation.WhenCreated;
@@ -97,13 +98,16 @@ public class Siblinghood {
     }
 
     public FamilyPlayer getSibling(FamilyPlayer playerFam) {
+
         if (player1.equals(playerFam)) {
             return player2;
         }
 
-        if (player1.equals(playerFam)) {
+        if (player2.equals(playerFam)) {
             return player1;
         }
+
+        Logger.debugLog("Siblinghood: getSibling: playerFam is not a sibling");
 
         return null;
     }
