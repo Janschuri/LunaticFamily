@@ -117,8 +117,6 @@ public class FamilyDBList extends FamilyCommand implements HasParams, HasParentC
             Component nameCmp = Component.text(name)
                     .hoverEvent(HoverEvent.showText(hover.build()));
 
-            TextReplacementConfig nameRpl = TextReplacementConfig.builder().match("%name%").replacement(nameCmp).build();
-
             Component row = getMessage(PLAYERS_MK.noPrefix(),
                 placeholder("%name%", nameCmp),
                 placeholder("%gender%", gender),
