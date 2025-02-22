@@ -148,7 +148,14 @@ public class AdoptSet extends FamilyCommand implements HasParams, HasParentComma
         if (firstParentFam.isFamilyMember(childFam)) {
             sender.sendMessage(getMessage(SAME_FAMILY_MK,
                 placeholder("%player1%", firstParentFam.getName()),
-                placeholder("%player2%", child.getName())));
+                placeholder("%player2%", childFam.getName())));
+            return true;
+        }
+
+        if (childFam.isFamilyMember(firstParentFam)) {
+            sender.sendMessage(getMessage(SAME_FAMILY_MK,
+                    placeholder("%player1%", firstParentFam.getName()),
+                    placeholder("%player2%", childFam.getName())));
             return true;
         }
 
