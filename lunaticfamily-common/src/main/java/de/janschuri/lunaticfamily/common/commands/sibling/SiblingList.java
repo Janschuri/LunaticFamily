@@ -6,6 +6,7 @@ import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.Placeholder;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
@@ -78,9 +79,9 @@ public class SiblingList extends FamilyCommand implements HasParams, HasParentCo
     }
 
     @Override
-    public List<Component> getParamsNames() {
+    public List<MessageKey> getParamsNames() {
         return List.of(
-                getMessage(PAGE_MK.noPrefix())
+                PAGE_MK
         );
     }
 

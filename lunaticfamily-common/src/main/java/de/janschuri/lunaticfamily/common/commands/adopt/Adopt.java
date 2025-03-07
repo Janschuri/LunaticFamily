@@ -7,7 +7,6 @@ import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.common.command.*;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
-import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;

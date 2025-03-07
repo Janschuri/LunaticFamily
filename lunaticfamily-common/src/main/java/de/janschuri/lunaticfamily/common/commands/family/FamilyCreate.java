@@ -27,7 +27,7 @@ public class FamilyCreate extends FamilyCommand implements HasParentCommand, Has
             .defaultMessage("en", "Do you really want to create %name% with the UUID %uuid%?");
     private static final CommandMessageKey CANCEL_MK = new LunaticCommandMessageKey(INSTANCE, "cancel")
             .defaultMessage("en", "You have canceled the creation of %name% with the UUID %uuid%.");
-    private static final MessageKey createRandomMK = new LunaticCommandMessageKey(INSTANCE, "createRandom")
+    private static final MessageKey CREATE_RANDOM_MK = new LunaticCommandMessageKey(INSTANCE, "createRandom")
             .defaultMessage("You didn't specified a UUID. Do you want to create a random one?");
 
 
@@ -71,7 +71,7 @@ public class FamilyCreate extends FamilyCommand implements HasParentCommand, Has
 
             DecisionMessage decisionMessage = Utils.getClickableDecisionMessage(
                     getPrefix(),
-                    getMessage(createRandomMK.noPrefix()),
+                    getMessage(CREATE_RANDOM_MK.noPrefix()),
                     getMessage(CONFIRM_MK.noPrefix()),
                     "/family create " + playerName + " " + randomUUID + " confirm",
                     getMessage(CANCEL_MK.noPrefix()),
@@ -153,10 +153,10 @@ public class FamilyCreate extends FamilyCommand implements HasParentCommand, Has
     }
 
     @Override
-    public List<Component> getParamsNames() {
+    public List<MessageKey> getParamsNames() {
         return List.of(
-            getMessage(PLAYER_NAME_MK.noPrefix()),
-            Component.text("UUID")
+            PLAYER_NAME_MK,
+            UUID_MK
         );
     }
 

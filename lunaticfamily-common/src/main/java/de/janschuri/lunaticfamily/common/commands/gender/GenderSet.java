@@ -5,6 +5,7 @@ import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
@@ -169,10 +170,10 @@ public class GenderSet extends FamilyCommand implements HasParams, HasParentComm
     }
 
     @Override
-    public List<Component> getParamsNames() {
+    public List<MessageKey> getParamsNames() {
         return List.of(
-                getMessage(GENDER_MK.noPrefix()),
-                getMessage(PLAYER_NAME_MK.noPrefix())
+                GENDER_MK,
+                PLAYER_NAME_MK
         );
     }
 }

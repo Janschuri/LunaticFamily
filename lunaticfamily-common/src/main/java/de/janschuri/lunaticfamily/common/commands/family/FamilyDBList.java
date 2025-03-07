@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
@@ -74,9 +75,9 @@ public class FamilyDBList extends FamilyCommand implements HasParams, HasParentC
     }
 
     @Override
-    public List<Component> getParamsNames() {
+    public List<MessageKey> getParamsNames() {
         return List.of(
-                getMessage(PAGE_MK.noPrefix())
+                PAGE_MK
         );
     }
 

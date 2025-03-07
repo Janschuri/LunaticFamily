@@ -10,6 +10,7 @@ import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
@@ -146,9 +147,9 @@ public class FamilyDelete extends FamilyCommand implements HasParentCommand, Has
     }
 
     @Override
-    public List<Component> getParamsNames() {
+    public List<MessageKey> getParamsNames() {
         return List.of(
-            Component.text("UUID")
+                UUID_MK
         );
     }
 

@@ -2,6 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
+import de.janschuri.lunaticfamily.common.commands.marry.MarryEmoji;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
@@ -38,9 +39,9 @@ public class FamilyBackground extends FamilyCommand implements HasParams, HasPar
     }
 
     @Override
-    public List<Component> getParamsNames() {
+    public List<MessageKey> getParamsNames() {
         return List.of(
-                getMessage(BACKGROUND_MK.noPrefix())
+                BACKGROUND_MK
         );
     }
 

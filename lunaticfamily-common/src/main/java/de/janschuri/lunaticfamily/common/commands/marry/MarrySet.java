@@ -6,6 +6,7 @@ import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
@@ -181,10 +182,10 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
     }
 
     @Override
-    public List<Component> getParamsNames() {
+    public List<MessageKey> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK.noPrefix()),
-                getMessage(PLAYER_NAME_MK.noPrefix())
+                PLAYER_NAME_MK,
+                PLAYER_NAME_MK
         );
     }
 

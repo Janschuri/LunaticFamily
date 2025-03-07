@@ -5,6 +5,7 @@ import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
@@ -105,9 +106,9 @@ public class GenderInfo extends FamilyCommand implements HasParentCommand, HasPa
     }
 
     @Override
-    public List<Component> getParamsNames() {
+    public List<MessageKey> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK.noPrefix())
+                PLAYER_NAME_MK
         );
     }
 

@@ -74,6 +74,11 @@ public class Family extends FamilyCommand implements HasHelpCommand, HasSubcomma
     }
 
     @Override
+    public boolean isPrimaryCommand() {
+        return true;
+    }
+
+    @Override
     public String getName() {
         return "family";
     }
