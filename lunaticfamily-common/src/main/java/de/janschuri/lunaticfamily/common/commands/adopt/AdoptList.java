@@ -99,7 +99,6 @@ public class AdoptList extends FamilyCommand implements HasParams, HasParentComm
         Component msg = getMessage(headerMK.noPrefix());
 
         int index = 1 + (10*(page-1));
-        Logger.debugLog("AdoptList: " + adoptList);
         for (Adoption e : adoptList) {
             FamilyPlayer player1Fam = e.getParent();
             FamilyPlayer player2Fam = e.getChild();

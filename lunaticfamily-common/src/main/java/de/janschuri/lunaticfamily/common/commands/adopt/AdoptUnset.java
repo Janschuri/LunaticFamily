@@ -54,7 +54,6 @@ public class AdoptUnset extends FamilyCommand implements HasParentCommand, HasPa
         }
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("AdoptUnsetSubcommand: Wrong usage");
             return true;
         }
 

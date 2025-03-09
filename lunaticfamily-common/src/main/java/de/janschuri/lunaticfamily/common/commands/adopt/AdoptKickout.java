@@ -143,7 +143,6 @@ public class AdoptKickout extends FamilyCommand implements HasParentCommand, Has
         }
 
         if (!confirm) {
-            Logger.debugLog(child.getName());
             player.sendMessage(Utils.getClickableDecisionMessage(
                     getPrefix(),
                     getMessage(CONFIRM_MK.noPrefix(),

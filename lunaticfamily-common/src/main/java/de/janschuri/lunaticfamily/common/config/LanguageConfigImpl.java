@@ -60,6 +60,7 @@ public class LanguageConfigImpl extends LunaticLanguageConfig implements FamilyL
                 }
             }
         }
+
         return remappedMap;
     }
 

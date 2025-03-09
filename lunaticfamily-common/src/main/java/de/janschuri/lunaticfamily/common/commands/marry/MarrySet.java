@@ -72,7 +72,6 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
 
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("MarrySet: Wrong usage");
             return true;
         }
 
@@ -83,7 +82,6 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
 
         if (args.length < 2) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("MarrySetSubcommand: Wrong usage");
             return true;
         }
 

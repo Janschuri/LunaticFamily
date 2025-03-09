@@ -227,9 +227,6 @@ public class FamilyTree {
             rowAbove = rightRows.getOrDefault(y+1, 0);
         }
 
-        Logger.debugLog("Row above: " + rowAbove);
-        Logger.debugLog("Anchor X: " + anchor.getX());
-
         int x = (int) anchor.getX();
         if (x < rowAbove && side != TreeAdvancement.Side.CENTER) {
             modifier = (rowAbove - (int) anchor.getX()) + 3;

@@ -103,7 +103,6 @@ public class PriestSibling extends FamilyCommand implements HasParentCommand, Ha
 
         if (args.length < 2) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("PriestSiblingSubcommand: Wrong usage");
             return true;
         }
 

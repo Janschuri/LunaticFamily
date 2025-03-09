@@ -111,7 +111,6 @@ public class SiblingPropose extends FamilyCommand implements HasParentCommand, H
 
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("SiblingPropose: Wrong usage");
             return true;
         }
 

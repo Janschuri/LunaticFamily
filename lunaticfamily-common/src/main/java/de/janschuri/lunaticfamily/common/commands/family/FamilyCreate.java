@@ -60,7 +60,6 @@ public class FamilyCreate extends FamilyCommand implements HasParentCommand, Has
 
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("FamilyCreate: Wrong usage");
             return true;
         }
 

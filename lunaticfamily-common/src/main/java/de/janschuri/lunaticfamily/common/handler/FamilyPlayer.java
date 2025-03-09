@@ -165,7 +165,6 @@ public class FamilyPlayer {
             idInsert = id;
         }
 
-        Logger.debugLog("Saving FamilyPlayer: " + idInsert);
 
         DatabaseRepository.getDatabase().save(this);
         return this;
@@ -244,7 +243,6 @@ public class FamilyPlayer {
         for (Adoption adoption : getAdoptionsAsChild()) {
             list.add(adoption.getParent());
 
-            Logger.debugLog("Adoption: " + adoption.getParent().getName());
         }
 
         return list;

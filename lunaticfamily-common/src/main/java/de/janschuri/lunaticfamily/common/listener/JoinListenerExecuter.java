@@ -28,10 +28,7 @@ public class JoinListenerExecuter {
 
     public static boolean execute(PlayerSender sender) {
 
-        Logger.debugLog("JoinListenerExecuter: " + sender.getName() + " joined");
-
         if (!Utils.isPlayerOnRegisteredServer(sender))  {
-            Logger.debugLog("JoinListenerExecuter: " + sender.getName() + " is not on a registered server");
             return true;
         }
 

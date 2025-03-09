@@ -99,7 +99,6 @@ public class PriestAdopt extends FamilyCommand implements HasParentCommand, HasP
 
         if (args.length < 2) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("PriestAdoptSubcommand: Wrong usage");
             return true;
         }
 

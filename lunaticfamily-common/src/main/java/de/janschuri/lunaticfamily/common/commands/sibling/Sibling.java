@@ -94,8 +94,6 @@ public class Sibling extends FamilyCommand implements HasHelpCommand, HasParentC
             }
         }
         sender.sendMessage(getMessage(WRONG_USAGE_MK));
-        Logger.debugLog("SiblingSubcommand: Wrong usage");
-
 
         return true;
     }

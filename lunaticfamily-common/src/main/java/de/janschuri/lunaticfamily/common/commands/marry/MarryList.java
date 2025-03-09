@@ -55,14 +55,12 @@ public class MarryList extends FamilyCommand implements HasParentCommand, HasPar
             return true;
         }
 
-        Logger.debugLog("MarryList: " + Arrays.toString(args));
 
         int page = 1;
         if (args.length > 0) {
             try {
                 page = Integer.parseInt(args[0]);
             } catch (Exception e) {
-                Logger.debugLog("MarryList1: ");
                 sender.sendMessage(getMessage(NO_NUMBER_MK,
                 placeholder("%input%", args[0])));
                 return true;
@@ -102,7 +100,6 @@ public class MarryList extends FamilyCommand implements HasParentCommand, HasPar
         Component msg = getMessage(HEADER_MK.noPrefix());
 
         int index = 1 + (10*(page-1));
-        Logger.debugLog("MarryList: " + marryList);
         for (Marriage e : marryList) {
             FamilyPlayer player1Fam = e.getPlayer1();
             FamilyPlayer player2Fam = e.getPlayer2();

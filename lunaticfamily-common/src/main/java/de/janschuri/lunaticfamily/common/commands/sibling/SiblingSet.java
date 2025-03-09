@@ -69,7 +69,6 @@ public class SiblingSet extends FamilyCommand implements HasParentCommand, HasPa
             return true;
         } else if (args.length < 2) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("SiblingSetSubcommand: Wrong usage");
             return true;
         }
 

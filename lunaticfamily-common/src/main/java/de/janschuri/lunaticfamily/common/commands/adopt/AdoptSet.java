@@ -105,7 +105,6 @@ public class AdoptSet extends FamilyCommand implements HasParams, HasParentComma
 
         if (args.length < 2) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("AdoptSetSubcommand: Wrong usage");
             return true;
         }
 

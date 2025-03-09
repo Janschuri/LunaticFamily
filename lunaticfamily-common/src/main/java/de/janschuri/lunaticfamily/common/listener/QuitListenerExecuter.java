@@ -32,8 +32,6 @@ public class QuitListenerExecuter {
 
     public static boolean execute(PlayerSender player) {
 
-        Logger.debugLog("QuitListenerExecuter: " + player.getName() + " quit");
-
         LanguageConfigImpl languageConfig = LunaticFamily.getLanguageConfig();
         UUID uuid = player.getUniqueId();
         FamilyPlayer playerFam = findOrCreate(uuid);

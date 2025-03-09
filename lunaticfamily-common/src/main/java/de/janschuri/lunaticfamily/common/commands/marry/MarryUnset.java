@@ -55,7 +55,6 @@ public class MarryUnset extends FamilyCommand implements HasParams, HasParentCom
         }
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("MarryUnset: Wrong usage");
             return true;
         }
 

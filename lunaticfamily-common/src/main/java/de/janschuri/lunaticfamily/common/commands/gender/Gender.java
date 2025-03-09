@@ -86,7 +86,6 @@ public class Gender extends FamilyCommand implements HasHelpCommand, HasSubcomma
             }
         }
         sender.sendMessage(getMessage(WRONG_USAGE_MK));
-        Logger.debugLog("Gender: Wrong usage");
 
         return true;
     }

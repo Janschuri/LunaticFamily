@@ -60,7 +60,6 @@ public class SiblingUnset extends FamilyCommand implements HasParentCommand, Has
 
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("SiblingUnset: Wrong usage");
             return true;
         }
 

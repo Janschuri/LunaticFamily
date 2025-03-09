@@ -107,7 +107,6 @@ public class Siblinghood {
             return player1;
         }
 
-        Logger.debugLog("Siblinghood: getSibling: playerFam is not a sibling");
 
         return null;
     }

@@ -96,7 +96,6 @@ public final class LunaticFamily {
 
         loadConfig();
 
-        Logger.debugLog("Mode: " + LunaticFamily.mode);
 
         registerCommands();
         platform.registerListener();

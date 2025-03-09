@@ -28,7 +28,6 @@ public class MarryPriest extends PriestMarry {
             list.add(super.getParentCommand().getName());
         }
 
-        Logger.debugLog("Aliases: " + list);
         return list;
     }
 }

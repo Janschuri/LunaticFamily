@@ -29,7 +29,6 @@ public class SiblingPriest extends PriestSibling {
             list.add(super.getParentCommand().getName());
         }
 
-        Logger.debugLog("Aliases: " + list);
         return list;
     }
 }

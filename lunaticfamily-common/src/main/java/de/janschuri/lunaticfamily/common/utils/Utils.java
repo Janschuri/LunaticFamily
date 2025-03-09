@@ -66,10 +66,8 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
     public static UUID getUUIDFromArg(String arg) {
         UUID uuid = null;
 
-        Logger.debugLog("arg: " + arg);
 
         if (isUUID(arg)) {
-            Logger.debugLog("arg is UUID");
 
             uuid = UUID.fromString(arg);
 
@@ -77,16 +75,11 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
                 uuid = null;
             }
         } else {
-            Logger.debugLog("arg is not UUID");
             FamilyPlayer playerFam = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().ieq("name", arg).findOne();
 
             if (playerFam != null) {
                 uuid = playerFam.getUUID();
             }
-        }
-
-        if (uuid == null) {
-            Logger.debugLog("UUID is null");
         }
 
 

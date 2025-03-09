@@ -97,7 +97,7 @@ public class SiblingList extends FamilyCommand implements HasParams, HasParentCo
         Component msg = getMessage(HEADER_MK.noPrefix());
 
         int index = 1 + (10*(page-1));
-        Logger.debugLog("SiblingList: " + siblingList);
+
         for (Siblinghood e : siblingList) {
             FamilyPlayer player1Fam = e.getPlayer1();
             FamilyPlayer player2Fam = e.getPlayer2();

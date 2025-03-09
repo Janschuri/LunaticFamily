@@ -99,7 +99,6 @@ public class MarryPropose extends FamilyCommand implements HasParentCommand, Has
 
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("MarryProposeSubcommand: Wrong usage");
             return true;
         }
 
