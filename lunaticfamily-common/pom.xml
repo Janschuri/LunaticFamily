@@ -75,16 +75,25 @@
     <dependencies>
         <dependency>
             <groupId>io.ebean</groupId>
-            <artifactId>ebean</artifactId>
-            <version>${ebean.version}</version>
+            <artifactId>ebean-core</artifactId>
+            <version>15.8.1</version>
         </dependency>
-
         <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq</artifactId>
-            <version>3.17.5</version>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean-mysql</artifactId>
+            <version>15.8.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean-sqlite</artifactId>
+            <version>15.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>33.3.1-jre</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>de.janschuri</groupId>
             <artifactId>lunaticfamily-platform-interface</artifactId>
@@ -95,18 +104,6 @@
             <groupId>de.janschuri</groupId>
             <artifactId>lunaticfamily-interface</artifactId>
             <version>1.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>32.1.2-jre</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.13</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
