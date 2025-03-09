@@ -2,6 +2,7 @@ package de.janschuri.lunaticfamily.common.config;
 
 import de.janschuri.lunaticfamily.FamilyLanguageConfig;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.common.config.LunaticLanguageConfig;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,18 +15,9 @@ public class LanguageConfigImpl extends LunaticLanguageConfig implements FamilyL
     private Map<String, String> colorsTranslations = new HashMap<>();
     private final Map<String, Map<String, String>> relationships = new HashMap<>();
 
-    private static Map<String, String> remappedRelationships = new LinkedHashMap<>(Map.of(
-            "grandchild", "child_child",
-            "grandparent", "parent_parent",
-            "aunt_or_uncle", "parent_sibling",
-            "great_child", "child_child",
-            "great_parent", "parent_parent",
-            "cousin", "parent_sibling_child",
-            "niece_or_nephew", "sibling_child",
-            "sibling_in_law", "partner_sibling",
-            "partner_in_law", "partner_parent",
-            "child_in_law", "child_partner"
-    ));
+    private static Map<String, String> remappedRelationships = new LinkedHashMap<>();
+
+
 
     public LanguageConfigImpl(Path dataDirectory, String languageKey) {
         super(dataDirectory, languageKey);
@@ -33,6 +25,18 @@ public class LanguageConfigImpl extends LunaticLanguageConfig implements FamilyL
 
     public void load() {
         super.load();
+
+        remappedRelationships.put("grandchild", "child_child");
+        remappedRelationships.put("grandparent", "parent_parent");
+        remappedRelationships.put("aunt_or_uncle", "parent_sibling");
+        remappedRelationships.put("great_child", "child_child");
+        remappedRelationships.put("great_parent", "parent_parent");
+        remappedRelationships.put("cousin", "parent_sibling_child");
+        remappedRelationships.put("niece_or_nephew", "sibling_child");
+        remappedRelationships.put("partner_in_law", "partner_parent");
+        remappedRelationships.put("child_in_law", "child_partner");
+        remappedRelationships.put("parent_in_law", "partner_parent");
+
 
         genderLang = getStringMap("genders");
 
@@ -49,16 +53,30 @@ public class LanguageConfigImpl extends LunaticLanguageConfig implements FamilyL
     }
 
     private static @NotNull Map<String, String> getRemappedMap(Map<String, String> map) {
-        Map<String, String> remappedMap = new HashMap<>(map);
+        Map<String, String> remappedMap = new HashMap<>();
 
         for (Map.Entry<String, String> entry : map.entrySet()) {
-            for (Map.Entry<String, String> remap : remappedRelationships.entrySet()) {
-                if (entry.getKey().contains(remap.getKey())) {
-                    String newKey = entry.getKey().replace(remap.getKey(), remap.getValue());
 
-                    remappedMap.put(newKey, entry.getValue());
-                }
+            String newKey = entry.getKey();
+            for (Map.Entry<String, String> remap : remappedRelationships.entrySet()) {
+//                if (entry.getKey().contains(remap.getKey())) {
+                        newKey = newKey.replaceAll(remap.getKey(), remap.getValue());
+//                }
             }
+
+
+            if (entry.getKey().contains("sibling_in_law")) {
+                Logger.debugLog("Key: " + entry.getKey() + " -> " + newKey);
+                String newKey1 = newKey.replaceAll("sibling_in_law", "sibling_partner");
+                String newKey2 = newKey.replaceAll("sibling_in_law", "partner_sibling");
+
+                remappedMap.put(newKey1, entry.getValue());
+                remappedMap.put(newKey2, entry.getValue());
+
+            } else {
+                remappedMap.put(newKey, entry.getValue());
+            }
+
         }
 
         return remappedMap;
