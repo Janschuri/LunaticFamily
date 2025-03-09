@@ -1,5 +1,6 @@
 package de.janschuri.lunaticfamily.common.handler.familytree;
 
+import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.TreeAdvancement;
@@ -28,8 +29,8 @@ public class FamilyTree {
                 .toList();
     }
 
-    private static String getRelationLang(String key) {
-        return key;
+    private static String getRelationLang(String key, String gender) {
+        return LunaticFamily.getLanguageConfig().getRelation(key, gender) + " | " + key;
     }
 
     private int getNextX(int y, TreeAdvancement.Side side) {
@@ -73,7 +74,8 @@ public class FamilyTree {
         UUID egoUUID = familyPlayer.getUUID();
         String egoGender = familyPlayer.getGender();
         String egoKey = "ego";
-        String egoLang = getRelationLang(egoKey);
+        String gender = familyPlayer.getGender();
+        String egoLang = getRelationLang(egoKey, gender);
         String egoTitle = familyPlayer.getName();
         String background = familyPlayer.getBackground();
         String egoSkinURL = familyPlayer.getSkinURL();
@@ -165,7 +167,7 @@ public class FamilyTree {
         int partnerId = partner.getId();
         UUID partnerUUID = partner.getUUID();
         String partnerGender = partner.getGender();
-        String partnerLang = getRelationLang(partnerKey);
+        String partnerLang = getRelationLang(partnerKey, partnerGender);
         String partnerTitle = partner.getName();
         String partnerSkinURL = partner.getSkinURL();
 
@@ -196,7 +198,7 @@ public class FamilyTree {
         int siblingId = sibling.getId();
         UUID siblingUUID = sibling.getUUID();
         String siblingGender = sibling.getGender();
-        String siblingLang = getRelationLang(siblingKey);
+        String siblingLang = getRelationLang(siblingKey, siblingGender);
         String siblingTitle = sibling.getName();
         String siblingSkinURL = sibling.getSkinURL();
 
@@ -256,7 +258,7 @@ public class FamilyTree {
         int parentId = parent.getId();
         UUID parentUUID = parent.getUUID();
         String parentGender = parent.getGender();
-        String parentLang = getRelationLang(parentKey);
+        String parentLang = getRelationLang(parentKey, parentGender);
         String parentTitle = parent.getName();
         String parentSkinURL = parent.getSkinURL();
 
@@ -307,7 +309,7 @@ public class FamilyTree {
         int childId = child.getId();
         UUID childUUID = child.getUUID();
         String childGender = child.getGender();
-        String childLang = getRelationLang(childKey);
+        String childLang = getRelationLang(childKey, childGender);
         String childTitle = child.getName();
         String childSkinURL = child.getSkinURL();
 
