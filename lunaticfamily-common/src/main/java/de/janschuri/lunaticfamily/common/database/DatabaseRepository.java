@@ -18,6 +18,10 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
 import org.jooq.impl.SQLDataType;
 import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
@@ -52,7 +56,6 @@ public class DatabaseRepository {
     }
 
     private static String getType() {
-        // type can be either "sqlite" or "mysql"
         return databaseConfig.getType();
     }
 
@@ -66,7 +69,7 @@ public class DatabaseRepository {
 
             Settings settings = new Settings()
                     .withRenderFormatted(false)
-                    .withExecuteLogging(false); // Disables query logging
+                    .withExecuteLogging(false);
 
             Configuration configuration = new DefaultConfiguration()
                     .set(conn)
@@ -94,6 +97,7 @@ public class DatabaseRepository {
             Logger.infoLog("Migrations already ran: " + Arrays.toString(names.toArray()));
 
             List<Migration> migrations = getMigrations();
+            Logger.infoLog("Migrations to run: " + migrations.size());
             conn.setAutoCommit(false);
 
             long batch = context.select(DSL.field("batch", Long.class))
@@ -232,7 +236,16 @@ public class DatabaseRepository {
     }
 
     private static List<Migration> getMigrations() {
-        Reflections reflections = new Reflections("de.janschuri.lunaticfamily.common.database.migrations");
+        String packageName = "de.janschuri.lunaticfamily.common.database.migrations";
+        ClassLoader pluginClassLoader = LunaticFamily.class.getClassLoader();
+
+        Reflections reflections = new Reflections(new ConfigurationBuilder()
+                .setUrls(ClasspathHelper.forPackage(packageName, pluginClassLoader))
+                .setScanners(new SubTypesScanner(false))
+                .filterInputsBy(new FilterBuilder().includePackage(packageName))
+                .addClassLoaders(pluginClassLoader)
+        );
+
 
         return reflections.getSubTypesOf(Migration.class).stream()
                 .filter(clazz -> !Modifier.isAbstract(clazz.getModifiers()))

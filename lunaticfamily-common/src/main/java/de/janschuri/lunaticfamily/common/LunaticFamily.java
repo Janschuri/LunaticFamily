@@ -78,6 +78,12 @@ public final class LunaticFamily {
             String languageKey = config.getLanguageKey();
             languageConfig = new LanguageConfigImpl(dataDirectory, languageKey);
             languageConfig.load();
+
+                if (DatabaseRepository.init()) {
+                    Logger.infoLog("Database loaded.");
+                } else {
+                    Logger.errorLog("Database could not be loaded.");
+                }
         }
         return true;
     }
@@ -92,20 +98,10 @@ public final class LunaticFamily {
 
         Logger.debugLog("Mode: " + LunaticFamily.mode);
 
+        registerCommands();
+        platform.registerListener();
+
         registerRequests();
-
-        if (LunaticFamily.mode != Mode.BACKEND) {
-            if (DatabaseRepository.init()) {
-                Logger.infoLog("Database loaded.");
-            } else {
-                Logger.errorLog("Database could not be loaded.");
-            }
-
-            FamilyTreeJSON.loadFamilyTreeJSON();
-
-            registerCommands();
-            platform.registerListener();
-        }
 
         Logger.infoLog("LunaticFamily enabled.");
     }

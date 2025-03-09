@@ -1,6 +1,5 @@
 package de.janschuri.lunaticfamily.common.database.migrations;
 
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import org.jooq.DSLContext;
 import de.janschuri.lunaticfamily.common.database.Migration;
 import org.jooq.impl.SQLDataType;
