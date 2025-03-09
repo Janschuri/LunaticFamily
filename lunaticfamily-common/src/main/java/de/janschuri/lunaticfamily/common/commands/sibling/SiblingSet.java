@@ -38,6 +38,9 @@ public class SiblingSet extends FamilyCommand implements HasParentCommand, HasPa
     private static final CommandMessageKey SET_BOTH_ADOPTED_MK = new LunaticCommandMessageKey(INSTANCE, "set_both_adopted")
             .defaultMessage("en", "%player1% and %player2% are adopted. Set the adoption by the parents or marry the parents to make %player1% and %player2% siblings.")
             .defaultMessage("de", "%player1% und %player2% sind adoptiert. Setze die Adoption durch die Eltern oder verheirate die Eltern, um %player1% und %player2% zu Geschwistern zu machen.");
+    private static final CommandMessageKey ALREADY_SIBLING_MK = new LunaticCommandMessageKey(INSTANCE, "already_sibling")
+            .defaultMessage("en", "%player1% already has a sibling.")
+            .defaultMessage("de", "%player1% hat bereits ein Geschwisterkind.");
 
 
 
@@ -122,9 +125,21 @@ public class SiblingSet extends FamilyCommand implements HasParentCommand, HasPa
             return true;
         }
 
+        if (player1Fam.hasSiblings()) {
+            sender.sendMessage(getMessage(ALREADY_SIBLING_MK,
+                placeholder("%player1%", player1Fam.getName())));
+            return true;
+        }
+
         if (player1Fam.isAdopted()) {
             sender.sendMessage(getMessage(IS_ADOPTED_MK,
                 placeholder("%player%", player1Fam.getName())));
+            return true;
+        }
+
+        if (player2Fam.hasSiblings()) {
+            sender.sendMessage(getMessage(ALREADY_SIBLING_MK,
+                placeholder("%player1%", player2Fam.getName())));
             return true;
         }
 
@@ -137,6 +152,7 @@ public class SiblingSet extends FamilyCommand implements HasParentCommand, HasPa
         sender.sendMessage(getMessage(ADDED_MK,
                 placeholder("%player1%", player1Fam.getName()),
                 placeholder("%player2%", player2Fam.getName())));
+
         player1Fam.addSibling(player2Fam);
 
         return true;
