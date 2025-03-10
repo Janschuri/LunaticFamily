@@ -8,10 +8,7 @@ import de.janschuri.lunaticlib.common.config.LunaticConfig;
 import de.janschuri.lunaticlib.common.utils.Mode;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ConfigImpl extends LunaticConfig implements FamilyConfig {
     private static final String CONFIG_FILE = "config.yml";
@@ -30,7 +27,7 @@ public class ConfigImpl extends LunaticConfig implements FamilyConfig {
     private double adoptProposeRange;
     private double siblingProposeRange;
     private Map<String, List<String>> successCommands = new HashMap<>();
-    private List<String> familyList;
+    private Set<String> familyList = new LinkedHashSet<>();
     private List<String> backgrounds;
     private Map<String, Double> commandWithdraws = new HashMap<>();
     private Map<String, String> colors = new HashMap<>();
@@ -63,7 +60,8 @@ public class ConfigImpl extends LunaticConfig implements FamilyConfig {
         allowSingleAdopt = getBoolean("allow_single_adopt", true);
         defaultBackground = "textures/block/" + getString("default_background", "moss_block") + ".png";
         defaultGender = getString("default_gender", "fe");
-        familyList = getStringList("family_list");
+        List<String> familyList = getStringList("family_list");
+        this.familyList = getRemappedFamilyList(familyList);
         backgrounds = getStringList("backgrounds");
         languageKey = getString("language", "en");
         dateFormat = getString("date_format", "dd.MM.yyyy HH:mm:ss");
@@ -77,6 +75,56 @@ public class ConfigImpl extends LunaticConfig implements FamilyConfig {
         successCommands = getStringListMap("success_commands");
         commandWithdraws = getDoubleMap("command_withdraws");
         colors = getStringMap("colors");
+    }
+
+    private static Set<String> getRemappedFamilyList(List<String> familyList) {
+        Set<String> remappedFamilyList = new LinkedHashSet<>();
+
+        for (String relation : familyList) {
+            String remappedRelation = relation
+                    .toLowerCase()
+                    .replace("first_", "")
+                    .replace("second_", "")
+                    .replace("third_", "")
+                    .replace("fourth_", "")
+                    .replace("fifth_", "")
+                    .replace("sixth_", "")
+                    .replace("seventh_", "")
+                    .replace("eighth_", "");
+
+            for (Map.Entry<String, String> remap : ConfigImpl.getRemappedRelationships().entrySet()) {
+                    remappedRelation = remappedRelation.replaceAll(remap.getKey(), remap.getValue());
+            }
+
+            if (remappedRelation.contains("sibling_in_law")) {
+                String newKey1 = remappedRelation.replaceAll("sibling_in_law", "sibling_partner");
+                String newKey2 = remappedRelation.replaceAll("sibling_in_law", "partner_sibling");
+
+                remappedFamilyList.add(newKey1);
+                remappedFamilyList.add(newKey2);
+            } else {
+                remappedFamilyList.add(remappedRelation);
+            }
+        }
+
+        return remappedFamilyList;
+    }
+
+    public static Map<String, String> getRemappedRelationships() {
+        Map<String, String> remappedRelationships = new LinkedHashMap<>();
+
+        remappedRelationships.put("grandchild", "child_child");
+        remappedRelationships.put("grandparent", "parent_parent");
+        remappedRelationships.put("aunt_or_uncle", "parent_sibling");
+        remappedRelationships.put("great_child", "child_child");
+        remappedRelationships.put("great_parent", "parent_parent");
+        remappedRelationships.put("cousin", "parent_sibling_child");
+        remappedRelationships.put("niece_or_nephew", "sibling_child");
+        remappedRelationships.put("partner_in_law", "partner_parent");
+        remappedRelationships.put("child_in_law", "child_partner");
+        remappedRelationships.put("parent_in_law", "partner_parent");
+
+        return remappedRelationships;
     }
 
     public String getLanguageKey() {
@@ -151,7 +199,7 @@ public class ConfigImpl extends LunaticConfig implements FamilyConfig {
         return successCommands.get(key);
     }
 
-    public List<String> getFamilyList() {
+    public Set<String> getFamilyList() {
         return familyList;
     }
 

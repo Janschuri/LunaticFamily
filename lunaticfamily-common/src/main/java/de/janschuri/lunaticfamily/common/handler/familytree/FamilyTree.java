@@ -74,6 +74,12 @@ public class FamilyTree {
                 .anyMatch(adv -> adv.getId() == player.getId());
     }
 
+    private static boolean isInFamilyList(String relation) {
+        String relationKey = relation.replaceAll("_\\d+", "");
+
+        return LunaticFamily.getConfig().getFamilyList().contains(relationKey);
+    }
+
     public void update() {
 
         treeAdvancements.clear();
@@ -96,7 +102,7 @@ public class FamilyTree {
 
         List<FamilyPlayer> parents = familyPlayer.getParents();
 
-        if (parents != null && !parents.isEmpty()) {
+        if (parents != null && !parents.isEmpty() && isInFamilyList("parent")) {
             HiddenAdvancement parentsAnchor = addParentsAnchor(egoAnchor, TreeAdvancement.Side.CENTER, egoKey, 0);
 
             int i = 0;
@@ -111,14 +117,14 @@ public class FamilyTree {
 
         FamilyPlayer partnerFam = familyPlayer.getPartner();
 
-        if (partnerFam != null) {
-            String partnerKey = "partner";
+        String partnerKey = "partner";
+        if (partnerFam != null && isInFamilyList(partnerKey)) {
 
             HiddenAdvancement partnerAnchor = addPartnerAdvancement(egoAnchor, TreeAdvancement.Side.RIGHT, partnerFam, partnerKey);
 
             List<FamilyPlayer> partnerSiblings = partnerFam.getSiblings();
 
-            if (partnerSiblings != null && !partnerSiblings.isEmpty()) {
+            if (partnerSiblings != null && !partnerSiblings.isEmpty() && isInFamilyList("partner_sibling")) {
                 HiddenAdvancement partnerSiblingsAnchor = addSiblingsAnchor(partnerAnchor, TreeAdvancement.Side.RIGHT, partnerKey);
 
                 int i = 0;
@@ -133,7 +139,7 @@ public class FamilyTree {
 
             List<FamilyPlayer> partnerParents = partnerFam.getParents();
 
-            if (partnerParents != null && !partnerParents.isEmpty()) {
+            if (partnerParents != null && !partnerParents.isEmpty() && isInFamilyList("partner_parent")) {
                 int firstParentSiblings = partnerParents.getFirst().getSiblings().size();
                 HiddenAdvancement partnerParentsAnchor = addParentsAnchor(partnerAnchor, TreeAdvancement.Side.RIGHT, partnerKey, firstParentSiblings);
 
@@ -148,7 +154,7 @@ public class FamilyTree {
 
         List<FamilyPlayer> children = familyPlayer.getChildren();
 
-        if (children != null && !children.isEmpty()) {
+        if (children != null && !children.isEmpty() && isInFamilyList("child")) {
             HiddenAdvancement childrenAnchor = addChildrenAnchor(egoAnchor, TreeAdvancement.Side.CENTER, egoKey);
 
             int i = 0;
@@ -165,7 +171,7 @@ public class FamilyTree {
 
         List<FamilyPlayer> siblings = familyPlayer.getSiblings();
 
-        if (siblings != null && !siblings.isEmpty()) {
+        if (siblings != null && !siblings.isEmpty() && isInFamilyList("sibling")) {
             HiddenAdvancement siblingsAnchor = addSiblingsAnchor(egoAnchor, TreeAdvancement.Side.LEFT, egoKey);
 
             int i = 0;
@@ -359,14 +365,14 @@ public class FamilyTree {
 
         FamilyPlayer partnerFam = familyPlayer.getPartner();
 
-        if (partnerFam != null) {
-            String partnerKey = key + "_partner";
+        String partnerKey = key + "_partner";
+        if (partnerFam != null && isInFamilyList(partnerKey)) {
             addPartnerAdvancement(anchor, side, partnerFam, partnerKey);
         }
 
         List<FamilyPlayer> children = familyPlayer.getChildren();
 
-        if (children != null && !children.isEmpty()) {
+        if (children != null && !children.isEmpty() && isInFamilyList(key+"_child")) {
             HiddenAdvancement childrenAnchor = addChildrenAnchor(anchor, side, key);
 
             int i = 0;
@@ -385,7 +391,7 @@ public class FamilyTree {
 
         List<FamilyPlayer> siblings = familyPlayer.getSiblings();
 
-        if (siblings != null && !siblings.isEmpty()) {
+        if (siblings != null && !siblings.isEmpty() && isInFamilyList(key + "_sibling")) {
             HiddenAdvancement siblingsAnchor = addSiblingsAnchor(anchor, side, key);
 
             int i = 0;
@@ -411,7 +417,7 @@ public class FamilyTree {
 
         List<FamilyPlayer> parents = familyPlayer.getParents();
 
-        if (parents != null && !parents.isEmpty()) {
+        if (parents != null && !parents.isEmpty() && isInFamilyList(key + "_parent")) {
             int firstParentSiblings = parents.getFirst().getSiblings().size();
             HiddenAdvancement parentsAnchor = addParentsAnchor(anchor, side, key, firstParentSiblings);
 

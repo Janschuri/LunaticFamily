@@ -15,8 +15,6 @@ public class LanguageConfigImpl extends LunaticLanguageConfig implements FamilyL
     private Map<String, String> colorsTranslations = new HashMap<>();
     private final Map<String, Map<String, String>> relationships = new HashMap<>();
 
-    private static Map<String, String> remappedRelationships = new LinkedHashMap<>();
-
 
 
     public LanguageConfigImpl(Path dataDirectory, String languageKey) {
@@ -25,17 +23,6 @@ public class LanguageConfigImpl extends LunaticLanguageConfig implements FamilyL
 
     public void load() {
         super.load();
-
-        remappedRelationships.put("grandchild", "child_child");
-        remappedRelationships.put("grandparent", "parent_parent");
-        remappedRelationships.put("aunt_or_uncle", "parent_sibling");
-        remappedRelationships.put("great_child", "child_child");
-        remappedRelationships.put("great_parent", "parent_parent");
-        remappedRelationships.put("cousin", "parent_sibling_child");
-        remappedRelationships.put("niece_or_nephew", "sibling_child");
-        remappedRelationships.put("partner_in_law", "partner_parent");
-        remappedRelationships.put("child_in_law", "child_partner");
-        remappedRelationships.put("parent_in_law", "partner_parent");
 
 
         genderLang = getStringMap("genders");
@@ -57,8 +44,8 @@ public class LanguageConfigImpl extends LunaticLanguageConfig implements FamilyL
 
         for (Map.Entry<String, String> entry : map.entrySet()) {
 
-            String newKey = entry.getKey();
-            for (Map.Entry<String, String> remap : remappedRelationships.entrySet()) {
+            String newKey = entry.getKey().toLowerCase();
+            for (Map.Entry<String, String> remap : ConfigImpl.getRemappedRelationships().entrySet()) {
                  newKey = newKey.replaceAll(remap.getKey(), remap.getValue());
             }
 

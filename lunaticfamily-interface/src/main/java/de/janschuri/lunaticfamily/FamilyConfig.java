@@ -3,6 +3,7 @@ package de.janschuri.lunaticfamily;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface FamilyConfig {
 
@@ -36,7 +37,7 @@ public interface FamilyConfig {
 
     List<String> getSuccessCommands(String key);
 
-    List<String> getFamilyList();
+    Set<String> getFamilyList();
 
     List<String> getBackgrounds();
 
