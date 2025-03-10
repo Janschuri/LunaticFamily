@@ -30,7 +30,7 @@ public class FamilyTree {
     }
 
     private static String getRelationLang(String key, String gender) {
-        return LunaticFamily.getLanguageConfig().getRelation(key, gender) + " | " + key;
+        return LunaticFamily.getLanguageConfig().getRelation(key, gender);
     }
 
     private int getX(int y, TreeAdvancement.Side side) {

@@ -125,6 +125,9 @@ public class FamilyList extends FamilyCommand implements HasParams, HasParentCom
     private Component getFamilyListMessage(List<RelationAdvancement> relationAdvancements, ComponentBuilder msg) {
 
         for (RelationAdvancement relationAdvancement : relationAdvancements) {
+            if (relationAdvancement.getKey() == "ego") {
+                continue;
+            }
 
                 Component relation = Component.text(relationAdvancement.getDescription());
                 Component name = Component.text(relationAdvancement.getTitle());
