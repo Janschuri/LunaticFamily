@@ -59,9 +59,7 @@ public class LanguageConfigImpl extends LunaticLanguageConfig implements FamilyL
 
             String newKey = entry.getKey();
             for (Map.Entry<String, String> remap : remappedRelationships.entrySet()) {
-//                if (entry.getKey().contains(remap.getKey())) {
-                        newKey = newKey.replaceAll(remap.getKey(), remap.getValue());
-//                }
+                 newKey = newKey.replaceAll(remap.getKey(), remap.getValue());
             }
 
 
