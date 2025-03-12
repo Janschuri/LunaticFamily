@@ -26,11 +26,14 @@ public class MarryList extends FamilyCommand implements HasParentCommand, HasPar
     private static final MarryList INSTANCE = new MarryList();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &7- List all married couples.");
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("List all married couples."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Zeige alle verheirateten Paare."));
     private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "header")
-            .defaultMessage("en", "All married couples on this server: ");
+            .defaultMessage("en", "All married couples on this server: ")
+            .defaultMessage("de", "Alle verheirateten Paare auf diesem Server: ");
     private static final CommandMessageKey PAIRS_MK = new LunaticCommandMessageKey(INSTANCE, "pairs")
-            .defaultMessage("en", "&6%index%: &b%player1% %emoji% &b%player2%");
+            .defaultMessage("en", "&6%index%: &b%player1% %emoji% &b%player2%")
+            .defaultMessage("de", "&6%index%: &b%player1% %emoji% &b%player2%");
 
 
     @Override

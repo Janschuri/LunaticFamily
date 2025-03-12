@@ -20,15 +20,20 @@ public class FamilyCreate extends FamilyCommand implements HasParentCommand, Has
     private static final FamilyCreate INSTANCE = new FamilyCreate();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Create a player in the database.");
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Create a player in the database.")
+            .defaultMessage("de", "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Erstelle einen Spieler in der Datenbank.");
     private static final CommandMessageKey CREATED_MK = new LunaticCommandMessageKey(INSTANCE, "created")
-            .defaultMessage("en", "You have created %name% with the UUID %uuid%.");
+            .defaultMessage("en", "You have created %name% with the UUID %uuid%.")
+            .defaultMessage("de", "Du hast %name% mit der UUID %uuid% erstellt.");
     private static final CommandMessageKey CONFIRM_MK = new LunaticCommandMessageKey(INSTANCE, "confirm")
-            .defaultMessage("en", "Do you really want to create %name% with the UUID %uuid%?");
+            .defaultMessage("en", "Do you really want to create %name% with the UUID %uuid%?")
+            .defaultMessage("de", "Willst du %name% mit der UUID %uuid% wirklich erstellen?");
     private static final CommandMessageKey CANCEL_MK = new LunaticCommandMessageKey(INSTANCE, "cancel")
-            .defaultMessage("en", "You have canceled the creation of %name% with the UUID %uuid%.");
+            .defaultMessage("en", "You have canceled the creation of %name% with the UUID %uuid%.")
+            .defaultMessage("de", "Du hast die Erstellung von %name% mit der UUID %uuid% abgebrochen.");
     private static final MessageKey CREATE_RANDOM_MK = new LunaticCommandMessageKey(INSTANCE, "createRandom")
-            .defaultMessage("You didn't specified a UUID. Do you want to create a random one?");
+            .defaultMessage("en", "You didn't specified a UUID. Do you want to create a random one?")
+            .defaultMessage("de", "Du hast keine UUID angegeben. Möchtest du eine zufällige erstellen?");
 
 
     @Override

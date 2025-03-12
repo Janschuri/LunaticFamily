@@ -19,17 +19,23 @@ public class MarryGift extends FamilyCommand implements HasParentCommand {
     private static final MarryGift INSTANCE = new MarryGift();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &7- Gift the item in your hand to your partner.");
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Gift the item in your hand to your partner."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Schenke den Gegenstand in deiner Hand deinem Partner."));
     private static final CommandMessageKey NO_PARTNER_MK = new LunaticCommandMessageKey(INSTANCE, "no_partner")
-            .defaultMessage("en", "You are not married!");
+            .defaultMessage("en", "You are not married!")
+            .defaultMessage("de", "Du bist nicht verheiratet.");
     private static final CommandMessageKey EMPTY_HAND_MK = new LunaticCommandMessageKey(INSTANCE, "empty_hand")
-            .defaultMessage("en", "You must be holding an item in your hand.");
+            .defaultMessage("en", "You must be holding an item in your hand.")
+            .defaultMessage("de", "Du musst einen Gegenstand in deiner Hand halten.");
     private static final CommandMessageKey PARTNER_FULL_INV_MK = new LunaticCommandMessageKey(INSTANCE, "partner_full_inv")
-            .defaultMessage("en", "Your partner has no space in their inventory.");
+            .defaultMessage("en", "Your partner has no space in their inventory.")
+            .defaultMessage("de", "Dein Partner hat keinen Platz in seinem Inventar.");
     private static final CommandMessageKey SENT_MK = new LunaticCommandMessageKey(INSTANCE, "sent")
-            .defaultMessage("en", "You have gifted something to your partner.");
+            .defaultMessage("en", "You have gifted something to your partner.")
+            .defaultMessage("de", "Du hast deinem Partner etwas geschenkt.");
     private static final CommandMessageKey GOT_MK = new LunaticCommandMessageKey(INSTANCE, "got")
-            .defaultMessage("en", "Your partner has gifted you something.");
+            .defaultMessage("en", "Your partner has gifted you something.")
+            .defaultMessage("de", "Dein Partner hat dir etwas geschenkt.");
 
 
 

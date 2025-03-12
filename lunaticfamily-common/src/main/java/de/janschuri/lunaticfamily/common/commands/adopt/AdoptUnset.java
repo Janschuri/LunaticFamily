@@ -21,13 +21,17 @@ public class AdoptUnset extends FamilyCommand implements HasParentCommand, HasPa
     private static final AdoptUnset INSTANCE = new AdoptUnset();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Unset the adoption of a child by a player.");
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Unset the adoption of a child by a player."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Setze die Adoption eines Kindes durch einen Spieler zurück."));
     private static final CommandMessageKey NOT_ADOPTED_MK = new LunaticCommandMessageKey(INSTANCE, "not_adopted")
-            .defaultMessage("en", "%player% is not adopted.");
+            .defaultMessage("en", "%player% is not adopted.")
+            .defaultMessage("de", "%player% ist nicht adoptiert.");
     private static final CommandMessageKey UNSET_MK = new LunaticCommandMessageKey(INSTANCE, "unset")
-            .defaultMessage("en", "You have dissolved the adoption of %child% by %parent1% and %parent2%.");
+            .defaultMessage("en", "You have dissolved the adoption of %child% by %parent1% and %parent2%.")
+            .defaultMessage("de", "Du hast die Adoption von %child% durch %parent1% und %parent2% aufgelöst.");
     private static final CommandMessageKey UNSET_BY_SINGLE_MK = new LunaticCommandMessageKey(INSTANCE, "unset_by_single")
-            .defaultMessage("en", "You have dissolved the adoption of %child% by %parent%.");
+            .defaultMessage("en", "You have dissolved the adoption of %child% by %parent%.")
+            .defaultMessage("de", "Du hast die Adoption von %child% durch %parent% aufgelöst.");
 
 
 

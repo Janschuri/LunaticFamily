@@ -24,8 +24,8 @@ public class AdoptSet extends FamilyCommand implements HasParams, HasParentComma
     private static final AdoptSet INSTANCE = new AdoptSet();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Set the adoption of a child by a player.")
-            .defaultMessage("de", "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Setze die Adoption eines Kindes durch einen Spieler.");
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Set the adoption of a child by a player."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Setze die Adoption eines Kindes durch einen Spieler."));
     private static final CommandMessageKey NO_SINGLE_ADOPT_MK = new LunaticCommandMessageKey(INSTANCE, "no_single_adopt")
             .defaultMessage("en", "%player% is not married. You must be married to adopt a child.")
             .defaultMessage("de", "%player% ist nicht verheiratet. Du musst verheiratet sein, um ein Kind zu adoptieren.");

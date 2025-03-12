@@ -14,9 +14,11 @@ public class FamilyReload extends FamilyCommand implements HasParentCommand {
     private static final FamilyReload INSTANCE = new FamilyReload();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &7- Reload the configuration.");
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Reload the configuration."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Lade die Konfiguration neu."));
     private static final CommandMessageKey RELOADED_MK = new LunaticCommandMessageKey(INSTANCE, "reloaded")
-            .defaultMessage("en", "The configuration has been reloaded.");
+            .defaultMessage("en", "The configuration has been reloaded.")
+            .defaultMessage("de", "Die Konfiguration wurde neu geladen.");
 
 
     @Override

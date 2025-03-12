@@ -23,15 +23,20 @@ public class FamilyList extends FamilyCommand implements HasParams, HasParentCom
     private static final FamilyList INSTANCE = new FamilyList();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &7- Show a list of all your family members.");
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Show a list of all your family members.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Zeige eine Liste aller deiner Familienmitglieder.");
     private static final CommandMessageKey HELP_OTHERS_MK = new LunaticCommandMessageKey(INSTANCE, "help_others")
-            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Show a list of all the family members of a player.");
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Show a list of all the family members of a player.")
+            .defaultMessage("de", "&6/%command% %subcommand% &b<%param%> &7- Zeige eine Liste aller Familienmitglieder eines Spielers.");
     private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "header")
-            .defaultMessage("en", "Your family:");
+            .defaultMessage("en", "Your family:")
+            .defaultMessage("de", "Deine Familie:");
     private static final CommandMessageKey OTHERS_HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "others_header")
-            .defaultMessage("en", "%player%'s family:");
+            .defaultMessage("en", "%player%'s family:")
+            .defaultMessage("de", "Familie von %player%:");
     private static final CommandMessageKey RELATIONS_MK = new LunaticCommandMessageKey(INSTANCE, "relations")
-            .defaultMessage("en", "&6%relation%: &b%player%");
+            .defaultMessage("en", "&6%relation%: &b%player%")
+            .defaultMessage("de", "&6%relation%: &b%player%");
 
 
     @Override

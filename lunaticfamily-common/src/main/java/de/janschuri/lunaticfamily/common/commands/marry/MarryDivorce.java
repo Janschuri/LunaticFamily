@@ -20,15 +20,20 @@ public class MarryDivorce extends FamilyCommand implements HasParentCommand {
     private static final MarryDivorce INSTANCE = new MarryDivorce();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &7- Get divorced.");
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Get divorced."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Lass dich scheiden."));
     private static final CommandMessageKey NO_PARTNER_MK = new LunaticCommandMessageKey(INSTANCE, "no_partner")
-            .defaultMessage("en", "You are not married!");
+            .defaultMessage("en", "You are not married!")
+            .defaultMessage("de", "Du bist nicht verheiratet.");
     private static final CommandMessageKey DIVORCED_MK = new LunaticCommandMessageKey(INSTANCE, "divorced")
-            .defaultMessage("en", "You are now divorced!");
+            .defaultMessage("en", "You are now divorced!")
+            .defaultMessage("de", "Du bist jetzt geschieden.");
     private static final CommandMessageKey CONFIRM_MK = new LunaticCommandMessageKey(INSTANCE, "confirm")
-            .defaultMessage("en", "Please confirm that you want to divorce.");
+            .defaultMessage("en", "Please confirm that you want to divorce.")
+            .defaultMessage("de", "Bitte bestätige, dass du dich scheiden lassen möchtest.");
     private static final CommandMessageKey CANCEL_MK = new LunaticCommandMessageKey(INSTANCE, "cancel")
-            .defaultMessage("en", "You have cancelled the divorce!");
+            .defaultMessage("en", "You have cancelled the divorce!")
+            .defaultMessage("de", "Du hast die Scheidung abgebrochen.");
 
 
     @Override

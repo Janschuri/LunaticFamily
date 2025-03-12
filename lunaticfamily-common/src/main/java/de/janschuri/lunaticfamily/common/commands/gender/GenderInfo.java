@@ -22,13 +22,17 @@ public class GenderInfo extends FamilyCommand implements HasParentCommand, HasPa
     private static final GenderInfo INSTANCE = new GenderInfo();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &7- Show your gender.");
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Show your gender.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Zeige dein Geschlecht.");
     private static final CommandMessageKey HELP_OTHERS_MK = new LunaticCommandMessageKey(INSTANCE, "help_others")
-            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Show the gender of a player.");
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Show the gender of a player.")
+            .defaultMessage("de", "&6/%command% %subcommand% &b<%param%> &7- Zeige das Geschlecht eines Spielers.");
     private static final CommandMessageKey INFO_MK = new LunaticCommandMessageKey(INSTANCE, "info")
-            .defaultMessage("en", "Your gender is %gender%.");
+            .defaultMessage("en", "Your gender is %gender%.")
+            .defaultMessage("de", "Dein Geschlecht ist %gender%.");
     private static final CommandMessageKey INFO_OTHERS_MK = new LunaticCommandMessageKey(INSTANCE, "info_others")
-            .defaultMessage("en", "%player%'s gender is %gender%.");
+            .defaultMessage("en", "%player%'s gender is %gender%.")
+            .defaultMessage("de", "Das Geschlecht von %player% ist %gender%.");
 
 
     @Override
@@ -73,6 +77,11 @@ public class GenderInfo extends FamilyCommand implements HasParentCommand, HasPa
             return true;
         }
 
+        if (!sender.hasPermission(getPermission()+".others")) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
+            return true;
+        }
+
         String playerArg = args[0];
         UUID playerUUID;
 
@@ -114,6 +123,6 @@ public class GenderInfo extends FamilyCommand implements HasParentCommand, HasPa
 
     @Override
     public List<Map<String, String>> getParams() {
-        return List.of(getOnlinePlayersParam());
+        return List.of(getOnlinePlayersParam(getPermission()+".others"));
     }
 }

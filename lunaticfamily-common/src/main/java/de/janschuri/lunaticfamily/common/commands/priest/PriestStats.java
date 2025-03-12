@@ -18,15 +18,20 @@ public class PriestStats extends FamilyCommand implements HasParentCommand {
     private static final PriestStats INSTANCE = new PriestStats();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &7- Show your statistics as a priest.");
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Show your statistics as a priest."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Zeige deine Statistiken als Priester."));
     private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "header")
-            .defaultMessage("en", "Your statistics:");
+            .defaultMessage("en", "Your statistics:")
+            .defaultMessage("de", "Deine Statistiken:");
     private static final CommandMessageKey MARRIAGES_MK = new LunaticCommandMessageKey(INSTANCE, "marriages")
-            .defaultMessage("en", "&6Marriages: &b%active%/%total% &7(%percentage%%)");
+            .defaultMessage("en", "&6Marriages: &b%active%/%total% &7(%percentage%%)")
+            .defaultMessage("de", "&6Ehen: &b%active%/%total% &7(%percentage%%)");
     private static final CommandMessageKey ADOPTIONS_MK = new LunaticCommandMessageKey(INSTANCE, "adoptions")
-            .defaultMessage("en", "&6Adoptions: &b%active%/%total% &7(%percentage%%)");
+            .defaultMessage("en", "&6Adoptions: &b%active%/%total% &7(%percentage%%)")
+            .defaultMessage("de", "&6Adoptionen: &b%active%/%total% &7(%percentage%%)");
     private static final CommandMessageKey SIBLINGS_MK = new LunaticCommandMessageKey(INSTANCE, "siblings")
-            .defaultMessage("en", "&6Siblinghoods: &b%active%/%total% &7(%percentage%%)");
+            .defaultMessage("en", "&6Siblinghoods: &b%active%/%total% &7(%percentage%%)")
+            .defaultMessage("de", "&6Geschwisterschaften: &b%active%/%total% &7(%percentage%%)");
 
 
 

@@ -24,15 +24,20 @@ public class MarryEmoji extends FamilyCommand implements HasParentCommand, HasPa
     private static final MarryEmoji INSTANCE = new MarryEmoji();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% <%param%> &7- Change the color of your heart in the marriage list.");
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Change the color of your heart in the marriage list."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Ändere die Farbe deines Herzens in der Heiratsliste."));
     private static final CommandMessageKey NO_COLOR_MK = new LunaticCommandMessageKey(INSTANCE, "no_color")
-            .defaultMessage("en", "You must specify a color.");
+            .defaultMessage("en", "You must specify a color.")
+            .defaultMessage("de", "Du musst eine Farbe angeben.");
     private static final CommandMessageKey COLOR_SET_MK = new LunaticCommandMessageKey(INSTANCE, "color_set")
-            .defaultMessage("en", "You have chosen the color %color%.");
+            .defaultMessage("en", "You have chosen the color %color%.")
+            .defaultMessage("de", "Du hast die Farbe %color% gewählt.");
     private static final CommandMessageKey NO_MARRIAGE_MK = new LunaticCommandMessageKey(INSTANCE, "no_marriage")
-            .defaultMessage("en", "You are not married!");
+            .defaultMessage("en", "You are not married!")
+            .defaultMessage("de", "Du bist nicht verheiratet!");
     private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "header")
-            .defaultMessage("en", "Available colors:");
+            .defaultMessage("en", "Available colors:")
+            .defaultMessage("de", "Verfügbare Farben:");
 
 
 

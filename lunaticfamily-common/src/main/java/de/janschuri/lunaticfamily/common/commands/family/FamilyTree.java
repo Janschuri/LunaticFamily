@@ -18,13 +18,17 @@ public class FamilyTree extends FamilyCommand implements HasParentCommand {
     private static final FamilyTree INSTANCE = new FamilyTree();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &7- Update your family tree.");
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Update your family tree."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Aktualisiere deinen Familienstammbaum."));
     private static final CommandMessageKey RELOADED_MK = new LunaticCommandMessageKey(INSTANCE, "reloaded")
-            .defaultMessage("en", "Your family tree has been reloaded.");
+            .defaultMessage("en", "Your family tree has been reloaded.")
+            .defaultMessage("de", "Dein Familienstammbaum wurde neu geladen.");
     private static final CommandMessageKey FAILED_MK = new LunaticCommandMessageKey(INSTANCE, "failed")
-            .defaultMessage("en", "Failed to reload your family tree.");
+            .defaultMessage("en", "Failed to reload your family tree.")
+            .defaultMessage("de", "Fehler beim Neuladen deines Familienstammbaums.");
     private static final CommandMessageKey DISABLED_MK = new LunaticCommandMessageKey(INSTANCE, "disabled")
-            .defaultMessage("en", "The family tree is disabled.");
+            .defaultMessage("en", "The family tree is disabled.")
+            .defaultMessage("de", "Der Familienstammbaum ist deaktiviert.");
 
 
     @Override

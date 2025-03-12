@@ -13,6 +13,7 @@ import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import de.janschuri.lunaticlib.common.config.LunaticMessageKey;
 import net.kyori.adventure.text.Component;
+import org.jooq.impl.QOM;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,9 +24,11 @@ public class FamilyBackground extends FamilyCommand implements HasParams, HasPar
     private static final FamilyBackground INSTANCE = new FamilyBackground();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Change the background of your family tree.");
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Change the background of your family tree."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Ändere den Hintergrund deines Familienstammbaums."));
     private static final CommandMessageKey SET_MK = new LunaticCommandMessageKey(INSTANCE, "set")
-            .defaultMessage("en", "Background has been reset.");
+            .defaultMessage("en", "Background has been set.")
+            .defaultMessage("de", "Hintergrund wurde gesetzt.");
 
 
     @Override

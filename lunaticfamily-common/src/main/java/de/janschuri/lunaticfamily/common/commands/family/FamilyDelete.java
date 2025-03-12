@@ -27,13 +27,17 @@ public class FamilyDelete extends FamilyCommand implements HasParentCommand, Has
     private static final FamilyDelete INSTANCE = new FamilyDelete();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Delete a player from the database.");
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Delete a player from the database."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Lösche einen Spieler aus der Datenbank."));
     private static final CommandMessageKey CONFIRM_MK = new LunaticCommandMessageKey(INSTANCE, "confirm")
-            .defaultMessage("en", "Do you really want to delete %uuid% from the database?");
+            .defaultMessage("en", "Do you really want to delete %uuid% from the database?")
+            .defaultMessage("de", "Willst du %uuid% wirklich aus der Datenbank löschen?");
     private static final CommandMessageKey DELETED_MK = new LunaticCommandMessageKey(INSTANCE, "deleted")
-            .defaultMessage("en", "You have deleted %uuid% from the database.");
+            .defaultMessage("en", "You have deleted %uuid% from the database.")
+            .defaultMessage("de", "Du hast %uuid% aus der Datenbank gelöscht.");
     private static final CommandMessageKey CANCEL_MK = new LunaticCommandMessageKey(INSTANCE, "cancel")
-            .defaultMessage("en", "You have canceled the deletion of %uuid%.");
+            .defaultMessage("en", "You have canceled the deletion of %uuid%.")
+            .defaultMessage("de", "Du hast die Löschung von %uuid% abgebrochen.");
 
 
 

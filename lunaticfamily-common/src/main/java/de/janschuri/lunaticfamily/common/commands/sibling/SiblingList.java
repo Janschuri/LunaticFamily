@@ -24,11 +24,14 @@ public class SiblingList extends FamilyCommand implements HasParams, HasParentCo
     private static final SiblingList INSTANCE = new SiblingList();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &7- List all siblinghoods.");
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("List all siblinghoods."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Liste alle Geschwisterschaften auf."));
     private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "header")
-            .defaultMessage("en", "All siblinghoods on this server: ");
+            .defaultMessage("en", "All siblinghoods on this server: ")
+            .defaultMessage("de", "Alle Geschwisterschaften auf diesem Server:");
     private static final CommandMessageKey SIBLINGS_MK = new LunaticCommandMessageKey(INSTANCE, "siblings")
-            .defaultMessage("en", "&6%index%: &b%player1% %emoji% &b%player2%");
+            .defaultMessage("en", "&6%index%: &b%player1% %emoji% &b%player2%")
+            .defaultMessage("de", "&6%index%: &b%player1% %emoji% &b%player2%");
 
 
 

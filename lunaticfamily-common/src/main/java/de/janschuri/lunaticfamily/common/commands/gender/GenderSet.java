@@ -24,25 +24,35 @@ public class GenderSet extends FamilyCommand implements HasParams, HasParentComm
     private static final GenderSet INSTANCE = new GenderSet();
 
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
-            .defaultMessage("en", "&6/%command% %subcommand% &3(<%param%>) &7- Set your gender.");
+            .defaultMessage("en", "&6/%command% %subcommand% &3(<%param%>) &7- Set your gender.")
+            .defaultMessage("de", "&6/%command% %subcommand% &3(<%param%>) &7- Setze dein Geschlecht.");
     private static final CommandMessageKey SET_MK = new LunaticCommandMessageKey(INSTANCE, "set")
-            .defaultMessage("en", "Choose your gender: ");
+            .defaultMessage("en", "Choose your gender: ")
+            .defaultMessage("de", "Wähle dein Geschlecht: ");
     private static final CommandMessageKey SET_HOVER_MK = new LunaticCommandMessageKey(INSTANCE, "set_hover")
-            .defaultMessage("en", "Set your gender to %gender%.");
+            .defaultMessage("en", "Set your gender to %gender%.")
+            .defaultMessage("de", "Setze dein Geschlecht auf %gender%.");
     private static final CommandMessageKey CHANGED_MK = new LunaticCommandMessageKey(INSTANCE, "changed")
-            .defaultMessage("en", "You have changed your gender to %gender%.");
+            .defaultMessage("en", "You have changed your gender to %gender%.")
+            .defaultMessage("de", "Du hast dein Geschlecht auf %gender% geändert.");
     private static final CommandMessageKey NOT_EXIST_MK = new LunaticCommandMessageKey(INSTANCE, "not_exist")
-            .defaultMessage("en", "This gender does not exist.");
+            .defaultMessage("en", "This gender does not exist.")
+            .defaultMessage("de", "Dieses Geschlecht existiert nicht.");
     private static final CommandMessageKey ALREADY_MK = new LunaticCommandMessageKey(INSTANCE, "already")
-            .defaultMessage("en", "Your gender is already %gender%.");
+            .defaultMessage("en", "Your gender is already %gender%.")
+            .defaultMessage("de", "Dein Geschlecht ist bereits %gender%.");
     private static final CommandMessageKey ADMIN_HELP_MK = new LunaticCommandMessageKey(INSTANCE, "admin_help")
-            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Set the gender of a player.");
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Set the gender of a player.")
+            .defaultMessage("de", "&6/%command% %subcommand% &b<%param%> &b<%param%> &7- Setze das Geschlecht eines Spielers.");
     private static final CommandMessageKey ADMIN_SET_MK = new LunaticCommandMessageKey(INSTANCE, "admin_set")
-            .defaultMessage("en", "You have changed the gender of %player% to %gender%.");
+            .defaultMessage("en", "You have changed the gender of %player% to %gender%.")
+            .defaultMessage("de", "Du hast das Geschlecht von %player% auf %gender% geändert.");
     private static final CommandMessageKey ADMIN_ALREADY_MK = new LunaticCommandMessageKey(INSTANCE, "admin_already")
-            .defaultMessage("en", "The gender of %player% is already %gender%.");
+            .defaultMessage("en", "The gender of %player% is already %gender%.")
+            .defaultMessage("de", "Das Geschlecht von %player% ist bereits %gender%.");
     private static final CommandMessageKey GENDER_MK = new LunaticCommandMessageKey(INSTANCE, "gender")
-            .defaultMessage("en", "gender");
+            .defaultMessage("en", "gender")
+            .defaultMessage("de", "geschlecht");
 
 
 
@@ -158,7 +168,7 @@ public class GenderSet extends FamilyCommand implements HasParams, HasParentComm
             genderParams.put(gender, getPermission());
         }
 
-        return List.of(genderParams, getOnlinePlayersParam());
+        return List.of(genderParams, getOnlinePlayersParam("lunaticfamily.admin.gender"));
     }
 
     @Override
