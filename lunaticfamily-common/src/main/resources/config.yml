@@ -12,8 +12,8 @@
 # ───────────────────────────────────────────────#
 
 
-
-use_proxy: false # If you have installed LunaticFamily on a proxy server, you can enable it here. If enabled, all following settings are ignored.
+# If you have installed LunaticFamily on a proxy server, you can enable it here. If enabled, all following settings are ignored.
+use_proxy: false
 
 default_gender: "fe"
 use_vault: true
