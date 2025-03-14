@@ -18,6 +18,10 @@ public class Adopt extends FamilyCommand implements HasHelpCommand, HasSubcomman
             .defaultMessage("en", "&6/%command% %subcommand% &7- Show the adopt help page.")
             .defaultMessage("de", "&6/%command% %subcommand% &7- Zeige die Adopt Hilfe Seite.");
 
+    private static final CommandMessageKey HELP_HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "help_header")
+            .defaultMessage("en", "Adopt-Help")
+            .defaultMessage("de", "Adopt-Hilfe");
+
     @Override
     public String getPermission() {
         return "lunaticfamily.adopt";
@@ -35,7 +39,7 @@ public class Adopt extends FamilyCommand implements HasHelpCommand, HasSubcomman
 
     @Override
     public MessageKey getHelpHeader() {
-        return null;
+        return HELP_HEADER_MK;
     }
 
     @Override

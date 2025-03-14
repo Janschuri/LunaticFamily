@@ -92,7 +92,9 @@ public class Gender extends FamilyCommand implements HasHelpCommand, HasSubcomma
 
     @Override
     public Map<CommandMessageKey, String> getHelpMessages() {
-        return Map.of();
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     @Override
