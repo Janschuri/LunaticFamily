@@ -96,9 +96,10 @@ public final class LunaticFamily {
 
         loadConfig();
 
-
-        registerCommands();
-        platform.registerListener();
+        if (LunaticFamily.mode != Mode.BACKEND) {
+            registerCommands();
+            platform.registerListener();
+        }
 
         registerRequests();
 
@@ -128,6 +129,7 @@ public final class LunaticFamily {
     }
 
     public static void registerCommands() {
+        Logger.infoLog("Registering commands...");
         LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new Family());
         LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new Adopt());
         LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new Sibling());

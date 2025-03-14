@@ -41,6 +41,14 @@ public class DatabaseRepository {
     private static Database db;
     private static DatabaseConfig databaseConfig;
 
+    static {
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static boolean init() {
         Logger.infoLog("Loading database...");
 
@@ -48,6 +56,9 @@ public class DatabaseRepository {
         databaseConfig = new DatabaseConfig(dataDirectory);
         databaseConfig.load();
 
+        Logger.debugLog("Database Type: " + getType());
+
+        createDatabaseIfNotExists();
         runMigrations();
         loadDatabase();
 
@@ -59,12 +70,28 @@ public class DatabaseRepository {
         return databaseConfig.getType();
     }
 
+    private static String getDatabaseName() {
+        if (getType().equalsIgnoreCase("sqlite")) {
+            return databaseConfig.getFilename() + ".db";
+        }
+        if (getType().equalsIgnoreCase("mysql")) {
+            return databaseConfig.getDatabase();
+        }
+
+        return null;
+    }
+
     public static void shutdown() {
         db.shutdown();
     }
 
     private static void runMigrations() {
         try (Connection conn = getConnection()) {
+            if (conn == null) {
+                Logger.errorLog("Could not connect to database");
+                return;
+            }
+
             java.util.logging.Logger.getLogger("org.jooq.Constants").setLevel(java.util.logging.Level.SEVERE);
 
             Settings settings = new Settings()
@@ -94,9 +121,13 @@ public class DatabaseRepository {
                     .from(DSL.table("migrations"))
                     .fetch(DSL.field("name", String.class));
 
-            Logger.infoLog("Migrations already ran: " + Arrays.toString(names.toArray()));
+            List<Migration> migrations = getMigrations()
+                    .stream()
+                    .filter(migration -> !names.contains(migration.getClass().getSimpleName()))
+                    .sorted(Comparator.comparing((Migration m) -> m.getClass().getSimpleName()))
+                    .toList();
 
-            List<Migration> migrations = getMigrations();
+
             Logger.infoLog("Migrations to run: " + migrations.size());
             conn.setAutoCommit(false);
 
@@ -138,21 +169,36 @@ public class DatabaseRepository {
         }
     }
 
-    private static Connection getConnection() throws SQLException {
+    private static Connection getConnection() {
+        return getConnection(false);
+    }
+
+    private static Connection getConnection(boolean baseUrl) {
         String url = getDatabaseUrl();
         String user = databaseConfig.getUsername();
         String password = databaseConfig.getPassword();
 
+        if (!baseUrl) {
+            url = url + "/" + getDatabaseName();
+        }
+
         String dialect = getType();
 
-        switch (dialect.toLowerCase()) {
-            case "sqlite":
-                return DriverManager.getConnection(url);
-            case "mysql":
-                return DriverManager.getConnection(url, user, password);
-            default:
-                throw new IllegalArgumentException("Unsupported dialect: " + dialect);
+        try {
+            switch (dialect.toLowerCase()) {
+                case "sqlite":
+                    return DriverManager.getConnection(url);
+                case "mysql":
+                    return DriverManager.getConnection(url, user, password);
+                default:
+                    throw new IllegalArgumentException("Unsupported dialect: " + dialect);
+            }
+        } catch (SQLException e) {
+            Logger.errorLog("Error while connecting to database: " + e.getMessage());
+            e.printStackTrace();
         }
+
+        return null;
     }
 
     private static void loadDatabase() {
@@ -167,7 +213,9 @@ public class DatabaseRepository {
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
         dataSourceConfig.setUsername(databaseConfig.getUsername());
         dataSourceConfig.setPassword(databaseConfig.getPassword());
-        dataSourceConfig.setUrl(getDatabaseUrl());
+        String url = getDatabaseUrl() + "/" + getDatabaseName();
+        Logger.infoLog("Loading data from database: " + url);
+        dataSourceConfig.setUrl(url);
         dataSourceConfig.setDriver(getDatabaseDriver());
 
         io.ebean.config.DatabaseConfig config = new io.ebean.config.DatabaseConfig();
@@ -185,15 +233,41 @@ public class DatabaseRepository {
         db = createWithContextClassLoader(config, classLoader);
     }
 
+    private static void createDatabaseIfNotExists() {
+        if (getType().equalsIgnoreCase("sqlite")) {
+            Path dataDirectory = LunaticFamily.getDataDirectory();
+            Path databasePath = dataDirectory.resolve(getDatabaseName());
+
+            if (!databasePath.toFile().exists()) {
+                try {
+                    databasePath.toFile().createNewFile();
+                } catch (Exception e) {
+                    Logger.errorLog("Error while creating database: " + e.getMessage());
+                }
+            }
+        }
+
+        if (getType().equalsIgnoreCase("mysql")) {
+            try (Connection conn = getConnection(true)) {
+                DSLContext context = DSL.using(conn, getSQLDialect());
+                String databaseName = getDatabaseName();
+                context.createDatabaseIfNotExists(databaseName)
+                        .execute();
+            } catch (SQLException e) {
+                Logger.errorLog("Error while creating database: " + e.getMessage());
+            }
+        }
+    }
+
     private static String getDatabaseUrl() {
         String type = getType();
         switch (type) {
             case "mysql":
-                return "jdbc:mysql://" + databaseConfig.getHost() + ":" + databaseConfig.getPort() + "/" + databaseConfig.getDatabase();
+                return "jdbc:mysql://" + databaseConfig.getHost() + ":" + databaseConfig.getPort();
             case "sqlite":
             default:
                 Path dataDirectory = LunaticFamily.getDataDirectory();
-                return "jdbc:sqlite:" + dataDirectory + "/" + databaseConfig.getFilename() + ".db";
+                return "jdbc:sqlite:" + dataDirectory;
         }
     }
 
