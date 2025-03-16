@@ -51,7 +51,6 @@ public class LanguageConfigImpl extends LunaticLanguageConfig implements FamilyL
 
 
             if (entry.getKey().contains("sibling_in_law")) {
-                Logger.debugLog("Key: " + entry.getKey() + " -> " + newKey);
                 String newKey1 = newKey.replaceAll("sibling_in_law", "sibling_partner");
                 String newKey2 = newKey.replaceAll("sibling_in_law", "partner_sibling");
 

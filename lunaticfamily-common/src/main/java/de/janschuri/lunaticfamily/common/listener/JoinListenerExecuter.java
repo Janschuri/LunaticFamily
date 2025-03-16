@@ -9,6 +9,7 @@ import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.config.HasMessageKeys;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
 import java.util.ArrayList;
@@ -17,13 +18,17 @@ import java.util.concurrent.TimeUnit;
 
 import static de.janschuri.lunaticfamily.common.handler.FamilyPlayer.findOrCreate;
 
-public class JoinListenerExecuter {
+public class JoinListenerExecuter implements HasMessageKeys {
 
-    private static final CommandMessageKey MARRY_PARTNER_OFFLINE_MK = new LunaticCommandMessageKey(new Marry(), "partner_offline");
-    private static final CommandMessageKey MARRY_PARTNER_ONLINE_MK = new LunaticCommandMessageKey(new Marry(), "partner_online");
-    private static final CommandMessageKey MARRY_PARTNER_JOINED_MK = new LunaticCommandMessageKey(new Marry(), "partner_joined");
-
-    private static final List<String> registeredServers = new ArrayList<>();
+    private static final CommandMessageKey MARRY_PARTNER_OFFLINE_MK = new LunaticCommandMessageKey(new Marry(), "partner_offline")
+            .defaultMessage("en", "Your partner is offline.")
+            .defaultMessage("de", "Dein Partner ist offline.");
+    private static final CommandMessageKey MARRY_PARTNER_ONLINE_MK = new LunaticCommandMessageKey(new Marry(), "partner_online")
+            .defaultMessage("en", "Your partner is online.")
+            .defaultMessage("de", "Dein Partner ist online.");
+    private static final CommandMessageKey MARRY_PARTNER_JOINED_MK = new LunaticCommandMessageKey(new Marry(), "partner_joined")
+            .defaultMessage("en", "Your partner has joined the server.")
+            .defaultMessage("de", "Dein Partner ist dem Server beigetreten.");
 
 
     public static boolean execute(PlayerSender sender) {
@@ -36,12 +41,12 @@ public class JoinListenerExecuter {
             LanguageConfigImpl languageConfig = LunaticFamily.getLanguageConfig();
             FamilyPlayer playerFam = findOrCreate(sender.getUniqueId());
             String skinURL = sender.getSkinURL();
-            Logger.debugLog(String.format("Executing join command: %s", skinURL));
+
             if (skinURL != null) {
                 playerFam.updateSkinURL(skinURL);
             }
             playerFam.save();
-            
+
             playerFam.updateFamilyTree();
 
             if (playerFam.isMarried()) {

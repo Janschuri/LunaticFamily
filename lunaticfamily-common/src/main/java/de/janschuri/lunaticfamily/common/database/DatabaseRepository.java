@@ -56,8 +56,6 @@ public class DatabaseRepository {
         databaseConfig = new DatabaseConfig(dataDirectory);
         databaseConfig.load();
 
-        Logger.debugLog("Database Type: " + getType());
-
         createDatabaseIfNotExists();
         runMigrations();
         loadDatabase();
@@ -82,7 +80,9 @@ public class DatabaseRepository {
     }
 
     public static void shutdown() {
-        db.shutdown();
+        if (db != null) {
+            db.shutdown();
+        }
     }
 
     private static void runMigrations() {

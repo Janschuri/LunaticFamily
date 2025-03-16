@@ -26,7 +26,6 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
 
     @Override
     protected void handleRequest(int requestId, ByteArrayDataInput in) {
-        Logger.debugLog("Received request " + requestId);
         boolean success = false;
 
         UUID uuid = UUID.fromString(in.readUTF());
@@ -47,8 +46,6 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
         }
 
 
-        Logger.debugLog("UpdateFamilyTreeRequest completed successfully");
-
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeBoolean(success);
         sendResponse(requestId, out.toByteArray());
@@ -56,7 +53,6 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
 
     @Override
     protected void handleResponse(int requestId, ByteArrayDataInput in) {
-        Logger.debugLog("Received response " + requestId);
         boolean success = in.readBoolean();
         completeRequest(requestId, success);
     }
@@ -69,8 +65,6 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
         byte[] byteArray = toByteArray(treeAdvancements);
         out.writeInt(byteArray.length);
         out.write(byteArray);
-
-        Logger.debugLog("Sending request " + REQUEST_NAME + " to server " + server);
 
         return sendRequest(server, out.toByteArray());
     }

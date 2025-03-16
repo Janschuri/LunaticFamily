@@ -26,7 +26,6 @@ public class PlatformImpl implements Platform<Plugin> {
 
     @Override
     public void registerListener() {
-        Logger.debugLog("Registering listener");
         BungeeLunaticFamily.getInstance().getProxy().getPluginManager().registerListener(BungeeLunaticFamily.getInstance(), new JoinListener());
         BungeeLunaticFamily.getInstance().getProxy().getPluginManager().registerListener(BungeeLunaticFamily.getInstance(), new QuitListener());
     }
