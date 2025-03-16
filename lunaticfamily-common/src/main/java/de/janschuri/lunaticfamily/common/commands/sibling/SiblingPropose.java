@@ -192,7 +192,7 @@ public class SiblingPropose extends FamilyCommand implements HasParentCommand, H
             return true;
         }
 
-        if (!player.isInRange(sibling.getUniqueId(), LunaticFamily.getConfig().getSiblingProposeRange()).thenApply(b -> b).join()) {
+        if (!player.isInRange(sibling.getUniqueId(), LunaticFamily.getConfig().getSiblingProposeRange())) {
             player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK,
                     placeholder("%player%", sibling.getName())
             ));

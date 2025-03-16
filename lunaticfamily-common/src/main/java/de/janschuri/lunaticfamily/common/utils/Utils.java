@@ -32,7 +32,8 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
             }
             amount *= factor;
 
-            return LunaticLib.getPlatform().getVault().hasEnoughMoney(serverName, uuid, amount);
+            return LunaticLib.getPlatform().getVault().hasEnoughMoney(serverName, uuid, amount)
+                    .thenApply(hasEnoughMoney -> hasEnoughMoney).join();
         }
         return true;
     }
@@ -50,7 +51,8 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
             }
             amount *= factor;
 
-            return LunaticLib.getPlatform().getVault().withdrawMoney(serverName, uuid, amount);
+            return LunaticLib.getPlatform().getVault().withdrawMoney(serverName, uuid, amount)
+                    .thenApply(withdrawn -> withdrawn).join();
 
         }
         return true;
