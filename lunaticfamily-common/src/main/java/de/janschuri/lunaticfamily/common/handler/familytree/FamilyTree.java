@@ -94,7 +94,7 @@ public class FamilyTree {
         String background = familyPlayer.getBackground();
         String egoSkinURL = familyPlayer.getSkinURL();
 
-        RootAdvancement root = new RootAdvancement(egoKey,  background, null, egoId, egoUUID, egoGender, egoTitle, egoLang, egoSkinURL, 13.5f, 7.5f, TreeAdvancement.Side.LEFT);
+        RootAdvancement root = new RootAdvancement(egoKey,  background, null, egoId, egoUUID, egoGender, egoTitle, egoLang, egoSkinURL, TreeAdvancement.Side.LEFT);
         treeAdvancements.add(root);
         leftRows.put(0, 1);
 

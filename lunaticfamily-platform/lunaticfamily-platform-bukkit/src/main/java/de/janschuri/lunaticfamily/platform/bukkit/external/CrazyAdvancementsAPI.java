@@ -33,11 +33,11 @@ public class CrazyAdvancementsAPI {
         reset(manager, player);
 
         HashMap<String, Advancement> advancementMap = new HashMap<>();
+        manager.addPlayer(player);
 
         for (TreeAdvancement treeAdvancement : treeAdvancements) {
             Advancement advancement = createAdvancement(treeAdvancement, advancementMap);
             advancementMap.put(treeAdvancement.getKey(), advancement);
-            manager.addPlayer(player);
             manager.addAdvancement(advancement);
         }
     }
@@ -78,13 +78,12 @@ public class CrazyAdvancementsAPI {
         AdvancementDisplay display = new AdvancementDisplay(icon, title, description, frame, visibility);
         float x = treeAdvancement.getX();
         float y = treeAdvancement.getY();
-        display.setX(x * (treeAdvancement.getSide() == TreeAdvancement.Side.LEFT ? -1 : 1));
-        display.setY(-y);
 
         if (treeAdvancement instanceof RootAdvancement rootTreeAdvancement) {
-            Logger.debugLog("RootAdvancement: " + rootTreeAdvancement.getKey() + " at " + x + ", " + y);
             display.setBackgroundTexture(rootTreeAdvancement.getBackground());
         } else {
+            display.setX(x * (treeAdvancement.getSide() == TreeAdvancement.Side.LEFT ? -1 : 1));
+            display.setY(-y);
             Advancement ego = advancementMap.get("ego");
             display.setPositionOrigin(ego);
         }
