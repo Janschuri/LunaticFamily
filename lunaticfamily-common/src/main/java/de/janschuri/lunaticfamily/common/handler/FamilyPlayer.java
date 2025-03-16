@@ -13,8 +13,10 @@ import io.ebean.annotation.Identity;
 import io.ebean.annotation.NotNull;
 import io.ebean.annotation.Where;
 import jakarta.persistence.*;
+import jdk.jshell.Snippet;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Entity
 @Table(name = "playerData")
@@ -101,7 +103,9 @@ public class FamilyPlayer {
         PlayerSender player = LunaticLib.getPlatform().getPlayerSender(uuid);
         this.name = player.getName();
         this.name = this.name == null ? "null" : this.name;
-        this.skinURL = player.getSkinURL();
+
+        String skinURL = player.getSkinURL();
+        this.skinURL = skinURL == null ? this.skinURL : skinURL;
         this.skinURL = this.skinURL == null ? DEFAULT_SKIN : this.skinURL;
         this.gender = LunaticFamily.getConfig().getDefaultGender();
         this.background = LunaticFamily.getConfig().getDefaultBackground();
@@ -120,9 +124,9 @@ public class FamilyPlayer {
         return Integer.hashCode(id);
     }
 
-    public boolean update() {
+    public void update() {
         DatabaseRepository.getDatabase().update(this);
-        return updateFamilyTree();
+        updateFamilyTree();
     }
 
     public String getName() {
@@ -151,22 +155,20 @@ public class FamilyPlayer {
     }
 
     public FamilyPlayer save() {
-        int idInsert;
-        if (id < 1) {
-            FamilyPlayer familyPlayer = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uuid", uuid).findOne();
-            if (familyPlayer != null) {
-                idInsert = familyPlayer.id;
-            } else {
-                idInsert = -1;
-            }
+        DatabaseRepository.getDatabase().save(this);
+        return this;
+    }
 
-        } else {
-            DatabaseRepository.getDatabase().update(this);
-            idInsert = id;
+    public FamilyPlayer updateSkinURL(String skinURL) {
+        if (skinURL == null) {
+            return this;
         }
 
+        if (skinURL.equals(this.skinURL)) {
+            return this;
+        }
 
-        DatabaseRepository.getDatabase().save(this);
+        this.skinURL = skinURL;
         return this;
     }
 
@@ -571,11 +573,11 @@ public class FamilyPlayer {
         return familyTree;
     }
 
-    public boolean updateFamilyTree() {
+    public CompletableFuture<Boolean> updateFamilyTree() {
         PlayerSender player = LunaticLib.getPlatform().getPlayerSender(this.uuid);
 
         if (player == null) {
-            return true;
+            return CompletableFuture.completedFuture(true);
         }
 
         if (player.isOnline() && LunaticFamily.getConfig().isUseCrazyAdvancementAPI()) {
@@ -583,7 +585,7 @@ public class FamilyPlayer {
 
             if (familyTreeManager == null) {
                 Logger.errorLog("FamilyTreeManager is null. Please check if CrazyAdvancementsAPI is installed or disable it!");
-                return false;
+                return CompletableFuture.completedFuture(false);
             } else {
 
                 String serverName = player.getServerName();
@@ -591,7 +593,7 @@ public class FamilyPlayer {
                 return familyTreeManager.update(serverName, uuid, getFamilyTree().getTreeAdvancements());
             }
         }
-        return true;
+        return CompletableFuture.completedFuture(true);
     }
 
     public Marriage getMarriage() {

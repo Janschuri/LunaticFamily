@@ -12,7 +12,9 @@ import java.util.UUID;
 public class PlatformImpl implements Platform<PluginContainer> {
     @Override
     public boolean spawnParticlesCloud(UUID uuid, double[] position, String particleString) {
-        return new SpawnParticlesCloudRequest().get(uuid, position, particleString);
+        return new SpawnParticlesCloudRequest().get(uuid, position, particleString)
+                .thenApply(s -> s)
+                .join();
     }
 
     @Override

@@ -44,7 +44,7 @@ public class SpawnParticlesCloudRequest extends FutureRequest<Boolean> {
         completeRequest(requestId, success);
     }
 
-    public boolean get(UUID uuid, double[] position, String particleString) {
+    public CompletableFuture<Boolean> get(UUID uuid, double[] position, String particleString) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF(uuid.toString());
         out.writeDouble(position[0]);

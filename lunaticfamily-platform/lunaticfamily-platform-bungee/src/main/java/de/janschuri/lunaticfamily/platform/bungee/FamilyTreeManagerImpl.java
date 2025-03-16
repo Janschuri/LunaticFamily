@@ -6,11 +6,12 @@ import de.janschuri.lunaticfamily.platform.FamilyTreeManager;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class FamilyTreeManagerImpl implements FamilyTreeManager {
 
     @Override
-    public boolean update(String server, UUID uuid, List<TreeAdvancement> treeAdvancements) {
+    public CompletableFuture<Boolean> update(String server, UUID uuid, List<TreeAdvancement> treeAdvancements) {
         return new UpdateFamilyTreeRequest().get(server, uuid, treeAdvancements);
     }
 }

@@ -32,12 +32,16 @@ public class JoinListenerExecuter {
             return true;
         }
 
-
-        LanguageConfigImpl languageConfig = LunaticFamily.getLanguageConfig();
-        FamilyPlayer playerFam = findOrCreate(sender.getUniqueId());
-        playerFam.save();
-
         Runnable runnable = () -> {
+            LanguageConfigImpl languageConfig = LunaticFamily.getLanguageConfig();
+            FamilyPlayer playerFam = findOrCreate(sender.getUniqueId());
+            String skinURL = sender.getSkinURL();
+            Logger.debugLog(String.format("Executing join command: %s", skinURL));
+            if (skinURL != null) {
+                playerFam.updateSkinURL(skinURL);
+            }
+            playerFam.save();
+            
             playerFam.updateFamilyTree();
 
             if (playerFam.isMarried()) {

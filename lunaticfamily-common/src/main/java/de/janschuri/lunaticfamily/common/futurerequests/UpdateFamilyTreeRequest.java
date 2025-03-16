@@ -18,14 +18,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
 
     private static final String REQUEST_NAME = "LunaticFamily:UpdateFamilyTree";
-    private static final ConcurrentHashMap<Integer, CompletableFuture<Boolean>> requestMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, CompletableFuture<Boolean>> REQUEST_MAP = new ConcurrentHashMap<>();
 
     public UpdateFamilyTreeRequest() {
-        super(REQUEST_NAME, requestMap);
+        super(REQUEST_NAME, REQUEST_MAP);
     }
 
     @Override
     protected void handleRequest(int requestId, ByteArrayDataInput in) {
+        Logger.debugLog("Received request " + requestId);
         boolean success = false;
 
         UUID uuid = UUID.fromString(in.readUTF());
@@ -38,12 +39,15 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
         if (treeAdvancements != null) {
             FamilyTreeManager familyTreeManager = LunaticFamily.getPlatform().getFamilyTreeManager();
 
-            success = familyTreeManager.update("", uuid, treeAdvancements);
+            success = familyTreeManager.update("", uuid, treeAdvancements)
+                    .thenApply(b -> b)
+                    .join();
         } else {
             Logger.errorLog("Failed to deserialize TreeAdvancements");
         }
 
 
+        Logger.debugLog("UpdateFamilyTreeRequest completed successfully");
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeBoolean(success);
@@ -52,11 +56,12 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
 
     @Override
     protected void handleResponse(int requestId, ByteArrayDataInput in) {
+        Logger.debugLog("Received response " + requestId);
         boolean success = in.readBoolean();
         completeRequest(requestId, success);
     }
 
-    public boolean get(String server, UUID uuid, List<TreeAdvancement> treeAdvancements) {
+    public CompletableFuture<Boolean> get(String server, UUID uuid, List<TreeAdvancement> treeAdvancements) {
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF(uuid.toString());
@@ -64,6 +69,8 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
         byte[] byteArray = toByteArray(treeAdvancements);
         out.writeInt(byteArray.length);
         out.write(byteArray);
+
+        Logger.debugLog("Sending request " + REQUEST_NAME + " to server " + server);
 
         return sendRequest(server, out.toByteArray());
     }

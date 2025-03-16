@@ -91,14 +91,20 @@ public class MarryGift extends FamilyCommand implements HasParentCommand {
                 return true;
             }
 
-            if (!player.hasItemInMainHand()) {
+            if (!player.hasItemInMainHand()
+                    .thenApply(b -> b)
+                    .join()) {
                 player.sendMessage(getMessage(EMPTY_HAND_MK));
                 return true;
             }
 
 
-                byte[] item = player.getItemInMainHand();
-                if (partner.giveItemDrop(item)) {
+                byte[] item = player.getItemInMainHand()
+                        .thenApply(b -> b)
+                        .join();
+                if (partner.giveItemDrop(item)
+                        .thenApply(b -> b)
+                        .join()) {
                     player.removeItemInMainHand();
                     player.sendMessage(getMessage(SENT_MK,
                             placeholder("%player%", partner.getName())

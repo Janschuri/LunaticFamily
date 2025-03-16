@@ -20,7 +20,7 @@ public class Placeholder {
     public static String getPlaceholder(UUID uuid, String placeholder) {
 
         if (LunaticFamily.getMode() == Mode.BACKEND) {
-            return new GetPlaceholderRequest().get(uuid, placeholder);
+            return new GetPlaceholderRequest().get(uuid, placeholder).thenApply(s -> s).join();
         }
 
         FamilyPlayer player = findOrCreate(uuid);
@@ -427,7 +427,7 @@ public class Placeholder {
     public static String getPlaceholder(UUID uuid1, UUID uuid2, String placeholder) {
 
         if (LunaticFamily.getMode() == Mode.BACKEND) {
-            return new GetRelationalPlaceholderRequest().get(uuid1, uuid2, placeholder);
+            return new GetRelationalPlaceholderRequest().get(uuid1, uuid2, placeholder).thenApply(s -> s).join();
         }
 
         FamilyPlayer player1 = findOrCreate(uuid1);

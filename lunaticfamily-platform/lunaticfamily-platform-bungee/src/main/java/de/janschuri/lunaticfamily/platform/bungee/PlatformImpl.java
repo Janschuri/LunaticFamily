@@ -1,6 +1,7 @@
 package de.janschuri.lunaticfamily.platform.bungee;
 
 import de.janschuri.lunaticfamily.common.futurerequests.SpawnParticlesCloudRequest;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.platform.FamilyTreeManager;
 import de.janschuri.lunaticfamily.platform.Platform;
 import de.janschuri.lunaticfamily.platform.bungee.listener.JoinListener;
@@ -13,7 +14,9 @@ public class PlatformImpl implements Platform<Plugin> {
 
     @Override
     public boolean spawnParticlesCloud(UUID uuid, double[] position, String particleString) {
-       return new SpawnParticlesCloudRequest().get(uuid, position, particleString);
+       return new SpawnParticlesCloudRequest().get(uuid, position, particleString)
+                .thenApply(s -> s)
+                .join();
     }
 
     @Override
@@ -23,6 +26,7 @@ public class PlatformImpl implements Platform<Plugin> {
 
     @Override
     public void registerListener() {
+        Logger.debugLog("Registering listener");
         BungeeLunaticFamily.getInstance().getProxy().getPluginManager().registerListener(BungeeLunaticFamily.getInstance(), new JoinListener());
         BungeeLunaticFamily.getInstance().getProxy().getPluginManager().registerListener(BungeeLunaticFamily.getInstance(), new QuitListener());
     }

@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 
 public class FamilyTreeManagerImpl implements FamilyTreeManager {
@@ -14,16 +15,16 @@ public class FamilyTreeManagerImpl implements FamilyTreeManager {
     private static final Map<String, String> relationLangs = new HashMap<>();
 
     @Override
-    public boolean update(String server, UUID uuid, List<TreeAdvancement> treeAdvancements) {
+    public CompletableFuture<Boolean> update(String server, UUID uuid, List<TreeAdvancement> treeAdvancements) {
 
         Player player = Bukkit.getPlayer(uuid);
 
         if (player == null) {
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
 
         CrazyAdvancementsAPI.send(player, treeAdvancements);
 
-        return true;
+        return CompletableFuture.completedFuture(true);
     }
 }

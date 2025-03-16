@@ -199,13 +199,13 @@ public class PriestMarry extends FamilyCommand implements HasParentCommand, HasP
             return true;
         }
 
-        if (!player.isInRange(player1.getUniqueId(), LunaticFamily.getConfig().getMarryPriestRange())) {
+        if (!player.isInRange(player1.getUniqueId(), LunaticFamily.getConfig().getMarryPriestRange()).thenApply(b -> b).join()) {
             player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK,
                 placeholder("%player%", player1.getName())));
             return true;
         }
 
-        if (!player.isInRange(player2.getUniqueId(), LunaticFamily.getConfig().getMarryPriestRange())) {
+        if (!player.isInRange(player2.getUniqueId(), LunaticFamily.getConfig().getMarryPriestRange()).thenApply(b -> b).join()) {
             player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK,
                 placeholder("%player%", player2.getName())));
             return true;

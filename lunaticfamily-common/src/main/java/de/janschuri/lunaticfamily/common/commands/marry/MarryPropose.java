@@ -183,7 +183,7 @@ public class MarryPropose extends FamilyCommand implements HasParentCommand, Has
             return true;
         }
 
-        if (!player.isInRange(partner.getUniqueId(), LunaticFamily.getConfig().getMarryProposeRange())) {
+        if (!player.isInRange(partner.getUniqueId(), LunaticFamily.getConfig().getMarryProposeRange()).thenApply(b -> b).join()) {
             player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK,
                 placeholder("%player%", partner.getName())));
             return true;

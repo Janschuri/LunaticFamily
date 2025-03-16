@@ -68,14 +68,18 @@ public class FamilyTree extends FamilyCommand implements HasParentCommand {
             FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
             playerFam.save();
 
-            if (playerFam.updateFamilyTree()) {
-                player.sendMessage(getMessage(RELOADED_MK));
-            } else {
-                sender.sendMessage(getMessage(FAILED_MK));
-                Logger.errorLog("Failed to reload family tree for player " + name + " (" + playerUUID + ").");
-                Logger.errorLog("Is the correct version of CrazyAdvancementsAPI installed?");
-                return false;
-            }
+
+            playerFam.updateFamilyTree()
+                    .thenApply(success -> {
+                        if (success) {
+                            player.sendMessage(getMessage(RELOADED_MK));
+                        } else {
+                            sender.sendMessage(getMessage(FAILED_MK));
+                            Logger.errorLog("Failed to reload family tree for player " + name + " (" + playerUUID + ").");
+                            Logger.errorLog("Is the correct version of CrazyAdvancementsAPI installed?");
+                        }
+                        return success;
+                    });
 
         return true;
     }

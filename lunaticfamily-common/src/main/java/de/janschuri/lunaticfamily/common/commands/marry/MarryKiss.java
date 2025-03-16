@@ -89,14 +89,14 @@ public class MarryKiss extends FamilyCommand implements HasParentCommand {
             return true;
         }
 
-        if (!player.isInRange(partner.getUniqueId(), LunaticFamily.getConfig().getMarryKissRange())) {
+        if (!player.isInRange(partner.getUniqueId(), LunaticFamily.getConfig().getMarryKissRange()).thenApply(b -> b).join()) {
             player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK,
                 placeholder("%player%", partner.getName())));
             return true;
         }
 
-        double[] playerPosition = player.getPosition();
-        double[] partnerPosition = partner.getPosition();
+        double[] playerPosition = player.getPosition().thenApply(b -> b).join();
+        double[] partnerPosition = partner.getPosition().thenApply(b -> b).join();
         double[] position = Utils.getPositionBetweenLocations(playerPosition, partnerPosition);
         position[1] += 2;
         for (int i = 0; i < 6; i++) {

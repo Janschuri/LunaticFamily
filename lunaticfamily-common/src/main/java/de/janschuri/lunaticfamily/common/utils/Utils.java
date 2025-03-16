@@ -7,12 +7,16 @@ import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.utils.Mode;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
 
     public static boolean isPlayerOnRegisteredServer(PlayerSender sender) {
         if (LunaticFamily.getMode() == Mode.PROXY) {
+            String serverName = sender.getServerName();
+            Logger.debugLog(String.format("Checking if player %s is registered server", serverName));
+            Logger.debugLog(String.format("Registered servers: %s", Arrays.toString(LunaticFamily.getConfig().getServers().toArray())));
             return LunaticFamily.getConfig().getServers().contains(sender.getServerName());
         }
         return true;

@@ -176,7 +176,7 @@ public class AdoptPropose extends FamilyCommand implements HasParentCommand, Has
             return true;
         }
 
-        if (!player.isInRange(child.getUniqueId(), LunaticFamily.getConfig().getAdoptProposeRange())) {
+        if (!player.isInRange(child.getUniqueId(), LunaticFamily.getConfig().getAdoptProposeRange()).thenApply(b -> b).join()) {
             player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK,
                 placeholder("%player%", child.getName())));
             return true;

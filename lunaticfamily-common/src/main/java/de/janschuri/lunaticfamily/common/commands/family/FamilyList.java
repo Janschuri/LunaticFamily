@@ -83,6 +83,7 @@ public class FamilyList extends FamilyCommand implements HasParams, HasParentCom
             List<RelationAdvancement> relationAdvancements = playerFam.getFamilyTree().getRelationAdvancements();
             ComponentBuilder msg = Component.text().append(getMessage(HEADER_MK.noPrefix()));
 
+            sender.sendMessage(playerFam.getSkinURL());
             sender.sendMessage(getFamilyListMessage(relationAdvancements, msg));
             playerFam.updateFamilyTree();
             return true;

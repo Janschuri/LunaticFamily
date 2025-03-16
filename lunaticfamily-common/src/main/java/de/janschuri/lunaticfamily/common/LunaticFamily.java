@@ -46,9 +46,8 @@ public final class LunaticFamily {
     private static final FutureRequest[] futureRequests = {
         new UpdateFamilyTreeRequest(),
         new SpawnParticlesCloudRequest(),
-        new LoadFamilyTreeMapRequest(),
-        new IsFamilyTreeMapLoadedRequest(),
         new GetPlaceholderRequest(),
+        new GetRelationalPlaceholderRequest(),
     };
 
     private static Path dataDirectory;

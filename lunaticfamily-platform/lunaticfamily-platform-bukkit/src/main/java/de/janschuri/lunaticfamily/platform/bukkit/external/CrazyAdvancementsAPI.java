@@ -3,6 +3,7 @@ package de.janschuri.lunaticfamily.platform.bukkit.external;
 import de.janschuri.lunaticfamily.TreeAdvancement;
 import de.janschuri.lunaticfamily.common.handler.familytree.HiddenAdvancement;
 import de.janschuri.lunaticfamily.common.handler.familytree.RootAdvancement;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.platform.bukkit.util.ItemStackUtils;
 import eu.endercentral.crazy_advancements.NameKey;
 import eu.endercentral.crazy_advancements.advancement.Advancement;
@@ -15,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.nio.file.LinkOption;
 import java.util.*;
 
 public class CrazyAdvancementsAPI {
@@ -74,13 +76,17 @@ public class CrazyAdvancementsAPI {
         description = description == null ? treeAdvancement.getKey() : description;
 
         AdvancementDisplay display = new AdvancementDisplay(icon, title, description, frame, visibility);
-        Advancement ego = advancementMap.get("ego");
-        display.setPositionOrigin(ego);
-        display.setX(treeAdvancement.getX() * (treeAdvancement.getSide() == TreeAdvancement.Side.LEFT ? -1 : 1));
-        display.setY(-treeAdvancement.getY());
+        float x = treeAdvancement.getX();
+        float y = treeAdvancement.getY();
+        display.setX(x * (treeAdvancement.getSide() == TreeAdvancement.Side.LEFT ? -1 : 1));
+        display.setY(-y);
 
         if (treeAdvancement instanceof RootAdvancement rootTreeAdvancement) {
+            Logger.debugLog("RootAdvancement: " + rootTreeAdvancement.getKey() + " at " + x + ", " + y);
             display.setBackgroundTexture(rootTreeAdvancement.getBackground());
+        } else {
+            Advancement ego = advancementMap.get("ego");
+            display.setPositionOrigin(ego);
         }
 
         List<AdvancementFlag> flags = new ArrayList<>();
