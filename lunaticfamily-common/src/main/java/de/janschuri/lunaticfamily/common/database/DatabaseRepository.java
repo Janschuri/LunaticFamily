@@ -28,10 +28,8 @@ import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.*;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static io.ebean.DatabaseFactory.createWithContextClassLoader;
@@ -41,20 +39,22 @@ public class DatabaseRepository {
     private static Database db;
     private static DatabaseConfig databaseConfig;
 
-    static {
-        try {
-            Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static boolean init() {
         Logger.infoLog("Loading database...");
 
         Path dataDirectory = LunaticFamily.getDataDirectory();
         databaseConfig = new DatabaseConfig(dataDirectory);
         databaseConfig.load();
+
+        if (getType().equalsIgnoreCase("sqlite")) {
+            try {
+                Class.forName("org.sqlite.JDBC");
+            } catch (ClassNotFoundException e) {
+                Logger.errorLog("Could not load SQLite JDBC driver.");
+                e.printStackTrace();
+                return false;
+            }
+        }
 
         createDatabaseIfNotExists();
         runMigrations();

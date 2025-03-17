@@ -4,7 +4,9 @@ import de.janschuri.lunaticfamily.FamilyConfig;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
+import de.janschuri.lunaticlib.ConfigKey;
 import de.janschuri.lunaticlib.common.config.LunaticConfig;
+import de.janschuri.lunaticlib.common.config.LunaticConfigKey;
 import de.janschuri.lunaticlib.common.utils.Mode;
 
 import java.nio.file.Path;

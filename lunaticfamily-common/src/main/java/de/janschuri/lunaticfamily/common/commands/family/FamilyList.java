@@ -83,7 +83,6 @@ public class FamilyList extends FamilyCommand implements HasParams, HasParentCom
             List<RelationAdvancement> relationAdvancements = playerFam.getFamilyTree().getRelationAdvancements();
             ComponentBuilder msg = Component.text().append(getMessage(HEADER_MK.noPrefix()));
 
-            sender.sendMessage(playerFam.getSkinURL());
             sender.sendMessage(getFamilyListMessage(relationAdvancements, msg));
             playerFam.updateFamilyTree();
             return true;
@@ -135,23 +134,23 @@ public class FamilyList extends FamilyCommand implements HasParams, HasParentCom
                 continue;
             }
 
-                Component relation = Component.text(relationAdvancement.getDescription());
-                Component name = Component.text(relationAdvancement.getTitle());
+            Component relation = Component.text(relationAdvancement.getDescription());
+            Component name = Component.text(relationAdvancement.getTitle());
 
-                TextReplacementConfig relationRpl = TextReplacementConfig.builder()
-                        .match("%relation%")
-                        .replacement(relation).build();
+            TextReplacementConfig relationRpl = TextReplacementConfig.builder()
+                    .match("%relation%")
+                    .replacement(relation).build();
 
-                TextReplacementConfig nameRpl = TextReplacementConfig.builder()
-                        .match("%player%")
-                        .replacement(name).build();
+            TextReplacementConfig nameRpl = TextReplacementConfig.builder()
+                    .match("%player%")
+                    .replacement(name).build();
 
-                Component component = getMessage(RELATIONS_MK.noPrefix())
-                        .replaceText(relationRpl)
-                        .replaceText(nameRpl);
+            Component component = getMessage(RELATIONS_MK.noPrefix())
+                    .replaceText(relationRpl)
+                    .replaceText(nameRpl);
 
-                msg.append(Component.newline())
-                        .append(component);
+            msg.append(Component.newline())
+                    .append(component);
 
         }
 
