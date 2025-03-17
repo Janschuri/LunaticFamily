@@ -42,28 +42,28 @@ public class AdoptAccept extends FamilyCommand implements HasParentCommand {
 
 
     private static final PriestAdopt PRIEST_ADOPT_INSTANCE = new PriestAdopt();
-    private final CommandMessageKey priestYesMK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"yes")
+    private static final CommandMessageKey PRIEST_YES_MK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"yes")
             .defaultMessage("en", "Yes, I do.")
             .defaultMessage("de", "Ja, ich will.");
-    private final CommandMessageKey priestNoMK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"no")
+    private static final CommandMessageKey PRIEST_NO_MK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"no")
             .defaultMessage("en", "No, I don't want to.")
             .defaultMessage("de", "Nein, ich will nicht.");
-    private final CommandMessageKey priestCompleteMK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"complete")
+    private static final CommandMessageKey PRIEST_COMPLETE_MK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"complete")
             .defaultMessage("en", "The adoption of %child% by %parent% is completed.")
             .defaultMessage("de", "Die Adoption von %child% durch %parent% ist abgeschlossen.");
-    private final CommandMessageKey priestAlreadyAdoptedMK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"already_adopted")
+    private static final CommandMessageKey PRIEST_ALREADY_ADOPTED_MK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"already_adopted")
             .defaultMessage("en", "%player% is already adopted.")
             .defaultMessage("de", "%player% ist bereits adoptiert.");
-    private final CommandMessageKey priestRequestMK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"request")
+    private static final CommandMessageKey PRIEST_REQUEST_MK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"request")
             .defaultMessage("en", "%player1%, would you like to adopt %player2% on this Minecraft server?")
             .defaultMessage("de", "%player1%, möchtest du %player2% auf diesem Minecraft-Server adoptieren?");
-    private final CommandMessageKey priestRequestExpiredPriestMK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"request_expired_priest")
+    private static final CommandMessageKey PRIEST_REQUEST_EXPIRED_PRIEST_MK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"request_expired_priest")
             .defaultMessage("en", "The adoption request of %parent% for %child% has expired.")
             .defaultMessage("de", "Die Adoptionsanfrage von %parent% für %child% ist abgelaufen.");
-    private final CommandMessageKey priestRequestExpiredParentMK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"request_expired_parent")
+    private static final CommandMessageKey PRIEST_REQUEST_EXPIRED_PARENT_MK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"request_expired_parent")
             .defaultMessage("en", "The adoption request for %child% has expired.")
             .defaultMessage("de", "Die Adoptionsanfrage für %child% ist abgelaufen.");
-    private final CommandMessageKey priestRequestExpiredChildMK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"request_expired_child")
+    private static final CommandMessageKey PRIEST_REQUEST_EXPIRED_CHILD_MK = new LunaticCommandMessageKey(PRIEST_ADOPT_INSTANCE,"request_expired_child")
             .defaultMessage("en", "The adoption request of %parent% for you has expired.")
             .defaultMessage("de", "Die Adoptionsanfrage von %parent% für dich ist abgelaufen.");
 
@@ -124,7 +124,7 @@ public class AdoptAccept extends FamilyCommand implements HasParentCommand {
         PlayerSender child = LunaticLib.getPlatform().getPlayerSender(childUUID);
 
         if (childFam.isAdopted()) {
-            player.sendMessage(getMessage(priestAlreadyAdoptedMK,
+            player.sendMessage(getMessage(PRIEST_ALREADY_ADOPTED_MK,
                 placeholder("%player%", childFam.getName())));
             return true;
         }
@@ -160,22 +160,22 @@ public class AdoptAccept extends FamilyCommand implements HasParentCommand {
             if (LunaticFamily.adoptRequests.containsKey(childUUID)) {
                 LunaticFamily.adoptRequests.remove(childUUID);
                 LunaticFamily.adoptPriests.remove(childUUID);
-                priest.sendMessage(getMessage(priestRequestExpiredPriestMK,
+                priest.sendMessage(getMessage(PRIEST_REQUEST_EXPIRED_PRIEST_MK,
                 placeholder("%parent%", player.getName()),
                 placeholder("%child%", child.getName())));
-                player.sendMessage(getMessage(priestRequestExpiredParentMK,
+                player.sendMessage(getMessage(PRIEST_REQUEST_EXPIRED_PARENT_MK,
                 placeholder("%child%", child.getName())));
-                child.sendMessage(getMessage(priestRequestExpiredChildMK,
+                child.sendMessage(getMessage(PRIEST_REQUEST_EXPIRED_CHILD_MK,
                 placeholder("%parent%", player.getName())));
             }
         };
 
         Utils.scheduleTask(runnable, 30L, TimeUnit.SECONDS);
 
-        player.chat(getLanguageConfig().getMessageAsString(priestYesMK.noPrefix()));
+        player.chat(getLanguageConfig().getMessageAsString(PRIEST_YES_MK.noPrefix()));
 
 
-        priest.chat(getLanguageConfig().getMessageAsString(priestRequestMK.noPrefix())
+        priest.chat(getLanguageConfig().getMessageAsString(PRIEST_REQUEST_MK.noPrefix())
                 .replace("%child%", childFam.getName())
                 .replace("%parent%", playerFam.getName()));
 
@@ -183,9 +183,9 @@ public class AdoptAccept extends FamilyCommand implements HasParentCommand {
         child.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
                 Component.empty(),
-                getMessage(priestYesMK.noPrefix()),
+                getMessage(PRIEST_YES_MK.noPrefix()),
                 "/family adopt accept",
-                getMessage(priestNoMK.noPrefix()),
+                getMessage(PRIEST_NO_MK.noPrefix()),
                 "/family adopt deny"),
                 LunaticFamily.getConfig().decisionAsInvGUI()
         );
@@ -200,7 +200,7 @@ public class AdoptAccept extends FamilyCommand implements HasParentCommand {
         UUID parent1UUID = LunaticFamily.adoptRequests.get(playerUUID);
 
         if (playerFam.isAdopted()) {
-            player.sendMessage(getMessage(priestAlreadyAdoptedMK,
+            player.sendMessage(getMessage(PRIEST_ALREADY_ADOPTED_MK,
                 placeholder("%player%", playerFam.getName()))
             );
             return true;
@@ -305,9 +305,9 @@ public class AdoptAccept extends FamilyCommand implements HasParentCommand {
         Utils.withdrawMoney(player.getServerName(), playerUUID, WithdrawKey.PRIEST_ADOPT_CHILD);
         Utils.withdrawMoney(player.getServerName(), parent1UUID, WithdrawKey.PRIEST_ADOPT_PARENT);
 
-        player.chat(getLanguageConfig().getMessageAsString(priestYesMK.noPrefix()));
+        player.chat(getLanguageConfig().getMessageAsString(PRIEST_YES_MK.noPrefix()));
 
-        priest.chat(getLanguageConfig().getMessageAsString(priestCompleteMK.noPrefix())
+        priest.chat(getLanguageConfig().getMessageAsString(PRIEST_COMPLETE_MK.noPrefix())
                 .replace("%child%", playerFam.getName())
                 .replace("%parent%", parent1Fam.getName()));
 
