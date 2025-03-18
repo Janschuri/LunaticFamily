@@ -105,20 +105,21 @@ public class DatabaseRepository {
 
             DSLContext context = DSL.using(configuration);
 
-            Query query = context.createTableIfNotExists("migrations")
-                    .column("id", SQLDataType.BIGINT
+            String migrationsTable = "lunaticfamily_migrations";
+            Query query = context.createTableIfNotExists(migrationsTable)
+                    .column("id", SQLDataType.BIGINTUNSIGNED
                             .nullable(false)
                             .identity(true)
                     )
                     .column("name", SQLDataType.VARCHAR(255).nullable(false))
-                    .column("batch", SQLDataType.BIGINT.nullable(false))
+                    .column("batch", SQLDataType.BIGINTUNSIGNED.nullable(false))
                     .constraint(DSL.constraint("name_unique").unique("name"))
                     .primaryKey("id");
 
             query.execute();
 
-            List<String> names = context.select(DSL.field("name", String.class))  // Specify the type as String
-                    .from(DSL.table("migrations"))
+            List<String> names = context.select(DSL.field("name", String.class))
+                    .from(DSL.table(migrationsTable))
                     .fetch(DSL.field("name", String.class));
 
             List<Migration> migrations = getMigrations()
@@ -132,7 +133,7 @@ public class DatabaseRepository {
             conn.setAutoCommit(false);
 
             long batch = context.select(DSL.field("batch", Long.class))
-                    .from(DSL.table("migrations"))
+                    .from(DSL.table(migrationsTable))
                     .stream().max((o1, o2) -> (int) (o1.get(DSL.field("batch", Long.class)) - o2.get(DSL.field("batch", Long.class))))
                     .map(record -> record.get(DSL.field("batch", Long.class)))
                     .orElse(0L) + 1;
@@ -148,7 +149,7 @@ public class DatabaseRepository {
                 try {
                     migration.run(context);
 
-                    context.insertInto(DSL.table("migrations"))
+                    context.insertInto(DSL.table(migrationsTable))
                             .columns(DSL.field("name"), DSL.field("batch"))
                             .values(name, batch)
                             .execute();

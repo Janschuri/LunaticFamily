@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.handler;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import io.ebean.annotation.Identity;
 import io.ebean.annotation.NotNull;
 import io.ebean.annotation.WhenCreated;
@@ -11,7 +10,7 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "siblinghoods")
+@Table(name = "lunaticfamily_siblinghoods")
 public class Siblinghood {
 
     @Id
@@ -20,20 +19,16 @@ public class Siblinghood {
     private int id;
     @ManyToOne
     @NotNull
-    @JoinColumn(name = "player1ID")
     private FamilyPlayer player1;
     @ManyToOne
     @NotNull
-    @JoinColumn(name = "player2ID")
     private FamilyPlayer player2;
     @ManyToOne
-    @JoinColumn(name = "priest")
     private FamilyPlayer priest;
-    private String emoji;
+    private String emojiColor;
     @NotNull
     @WhenCreated
     private Timestamp date;
-    @Column(name = "unsiblingDate")
     private Timestamp unsiblingDate;
 
     public Siblinghood(FamilyPlayer player1, FamilyPlayer player2) {
@@ -77,7 +72,7 @@ public class Siblinghood {
     }
 
     public String getEmojiColor() {
-        String color = emoji;
+        String color = emojiColor;
         if (color == null) {
             color = LunaticFamily.getConfig().getDefaultSiblingEmojiColor();
         }
@@ -85,7 +80,7 @@ public class Siblinghood {
     }
 
     public Siblinghood setEmojiColor(String color) {
-        emoji = color;
+        emojiColor = color;
         return this;
     }
 

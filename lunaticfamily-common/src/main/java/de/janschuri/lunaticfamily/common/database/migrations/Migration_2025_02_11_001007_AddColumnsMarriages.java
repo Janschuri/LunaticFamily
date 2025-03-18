@@ -10,6 +10,9 @@ public class Migration_2025_02_11_001007_AddColumnsMarriages extends Migration {
 
     public void run(DSLContext context) {
         String tableName = "marriages";
+        if (!tableExists(context, tableName)) {
+            return;
+        }
 
         if (!columnExists(context, tableName, "player1ID")) {
             context.alterTable(tableName)

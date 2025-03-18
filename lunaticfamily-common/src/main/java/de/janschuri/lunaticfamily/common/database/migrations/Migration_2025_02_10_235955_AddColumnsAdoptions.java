@@ -10,6 +10,9 @@ public class Migration_2025_02_10_235955_AddColumnsAdoptions extends Migration {
 
     public void run(DSLContext context) {
         String tableName = "adoptions";
+        if (!tableExists(context, tableName)) {
+            return;
+        }
 
         if (!columnExists(context, tableName, "parentID")) {
             context.alterTable(tableName)

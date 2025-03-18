@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Entity
-@Table(name = "playerData")
+@Table(name = "lunaticfamily_players")
 public class FamilyPlayer {
 
     @Id
@@ -29,34 +29,33 @@ public class FamilyPlayer {
     private int id;
     private final UUID uuid;
     private String name;
-    @Column(name = "skinURL")
     private String skinURL;
     private String gender;
     private String background;
 
     @OneToMany(mappedBy = "player1")
-    @Where(clause = "divorceDate IS NULL")
+    @Where(clause = "divorce_date IS NULL")
     private List<Marriage> marriagesAsPlayer1 = new ArrayList<>();
     @OneToMany(mappedBy = "player2")
-    @Where(clause = "divorceDate IS NULL")
+    @Where(clause = "divorce_date IS NULL")
     private List<Marriage> marriagesAsPlayer2 = new ArrayList<>();
     @OneToMany(mappedBy = "priest")
     private final List<Marriage> marriagesAsPriest = new ArrayList<>();
 
     @OneToMany(mappedBy = "player1")
-    @Where(clause = "unsiblingDate IS NULL")
+    @Where(clause = "unsibling_date IS NULL")
     private List<Siblinghood> siblinghoodsAsPlayer1 = new ArrayList<>();
     @OneToMany(mappedBy = "player2")
-    @Where(clause = "unsiblingDate IS NULL")
+    @Where(clause = "unsibling_date IS NULL")
     private List<Siblinghood> siblinghoodsAsPlayer2 = new ArrayList<>();
     @OneToMany(mappedBy = "priest")
     private final List<Siblinghood> siblinghoodsAsPriest = new ArrayList<>();
 
     @OneToMany(mappedBy = "parent")
-    @Where(clause = "unadoptDate IS NULL")
+    @Where(clause = "unadopt_date IS NULL")
     private List<Adoption> adoptionsAsParent = new ArrayList<>();
     @OneToMany(mappedBy = "child")
-    @Where(clause = "unadoptDate IS NULL")
+    @Where(clause = "unadopt_date IS NULL")
     private List<Adoption> adoptionsAsChild = new ArrayList<>();
     @OneToMany(mappedBy = "priest")
     private final List<Adoption> adoptionsAsPriest = new ArrayList<>();

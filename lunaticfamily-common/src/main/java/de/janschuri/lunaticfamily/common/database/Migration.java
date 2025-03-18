@@ -7,6 +7,7 @@ import java.util.List;
 
 public abstract class Migration {
 
+//    ./create-migration.sh "name"
     public abstract void run(DSLContext context);
 
     protected boolean columnExists(DSLContext create, String tableName, String columnName) {
@@ -24,5 +25,10 @@ public abstract class Migration {
         }
 
         return false;
+    }
+
+    protected boolean tableExists(DSLContext create, String tableName) {
+        @NotNull List<Table<?>> tables = create.meta().getTables(tableName);
+        return !tables.isEmpty();
     }
 }

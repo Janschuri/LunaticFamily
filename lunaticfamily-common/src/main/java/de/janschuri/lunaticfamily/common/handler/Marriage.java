@@ -11,7 +11,7 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "marriages")
+@Table(name = "lunaticfamily_marriages")
 public class Marriage {
 
     @Id
@@ -19,22 +19,17 @@ public class Marriage {
     @NotNull
     private int id;
     @ManyToOne
-    @JoinColumn(name = "player1ID")
     @NotNull
     private FamilyPlayer player1;
     @ManyToOne
-    @JoinColumn(name = "player2ID")
     @NotNull
     private FamilyPlayer player2;
     @ManyToOne
-    @JoinColumn(name = "priest")
     private FamilyPlayer priest;
-    @Column(name = "heart")
-    private String emoji;
+    private String emojiColor;
     @WhenCreated
     @NotNull
     private Timestamp date;
-    @Column(name = "divorceDate")
     private Timestamp divorceDate;
 
     public Marriage(FamilyPlayer player1, FamilyPlayer player2) {
@@ -79,7 +74,7 @@ public class Marriage {
 
     public String getEmojiColor() {
 
-        String color = emoji;
+        String color = emojiColor;
         if (color == null) {
             color = LunaticFamily.getConfig().getDefaultMarryEmojiColor();
         }
@@ -87,7 +82,7 @@ public class Marriage {
     }
 
     public void setEmojiColor(String color) {
-        emoji = color;
+        emojiColor = color;
         DatabaseRepository.getDatabase().save(this);
     }
 

@@ -10,30 +10,26 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "adoptions")
+@Table(name = "lunaticfamily_adoptions")
 public class Adoption {
 
     @Id
     @Identity
     @NotNull
     private int id;
-    private String emoji;
+    private String emojiColor;
     @NotNull
     @WhenCreated
     private Timestamp date;
-    @Column(name = "unadoptDate")
     private Timestamp unadoptDate;
 
     @ManyToOne
     @NotNull
-    @JoinColumn(name = "parentID")
     private FamilyPlayer parent;
     @ManyToOne
     @NotNull
-    @JoinColumn(name = "childID")
     private FamilyPlayer child;
     @ManyToOne
-    @JoinColumn(name = "priest")
     private FamilyPlayer priest;
 
     public Adoption(FamilyPlayer parent, FamilyPlayer child) {
@@ -77,7 +73,7 @@ public class Adoption {
 
     public String getEmojiColor() {
 
-        String color = emoji;
+        String color = emojiColor;
         if (color == null) {
             color = LunaticFamily.getConfig().getDefaultAdoptEmojiColor();
         }
@@ -85,7 +81,7 @@ public class Adoption {
     }
 
     public Adoption setEmojiColor(String color) {
-        emoji = color;
+        emojiColor = color;
         return this;
     }
 

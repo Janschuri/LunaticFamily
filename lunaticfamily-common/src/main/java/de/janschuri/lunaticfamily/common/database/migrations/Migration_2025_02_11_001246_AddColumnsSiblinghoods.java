@@ -10,6 +10,9 @@ public class Migration_2025_02_11_001246_AddColumnsSiblinghoods extends Migratio
 
     public void run(DSLContext context) {
         String tableName = "siblinghoods";
+        if (!tableExists(context, tableName)) {
+            return;
+        }
 
         if (!columnExists(context, tableName, "player1ID")) {
             context.alterTable(tableName)
