@@ -45,6 +45,7 @@ public class Migration_2025_03_18_135012_MigratePlayerDataTable extends Migratio
                                 DSL.field("background"))
                         .from(DSL.table(oldTableName))
                         .where(DSL.field("uuid").isNotNull()))
+                .onDuplicateKeyIgnore()
                 .execute();
 
         context.dropTableIfExists(oldTableName).execute();

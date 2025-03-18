@@ -17,7 +17,7 @@ public class Marriage {
     @Id
     @Identity
     @NotNull
-    private int id;
+    private long id;
     @ManyToOne
     @NotNull
     private FamilyPlayer player1;
@@ -27,7 +27,6 @@ public class Marriage {
     @ManyToOne
     private FamilyPlayer priest;
     private String emojiColor;
-    @WhenCreated
     @NotNull
     private Timestamp date;
     private Timestamp divorceDate;
@@ -35,6 +34,13 @@ public class Marriage {
     public Marriage(FamilyPlayer player1, FamilyPlayer player2) {
         this.player1 = player1;
         this.player2 = player2;
+        this.date = new Timestamp(System.currentTimeMillis());
+    }
+
+    public Marriage(long player1, long player2, Timestamp date) {
+        this.player1 = FamilyPlayer.find(player1);
+        this.player2 = FamilyPlayer.find(player2);
+        this.date = date != null ? date : new Timestamp(System.currentTimeMillis());
     }
 
     public Marriage save() {

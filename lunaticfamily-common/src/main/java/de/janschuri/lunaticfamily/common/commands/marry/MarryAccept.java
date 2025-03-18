@@ -114,11 +114,11 @@ public class MarryAccept extends FamilyCommand implements HasParentCommand {
 
     private boolean proceedRequest(PlayerSender player) {
         UUID playerUUID = player.getUniqueId();
-        int playerID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uuid", playerUUID).findOne().getId();
+        long playerID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uuid", playerUUID).findOne().getId();
         FamilyPlayer playerFam = getFamilyPlayer(playerID);
 
         UUID partnerUUID = LunaticFamily.marryRequests.get(playerUUID);
-        int partnerID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uuid", partnerUUID).findOne().getId();
+        long partnerID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uuid", partnerUUID).findOne().getId();
         FamilyPlayer partnerFam = getFamilyPlayer(partnerID);
         PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
 

@@ -88,7 +88,7 @@ public class FamilyDBList extends FamilyCommand implements HasParams, HasParentC
     }
 
     private Component getPlayerList(int page) {
-        Map<Integer, FamilyPlayer> players = DatabaseRepository.getDatabase().find(FamilyPlayer.class).findList().stream()
+        Map<Long, FamilyPlayer> players = DatabaseRepository.getDatabase().find(FamilyPlayer.class).findList().stream()
                 .collect(LinkedHashMap::new, (m, v) -> m.put(v.getId(), v), LinkedHashMap::putAll);
 
         ComponentBuilder<TextComponent, TextComponent.Builder> msg = Component.text().append(getMessage(HEADER_MK.noPrefix()));
@@ -98,7 +98,7 @@ public class FamilyDBList extends FamilyCommand implements HasParams, HasParentC
         for (FamilyPlayer player : players.values()) {
             msg.append(Component.newline());
 
-            int id = player.getId();
+            long id = player.getId();
             String uuid = player.getUUID() == null ? "null" : player.getUUID().toString();
             String skinURL = player.getSkinURL() == null ? "null" : player.getSkinURL();
             String background = player.getBackground() == null ? "null" : player.getBackground();

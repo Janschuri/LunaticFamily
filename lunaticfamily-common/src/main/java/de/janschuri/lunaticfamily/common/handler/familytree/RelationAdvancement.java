@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class RelationAdvancement implements TreeAdvancement {
 
-    private final int id;
+    private final long id;
     private final String gender;
     private final UUID uuid;
     private final String key;
@@ -21,7 +21,7 @@ public class RelationAdvancement implements TreeAdvancement {
 
     public static final String DEFAULT_SKIN = "https://textures.minecraft.net/texture/2705fd94a0c431927fb4e639b0fcfb49717e412285a02b439e0112da22b2e2ec";
 
-    public RelationAdvancement(@NotNull String key, TreeAdvancement parent, int id, UUID uuid, String gender, String title, String description, String skinUrl, float x, float y, Side side) {
+    public RelationAdvancement(@NotNull String key, TreeAdvancement parent, long id, UUID uuid, String gender, String title, String description, String skinUrl, float x, float y, Side side) {
         this.id = id;
         this.uuid = uuid;
         this.gender = gender;
@@ -30,10 +30,10 @@ public class RelationAdvancement implements TreeAdvancement {
         this.title = title;
         this.description = description;
 
-        if (skinUrl != null || !skinUrl.isEmpty()) {
-            this.skinUrl = skinUrl;
-        } else {
+        if (skinUrl == null || !skinUrl.isEmpty()) {
             this.skinUrl = DEFAULT_SKIN;
+        } else {
+            this.skinUrl = skinUrl;
         }
 
         this.x = x;
@@ -41,7 +41,7 @@ public class RelationAdvancement implements TreeAdvancement {
         this.side = side;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

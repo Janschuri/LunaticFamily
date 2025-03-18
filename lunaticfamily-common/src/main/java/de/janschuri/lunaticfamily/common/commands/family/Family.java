@@ -57,6 +57,7 @@ public class Family extends FamilyCommand implements HasHelpCommand, HasSubcomma
                 new Marry(),
                 new Priest(),
                 new FamilyDBList(),
+                new FamilyMigrate(),
                 getHelpCommand()
         );
     }

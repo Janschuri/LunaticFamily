@@ -78,7 +78,7 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
                 uuid = null;
             }
         } else {
-            FamilyPlayer playerFam = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().ieq("name", arg).findOne();
+            FamilyPlayer playerFam = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().ieq("name", arg).findList().get(0);
 
             if (playerFam != null) {
                 uuid = playerFam.getUUID();

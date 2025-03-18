@@ -100,7 +100,7 @@ public abstract class FamilyCommand extends LunaticCommand implements HasMessage
         return FamilyPlayer.findOrCreate(playerUUID);
     }
 
-    protected static FamilyPlayer getFamilyPlayer(int playerID) {
+    protected static FamilyPlayer getFamilyPlayer(long playerID) {
         return FamilyPlayer.find(playerID);
     }
 

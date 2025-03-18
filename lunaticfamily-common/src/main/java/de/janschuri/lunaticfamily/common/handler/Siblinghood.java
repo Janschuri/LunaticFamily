@@ -16,7 +16,7 @@ public class Siblinghood {
     @Id
     @Identity
     @NotNull
-    private int id;
+    private long id;
     @ManyToOne
     @NotNull
     private FamilyPlayer player1;
@@ -27,13 +27,13 @@ public class Siblinghood {
     private FamilyPlayer priest;
     private String emojiColor;
     @NotNull
-    @WhenCreated
     private Timestamp date;
     private Timestamp unsiblingDate;
 
     public Siblinghood(FamilyPlayer player1, FamilyPlayer player2) {
         this.player1 = player1;
         this.player2 = player2;
+        this.date = new Timestamp(System.currentTimeMillis());
     }
 
     public Siblinghood save() {

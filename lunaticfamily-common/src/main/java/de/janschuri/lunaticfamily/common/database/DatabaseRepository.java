@@ -2,20 +2,26 @@ package de.janschuri.lunaticfamily.common.database;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.config.DatabaseConfig;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticfamily.common.handler.query.QAdoption;
 import de.janschuri.lunaticfamily.common.handler.query.QFamilyPlayer;
 import de.janschuri.lunaticfamily.common.handler.query.QMarriage;
 import de.janschuri.lunaticfamily.common.handler.query.QSiblinghood;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import io.ebean.Database;
+import io.ebean.Expr;
 import io.ebean.config.dbplatform.DatabasePlatform;
 import io.ebean.datasource.DataSourceConfig;
 import io.ebean.platform.mysql.MySqlPlatform;
 import io.ebean.platform.sqlite.SQLitePlatform;
+import org.jetbrains.annotations.NotNull;
 import org.jooq.*;
+import org.jooq.Record;
 import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
+import org.jooq.impl.QOM;
 import org.jooq.impl.SQLDataType;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
@@ -28,6 +34,7 @@ import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -335,6 +342,149 @@ public class DatabaseRepository {
                 .filter(migration -> migration != null)
                 .sorted(Comparator.comparing((Migration m) -> m.getClass().getSimpleName()))
                 .collect(Collectors.toList());
+    }
+
+    public static boolean canMigrate() {
+        try (Connection conn = getConnection()) {
+            DSLContext context = DSL.using(conn, getSQLDialect());
+
+            if (!tableExists(context, "marry_players") || !tableExists(context, "marry_partners")) {
+                return false;
+            }
+        } catch (SQLException e) {
+            Logger.errorLog("Error while checking migration: " + e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    public static boolean migrateMarriageMaster() {
+        try (Connection conn = getConnection()) {
+            DSLContext context = DSL.using(conn, getSQLDialect());
+
+            String oldPlayerTableName = "marry_players";
+            String oldMarriagesTableName = "marry_partners";
+
+            if (!tableExists(context, oldPlayerTableName) || !tableExists(context, oldMarriagesTableName)) {
+                Logger.errorLog("Old tables do not exist");
+                return false;
+            }
+
+            List<Record> players = context.select()
+                    .from(oldPlayerTableName)
+                    .fetch();
+
+            Map<Long, UUID> playerMapping = new HashMap<>();
+            List<FamilyPlayer> familyPlayers = new ArrayList<>();
+
+            boolean first = true;
+
+            for (Record player : players) {
+                if (first) {
+                    first = false;
+                    // log all columns with values
+                    for (Field<?> field : player.fields()) {
+                        Logger.debugLog(field.getName() + ": " + player.get(field));
+                    }
+                }
+
+                long id = player.get("player_id", Long.class);
+
+                String uuidString = player.get("uuid", String.class);
+                String formattedUUID = uuidString.replaceFirst(
+                        "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
+                        "$1-$2-$3-$4-$5"
+                );
+
+                UUID uuid = UUID.fromString(formattedUUID);
+
+                playerMapping.put(id, uuid);
+
+                FamilyPlayer familyPlayer = FamilyPlayer.findOrCreate(uuid);
+                if (familyPlayer != null) {
+                    String name = player.get("name", String.class);
+                    familyPlayer.setName(name);
+
+                    familyPlayers.add(familyPlayer);
+                }
+            }
+
+            getDatabase().saveAll(familyPlayers);
+
+
+            Map<Long, Long> idMapping = new HashMap<>();
+
+            List<FamilyPlayer> newPlayers = getDatabase().find(FamilyPlayer.class)
+                    .where()
+                    .in("uuid", playerMapping.values())
+                    .findList();
+
+            for (FamilyPlayer newPlayer : newPlayers) {
+                long id = newPlayer.getId();
+                UUID uuid = newPlayer.getUUID();
+
+                for (Map.Entry<Long, UUID> entry : playerMapping.entrySet()) {
+                    if (entry.getValue().equals(uuid)) {
+                        idMapping.put(entry.getKey(), id);
+                        break;
+                    }
+                }
+            }
+
+            List<Record> marriages = context.select()
+                    .from(oldMarriagesTableName)
+                    .fetch();
+
+            List<Marriage> newMarriages = new ArrayList<>();
+
+            for (Record marriage : marriages) {
+                long oldPlayer1Id = marriage.get("player1", Long.class);
+                long oldPlayer2Id = marriage.get("player2", Long.class);
+                long oldPriestId = marriage.get("priest", Long.class);
+                Timestamp date = marriage.get("date", Timestamp.class);
+
+                long newPlayer1Id = idMapping.get(oldPlayer1Id);
+                long newPlayer2Id = idMapping.get(oldPlayer2Id);
+                long newPriestId = idMapping.get(oldPriestId);
+                if (newPriestId == newPlayer1Id || newPriestId == newPlayer2Id) {
+                    newPriestId = -1;
+                }
+
+                boolean oldMarriage = getDatabase().find(Marriage.class)
+                        .where()
+                        .or(
+                                Expr.and(Expr.eq("player1_id", newPlayer1Id), Expr.eq("player2_id", newPlayer2Id)),
+                                Expr.and(Expr.eq("player1_id", newPlayer2Id), Expr.eq("player2_id", newPlayer1Id))
+                        )
+                        .exists();
+
+                if (oldMarriage) {
+                    continue;
+                }
+
+                Marriage newMarriage = new Marriage(newPlayer1Id, newPlayer2Id, date);
+
+                if (newPriestId != -1) {
+                    newMarriage.setPriest(FamilyPlayer.find(newPriestId));
+                }
+
+                newMarriages.add(newMarriage);
+            }
+
+            getDatabase().saveAll(newMarriages);
+
+        } catch (SQLException e) {
+            Logger.errorLog("Error while migrating marriage master: " + e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    protected static boolean tableExists(DSLContext create, String tableName) {
+        @NotNull List<Table<?>> tables = create.meta().getTables(tableName);
+        return !tables.isEmpty();
     }
 }
 

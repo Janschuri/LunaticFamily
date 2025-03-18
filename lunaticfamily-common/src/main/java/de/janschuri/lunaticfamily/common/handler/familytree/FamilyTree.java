@@ -84,7 +84,7 @@ public class FamilyTree {
 
         treeAdvancements.clear();
 
-        int egoId = familyPlayer.getId();
+        long egoId = familyPlayer.getId();
         UUID egoUUID = familyPlayer.getUUID();
         String egoGender = familyPlayer.getGender();
         String egoKey = "ego";
@@ -200,7 +200,7 @@ public class FamilyTree {
 
         int x = getNextX(y, side);
 
-        int partnerId = partner.getId();
+        long partnerId = partner.getId();
         UUID partnerUUID = partner.getUUID();
         String partnerGender = partner.getGender();
         String partnerLang = getRelationLang(partnerKey, partnerGender);
@@ -228,7 +228,7 @@ public class FamilyTree {
 
     public HiddenAdvancement addSiblingAdvancement(TreeAdvancement siblingsAnchor, TreeAdvancement.Side side, FamilyPlayer sibling, String siblingKey, int x) {
 
-        int siblingId = sibling.getId();
+        long siblingId = sibling.getId();
         UUID siblingUUID = sibling.getUUID();
         String siblingGender = sibling.getGender();
         String siblingLang = getRelationLang(siblingKey, siblingGender);
@@ -288,7 +288,7 @@ public class FamilyTree {
         int min = isFirstParent ? siblingsAmount * 2 : 0;
         int x = getNextX(y, side, min);
 
-        int parentId = parent.getId();
+        long parentId = parent.getId();
         UUID parentUUID = parent.getUUID();
         String parentGender = parent.getGender();
         String parentLang = getRelationLang(parentKey, parentGender);
@@ -339,7 +339,7 @@ public class FamilyTree {
 
         int x = getNextX(y, side, min);
 
-        int childId = child.getId();
+        long childId = child.getId();
         UUID childUUID = child.getUUID();
         String childGender = child.getGender();
         String childLang = getRelationLang(childKey, childGender);

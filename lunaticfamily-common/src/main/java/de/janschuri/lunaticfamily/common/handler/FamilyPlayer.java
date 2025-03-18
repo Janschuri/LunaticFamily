@@ -26,7 +26,7 @@ public class FamilyPlayer {
     @Identity
     @NotNull
     @GeneratedValue
-    private int id;
+    private long id;
     private final UUID uuid;
     private String name;
     private String skinURL;
@@ -60,10 +60,10 @@ public class FamilyPlayer {
     @OneToMany(mappedBy = "priest")
     private final List<Adoption> adoptionsAsPriest = new ArrayList<>();
 
-    private static final BiMap<UUID, Integer> ids = HashBiMap.create();
-    private static final Map<Integer, FamilyPlayer> familyPlayerMap = new HashMap<>();
+    private static final BiMap<UUID, Long> ids = HashBiMap.create();
+    private static final Map<Long, FamilyPlayer> familyPlayerMap = new HashMap<>();
 
-    public static FamilyPlayer find(int id) {
+    public static FamilyPlayer find(long id) {
         if (familyPlayerMap.containsKey(id)) {
             return familyPlayerMap.get(id);
         } else {
@@ -85,10 +85,12 @@ public class FamilyPlayer {
 
             if (familyPlayer == null) {
                 familyPlayer = new FamilyPlayer(uuid);
-                familyPlayer.save();
+                return familyPlayer;
             }
 
             ids.put(uuid, familyPlayer.id);
+
+
             familyPlayerMap.put(familyPlayer.id, familyPlayer);
 
             return familyPlayer;
@@ -99,7 +101,6 @@ public class FamilyPlayer {
         this.uuid = uuid;
         PlayerSender player = LunaticLib.getPlatform().getPlayerSender(uuid);
         this.name = player.getName();
-        this.name = this.name == null ? "null" : this.name;
 
         String skinURL = player.getSkinURL();
         this.skinURL = skinURL == null ? this.skinURL : skinURL;
@@ -117,7 +118,7 @@ public class FamilyPlayer {
 
     @Override
     public int hashCode() {
-        return Integer.hashCode(id);
+        return Long.hashCode(id);
     }
 
     public void update() {
@@ -126,6 +127,10 @@ public class FamilyPlayer {
     }
 
     public String getName() {
+        if (name == null) {
+            return "null";
+        }
+
         return name;
     }
 
@@ -142,7 +147,7 @@ public class FamilyPlayer {
         return this;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -152,6 +157,8 @@ public class FamilyPlayer {
 
     public FamilyPlayer save() {
         DatabaseRepository.getDatabase().save(this);
+        ids.put(uuid, id);
+        familyPlayerMap.put(id, this);
         return this;
     }
 

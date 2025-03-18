@@ -16,10 +16,9 @@ public class Adoption {
     @Id
     @Identity
     @NotNull
-    private int id;
+    private long id;
     private String emojiColor;
     @NotNull
-    @WhenCreated
     private Timestamp date;
     private Timestamp unadoptDate;
 
@@ -35,6 +34,7 @@ public class Adoption {
     public Adoption(FamilyPlayer parent, FamilyPlayer child) {
         this.parent = parent;
         this.child = child;
+        this.date = new Timestamp(System.currentTimeMillis());
     }
 
     public Adoption save() {
