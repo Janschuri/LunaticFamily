@@ -19,6 +19,8 @@ public class RelationAdvancement implements TreeAdvancement {
     private final Side side;
     private float x;
 
+    public static final String DEFAULT_SKIN = "https://textures.minecraft.net/texture/2705fd94a0c431927fb4e639b0fcfb49717e412285a02b439e0112da22b2e2ec";
+
     public RelationAdvancement(@NotNull String key, TreeAdvancement parent, int id, UUID uuid, String gender, String title, String description, String skinUrl, float x, float y, Side side) {
         this.id = id;
         this.uuid = uuid;
@@ -27,7 +29,13 @@ public class RelationAdvancement implements TreeAdvancement {
         this.parent = parent;
         this.title = title;
         this.description = description;
-        this.skinUrl = skinUrl;
+
+        if (skinUrl != null || !skinUrl.isEmpty()) {
+            this.skinUrl = skinUrl;
+        } else {
+            this.skinUrl = DEFAULT_SKIN;
+        }
+
         this.x = x;
         this.y = y;
         this.side = side;

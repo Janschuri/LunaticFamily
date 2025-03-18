@@ -100,7 +100,7 @@ public class FamilyDBList extends FamilyCommand implements HasParams, HasParentC
 
             int id = player.getId();
             String uuid = player.getUUID() == null ? "null" : player.getUUID().toString();
-            String skinURL = player.getGender() == null ? "null" : player.getSkinURL();
+            String skinURL = player.getSkinURL() == null ? "null" : player.getSkinURL();
             String background = player.getBackground() == null ? "null" : player.getBackground();
             String name = player.getName() == null ? "null" : player.getName();
             String gender = player.getGender() == null ? "null" : player.getGender();

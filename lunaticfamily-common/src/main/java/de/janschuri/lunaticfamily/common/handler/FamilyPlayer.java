@@ -63,8 +63,6 @@ public class FamilyPlayer {
     private static final BiMap<UUID, Integer> ids = HashBiMap.create();
     private static final Map<Integer, FamilyPlayer> familyPlayerMap = new HashMap<>();
 
-    public static final String DEFAULT_SKIN = "https://textures.minecraft.net/texture/2705fd94a0c431927fb4e639b0fcfb49717e412285a02b439e0112da22b2e2ec";
-
     public static FamilyPlayer find(int id) {
         if (familyPlayerMap.containsKey(id)) {
             return familyPlayerMap.get(id);
@@ -105,7 +103,6 @@ public class FamilyPlayer {
 
         String skinURL = player.getSkinURL();
         this.skinURL = skinURL == null ? this.skinURL : skinURL;
-        this.skinURL = this.skinURL == null ? DEFAULT_SKIN : this.skinURL;
         this.gender = LunaticFamily.getConfig().getDefaultGender();
         this.background = LunaticFamily.getConfig().getDefaultBackground();
     }
