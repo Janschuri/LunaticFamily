@@ -1,24 +1,38 @@
 package de.janschuri.lunaticfamily.common.commands.adopt;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class AdoptUnset extends Subcommand {
+public class AdoptUnset extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey notAdoptedMK = new CommandMessageKey(this,"not_adopted");
-    private final CommandMessageKey unsetMK = new CommandMessageKey(this,"unset");
-    private final CommandMessageKey unsetBySingleMK = new CommandMessageKey(this,"unset_by_single");
+    private static final AdoptUnset INSTANCE = new AdoptUnset();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Unset the adoption of a child by a player."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Setze die Adoption eines Kindes durch einen Spieler zurück."));
+    private static final CommandMessageKey NOT_ADOPTED_MK = new LunaticCommandMessageKey(INSTANCE, "not_adopted")
+            .defaultMessage("en", "%player% is not adopted.")
+            .defaultMessage("de", "%player% ist nicht adoptiert.");
+    private static final CommandMessageKey UNSET_MK = new LunaticCommandMessageKey(INSTANCE, "unset")
+            .defaultMessage("en", "You have dissolved the adoption of %child% by %parent1% and %parent2%.")
+            .defaultMessage("de", "Du hast die Adoption von %child% durch %parent1% und %parent2% aufgelöst.");
+    private static final CommandMessageKey UNSET_BY_SINGLE_MK = new LunaticCommandMessageKey(INSTANCE, "unset_by_single")
+            .defaultMessage("en", "You have dissolved the adoption of %child% by %parent%.")
+            .defaultMessage("de", "Du hast die Adoption von %child% durch %parent% aufgelöst.");
+
 
 
     @Override
@@ -44,7 +58,6 @@ public class AdoptUnset extends Subcommand {
         }
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("AdoptUnsetSubcommand: Wrong usage");
             return true;
         }
 
@@ -52,34 +65,34 @@ public class AdoptUnset extends Subcommand {
         String player1Arg = args[0];
         UUID childUUID = Utils.getUUIDFromArg(player1Arg);
         if (childUUID == null) {
-            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                    .replaceText(getTextReplacementConfig("%player%", player1Arg)));
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", player1Arg)));
             return true;
         }
 
 
-        FamilyPlayerImpl childFam = new FamilyPlayerImpl(childUUID);
+        FamilyPlayer childFam = getFamilyPlayer(childUUID);
 
         if (!childFam.isAdopted()) {
-            sender.sendMessage(getMessage(notAdoptedMK)
-                    .replaceText(getTextReplacementConfig("%player%", childFam.getName())));
+            sender.sendMessage(getMessage(NOT_ADOPTED_MK,
+                placeholder("%player%", childFam.getName())));
             return true;
         }
-        FamilyPlayerImpl firstParentFam = (FamilyPlayerImpl) childFam.getParents().get(0);
+        FamilyPlayer firstParentFam = childFam.getParents().get(0);
 
         if (firstParentFam.isMarried()) {
-            FamilyPlayerImpl secondParentFam = firstParentFam.getPartner();
-            sender.sendMessage(getMessage(unsetMK)
-                    .replaceText(getTextReplacementConfig("%child%", childFam.getName()))
-                    .replaceText(getTextReplacementConfig("%parent1%", firstParentFam.getName()))
-                    .replaceText(getTextReplacementConfig("%parent2%", secondParentFam.getName())));
+            FamilyPlayer secondParentFam = firstParentFam.getPartner();
+            sender.sendMessage(getMessage(UNSET_MK,
+                placeholder("%child%", childFam.getName()),
+                placeholder("%parent1%", firstParentFam.getName()),
+                placeholder("%parent2%", secondParentFam.getName())));
         } else {
-            sender.sendMessage(getMessage(unsetBySingleMK)
-                    .replaceText(getTextReplacementConfig("%child%", childFam.getName()))
-                    .replaceText(getTextReplacementConfig("%parent%", firstParentFam.getName())));
+            sender.sendMessage(getMessage(UNSET_BY_SINGLE_MK,
+                placeholder("%child%", childFam.getName()),
+                placeholder("%parent%", firstParentFam.getName())));
         }
 
-        firstParentFam.unadopt(childFam.getId());
+        firstParentFam.unadopt(childFam);
 
 
 
@@ -87,9 +100,16 @@ public class AdoptUnset extends Subcommand {
     }
 
     @Override
-    public List<Component> getParamsNames() {
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
+    }
+
+    @Override
+    public List<MessageKey> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK, false)
+                PLAYER_NAME_MK
         );
     }
 

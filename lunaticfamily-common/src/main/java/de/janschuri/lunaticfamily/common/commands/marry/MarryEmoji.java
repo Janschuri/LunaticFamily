@@ -1,13 +1,16 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
-import de.janschuri.lunaticfamily.common.utils.Logger;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextReplacementConfig;
@@ -16,13 +19,26 @@ import net.kyori.adventure.text.format.TextColor;
 
 import java.util.*;
 
-public class MarryEmoji extends Subcommand {
+public class MarryEmoji extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey noColorMK = new CommandMessageKey(this,"no_color");
-    private final CommandMessageKey colorSetMK = new CommandMessageKey(this,"color_set");
-    private final CommandMessageKey noMarriageMK = new CommandMessageKey(this,"no_marriage");
-    private final CommandMessageKey headerMK = new CommandMessageKey(this,"header");
+    private static final MarryEmoji INSTANCE = new MarryEmoji();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Change the color of your heart in the marriage list."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Ändere die Farbe deines Herzens in der Heiratsliste."));
+    private static final CommandMessageKey NO_COLOR_MK = new LunaticCommandMessageKey(INSTANCE, "no_color")
+            .defaultMessage("en", "You must specify a color.")
+            .defaultMessage("de", "Du musst eine Farbe angeben.");
+    private static final CommandMessageKey COLOR_SET_MK = new LunaticCommandMessageKey(INSTANCE, "color_set")
+            .defaultMessage("en", "You have chosen the color %color%.")
+            .defaultMessage("de", "Du hast die Farbe %color% gewählt.");
+    private static final CommandMessageKey NO_MARRIAGE_MK = new LunaticCommandMessageKey(INSTANCE, "no_marriage")
+            .defaultMessage("en", "You are not married!")
+            .defaultMessage("de", "Du bist nicht verheiratet!");
+    private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "header")
+            .defaultMessage("en", "Available colors:")
+            .defaultMessage("de", "Verfügbare Farben:");
+
 
 
     @Override
@@ -41,7 +57,7 @@ public class MarryEmoji extends Subcommand {
     }
 
     public boolean execute(Sender sender, String[] args) {
-        if (!(sender instanceof PlayerSender)) {
+        if (!(sender instanceof PlayerSender player)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
             return true;
         }
@@ -52,18 +68,17 @@ public class MarryEmoji extends Subcommand {
         }
 
 
-        PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         if (!playerFam.isMarried()) {
-            sender.sendMessage(getMessage(noMarriageMK));
+            sender.sendMessage(getMessage(NO_MARRIAGE_MK));
             return true;
         }
 
         if (args.length < 1) {
             ComponentBuilder builder = Component.text();
-            builder.append(getMessage(headerMK));
+            builder.append(getMessage(HEADER_MK));
             builder.append(Component.newline());
 
             for (String color : getParams().get(0).keySet()) {
@@ -89,7 +104,7 @@ public class MarryEmoji extends Subcommand {
         String color = args[0];
 
         if (!LunaticFamily.getConfig().getColors().containsKey(color) && !Utils.isValidHexCode(color)) {
-            sender.sendMessage(getMessage(noColorMK));
+            sender.sendMessage(getMessage(NO_COLOR_MK));
             return true;
         }
 
@@ -121,7 +136,7 @@ public class MarryEmoji extends Subcommand {
 
         TextReplacementConfig replacementConfig = TextReplacementConfig.builder().match("%color%").replacement(colorComponent).build();
 
-        Component msg = getMessage(colorSetMK).replaceText(replacementConfig);
+        Component msg = getMessage(COLOR_SET_MK).replaceText(replacementConfig);
 
         player.sendMessage(msg);
         playerFam.getMarriages().get(0).setEmojiColor(hexColor);
@@ -129,11 +144,18 @@ public class MarryEmoji extends Subcommand {
         return true;
     }
 
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
+    }
+
 
     @Override
-    public List<Component> getParamsNames() {
+    public List<MessageKey> getParamsNames() {
         return List.of(
-                getMessage(COLOR_MK, false)
+                COLOR_MK
         );
     }
 

@@ -1,24 +1,42 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
+import java.util.Map;
 import java.util.UUID;
 
-public class MarryGift extends Subcommand {
+public class MarryGift extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey noPartnerMK = new CommandMessageKey(this,"no_partner");
-    private final CommandMessageKey emptyHandMK = new CommandMessageKey(this,"empty_hand");
-    private final CommandMessageKey partnerFullInvMK = new CommandMessageKey(this,"partner_full_inv");
-    private final CommandMessageKey sentMK = new CommandMessageKey(this,"sent");
-    private final CommandMessageKey gotMK = new CommandMessageKey(this,"got");
+    private static final MarryGift INSTANCE = new MarryGift();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Gift the item in your hand to your partner."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Schenke den Gegenstand in deiner Hand deinem Partner."));
+    private static final CommandMessageKey NO_PARTNER_MK = new LunaticCommandMessageKey(INSTANCE, "no_partner")
+            .defaultMessage("en", "You are not married!")
+            .defaultMessage("de", "Du bist nicht verheiratet.");
+    private static final CommandMessageKey EMPTY_HAND_MK = new LunaticCommandMessageKey(INSTANCE, "empty_hand")
+            .defaultMessage("en", "You must be holding an item in your hand.")
+            .defaultMessage("de", "Du musst einen Gegenstand in deiner Hand halten.");
+    private static final CommandMessageKey PARTNER_FULL_INV_MK = new LunaticCommandMessageKey(INSTANCE, "partner_full_inv")
+            .defaultMessage("en", "Your partner has no space in their inventory.")
+            .defaultMessage("de", "Dein Partner hat keinen Platz in seinem Inventar.");
+    private static final CommandMessageKey SENT_MK = new LunaticCommandMessageKey(INSTANCE, "sent")
+            .defaultMessage("en", "You have gifted something to your partner.")
+            .defaultMessage("de", "Du hast deinem Partner etwas geschenkt.");
+    private static final CommandMessageKey GOT_MK = new LunaticCommandMessageKey(INSTANCE, "got")
+            .defaultMessage("en", "Your partner has gifted you something.")
+            .defaultMessage("de", "Dein Partner hat dir etwas geschenkt.");
+
 
 
     @Override
@@ -38,7 +56,7 @@ public class MarryGift extends Subcommand {
 
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!(sender instanceof PlayerSender)) {
+        if (!(sender instanceof PlayerSender player)) {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
             return true;
         }
@@ -48,34 +66,33 @@ public class MarryGift extends Subcommand {
             return true;
         }
 
-            PlayerSender player = (PlayerSender) sender;
-            UUID playerUUID = player.getUniqueId();
-            String name = player.getName();
-            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID, name);
+        UUID playerUUID = player.getUniqueId();
+            FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
             if (!playerFam.isMarried()) {
-                player.sendMessage(getMessage(noPartnerMK));
+                player.sendMessage(getMessage(NO_PARTNER_MK));
                 return true;
             }
 
-            UUID partnerUUID = playerFam.getPartner().getUniqueId();
+            UUID partnerUUID = playerFam.getPartner().getUUID();
             PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
 
             if (!partner.isOnline()) {
-                player.sendMessage(getMessage(PLAYER_OFFLINE_MK)
-                        .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+                player.sendMessage(getMessage(PLAYER_OFFLINE_MK,
+                        placeholder("%player%", partner.getName())
+                ));
                 return true;
             }
 
             if (!Utils.isPlayerOnRegisteredServer(partner)) {
-                player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
-                        .replaceText(getTextReplacementConfig("%player%", partner.getName()))
-                        .replaceText(getTextReplacementConfig("%server%", partner.getServerName())));
+                player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK,
+                    placeholder("%player%", partner.getName())
+                ));
                 return true;
             }
 
             if (!player.hasItemInMainHand()) {
-                player.sendMessage(getMessage(emptyHandMK));
+                player.sendMessage(getMessage(EMPTY_HAND_MK));
                 return true;
             }
 
@@ -83,15 +100,24 @@ public class MarryGift extends Subcommand {
                 byte[] item = player.getItemInMainHand();
                 if (partner.giveItemDrop(item)) {
                     player.removeItemInMainHand();
-                    player.sendMessage(getMessage(sentMK)
-                            .replaceText(getTextReplacementConfig("%player%", partner.getName())));
-                    partner.sendMessage(getMessage(gotMK)
-                            .replaceText(getTextReplacementConfig("%player%", player.getName())));
+                    player.sendMessage(getMessage(SENT_MK,
+                            placeholder("%player%", partner.getName())
+                    ));
+                    partner.sendMessage(getMessage(GOT_MK,
+                            placeholder("%player%", player.getName())
+                            ));
                 } else {
                     Logger.errorLog("Error while giving item to partner.");
                     Logger.errorLog("Item: " + item);
                     return false;
                 }
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 }

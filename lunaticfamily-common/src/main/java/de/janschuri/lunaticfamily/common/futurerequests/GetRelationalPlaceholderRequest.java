@@ -12,11 +12,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GetRelationalPlaceholderRequest extends FutureRequest<String> {
 
-    private static final String REQUEST_NAME = "LunaticFamily:GetPlaceholder";
-    private static final ConcurrentHashMap<Integer, CompletableFuture<String>> requestMap = new ConcurrentHashMap<>();
+    private static final String REQUEST_NAME = "LunaticFamily:GetRelationalPlaceholder";
+    private static final ConcurrentHashMap<Integer, CompletableFuture<String>> REQUEST_MAP = new ConcurrentHashMap<>();
 
     public GetRelationalPlaceholderRequest() {
-        super(REQUEST_NAME, requestMap);
+        super(REQUEST_NAME, REQUEST_MAP);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class GetRelationalPlaceholderRequest extends FutureRequest<String> {
         completeRequest(requestId, result);
     }
 
-    public String get(UUID uuid1, UUID uuid2, String placeholder) {
+    public CompletableFuture<String> get(UUID uuid1, UUID uuid2, String placeholder) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF(uuid1.toString());
         out.writeUTF(uuid2.toString());

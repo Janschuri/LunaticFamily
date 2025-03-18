@@ -1,7 +1,8 @@
 package de.janschuri.lunaticfamily.platform.bungee;
 
 import de.janschuri.lunaticfamily.common.futurerequests.SpawnParticlesCloudRequest;
-import de.janschuri.lunaticfamily.platform.FamilyTree;
+import de.janschuri.lunaticfamily.common.utils.Logger;
+import de.janschuri.lunaticfamily.platform.FamilyTreeManager;
 import de.janschuri.lunaticfamily.platform.Platform;
 import de.janschuri.lunaticfamily.platform.bungee.listener.JoinListener;
 import de.janschuri.lunaticfamily.platform.bungee.listener.QuitListener;
@@ -13,12 +14,14 @@ public class PlatformImpl implements Platform<Plugin> {
 
     @Override
     public boolean spawnParticlesCloud(UUID uuid, double[] position, String particleString) {
-       return new SpawnParticlesCloudRequest().get(uuid, position, particleString);
+       return new SpawnParticlesCloudRequest().get(uuid, position, particleString)
+                .thenApply(s -> s)
+                .join();
     }
 
     @Override
-    public FamilyTree getFamilyTree() {
-        return new FamilyTreeImpl();
+    public FamilyTreeManager getFamilyTreeManager() {
+        return new FamilyTreeManagerImpl();
     }
 
     @Override

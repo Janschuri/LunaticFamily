@@ -1,30 +1,45 @@
 package de.janschuri.lunaticfamily.common.commands.gender;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class GenderInfo extends Subcommand {
+public class GenderInfo extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey helpOthersMK = new CommandMessageKey(this,"help_others");
-    private final CommandMessageKey infoMK = new CommandMessageKey(this,"info");
-    private final CommandMessageKey infoOthersMK = new CommandMessageKey(this,"info_others");
+    private static final GenderInfo INSTANCE = new GenderInfo();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Show your gender.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Zeige dein Geschlecht.");
+    private static final CommandMessageKey HELP_OTHERS_MK = new LunaticCommandMessageKey(INSTANCE, "help_others")
+            .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Show the gender of a player.")
+            .defaultMessage("de", "&6/%command% %subcommand% &b<%param%> &7- Zeige das Geschlecht eines Spielers.");
+    private static final CommandMessageKey INFO_MK = new LunaticCommandMessageKey(INSTANCE, "info")
+            .defaultMessage("en", "Your gender is %gender%.")
+            .defaultMessage("de", "Dein Geschlecht ist %gender%.");
+    private static final CommandMessageKey INFO_OTHERS_MK = new LunaticCommandMessageKey(INSTANCE, "info_others")
+            .defaultMessage("en", "%player%'s gender is %gender%.")
+            .defaultMessage("de", "Das Geschlecht von %player% ist %gender%.");
+
 
     @Override
     public Map<CommandMessageKey, String> getHelpMessages() {
         return Map.of(
-                helpMK, getPermission(),
-                helpOthersMK, getPermission() + ".others"
+                HELP_MK, getPermission(),
+                HELP_OTHERS_MK, getPermission() + ".others"
         );
     }
 
@@ -50,57 +65,64 @@ public class GenderInfo extends Subcommand {
         }
 
         if (args.length == 0) {
-            if (!(sender instanceof PlayerSender)) {
+            if (!(sender instanceof PlayerSender player)) {
                 sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
                 return true;
             }
 
-            PlayerSender player = (PlayerSender) sender;
             UUID playerUUID = player.getUniqueId();
-            FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
-            sender.sendMessage(getMessage(infoMK)
-                    .replaceText(getTextReplacementConfig("%gender%", getGenderLang(playerFam.getGender()))));
+            FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+            sender.sendMessage(getMessage(INFO_MK,
+                placeholder("%gender%", getGenderLang(playerFam.getGender()))));
+            return true;
+        }
+
+        if (!sender.hasPermission(getPermission()+".others")) {
+            sender.sendMessage(getMessage(NO_PERMISSION_MK));
             return true;
         }
 
         String playerArg = args[0];
         UUID playerUUID;
 
+
+        FamilyPlayer player;
+
         if (Utils.isUUID(playerArg)) {
             playerUUID = UUID.fromString(playerArg);
 
-            if (PlayerDataTable.getID(playerUUID) < 0) {
-                sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                        .replaceText(getTextReplacementConfig("%player%", playerArg)));
+            if (DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uniqueId", playerUUID).findCount() == 0) {
+                sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", playerArg)));
                 return true;
             }
-        } else {
-            playerUUID = PlayerDataTable.getUUID(playerArg);
 
-            if (playerUUID == null) {
-                sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK)
-                        .replaceText(getTextReplacementConfig("%player%", playerArg)));
+            player = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uniqueId", playerUUID).findOne();
+        } else {
+            player = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", playerArg).findOne();
+
+            if (player == null) {
+                sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                placeholder("%player%", playerArg)));
                 return true;
             }
         }
 
-        FamilyPlayerImpl player = new FamilyPlayerImpl(playerUUID);
-
-        sender.sendMessage(getMessage(infoOthersMK)
-                .replaceText(getTextReplacementConfig("%player%", player.getName()))
-                .replaceText(getTextReplacementConfig("%gender%", getGenderLang(player.getGender()))));
+        sender.sendMessage(getMessage(INFO_OTHERS_MK,
+                placeholder("%player%", player.getName()),
+                placeholder("%gender%", getGenderLang(player.getGender()))));
         return true;
     }
 
     @Override
-    public List<Component> getParamsNames() {
+    public List<MessageKey> getParamsNames() {
         return List.of(
-                getMessage(PLAYER_NAME_MK, false)
+                PLAYER_NAME_MK
         );
     }
 
     @Override
     public List<Map<String, String>> getParams() {
-        return List.of(getOnlinePlayersParam());
+        return List.of(getOnlinePlayersParam(getPermission()+".others"));
     }
 }

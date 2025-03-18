@@ -1,51 +1,68 @@
 package de.janschuri.lunaticfamily.common.handler;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
+//import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
+import io.ebean.annotation.Identity;
+import io.ebean.annotation.NotNull;
+import io.ebean.annotation.WhenCreated;
+import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 
+@Entity
+@Table(name = "lunaticfamily_marriages")
 public class Marriage {
 
-    private final int id;
-    private final int player1ID;
-    private final int player2ID;
-    private final int priest;
-    private final String emoji;
-    private final Timestamp date;
-    private final Timestamp divorceDate;
+    @Id
+    @Identity
+    @NotNull
+    private long id;
+    @ManyToOne
+    @NotNull
+    private FamilyPlayer player1;
+    @ManyToOne
+    @NotNull
+    private FamilyPlayer player2;
+    @ManyToOne
+    private FamilyPlayer priest;
+    private String emojiColor;
+    @NotNull
+    private Timestamp date;
+    private Timestamp divorceDate;
 
-    public Marriage(int id) {
-        Marriage marriage = MarriagesTable.getMarriage(id);
-        this.id = marriage.id;
-        this.player1ID = marriage.player1ID;
-        this.player2ID = marriage.player2ID;
-        this.emoji = marriage.emoji;
-        this.priest = marriage.priest;
-        this.date = marriage.date;
-        this.divorceDate = marriage.divorceDate;
+    public Marriage(FamilyPlayer player1, FamilyPlayer player2) {
+        this.player1 = player1;
+        this.player2 = player2;
+        this.date = new Timestamp(System.currentTimeMillis());
     }
 
-    public Marriage(int id, int player1ID, int player2ID, int priest, String emoji, Timestamp date, Timestamp divorceDate) {
-        this.id = id;
-        this.player1ID = player1ID;
-        this.player2ID = player2ID;
-        this.priest = priest;
-        this.emoji = emoji;
-        this.date = date;
-        this.divorceDate = divorceDate;
+    public Marriage(long player1, long player2, Timestamp date) {
+        this.player1 = FamilyPlayer.find(player1);
+        this.player2 = FamilyPlayer.find(player2);
+        this.date = date != null ? date : new Timestamp(System.currentTimeMillis());
     }
 
-    public int getPlayer1ID() {
-        return player1ID;
+    public Marriage save() {
+        DatabaseRepository.getDatabase().save(this);
+        return this;
     }
 
-    public int getPlayer2ID() {
-        return player2ID;
+    public FamilyPlayer getPlayer1() {
+        return player1;
     }
 
-    public int getPriest() {
+    public FamilyPlayer getPlayer2() {
+        return player2;
+    }
+
+    public FamilyPlayer getPriest() {
         return priest;
+    }
+
+    public Marriage setPriest(FamilyPlayer priest) {
+        this.priest = priest;
+        return this;
     }
 
     public Timestamp getDate() {
@@ -56,9 +73,14 @@ public class Marriage {
         return divorceDate;
     }
 
+    public Marriage setDivorceDate() {
+        divorceDate = new Timestamp(System.currentTimeMillis());
+        return this;
+    }
+
     public String getEmojiColor() {
 
-        String color = emoji;
+        String color = emojiColor;
         if (color == null) {
             color = LunaticFamily.getConfig().getDefaultMarryEmojiColor();
         }
@@ -66,7 +88,8 @@ public class Marriage {
     }
 
     public void setEmojiColor(String color) {
-        MarriagesTable.saveEmojiColor(this.id, color);
+        emojiColor = color;
+        DatabaseRepository.getDatabase().save(this);
     }
 
     public String getColoredEmoji() {
@@ -81,15 +104,15 @@ public class Marriage {
         return divorceDate != null;
     }
 
-    public int getPartnerID(int playerID) {
-        if (playerID == player1ID) {
-            return player2ID;
+    public FamilyPlayer getPartner(FamilyPlayer playerFam) {
+        if (playerFam.equals(player1)) {
+            return player2;
         }
 
-        if (playerID == player2ID) {
-            return player1ID;
+        if (playerFam.equals(player2)) {
+            return player1;
         }
 
-        return -1;
+        return null;
     }
 }

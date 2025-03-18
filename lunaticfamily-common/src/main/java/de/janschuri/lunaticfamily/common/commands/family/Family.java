@@ -1,27 +1,49 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.commands.adopt.Adopt;
 import de.janschuri.lunaticfamily.common.commands.gender.Gender;
 import de.janschuri.lunaticfamily.common.commands.marry.Marry;
 import de.janschuri.lunaticfamily.common.commands.priest.Priest;
 import de.janschuri.lunaticfamily.common.commands.sibling.Sibling;
-import de.janschuri.lunaticfamily.common.utils.Logger;
-import de.janschuri.lunaticlib.LunaticCommand;
+import de.janschuri.lunaticlib.Command;
+import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
+import de.janschuri.lunaticlib.common.command.HasHelpCommand;
+import de.janschuri.lunaticlib.common.command.HasSubcommands;
 import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
-import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
 import java.util.List;
+import java.util.Map;
 
-public class Family extends Subcommand {
+public class Family extends FamilyCommand implements HasHelpCommand, HasSubcommands {
+
+    private static final Family INSTANCE = new Family();
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Show the family help page.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Zeige die Familien Hilfe Seite.");
+    private static final CommandMessageKey HELP_HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "help_header")
+            .defaultMessage("en", "Family-Help")
+            .defaultMessage("de", "Familien-Hilfe");
 
     @Override
     public LunaticHelpCommand getHelpCommand() {
-        return new LunaticHelpCommand(getLanguageConfig(), this);
+        return new LunaticHelpCommand(this);
     }
 
     @Override
-    public List<LunaticCommand> getSubcommands() {
+    public MessageKey pageParamName() {
+        return PAGE_MK;
+    }
+
+    @Override
+    public MessageKey getHelpHeader() {
+        return HELP_HEADER_MK;
+    }
+
+    @Override
+    public List<Command> getSubcommands() {
         return List.of(
                 new FamilyList(),
                 new FamilyBackground(),
@@ -35,6 +57,7 @@ public class Family extends Subcommand {
                 new Marry(),
                 new Priest(),
                 new FamilyDBList(),
+                new FamilyMigrate(),
                 getHelpCommand()
         );
     }
@@ -45,40 +68,20 @@ public class Family extends Subcommand {
     }
 
     @Override
-    public String getName() {
-        return "family";
-    }
-
-    @Override
-    public boolean execute(Sender sender, String[] args) {
-        if (!sender.hasPermission(getPermission())) {
-            sender.sendMessage(getMessage(NO_PERMISSION_MK));
-            return true;
-        }
-        if (args.length == 0) {
-            getHelpCommand().execute(sender, args);
-            return true;
-        }
-
-        final String subcommand = args[0];
-
-        for (LunaticCommand sc : getSubcommands()) {
-            if (checkIsSubcommand(sc, subcommand)) {
-                String[] newArgs = new String[args.length - 1];
-                System.arraycopy(args, 1, newArgs, 0, args.length - 1);
-                return sc.execute(sender, newArgs);
-            }
-        }
-        sender.sendMessage(getMessage(WRONG_USAGE_MK));
-        Logger.debugLog("Family: Wrong usage");
-
-
-        return true;
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     @Override
     public boolean isPrimaryCommand() {
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return "family";
     }
 
 }

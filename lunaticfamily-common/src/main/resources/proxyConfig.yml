@@ -12,8 +12,8 @@
 # ───────────────────────────────────────────────#
 
 
-
-servers: # List of servers that are connected to the proxy via LunaticFamily
+# List of servers that are connected to the proxy via LunaticFamily
+servers:
   - "server1"
   - "server2"
 

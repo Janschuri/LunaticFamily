@@ -1,9 +1,8 @@
 package de.janschuri.lunaticfamily.platform.velocity;
 
 import com.velocitypowered.api.plugin.PluginContainer;
-import com.velocitypowered.api.proxy.ProxyServer;
 import de.janschuri.lunaticfamily.common.futurerequests.SpawnParticlesCloudRequest;
-import de.janschuri.lunaticfamily.platform.FamilyTree;
+import de.janschuri.lunaticfamily.platform.FamilyTreeManager;
 import de.janschuri.lunaticfamily.platform.Platform;
 import de.janschuri.lunaticfamily.platform.velocity.listener.JoinListener;
 import de.janschuri.lunaticfamily.platform.velocity.listener.QuitListener;
@@ -13,12 +12,14 @@ import java.util.UUID;
 public class PlatformImpl implements Platform<PluginContainer> {
     @Override
     public boolean spawnParticlesCloud(UUID uuid, double[] position, String particleString) {
-        return new SpawnParticlesCloudRequest().get(uuid, position, particleString);
+        return new SpawnParticlesCloudRequest().get(uuid, position, particleString)
+                .thenApply(s -> s)
+                .join();
     }
 
     @Override
-    public FamilyTree getFamilyTree() {
-        return new FamilyTreeImpl();
+    public FamilyTreeManager getFamilyTreeManager() {
+        return new FamilyTreeManagerImpl();
     }
 
     @Override

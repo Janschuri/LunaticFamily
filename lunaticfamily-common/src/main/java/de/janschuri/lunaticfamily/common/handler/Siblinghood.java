@@ -1,54 +1,61 @@
 package de.janschuri.lunaticfamily.common.handler;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
-import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
+import io.ebean.annotation.Identity;
+import io.ebean.annotation.NotNull;
+import io.ebean.annotation.WhenCreated;
+import jakarta.persistence.*;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 
+@Entity
+@Table(name = "lunaticfamily_siblinghoods")
 public class Siblinghood {
 
-    private final int id;
-    private final int player1ID;
-    private final int player2ID;
-    private final int priest;
-    private final String emoji;
-    private final Timestamp date;
-    private final Timestamp unsiblingDate;
+    @Id
+    @Identity
+    @NotNull
+    private long id;
+    @ManyToOne
+    @NotNull
+    private FamilyPlayer player1;
+    @ManyToOne
+    @NotNull
+    private FamilyPlayer player2;
+    @ManyToOne
+    private FamilyPlayer priest;
+    private String emojiColor;
+    @NotNull
+    private Timestamp date;
+    private Timestamp unsiblingDate;
 
-    public Siblinghood(int id) {
-        Siblinghood siblinghood = SiblinghoodsTable.getSiblinghood(id);
-        assert siblinghood != null;
-        this.id = siblinghood.id;
-        this.player1ID = siblinghood.player1ID;
-        this.player2ID = siblinghood.player2ID;
-        this.priest = siblinghood.priest;
-        this.emoji = siblinghood.emoji;
-        this.date = siblinghood.date;
-        this.unsiblingDate = siblinghood.unsiblingDate;
+    public Siblinghood(FamilyPlayer player1, FamilyPlayer player2) {
+        this.player1 = player1;
+        this.player2 = player2;
+        this.date = new Timestamp(System.currentTimeMillis());
     }
 
-    public Siblinghood(int id, int player1ID, int player2ID, int priest, String emoji, Timestamp date, Timestamp unsiblingDate) {
-        this.id = id;
-        this.player1ID = player1ID;
-        this.player2ID = player2ID;
-        this.priest = priest;
-        this.emoji = emoji;
-        this.date = date;
-        this.unsiblingDate = unsiblingDate;
+    public Siblinghood save() {
+        DatabaseRepository.getDatabase().save(this);
+        return this;
     }
 
-    public int getPlayer1ID() {
-        return player1ID;
+    public FamilyPlayer getPlayer1() {
+        return player1;
     }
 
-    public int getPlayer2ID() {
-        return player2ID;
+    public FamilyPlayer getPlayer2() {
+        return player2;
     }
 
-    public int getPriest() {
+    public FamilyPlayer getPriest() {
         return priest;
+    }
+
+    public Siblinghood setPriest(FamilyPlayer priest) {
+        this.priest = priest;
+        return this;
     }
 
     public Timestamp getDate() {
@@ -59,16 +66,22 @@ public class Siblinghood {
         return unsiblingDate;
     }
 
+    public Siblinghood setUnsiblingDate() {
+        this.unsiblingDate = new Timestamp(System.currentTimeMillis());
+        return this;
+    }
+
     public String getEmojiColor() {
-        String color = emoji;
+        String color = emojiColor;
         if (color == null) {
             color = LunaticFamily.getConfig().getDefaultSiblingEmojiColor();
         }
         return color;
     }
 
-    public void setEmojiColor(String color) {
-        SiblinghoodsTable.saveEmojiColor(this.id, color);
+    public Siblinghood setEmojiColor(String color) {
+        emojiColor = color;
+        return this;
     }
 
     public String getColoredEmoji() {
@@ -79,15 +92,17 @@ public class Siblinghood {
         return "⭐";
     }
 
-    public int getSiblingID(int playerID) {
-        if (playerID == player1ID) {
-            return player2ID;
+    public FamilyPlayer getSibling(FamilyPlayer playerFam) {
+
+        if (player1.equals(playerFam)) {
+            return player2;
         }
 
-        if (playerID == player2ID) {
-            return player1ID;
+        if (player2.equals(playerFam)) {
+            return player1;
         }
 
-        return -1;
+
+        return null;
     }
 }

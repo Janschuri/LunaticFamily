@@ -1,29 +1,44 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
-import de.janschuri.lunaticfamily.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
-import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
-import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
+import de.janschuri.lunaticfamily.common.handler.Adoption;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.common.handler.Marriage;
+import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-public class FamilyDelete extends Subcommand {
+public class FamilyDelete extends FamilyCommand implements HasParentCommand, HasParams {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey confirmMK = new CommandMessageKey(this,"confirm");
-    private final CommandMessageKey deletedMK = new CommandMessageKey(this,"deleted");
-    private final CommandMessageKey cancelMK = new CommandMessageKey(this, "cancel");
+    private static final FamilyDelete INSTANCE = new FamilyDelete();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Delete a player from the database."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Lösche einen Spieler aus der Datenbank."));
+    private static final CommandMessageKey CONFIRM_MK = new LunaticCommandMessageKey(INSTANCE, "confirm")
+            .defaultMessage("en", "Do you really want to delete %uuid% from the database?")
+            .defaultMessage("de", "Willst du %uuid% wirklich aus der Datenbank löschen?");
+    private static final CommandMessageKey DELETED_MK = new LunaticCommandMessageKey(INSTANCE, "deleted")
+            .defaultMessage("en", "You have deleted %uuid% from the database.")
+            .defaultMessage("de", "Du hast %uuid% aus der Datenbank gelöscht.");
+    private static final CommandMessageKey CANCEL_MK = new LunaticCommandMessageKey(INSTANCE, "cancel")
+            .defaultMessage("en", "You have canceled the deletion of %uuid%.")
+            .defaultMessage("de", "Du hast die Löschung von %uuid% abgebrochen.");
+
 
 
     @Override
@@ -55,7 +70,6 @@ public class FamilyDelete extends Subcommand {
 
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
-            Logger.debugLog("FamilyDeleteSubcommand: Wrong usage");
             return true;
         }
 
@@ -74,34 +88,52 @@ public class FamilyDelete extends Subcommand {
         String playerArg = args[0];
 
         if (!Utils.isUUID(playerArg)) {
-            sender.sendMessage(getMessage(NO_UUID_MK)
-                    .replaceText(getTextReplacementConfig("%input%", playerArg)));
+            sender.sendMessage(getMessage(NO_UUID_MK,
+                placeholder("%input%", playerArg)));
             return true;
         }
 
         if (confirm) {
             UUID playerUUID = UUID.fromString(playerArg);
-            FamilyPlayer playerFam = new FamilyPlayerImpl(playerUUID);
-            MarriagesTable.deleteMarriage(playerFam.getId());
-            AdoptionsTable.deleteAllAdoptions(playerFam.getId());
-            SiblinghoodsTable.deleteSiblinghood(playerFam.getId());
-            PlayerDataTable.deletePlayerData(playerArg);
-            sender.sendMessage(getMessage(deletedMK).replaceText(getTextReplacementConfig("%uuid%", playerArg)));
+            FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+
+            for (Marriage marriage : playerFam.getMarriages()) {
+                DatabaseRepository.getDatabase().delete(marriage);
+            }
+
+            for (Adoption adoption : playerFam.getAdoptionsAsChild()) {
+                DatabaseRepository.getDatabase().delete(adoption);
+            }
+
+            for (Adoption adoption : playerFam.getAdoptionsAsParent()) {
+                DatabaseRepository.getDatabase().delete(adoption);
+            }
+
+            for (Siblinghood siblinghood : playerFam.getSiblinghoods()) {
+                DatabaseRepository.getDatabase().delete(siblinghood);
+            }
+
+            DatabaseRepository.getDatabase().delete(playerFam);
+
+            sender.sendMessage(getMessage(DELETED_MK,
+                placeholder("%uuid%", playerArg)));
             return true;
         }
 
         if (cancel) {
-            sender.sendMessage(getMessage(cancelMK).replaceText(getTextReplacementConfig("%uuid%", playerArg)));
+            sender.sendMessage(getMessage(CANCEL_MK,
+                placeholder("%uuid%", playerArg)));
             return true;
         }
 
 
         player.sendMessage(Utils.getClickableDecisionMessage(
                 getPrefix(),
-                getMessage(confirmMK, false).replaceText(getTextReplacementConfig("%uuid%", playerArg)),
-                getMessage(CONFIRM_MK, false),
+                getMessage(CONFIRM_MK.noPrefix(),
+                placeholder("%uuid%", playerArg)),
+                getMessage(CONFIRM_MK.noPrefix()),
                 "/family delete " + playerArg + " confirm",
-                getMessage(CANCEL_MK, false),
+                getMessage(CANCEL_MK.noPrefix()),
                 "/family delete " + playerArg + " cancel"),
                 LunaticFamily.getConfig().decisionAsInvGUI()
         );
@@ -111,9 +143,21 @@ public class FamilyDelete extends Subcommand {
     }
 
     @Override
-    public List<Component> getParamsNames() {
-        return List.of(
-            Component.text("UUID")
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+            HELP_MK, getPermission()
         );
+    }
+
+    @Override
+    public List<MessageKey> getParamsNames() {
+        return List.of(
+                UUID_MK
+        );
+    }
+
+    @Override
+    public List<Map<String, String>> getParams() {
+        return List.of();
     }
 }

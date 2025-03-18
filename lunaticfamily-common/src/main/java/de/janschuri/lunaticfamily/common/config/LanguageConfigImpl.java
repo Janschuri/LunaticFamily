@@ -1,19 +1,21 @@
 package de.janschuri.lunaticfamily.common.config;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import de.janschuri.lunaticfamily.LanguageConfig;
+import de.janschuri.lunaticfamily.FamilyLanguageConfig;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticlib.common.config.LunaticLanguageConfigImpl;
+import de.janschuri.lunaticfamily.common.utils.Logger;
+import de.janschuri.lunaticlib.common.config.LunaticLanguageConfig;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.*;
 
-public class LanguageConfigImpl extends LunaticLanguageConfigImpl implements LanguageConfig {
+public class LanguageConfigImpl extends LunaticLanguageConfig implements FamilyLanguageConfig {
     private Map<String, String> genderLang = new HashMap<>();
     private List<String> genders = new ArrayList<>();
     private Map<String, String> colorsTranslations = new HashMap<>();
     private final Map<String, Map<String, String>> relationships = new HashMap<>();
+
+
 
     public LanguageConfigImpl(Path dataDirectory, String languageKey) {
         super(dataDirectory, languageKey);
@@ -22,16 +24,51 @@ public class LanguageConfigImpl extends LunaticLanguageConfigImpl implements Lan
     public void load() {
         super.load();
 
+
         genderLang = getStringMap("genders");
 
         genders = getKeys("family_relationships");
 
         for (String gender : genders) {
             Map<String, String> map = getStringMap("family_relationships." + gender);
-            relationships.put(gender, map);
+            Map<String, String> remappedMap = getRemappedMap(map);
+
+            relationships.put(gender, remappedMap);
         }
 
         colorsTranslations = getStringMap("color_translations");
+    }
+
+    private static @NotNull Map<String, String> getRemappedMap(Map<String, String> map) {
+        Map<String, String> remappedMap = new HashMap<>();
+
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+
+            String newKey = entry.getKey().toLowerCase();
+            for (Map.Entry<String, String> remap : ConfigImpl.getRemappedRelationships().entrySet()) {
+                 newKey = newKey.replaceAll(remap.getKey(), remap.getValue());
+            }
+
+
+            if (entry.getKey().contains("sibling_in_law")) {
+                String newKey1 = newKey.replaceAll("sibling_in_law", "sibling_partner");
+                String newKey2 = newKey.replaceAll("sibling_in_law", "partner_sibling");
+
+                remappedMap.put(newKey1, entry.getValue());
+                remappedMap.put(newKey2, entry.getValue());
+
+            } else {
+                remappedMap.put(newKey, entry.getValue());
+            }
+
+        }
+
+        return remappedMap;
+    }
+
+    @Override
+    protected String getPackage() {
+        return "de.janschuri.lunaticfamily.common";
     }
 
     public String getGenderLang(String key) {
@@ -60,16 +97,7 @@ public class LanguageConfigImpl extends LunaticLanguageConfigImpl implements Lan
     }
 
     public String getRelation(String relation, String gender) {
-        String relationKey = relation
-                .replace("first_", "")
-                .replace("second_", "")
-                .replace("third_", "")
-                .replace("fourth_", "")
-                .replace("fifth_", "")
-                .replace("sixth_", "")
-                .replace("seventh__", "")
-                .replace("eighth_", "");
-
+        String relationKey = relation.replaceAll("_\\d+", "");
 
         if (genders.contains(gender)) {
             Map<String, String> relations = relationships.get(gender);

@@ -3,22 +3,25 @@ package de.janschuri.lunaticfamily.common.futurerequests;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import de.janschuri.lunaticfamily.TreeAdvancement;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.utils.Logger;
-import de.janschuri.lunaticfamily.platform.FamilyTree;
+import de.janschuri.lunaticfamily.platform.FamilyTreeManager;
 import de.janschuri.lunaticlib.common.futurerequests.FutureRequest;
 
-import java.util.*;
+import java.io.*;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
 
     private static final String REQUEST_NAME = "LunaticFamily:UpdateFamilyTree";
-    private static final ConcurrentHashMap<Integer, CompletableFuture<Boolean>> requestMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, CompletableFuture<Boolean>> REQUEST_MAP = new ConcurrentHashMap<>();
 
     public UpdateFamilyTreeRequest() {
-        super(REQUEST_NAME, requestMap);
+        super(REQUEST_NAME, REQUEST_MAP);
     }
 
     @Override
@@ -26,37 +29,22 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
         boolean success = false;
 
         UUID uuid = UUID.fromString(in.readUTF());
-        String background = in.readUTF();
-        int size = in.readInt();
+        int length = in.readInt();
+        byte[] byteArray = new byte[length];
+        in.readFully(byteArray);
 
-        List<String> familyList = new ArrayList<>();
-        Map<String, String> names = new HashMap<>();
-        Map<String, String> skins = new HashMap<>();
-        Map<String, String> relationLangs = new HashMap<>();
+        List<TreeAdvancement> treeAdvancements = fromByteArray(byteArray);
 
-        for (int i = 0; i < size; i++) {
-            String relation = in.readUTF();
-            String name = in.readUTF();
-            String skinURL = in.readUTF();
-            String relationLang = in.readUTF();
+        if (treeAdvancements != null) {
+            FamilyTreeManager familyTreeManager = LunaticFamily.getPlatform().getFamilyTreeManager();
 
-            familyList.add(relation);
-            names.put(relation, name);
-            skins.put(relation, skinURL);
-            relationLangs.put(relation, relationLang);
-        }
-
-        FamilyTree familyTree = LunaticFamily.getPlatform().getFamilyTree();
-
-        if (familyTree == null) {
-            Logger.errorLog("FamilyTree is null. Please check if CrazyAdvancementsAPI is installed or disable it!");
+            success = familyTreeManager.update("", uuid, treeAdvancements)
+                    .thenApply(b -> b)
+                    .join();
         } else {
-            success = familyTree.update("", uuid, background, familyList, names, skins, relationLangs);
+            Logger.errorLog("Failed to deserialize TreeAdvancements");
         }
 
-        if (!success) {
-            Logger.debugLog( "UpdateFamilyTreeRequest: Failed to update family tree for player with UUID " + uuid + ".");
-        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeBoolean(success);
@@ -69,32 +57,41 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
         completeRequest(requestId, success);
     }
 
-    public boolean get(String server, UUID uuid, String background, List<String> familyList, Map<String, String> names, Map<String, String> skins, Map<String, String> relationLangs) {
-        if (new IsFamilyTreeMapLoadedRequest().get(server)) {
-            Logger.debugLog("FamilyTreeMap is loaded.");
-        } else {
-            Logger.debugLog("FamilyTreeMap is not loaded.");
-            new LoadFamilyTreeMapRequest().get(server);
-        }
-
+    public CompletableFuture<Boolean> get(String server, UUID uuid, List<TreeAdvancement> treeAdvancements) {
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF(uuid.toString());
-        out.writeUTF(background);
 
-        Logger.debugLog("UpdateFamilyTreeRequest: " + familyList.toString());
-
-        int size = familyList.size();
-        out.writeInt(size);
-
-
-        for (String relation : familyList) {
-            out.writeUTF(relation);
-            out.writeUTF(names.get(relation));
-            out.writeUTF(skins.get(relation));
-            out.writeUTF(relationLangs.get(relation));
-        }
+        byte[] byteArray = toByteArray(treeAdvancements);
+        out.writeInt(byteArray.length);
+        out.write(byteArray);
 
         return sendRequest(server, out.toByteArray());
+    }
+
+    public static byte[] toByteArray(List<TreeAdvancement> treeAdvancements) {
+        try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteStream)) {
+
+            // Serialize the list
+            objectOutputStream.writeObject(treeAdvancements);
+
+            return byteStream.toByteArray(); // Return serialized byte array
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new byte[0]; // Return empty array in case of failure
+        }
+    }
+
+    public static List<TreeAdvancement> fromByteArray(byte[] byteArray) {
+        try (ByteArrayInputStream byteStream = new ByteArrayInputStream(byteArray);
+             ObjectInputStream objectInputStream = new ObjectInputStream(byteStream)) {
+
+            // Deserialize the byte array into a List<TreeAdvancement>
+            return (List<TreeAdvancement>) objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null; // Return null in case of failure
+        }
     }
 }

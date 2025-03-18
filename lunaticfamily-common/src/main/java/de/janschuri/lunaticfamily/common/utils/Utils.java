@@ -1,15 +1,13 @@
 package de.janschuri.lunaticfamily.common.utils;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
-import de.janschuri.lunaticlib.DecisionMessage;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.utils.Mode;
-import net.kyori.adventure.text.Component;
 
-import java.nio.file.LinkOption;
-import java.util.List;
+import java.util.Arrays;
 import java.util.UUID;
 
 public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
@@ -34,7 +32,8 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
             }
             amount *= factor;
 
-            return LunaticLib.getPlatform().getVault().hasEnoughMoney(serverName, uuid, amount);
+            return LunaticLib.getPlatform().getVault().hasEnoughMoney(serverName, uuid, amount)
+                    .thenApply(hasEnoughMoney -> hasEnoughMoney).join();
         }
         return true;
     }
@@ -52,7 +51,8 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
             }
             amount *= factor;
 
-            return LunaticLib.getPlatform().getVault().withdrawMoney(serverName, uuid, amount);
+            return LunaticLib.getPlatform().getVault().withdrawMoney(serverName, uuid, amount)
+                    .thenApply(withdrawn -> withdrawn).join();
 
         }
         return true;
@@ -67,25 +67,22 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
     }
 
     public static UUID getUUIDFromArg(String arg) {
-        UUID uuid;
+        UUID uuid = null;
 
-        Logger.debugLog("arg: " + arg);
 
         if (isUUID(arg)) {
-            Logger.debugLog("arg is UUID");
 
             uuid = UUID.fromString(arg);
 
-            if (PlayerDataTable.getID(uuid) < 0) {
+            if (DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uuid", uuid).findCount() == 0) {
                 uuid = null;
             }
         } else {
-            Logger.debugLog("arg is not UUID");
-            uuid = PlayerDataTable.getUUID(arg);
-        }
+            FamilyPlayer playerFam = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().ieq("name", arg).findList().get(0);
 
-        if (uuid == null) {
-            Logger.debugLog("UUID is null");
+            if (playerFam != null) {
+                uuid = playerFam.getUUID();
+            }
         }
 
 

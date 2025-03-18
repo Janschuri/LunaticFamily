@@ -1,23 +1,49 @@
 package de.janschuri.lunaticfamily.common.commands.gender;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.commands.family.Family;
 import de.janschuri.lunaticfamily.common.utils.Logger;
-import de.janschuri.lunaticlib.LunaticCommand;
+import de.janschuri.lunaticlib.Command;
+import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
+import de.janschuri.lunaticlib.common.command.HasHelpCommand;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.command.HasSubcommands;
 import de.janschuri.lunaticlib.common.command.LunaticHelpCommand;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
+import net.kyori.adventure.text.Component;
 
 import java.util.List;
+import java.util.Map;
 
-public class Gender extends Subcommand {
+public class Gender extends FamilyCommand implements HasHelpCommand, HasSubcommands, HasParentCommand {
+
+    private static final Gender INSTANCE = new Gender();
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Show the gender help page.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Zeige die Gender-Hilfe.");
+    private static final CommandMessageKey HELP_HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "help_header")
+            .defaultMessage("en", "Gender-Help")
+            .defaultMessage("de", "Gender-Hilfe");
 
     @Override
     public LunaticHelpCommand getHelpCommand() {
-        return new LunaticHelpCommand(getLanguageConfig(), this);
+        return new LunaticHelpCommand(this);
     }
 
     @Override
-    public List<LunaticCommand> getSubcommands() {
+    public MessageKey pageParamName() {
+        return PAGE_MK;
+    }
+
+    @Override
+    public MessageKey getHelpHeader() {
+        return HELP_HEADER_MK;
+    }
+
+    @Override
+    public List<Command> getSubcommands() {
         return List.of(
                 new GenderSet(),
                 new GenderInfo(),
@@ -52,7 +78,7 @@ public class Gender extends Subcommand {
         }
         final String subcommand = args[0];
 
-        for (LunaticCommand sc : getSubcommands()) {
+        for (Command sc : getSubcommands()) {
             if (checkIsSubcommand(sc, subcommand)) {
                 String[] newArgs = new String[args.length - 1];
                 System.arraycopy(args, 1, newArgs, 0, args.length - 1);
@@ -60,9 +86,15 @@ public class Gender extends Subcommand {
             }
         }
         sender.sendMessage(getMessage(WRONG_USAGE_MK));
-        Logger.debugLog("Gender: Wrong usage");
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 
     @Override

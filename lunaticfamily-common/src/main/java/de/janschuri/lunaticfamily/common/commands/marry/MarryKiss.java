@@ -1,23 +1,37 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class MarryKiss extends Subcommand {
+public class MarryKiss extends FamilyCommand implements HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey noPartnerMK = new CommandMessageKey(this,"no_partner");
-    private final CommandMessageKey kissMK = new CommandMessageKey(this,"kiss");
-    private final CommandMessageKey gotKissedMK = new CommandMessageKey(this,"got_kissed");
+    private static final MarryKiss INSTANCE = new MarryKiss();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Kiss your partner.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Küss deinen Partner.");
+    private static final CommandMessageKey NO_PARTNER_MK = new LunaticCommandMessageKey(INSTANCE, "no_partner")
+            .defaultMessage("en", "You are not married!")
+            .defaultMessage("de", "Du bist nicht verheiratet!");
+    private static final CommandMessageKey KISS_MK = new LunaticCommandMessageKey(INSTANCE, "kiss")
+            .defaultMessage("en", "You have kissed %player%.")
+            .defaultMessage("de", "Du hast %player% geküsst.");
+    private static final CommandMessageKey GOT_KISSED_MK = new LunaticCommandMessageKey(INSTANCE, "got_kissed")
+            .defaultMessage("en", "%player% has kissed you.")
+            .defaultMessage("de", "%player% hat dich geküsst.");
+
 
 
     @Override
@@ -37,7 +51,7 @@ public class MarryKiss extends Subcommand {
 
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!(sender instanceof PlayerSender)) {
+        if (!(sender instanceof PlayerSender player)) {
             sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
             return true;
         }
@@ -46,39 +60,38 @@ public class MarryKiss extends Subcommand {
             sender.sendMessage(getMessage(NO_PERMISSION_MK));
             return true;
         }
-        PlayerSender player = (PlayerSender) sender;
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(playerUUID);
+        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
 
         if (!playerFam.isMarried()) {
-            sender.sendMessage(getMessage(noPartnerMK));
+            sender.sendMessage(getMessage(NO_PARTNER_MK));
             return true;
         }
 
-        PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUniqueId());
+        PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUUID());
 
         if (!partner.isOnline()) {
-            sender.sendMessage(getMessage(PLAYER_OFFLINE_MK)
-                    .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+            sender.sendMessage(getMessage(PLAYER_OFFLINE_MK,
+                placeholder("%player%", partner.getName())));
             return true;
         }
 
         if (!Utils.isPlayerOnRegisteredServer(partner)) {
-            player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK)
-                    .replaceText(getTextReplacementConfig("%player%", partner.getName()))
-                    .replaceText(getTextReplacementConfig("%server%", partner.getServerName())));
+            player.sendMessage(getMessage(PLAYER_NOT_ON_WHITELISTED_SERVER_MK,
+                placeholder("%player%", partner.getName()),
+                placeholder("%server%", partner.getServerName())));
             return true;
         }
 
         if (!player.isSameServer(partner.getUniqueId())) {
-            sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK)
-                    .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+            sender.sendMessage(getMessage(PLAYER_NOT_SAME_SERVER_MK,
+                placeholder("%player%", partner.getName())));
             return true;
         }
 
         if (!player.isInRange(partner.getUniqueId(), LunaticFamily.getConfig().getMarryKissRange())) {
-            player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK)
-                    .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+            player.sendMessage(getMessage(PLAYER_TOO_FAR_AWAY_MK,
+                placeholder("%player%", partner.getName())));
             return true;
         }
 
@@ -95,13 +108,20 @@ public class MarryKiss extends Subcommand {
             Utils.scheduleTask(runnable, i * 250L, TimeUnit.MILLISECONDS);
         }
 
-        player.sendMessage(getMessage(kissMK)
-                .replaceText(getTextReplacementConfig("%player%", partner.getName())));
+        player.sendMessage(getMessage(KISS_MK,
+                placeholder("%player%", partner.getName())));
 
-        partner.sendMessage(getMessage(gotKissedMK)
-                .replaceText(getTextReplacementConfig("%player%", player.getName())));
+        partner.sendMessage(getMessage(GOT_KISSED_MK,
+                placeholder("%player%", player.getName())));
 
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 }

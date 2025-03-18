@@ -1,12 +1,8 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.commands.priest.Priest;
 import de.janschuri.lunaticfamily.common.commands.priest.PriestMarry;
-import de.janschuri.lunaticfamily.common.commands.priest.PriestSibling;
-import de.janschuri.lunaticfamily.common.commands.sibling.Sibling;
 import de.janschuri.lunaticlib.CommandMessageKey;
-import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import de.janschuri.lunaticlib.common.logger.Logger;
 
 import java.util.List;
@@ -21,7 +17,7 @@ public class MarryPriest extends PriestMarry {
 
     @Override
     public Map<CommandMessageKey, String> getHelpMessages() {
-        return Map.of(new CommandMessageKey(new PriestMarry(), "help"), getPermission());
+        return Map.of(new LunaticCommandMessageKey(new PriestMarry(), "help"), getPermission());
     }
 
     @Override
@@ -32,7 +28,6 @@ public class MarryPriest extends PriestMarry {
             list.add(super.getParentCommand().getName());
         }
 
-        Logger.debugLog("Aliases: " + list.toString());
         return list;
     }
 }

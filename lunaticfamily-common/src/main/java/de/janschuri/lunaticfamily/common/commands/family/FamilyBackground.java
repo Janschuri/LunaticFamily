@@ -1,23 +1,34 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
+import de.janschuri.lunaticfamily.common.commands.marry.MarryEmoji;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
+import de.janschuri.lunaticlib.common.config.LunaticMessageKey;
 import net.kyori.adventure.text.Component;
+import org.jooq.impl.QOM;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FamilyBackground extends Subcommand {
+public class FamilyBackground extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey setMK = new CommandMessageKey(this,"set");
-    private final MessageKey backgroundMK = new MessageKey("background");
+    private static final FamilyBackground INSTANCE = new FamilyBackground();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("Change the background of your family tree."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Ändere den Hintergrund deines Familienstammbaums."));
+    private static final CommandMessageKey SET_MK = new LunaticCommandMessageKey(INSTANCE, "set")
+            .defaultMessage("en", "Background has been set.")
+            .defaultMessage("de", "Hintergrund wurde gesetzt.");
 
 
     @Override
@@ -31,9 +42,9 @@ public class FamilyBackground extends Subcommand {
     }
 
     @Override
-    public List<Component> getParamsNames() {
+    public List<MessageKey> getParamsNames() {
         return List.of(
-                getMessage(backgroundMK, false)
+                BACKGROUND_MK
         );
     }
 
@@ -69,16 +80,28 @@ public class FamilyBackground extends Subcommand {
         }
 
         if (args.length == 0) {
-            sender.sendMessage(getMessage(helpMK));
+            sender.sendMessage(getReplacedHelpMessage(HELP_MK, sender, this));
             return true;
         }
 
-        FamilyPlayerImpl playerFam = new FamilyPlayerImpl(player.getUniqueId());
+        String backgroundArg = args[0];
+        String background = "textures/block/" + backgroundArg + ".png";
 
-        playerFam.setBackground(args[0]);
-        sender.sendMessage(getMessage(setMK));
+        FamilyPlayer playerFam = FamilyPlayer.findOrCreate(player.getUniqueId());
+
+
+        playerFam.setBackground(background);
+        playerFam.save();
+        sender.sendMessage(getMessage(SET_MK));
         playerFam.updateFamilyTree();
 
         return true;
+    }
+
+    @Override
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
     }
 }

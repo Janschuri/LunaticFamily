@@ -1,25 +1,36 @@
 package de.janschuri.lunaticfamily.common.commands.family;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.PlayerDataTable;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class FamilyDBList extends Subcommand {
+public class FamilyDBList extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey headerMK = new CommandMessageKey(this,"header");
-    private final CommandMessageKey playersMK = new CommandMessageKey(this,"players");
+    private static final FamilyDBList INSTANCE = new FamilyDBList();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", "&6/%command% %subcommand% &7- Show a list of all players in the database.")
+            .defaultMessage("de", "&6/%command% %subcommand% &7- Zeige eine Liste aller Spieler in der Datenbank.");
+    private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "header")
+            .defaultMessage("en", "All players in the database:")
+            .defaultMessage("de", "Alle Spieler in der Datenbank:");
+    private static final CommandMessageKey PLAYERS_MK = new LunaticCommandMessageKey(INSTANCE, "players")
+            .defaultMessage("en", "&6%index%: &b%name% &7(%gender%)")
+            .defaultMessage("de", "&6%index%: &b%name% &7(%gender%)");
 
 
     @Override
@@ -33,23 +44,19 @@ public class FamilyDBList extends Subcommand {
     }
 
     @Override
-    public Subcommand getParentCommand() {
+    public FamilyCommand getParentCommand() {
         return new Family();
     }
 
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!sender.hasPermission(getPermission())) {
-            sender.sendMessage(getMessage(NO_PERMISSION_MK));
-            return true;
-        }
         int page = 1;
         if (args.length > 0) {
             try {
                 page = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                sender.sendMessage(getMessage(NO_NUMBER_MK)
-                        .replaceText(getTextReplacementConfig("%input%", args[0])));
+                sender.sendMessage(getMessage(NO_NUMBER_MK,
+                placeholder("%input%", args[0])));
             }
         }
 
@@ -61,9 +68,16 @@ public class FamilyDBList extends Subcommand {
     }
 
     @Override
-    public List<Component> getParamsNames() {
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
+    }
+
+    @Override
+    public List<MessageKey> getParamsNames() {
         return List.of(
-                getMessage(PAGE_MK, false)
+                PAGE_MK
         );
     }
 
@@ -74,21 +88,22 @@ public class FamilyDBList extends Subcommand {
     }
 
     private Component getPlayerList(int page) {
-        Map<Integer, Map<String, String>> players = sortMapByReverseInteger(PlayerDataTable.getPlayerList(page));
+        Map<Long, FamilyPlayer> players = DatabaseRepository.getDatabase().find(FamilyPlayer.class).findList().stream()
+                .collect(LinkedHashMap::new, (m, v) -> m.put(v.getId(), v), LinkedHashMap::putAll);
 
-        ComponentBuilder<TextComponent, TextComponent.Builder> msg = Component.text().append(getMessage(headerMK, false));
+        ComponentBuilder<TextComponent, TextComponent.Builder> msg = Component.text().append(getMessage(HEADER_MK.noPrefix()));
 
         int i = 1;
 
-        for (Map<String, String> player : players.values()) {
+        for (FamilyPlayer player : players.values()) {
             msg.append(Component.newline());
 
-            String id = player.get("id") == null ? "null" : player.get("id");
-            String uuid = player.get("uuid") == null ? "null" : player.get("uuid");
-            String skinURL = player.get("skinURL") == null ? "null" : player.get("skinURL");
-            String background = player.get("background") == null ? "null" : player.get("background");
-            String name = player.get("name") == null ? "null" : player.get("name");
-            String gender = player.get("gender") == null ? "null" : player.get("gender");
+            long id = player.getId();
+            String uuid = player.getUUID() == null ? "null" : player.getUUID().toString();
+            String skinURL = player.getSkinURL() == null ? "null" : player.getSkinURL();
+            String background = player.getBackground() == null ? "null" : player.getBackground();
+            String name = player.getName() == null ? "null" : player.getName();
+            String gender = player.getGender() == null ? "null" : player.getGender();
 
             ComponentBuilder<TextComponent, TextComponent.Builder> hover = Component.text()
                             .append(Component.text("ID: " + id))
@@ -103,32 +118,21 @@ public class FamilyDBList extends Subcommand {
             Component nameCmp = Component.text(name)
                     .hoverEvent(HoverEvent.showText(hover.build()));
 
-            TextReplacementConfig nameRpl = TextReplacementConfig.builder().match("%name%").replacement(nameCmp).build();
+            Component row = getMessage(PLAYERS_MK.noPrefix(),
+                placeholder("%name%", nameCmp),
+                placeholder("%gender%", gender),
+                placeholder("%index%", String.valueOf(page*i))
+            );
 
-            Component row = getMessage(playersMK, false)
-                    .replaceText(nameRpl)
-                    .replaceText(getTextReplacementConfig("%gender%", gender))
-                    .replaceText(getTextReplacementConfig("%index%",  String.valueOf(page*i)));
+            Component delete = Component.text(" [X]")
+                    .clickEvent(ClickEvent.runCommand("/family delete " + uuid))
+                    .hoverEvent(HoverEvent.showText(Component.text("Delete " + name)));
+
+            row = row.append(delete);
 
             msg.append(row);
         }
 
         return msg.build();
-    }
-
-    private static Map<Integer, Map<String, String>> sortMapByReverseInteger(Map<Integer, Map<String, String>> inputMap) {
-        // Convert map entries to a list
-        List<Map.Entry<Integer, Map<String, String>>> entryList = new ArrayList<>(inputMap.entrySet());
-
-        // Sort the list in reverse order based on the integer keys
-        entryList.sort((entry1, entry2) -> entry2.getKey().compareTo(entry1.getKey()));
-
-        // Convert the sorted list back to a map
-        Map<Integer, Map<String, String>> sortedMap = new LinkedHashMap<>();
-        for (Map.Entry<Integer, Map<String, String>> entry : entryList) {
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-
-        return sortedMap;
     }
 }

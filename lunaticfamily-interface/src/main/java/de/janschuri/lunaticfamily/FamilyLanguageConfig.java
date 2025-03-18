@@ -1,11 +1,9 @@
 package de.janschuri.lunaticfamily;
 
-import de.janschuri.lunaticlib.LunaticLanguageConfig;
-
 import java.util.List;
 import java.util.Map;
 
-public interface LanguageConfig extends LunaticLanguageConfig {
+public interface FamilyLanguageConfig {
 
     String getGenderLang(String key);
 

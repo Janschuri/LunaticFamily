@@ -1,25 +1,38 @@
 package de.janschuri.lunaticfamily.common.commands.sibling;
 
-import de.janschuri.lunaticfamily.common.commands.Subcommand;
-import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
+import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.CommandMessageKey;
+import de.janschuri.lunaticlib.MessageKey;
+import de.janschuri.lunaticlib.Placeholder;
 import de.janschuri.lunaticlib.Sender;
+import de.janschuri.lunaticlib.common.command.HasParams;
+import de.janschuri.lunaticlib.common.command.HasParentCommand;
+import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 
 import java.util.List;
 import java.util.Map;
 
-public class SiblingList extends Subcommand {
+public class SiblingList extends FamilyCommand implements HasParams, HasParentCommand {
 
-    private final CommandMessageKey helpMK = new CommandMessageKey(this,"help");
-    private final CommandMessageKey headerMK = new CommandMessageKey(this,"header");
-    private final CommandMessageKey pairsMK = new CommandMessageKey(this,"siblings");
+    private static final SiblingList INSTANCE = new SiblingList();
+
+    private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
+            .defaultMessage("en", INSTANCE.getDefaultHelpMessage("List all siblinghoods."))
+            .defaultMessage("de", INSTANCE.getDefaultHelpMessage("Liste alle Geschwisterschaften auf."));
+    private static final CommandMessageKey HEADER_MK = new LunaticCommandMessageKey(INSTANCE, "header")
+            .defaultMessage("en", "All siblinghoods on this server: ")
+            .defaultMessage("de", "Alle Geschwisterschaften auf diesem Server:");
+    private static final CommandMessageKey SIBLINGS_MK = new LunaticCommandMessageKey(INSTANCE, "siblings")
+            .defaultMessage("en", "&6%index%: &b%player1% %emoji% &b%player2%")
+            .defaultMessage("de", "&6%index%: &b%player1% %emoji% &b%player2%");
+
 
 
     @Override
@@ -49,8 +62,9 @@ public class SiblingList extends Subcommand {
             try {
                 page = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                sender.sendMessage(getMessage(NO_NUMBER_MK)
-                        .replaceText(getTextReplacementConfig("%input%", args[0])));
+                sender.sendMessage(getMessage(NO_NUMBER_MK,
+                        placeholder("%input%", args[0])
+                ));
             }
         }
 
@@ -61,9 +75,16 @@ public class SiblingList extends Subcommand {
     }
 
     @Override
-    public List<Component> getParamsNames() {
+    public Map<CommandMessageKey, String> getHelpMessages() {
+        return Map.of(
+                HELP_MK, getPermission()
+        );
+    }
+
+    @Override
+    public List<MessageKey> getParamsNames() {
         return List.of(
-                getMessage(PAGE_MK, false)
+                PAGE_MK
         );
     }
 
@@ -74,37 +95,31 @@ public class SiblingList extends Subcommand {
     }
 
     private Component getSiblingList(int page) {
-        List<Siblinghood> siblingList = SiblinghoodsTable.getSiblinghoodList(page, 10);
+        List<Siblinghood> siblingList = DatabaseRepository.getDatabase().find(Siblinghood.class).setFirstRow(10*(page-1)).setMaxRows(10).findList();
 
-        Component msg = getMessage(headerMK, false);
+        Component msg = getMessage(HEADER_MK.noPrefix());
 
         int index = 1 + (10*(page-1));
-        Logger.debugLog("SiblingList: " + siblingList);
+
         for (Siblinghood e : siblingList) {
-            FamilyPlayerImpl player1Fam = new FamilyPlayerImpl(e.getPlayer1ID());
-            FamilyPlayerImpl player2Fam = new FamilyPlayerImpl(e.getPlayer2ID());
+            FamilyPlayer player1Fam = e.getPlayer1();
+            FamilyPlayer player2Fam = e.getPlayer2();
 
 
             String hoverText = " (" + e.getDate() + ")";
-            if (e.getPriest() > 0) {
-                hoverText = hoverText + " -> " + new FamilyPlayerImpl(e.getPriest()).getName();
+            if (e.getPriest() != null) {
+                hoverText = hoverText + " -> " + e.getPriest().getName();
             }
 
             Component heart = Component.text(" " + Siblinghood.getDefaultEmoji() + " ", TextColor.fromHexString(e.getEmojiColor())).hoverEvent(HoverEvent.showText(Component.text(hoverText)));
 
-            TextReplacementConfig indexRpl = getTextReplacementConfig("%index%", String.valueOf(index));
-            TextReplacementConfig player1Rpl = getTextReplacementConfig("%player1%", player1Fam.getName());
-            TextReplacementConfig player2Rpl = getTextReplacementConfig("%player2%", player2Fam.getName());
-            TextReplacementConfig heartRpl = TextReplacementConfig.builder().match("%emoji%").replacement(heart).build();
+            Placeholder indexRpl = placeholder("%index%", String.valueOf(index));
+            Placeholder player1Rpl = placeholder("%player1%", player1Fam.getName());
+            Placeholder player2Rpl = placeholder("%player2%", player2Fam.getName());
+            Placeholder heartRpl = placeholder("%emoji%", heart);
 
             msg = msg.append(Component.newline())
-                    .append(getMessage(pairsMK, false)
-                            .replaceText(indexRpl)
-                            .replaceText(player1Rpl)
-                            .replaceText(player2Rpl)
-                            .replaceText(heartRpl));
-
-
+                    .append(getMessage(SIBLINGS_MK.noPrefix(), indexRpl, player1Rpl, player2Rpl, heartRpl));
 
             index++;
         }

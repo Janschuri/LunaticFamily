@@ -11,11 +11,12 @@ import de.janschuri.lunaticfamily.common.commands.sibling.Sibling;
 import de.janschuri.lunaticfamily.common.config.ConfigImpl;
 import de.janschuri.lunaticfamily.common.config.FamilyTreeJSON;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
-import de.janschuri.lunaticfamily.common.database.Database;
-import de.janschuri.lunaticfamily.common.database.tables.AdoptionsTable;
-import de.janschuri.lunaticfamily.common.database.tables.MarriagesTable;
-import de.janschuri.lunaticfamily.common.database.tables.SiblinghoodsTable;
+import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.futurerequests.*;
+import de.janschuri.lunaticfamily.common.handler.Adoption;
+import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.common.handler.Marriage;
+import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.platform.Platform;
 import de.janschuri.lunaticlib.common.LunaticLib;
@@ -45,9 +46,8 @@ public final class LunaticFamily {
     private static final FutureRequest[] futureRequests = {
         new UpdateFamilyTreeRequest(),
         new SpawnParticlesCloudRequest(),
-        new LoadFamilyTreeMapRequest(),
-        new IsFamilyTreeMapLoadedRequest(),
         new GetPlaceholderRequest(),
+        new GetRelationalPlaceholderRequest(),
     };
 
     private static Path dataDirectory;
@@ -77,6 +77,12 @@ public final class LunaticFamily {
             String languageKey = config.getLanguageKey();
             languageConfig = new LanguageConfigImpl(dataDirectory, languageKey);
             languageConfig.load();
+
+                if (DatabaseRepository.init()) {
+                    Logger.infoLog("Database loaded.");
+                } else {
+                    Logger.errorLog("Database could not be loaded.");
+                }
         }
         return true;
     }
@@ -89,25 +95,12 @@ public final class LunaticFamily {
 
         loadConfig();
 
-        Logger.debugLog("Mode: " + LunaticFamily.mode);
-
-        registerRequests();
-
         if (LunaticFamily.mode != Mode.BACKEND) {
-            if (Database.loadDatabase()) {
-                Logger.infoLog("Database loaded.");
-            } else {
-                Logger.errorLog("Database could not be loaded.");
-            }
-
-            FamilyTreeJSON.loadFamilyTreeJSON();
-
-            if (config.isUseCrazyAdvancementAPI()) {
-                platform.getFamilyTree().loadFamilyTreeMap(FamilyTreeJSON.getContent());
-            }
             registerCommands();
             platform.registerListener();
         }
+
+        registerRequests();
 
         Logger.infoLog("LunaticFamily enabled.");
     }
@@ -117,6 +110,7 @@ public final class LunaticFamily {
     }
 
     public static void onDisable() {
+        DatabaseRepository.shutdown();
         LunaticFamily.unregisterRequests();
         Logger.infoLog("LunaticFamily disabled.");
     }
@@ -134,6 +128,7 @@ public final class LunaticFamily {
     }
 
     public static void registerCommands() {
+        Logger.infoLog("Registering commands...");
         LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new Family());
         LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new Adopt());
         LunaticLib.getPlatform().registerCommand(getPlatform().getInstanceOfPlatform(), new Sibling());
@@ -151,30 +146,38 @@ public final class LunaticFamily {
     }
 
     public static Map<String, Integer> getMarriagesStats() {
-        int totalMarriages = MarriagesTable.getTotalMarriagesCount();
-        int marriages = MarriagesTable.getMarriagesCount();
+        int totalMarriages = DatabaseRepository.getDatabase().find(Marriage.class).findCount();
+        int marriages = DatabaseRepository.getDatabase().find(Marriage.class).where().isNull("divorceDate").findCount();
         int divorced = totalMarriages - marriages;
 
         return Map.of("Marriages", marriages, "Divorced Marriages", divorced);
     }
 
     public static Map<String, Integer> getSiblinghoodsStats() {
-        int totalSiblings = SiblinghoodsTable.getTotalSiblinghoodsCount();
-        int siblings = SiblinghoodsTable.getSiblinghoodsCount();
+        int totalSiblings = DatabaseRepository.getDatabase().find(Siblinghood.class).findCount();
+        int siblings = DatabaseRepository.getDatabase().find(Siblinghood.class).where().isNull("unsiblingDate").findCount();
         int unsiblinged = totalSiblings - siblings;
 
         return Map.of("Siblings", siblings, "Unsiblinged Siblings", unsiblinged);
     }
 
     public static Map<String, Integer> getAdoptionsStats() {
-        int totalAdoptions = AdoptionsTable.getTotalAdoptionsCount();
-        int adoptions = AdoptionsTable.getAdoptionsCount();
+        int totalAdoptions = DatabaseRepository.getDatabase().find(Adoption.class).findCount();
+        int adoptions = DatabaseRepository.getDatabase().find(Adoption.class).where().isNull("unadoptDate").findCount();
         int unadopted = totalAdoptions - adoptions;
 
         return Map.of("Adoptions", adoptions, "Unadopted Adoptions", unadopted);
     }
 
     public static int getMarriedPlayersCount() {
-        return MarriagesTable.getMarriagesCount()*2;
+        return DatabaseRepository.getDatabase().find(Marriage.class).where().isNull("divorceDate").findCount() * 2;
+    }
+
+    public static FamilyPlayer getFamilyPlayer(UUID uuid) {
+        return FamilyPlayer.findOrCreate(uuid);
+    }
+
+    public static FamilyPlayer getFamilyPlayer(int id) {
+        return FamilyPlayer.find(id);
     }
 }

@@ -1,13 +1,6 @@
 package de.janschuri.lunaticfamily.platform.bukkit.external;
 
-import de.janschuri.lunaticfamily.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.LunaticFamily;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayerImpl;
 import de.janschuri.lunaticfamily.common.handler.Placeholder;
-import de.janschuri.lunaticfamily.common.utils.Logger;
-import de.janschuri.lunaticfamily.platform.bukkit.FamilyTreeImpl;
-import de.janschuri.lunaticlib.common.LunaticLib;
-import de.janschuri.lunaticlib.common.utils.Mode;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.clip.placeholderapi.expansion.Relational;
 import org.bukkit.OfflinePlayer;
