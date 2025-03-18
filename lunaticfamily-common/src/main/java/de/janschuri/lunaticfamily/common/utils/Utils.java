@@ -62,10 +62,6 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
         return LunaticFamily.getPlatform().spawnParticlesCloud(uuid, position, particleString);
     }
 
-    public static boolean isPriest(UUID uuid) {
-        return LunaticFamily.marryPriests.containsValue(uuid);
-    }
-
     public static UUID getUUIDFromArg(String arg) {
         UUID uuid = null;
 

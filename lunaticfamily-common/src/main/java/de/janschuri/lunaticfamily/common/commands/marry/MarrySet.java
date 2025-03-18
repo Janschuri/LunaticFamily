@@ -155,15 +155,6 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
             return true;
         }
 
-
-        LunaticFamily.marryRequests.remove(player1UUID);
-        LunaticFamily.marryPriestRequests.remove(player1UUID);
-        LunaticFamily.marryPriests.remove(player1UUID);
-
-        LunaticFamily.marryRequests.remove(player1UUID);
-        LunaticFamily.marryPriestRequests.remove(player1UUID);
-        LunaticFamily.marryPriests.remove(player1UUID);
-
         player1Fam.marry(player2Fam);
         sender.sendMessage(getMessage(MARRIED_MK,
                 placeholder("%player1%", player1Fam.getName()),

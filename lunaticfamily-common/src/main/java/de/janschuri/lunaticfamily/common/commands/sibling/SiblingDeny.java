@@ -61,59 +61,6 @@ public class SiblingDeny extends FamilyCommand implements HasParentCommand {
 
     @Override
     public boolean execute(Sender sender, String[] args) {
-        if (!(sender instanceof PlayerSender player)) {
-            sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
-            return true;
-        }
-
-        if (!sender.hasPermission(getPermission())) {
-            sender.sendMessage(getMessage(NO_PERMISSION_MK));
-            return true;
-        }
-
-        UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
-
-        if (LunaticFamily.siblingRequests.containsKey(playerUUID)) {
-            UUID partnerUUID = LunaticFamily.siblingRequests.get(playerUUID);
-            PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
-            if (!LunaticFamily.siblingPriests.containsKey(partnerUUID)) {
-                player.sendMessage(getMessage(DENY_MK,
-                    placeholder("%player%", sibling.getName())
-                ));
-                sibling.sendMessage(getMessage(DENIED_MK,
-                    placeholder("%player%", playerFam.getName())
-                ));
-            } else {
-                UUID priestUUID = LunaticFamily.siblingPriests.get(partnerUUID);
-                PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
-                player.chat(getLanguageConfig().getMessageAsString(PRIEST_NO_MK.noPrefix()));
-
-                Runnable runnable = () -> {
-                    priest.chat(getLanguageConfig().getMessageAsString(PRIEST_CANCEL_MK.noPrefix()));
-                };
-
-                Utils.scheduleTask(runnable, 250, TimeUnit.MILLISECONDS);
-
-
-                LunaticFamily.siblingPriests.remove(partnerUUID);
-            }
-            LunaticFamily.siblingRequests.remove(playerUUID);
-            return true;
-        }
-
-        if (LunaticFamily.siblingPriestRequests.containsKey(playerUUID)) {
-            player.chat(getLanguageConfig().getMessageAsString(PRIEST_NO_MK.noPrefix()));
-            UUID priestUUID = LunaticFamily.siblingPriests.get(playerUUID);
-            PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
-            priest.chat(getLanguageConfig().getMessageAsString(PRIEST_CANCEL_MK.noPrefix()));
-            LunaticFamily.siblingPriestRequests.remove(playerUUID);
-            LunaticFamily.siblingPriests.remove(playerUUID);
-            return true;
-        }
-
-        sender.sendMessage(getMessage(NO_REQUEST_MK));
-
         return true;
     }
 

@@ -210,11 +210,7 @@ public class AdoptSet extends FamilyCommand implements HasParams, HasParentComma
                 placeholder("%parent2%", secondParentFam.getName())));
         }
 
-        LunaticFamily.adoptRequests.remove(childUUID);
         firstParentFam.adopt(childFam);
-
-
-
         return true;
     }
 

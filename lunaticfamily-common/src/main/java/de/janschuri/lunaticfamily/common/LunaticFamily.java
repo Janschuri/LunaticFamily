@@ -29,15 +29,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public final class LunaticFamily {
-    public static BiMap<UUID, UUID> marryRequests = HashBiMap.create();
-    public static BiMap<UUID, UUID> marryPriestRequests = HashBiMap.create();
-    public static BiMap<UUID, UUID> marryPriests = HashBiMap.create();
-    public static BiMap<UUID, UUID> adoptRequests = HashBiMap.create();
-    public static BiMap<UUID, UUID> adoptPriestRequests = HashBiMap.create();
-    public static BiMap<UUID, UUID> adoptPriests = HashBiMap.create();
-    public static BiMap<UUID, UUID> siblingRequests = HashBiMap.create();
-    public static BiMap<UUID, UUID> siblingPriestRequests = HashBiMap.create();
-    public static BiMap<UUID, UUID> siblingPriests = HashBiMap.create();
     public static boolean isDebug;
 
     private static LanguageConfigImpl languageConfig;
