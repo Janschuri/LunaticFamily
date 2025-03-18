@@ -166,6 +166,9 @@ public class FamilyCreate extends FamilyCommand implements HasParentCommand, Has
 
     @Override
     public List<Map<String, String>> getParams() {
-        return List.of();
+        return List.of(
+            getOnlinePlayersParam(),
+            getOnlinePlayersParam()
+        );
     }
 }
