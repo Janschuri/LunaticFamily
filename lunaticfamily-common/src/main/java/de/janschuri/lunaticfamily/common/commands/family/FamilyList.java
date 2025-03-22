@@ -77,7 +77,7 @@ public class FamilyList extends FamilyCommand implements HasParams, HasParentCom
         if (args.length == 0) {
             PlayerSender player = (PlayerSender) sender;
             UUID uuid = player.getUniqueId();
-            FamilyPlayer playerFam = getFamilyPlayer(uuid);
+            FamilyPlayer playerFam = FamilyPlayer.find(uuid);
             playerFam.update();
 
             List<RelationAdvancement> relationAdvancements = playerFam.getFamilyTree().getRelationAdvancements();
@@ -89,9 +89,17 @@ public class FamilyList extends FamilyCommand implements HasParams, HasParentCom
         }
 
         String playerName = args[0];
-        UUID player1UUID = Utils.getUUIDFromArg(playerName);
+        FamilyPlayer player1Fam;
 
-        if (player1UUID == null) {
+        if (Utils.isUUID(playerName)) {
+            UUID playerUUID = UUID.fromString(playerName);
+            player1Fam = FamilyPlayer.find(playerUUID);
+            playerName = player1Fam.getName();
+        } else {
+            player1Fam = FamilyPlayer.find(playerName);
+        }
+
+        if (player1Fam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                 placeholder("%player%", playerName)));
             return true;
@@ -103,7 +111,6 @@ public class FamilyList extends FamilyCommand implements HasParams, HasParentCom
             return true;
         }
 
-        FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
         List<RelationAdvancement> relationAdvancements = player1Fam.getFamilyTree().getRelationAdvancements();
         ComponentBuilder msg = Component.text();
         msg.append(getMessage(OTHERS_HEADER_MK.noPrefix(),

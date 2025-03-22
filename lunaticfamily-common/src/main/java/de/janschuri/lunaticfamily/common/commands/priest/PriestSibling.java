@@ -2,10 +2,8 @@ package de.janschuri.lunaticfamily.common.commands.priest;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
-import de.janschuri.lunaticfamily.common.commands.adopt.Adopt;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -121,28 +119,25 @@ public class PriestSibling extends FamilyCommand implements HasParentCommand, Ha
         String player1Name = args[0];
         String player2Name = args[1];
 
-        UUID player1UUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", player1Name).findOne().getUUID();
-        UUID player2UUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", player2Name).findOne().getUUID();
+        FamilyPlayer player1Fam = FamilyPlayer.find(player1Name);
+        FamilyPlayer player2Fam = FamilyPlayer.find(player2Name);
 
-        if (player1UUID == null) {
+        if (player1Fam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                 placeholder("%player%", player1Name)));
             return true;
         }
 
-        if (player2UUID == null) {
+        if (player2Fam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                 placeholder("%player%", player2Name)));
             return true;
         }
 
-        if (player1UUID.equals(player2UUID)) {
+        if (player1Fam.equals(player2Fam)) {
             sender.sendMessage(getMessage(SAME_PLAYER_MK));
             return true;
         }
-
-        FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
-        FamilyPlayer player2Fam = getFamilyPlayer(player2UUID);
 
         player1Fam.update();
         player2Fam.update();
@@ -160,6 +155,9 @@ public class PriestSibling extends FamilyCommand implements HasParentCommand, Ha
                 placeholder("%player2%", player2Fam.getName())));
             return true;
         }
+
+        UUID player1UUID = player1Fam.getUUID();
+        UUID player2UUID = player2Fam.getUUID();
 
         PlayerSender player1 = LunaticLib.getPlatform().getPlayerSender(player1UUID);
         PlayerSender player2 = LunaticLib.getPlatform().getPlayerSender(player2UUID);

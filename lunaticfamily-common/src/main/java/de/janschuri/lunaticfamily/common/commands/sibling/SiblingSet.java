@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
@@ -10,7 +9,6 @@ import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
-import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -76,24 +74,37 @@ public class SiblingSet extends FamilyCommand implements HasParentCommand, HasPa
         }
 
         String player1Arg = args[0];
-        UUID player1UUID = Utils.getUUIDFromArg(player1Arg);
-        if (player1UUID == null) {
+        FamilyPlayer player1Fam;
+
+        if (Utils.isUUID(player1Arg)) {
+            UUID player1UUID = UUID.fromString(player1Arg);
+            player1Fam = FamilyPlayer.find(player1UUID);
+            player1Arg = player1Fam.getName();
+        } else {
+            player1Fam = FamilyPlayer.find(player1Arg);
+        }
+
+        if (player1Fam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                 placeholder("%player%", player1Arg)));
             return true;
         }
 
         String player2Arg = args[1];
-        UUID player2UUID = Utils.getUUIDFromArg(player2Arg);
-        if (player2UUID == null) {
+        FamilyPlayer player2Fam;
+
+        if (Utils.isUUID(player2Arg)) {
+            UUID player2UUID = UUID.fromString(player2Arg);
+            player2Fam = FamilyPlayer.find(player2UUID);
+        } else {
+            player2Fam = FamilyPlayer.find(player2Arg);
+        }
+
+        if (player2Fam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                 placeholder("%player%", player2Arg)));
             return true;
         }
-
-
-        FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
-        FamilyPlayer player2Fam = getFamilyPlayer(player2UUID);
 
         player1Fam.update();
         player2Fam.update();

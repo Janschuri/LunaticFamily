@@ -118,9 +118,9 @@ public class AdoptAccept extends FamilyCommand implements HasParentCommand {
 
     private boolean proceedPriestRequest(PlayerSender player) {
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
         UUID childUUID = LunaticFamily.adoptPriestRequests.get(playerUUID);
-        FamilyPlayer childFam = getFamilyPlayer(childUUID);
+        FamilyPlayer childFam = FamilyPlayer.find(childUUID);
         PlayerSender child = LunaticLib.getPlatform().getPlayerSender(childUUID);
 
         if (childFam.isAdopted()) {
@@ -196,7 +196,7 @@ public class AdoptAccept extends FamilyCommand implements HasParentCommand {
 
     private boolean proceedRequest(PlayerSender player) {
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
         UUID parent1UUID = LunaticFamily.adoptRequests.get(playerUUID);
 
         if (playerFam.isAdopted()) {
@@ -215,10 +215,10 @@ public class AdoptAccept extends FamilyCommand implements HasParentCommand {
 
     private boolean acceptRequest(PlayerSender player) {
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
         UUID parent1UUID = LunaticFamily.adoptRequests.get(playerUUID);
-        FamilyPlayer parent1Fam = getFamilyPlayer(parent1UUID);
+        FamilyPlayer parent1Fam = FamilyPlayer.find(parent1UUID);
         PlayerSender parent1 = LunaticLib.getPlatform().getPlayerSender(parent1UUID);
 
         if (parent1Fam.getChildrenAmount() > 1) {
@@ -274,11 +274,11 @@ public class AdoptAccept extends FamilyCommand implements HasParentCommand {
         UUID playerUUID = player.getUniqueId();
         UUID parent1UUID = LunaticFamily.adoptRequests.get(playerUUID);
 
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
-        FamilyPlayer parent1Fam = getFamilyPlayer(parent1UUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
+        FamilyPlayer parent1Fam = FamilyPlayer.find(parent1UUID);
 
         UUID priestUUID = LunaticFamily.adoptPriests.get(parent1UUID);
-        FamilyPlayer priestFam = getFamilyPlayer(priestUUID);
+        FamilyPlayer priestFam = FamilyPlayer.find(priestUUID);
         PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
 
         if (!Utils.hasEnoughMoney(player.getServerName(), priestUUID, WithdrawKey.PRIEST_ADOPT)) {

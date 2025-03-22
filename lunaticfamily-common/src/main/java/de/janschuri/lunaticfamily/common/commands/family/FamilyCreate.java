@@ -3,13 +3,11 @@ package de.janschuri.lunaticfamily.common.commands.family;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.*;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
-import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -113,7 +111,7 @@ public class FamilyCreate extends FamilyCommand implements HasParentCommand, Has
         UUID playerUUID = UUID.fromString(playerUUIDArg);
 
         if (confirm) {
-            FamilyPlayer familyPlayer = getFamilyPlayer(playerUUID).setName(playerName);
+            FamilyPlayer familyPlayer = FamilyPlayer.findOrCreate(playerUUID).setName(playerName);
             familyPlayer.save();
 
             sender.sendMessage(getMessage(CREATED_MK,

@@ -4,7 +4,6 @@ import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.handler.Siblinghood;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.Placeholder;
@@ -88,10 +87,15 @@ public class SiblingList extends FamilyCommand implements HasParams, HasParentCo
         );
     }
 
-
     @Override
     public List<Map<String, String>> getParams() {
-        return List.of(getOnlinePlayersParam());
+        Map<String, String> numbers = Map.of(
+                "1", getPermission(),
+                "2", getPermission(),
+                "3", getPermission()
+        );
+
+        return List.of(numbers);
     }
 
     private Component getSiblingList(int page) {

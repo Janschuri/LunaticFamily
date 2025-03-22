@@ -96,14 +96,6 @@ public abstract class FamilyCommand extends LunaticCommand implements HasMessage
         return LunaticFamily.getLanguageConfig();
     }
 
-    protected static FamilyPlayer getFamilyPlayer(UUID playerUUID) {
-        return FamilyPlayer.findOrCreate(playerUUID);
-    }
-
-    protected static FamilyPlayer getFamilyPlayer(long playerID) {
-        return FamilyPlayer.find(playerID);
-    }
-
     @Override
     public Component wrongUsageMessage(Sender sender, String[] strings) {
         return getMessage(WRONG_USAGE_MK);

@@ -7,7 +7,6 @@ import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.utils.Mode;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
@@ -64,29 +63,6 @@ public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
 
     public static boolean isPriest(UUID uuid) {
         return LunaticFamily.marryPriests.containsValue(uuid);
-    }
-
-    public static UUID getUUIDFromArg(String arg) {
-        UUID uuid = null;
-
-
-        if (isUUID(arg)) {
-
-            uuid = UUID.fromString(arg);
-
-            if (DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uuid", uuid).findCount() == 0) {
-                uuid = null;
-            }
-        } else {
-            FamilyPlayer playerFam = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().ieq("name", arg).findList().get(0);
-
-            if (playerFam != null) {
-                uuid = playerFam.getUUID();
-            }
-        }
-
-
-        return uuid;
     }
 
     public static String getPercentageAsString(int active, int total) {

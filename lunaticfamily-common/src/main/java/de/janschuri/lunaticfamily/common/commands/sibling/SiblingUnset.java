@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
@@ -10,7 +9,6 @@ import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
-import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -64,15 +62,22 @@ public class SiblingUnset extends FamilyCommand implements HasParentCommand, Has
         }
 
         String player1Name = args[0];
-        UUID player1UUID = Utils.getUUIDFromArg(player1Name);
-        if (player1UUID == null) {
+        FamilyPlayer player1Fam;
+
+        if (Utils.isUUID(player1Name)) {
+            UUID player1UUID = UUID.fromString(player1Name);
+            player1Fam = FamilyPlayer.find(player1UUID);
+            player1Name = player1Fam.getName();
+        } else {
+            player1Fam = FamilyPlayer.find(player1Name);
+        }
+
+
+        if (player1Fam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                 placeholder("%player%", player1Name)));
             return true;
         }
-
-        FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
-
 
         if (!player1Fam.hasSiblings()) {
             sender.sendMessage(getMessage(NO_SIBLING_MK,

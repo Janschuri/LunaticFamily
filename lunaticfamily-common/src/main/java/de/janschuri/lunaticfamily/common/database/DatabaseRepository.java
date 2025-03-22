@@ -21,7 +21,6 @@ import org.jooq.Record;
 import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
-import org.jooq.impl.QOM;
 import org.jooq.impl.SQLDataType;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
@@ -401,7 +400,7 @@ public class DatabaseRepository {
 
                 playerMapping.put(id, uuid);
 
-                FamilyPlayer familyPlayer = FamilyPlayer.findOrCreate(uuid);
+                FamilyPlayer familyPlayer = FamilyPlayer.find(uuid);
                 if (familyPlayer != null) {
                     String name = player.get("name", String.class);
                     familyPlayer.setName(name);

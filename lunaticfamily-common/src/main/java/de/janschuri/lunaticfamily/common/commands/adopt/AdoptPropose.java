@@ -4,7 +4,6 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -15,7 +14,6 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
-import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -104,7 +102,7 @@ public class AdoptPropose extends FamilyCommand implements HasParentCommand, Has
         }
 
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
         boolean confirm = false;
         boolean cancel = false;
@@ -141,15 +139,15 @@ public class AdoptPropose extends FamilyCommand implements HasParentCommand, Has
         }
 
         String childName = args[0];
+        FamilyPlayer childFam = FamilyPlayer.find(childName);
 
-        UUID childUUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", childName).findOne().getUUID();
-
-        if (childUUID == null) {
+        if (childFam == null) {
             player.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                 placeholder("%player%", childName)));
             return true;
         }
 
+        UUID childUUID = childFam.getUUID();
         PlayerSender child = LunaticLib.getPlatform().getPlayerSender(childUUID);
 
 
@@ -181,8 +179,6 @@ public class AdoptPropose extends FamilyCommand implements HasParentCommand, Has
                 placeholder("%player%", child.getName())));
             return true;
         }
-
-        FamilyPlayer childFam = getFamilyPlayer(childUUID);
 
         if (args[0].equalsIgnoreCase(player.getName())) {
             player.sendMessage(getMessage(selfRequestMK));

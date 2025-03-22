@@ -12,7 +12,6 @@ import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 
@@ -81,10 +80,15 @@ public class FamilyDBList extends FamilyCommand implements HasParams, HasParentC
         );
     }
 
-
     @Override
     public List<Map<String, String>> getParams() {
-        return List.of(getOnlinePlayersParam());
+        Map<String, String> numbers = Map.of(
+                "1", getPermission(),
+                "2", getPermission(),
+                "3", getPermission()
+        );
+
+        return List.of(numbers);
     }
 
     private Component getPlayerList(int page) {

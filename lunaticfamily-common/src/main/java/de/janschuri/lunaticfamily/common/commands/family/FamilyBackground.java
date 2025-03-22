@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.commands.family;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
-import de.janschuri.lunaticfamily.common.commands.marry.MarryEmoji;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
@@ -11,9 +10,6 @@ import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
-import de.janschuri.lunaticlib.common.config.LunaticMessageKey;
-import net.kyori.adventure.text.Component;
-import org.jooq.impl.QOM;
 
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +83,7 @@ public class FamilyBackground extends FamilyCommand implements HasParams, HasPar
         String backgroundArg = args[0];
         String background = "textures/block/" + backgroundArg + ".png";
 
-        FamilyPlayer playerFam = FamilyPlayer.findOrCreate(player.getUniqueId());
+        FamilyPlayer playerFam = FamilyPlayer.find(player.getUniqueId());
 
 
         playerFam.setBackground(background);

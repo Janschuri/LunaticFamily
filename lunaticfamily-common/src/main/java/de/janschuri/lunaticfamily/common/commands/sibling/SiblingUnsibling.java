@@ -67,8 +67,7 @@ public class SiblingUnsibling extends FamilyCommand implements HasParentCommand 
             return true;
         }
         UUID playerUUID = player.getUniqueId();
-        String name = player.getName();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
         boolean confirm = false;
         boolean cancel = false;

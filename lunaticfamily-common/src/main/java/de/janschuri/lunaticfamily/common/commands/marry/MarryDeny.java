@@ -71,7 +71,7 @@ public class MarryDeny extends FamilyCommand implements HasParentCommand {
         }
 
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
 
         if (LunaticFamily.marryRequests.containsKey(playerUUID)) {

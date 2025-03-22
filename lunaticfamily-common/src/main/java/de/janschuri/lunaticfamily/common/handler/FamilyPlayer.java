@@ -13,7 +13,6 @@ import io.ebean.annotation.Identity;
 import io.ebean.annotation.NotNull;
 import io.ebean.annotation.Where;
 import jakarta.persistence.*;
-import jdk.jshell.Snippet;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -60,7 +59,8 @@ public class FamilyPlayer {
     @OneToMany(mappedBy = "priest")
     private final List<Adoption> adoptionsAsPriest = new ArrayList<>();
 
-    private static final BiMap<UUID, Long> ids = HashBiMap.create();
+    private static final BiMap<UUID, Long> uuids = HashBiMap.create();
+    private static final BiMap<String, Long> names = HashBiMap.create();
     private static final Map<Long, FamilyPlayer> familyPlayerMap = new HashMap<>();
 
     public static FamilyPlayer find(long id) {
@@ -71,36 +71,62 @@ public class FamilyPlayer {
             if (familyPlayer == null) {
                 return null;
             }
-            ids.put(familyPlayer.uuid, id);
+            uuids.put(familyPlayer.uuid, id);
+            names.put(familyPlayer.name, id);
             familyPlayerMap.put(id, familyPlayer);
+
             return familyPlayer;
         }
     }
 
-    public static FamilyPlayer findOrCreate(@org.jetbrains.annotations.NotNull UUID uuid) {
-        if (ids.containsKey(uuid)) {
-            return find(ids.get(uuid));
+    public static FamilyPlayer find(String name) {
+        if (names.containsKey(name)) {
+            long id = names.get(name);
+            return find(id);
+        } else {
+            FamilyPlayer familyPlayer = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", name).findList().getFirst();
+            if (familyPlayer == null) {
+                return null;
+            }
+            long id = familyPlayer.getId();
+            uuids.put(familyPlayer.uuid, id);
+            names.put(name, id);
+            familyPlayerMap.put(id, familyPlayer);
+
+            return familyPlayer;
+        }
+    }
+
+    public static FamilyPlayer find(UUID uuid) {
+        if (uuids.containsKey(uuid)) {
+            return find(uuids.get(uuid));
         } else {
             FamilyPlayer familyPlayer = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uuid", uuid).findOne();
-
             if (familyPlayer == null) {
-                familyPlayer = new FamilyPlayer(uuid);
-                return familyPlayer;
+                return null;
             }
-
-            ids.put(uuid, familyPlayer.id);
-
-
+            uuids.put(uuid, familyPlayer.id);
+            names.put(familyPlayer.name, familyPlayer.id);
             familyPlayerMap.put(familyPlayer.id, familyPlayer);
 
             return familyPlayer;
         }
     }
 
+    public static FamilyPlayer findOrCreate(@org.jetbrains.annotations.NotNull UUID uuid) {
+        FamilyPlayer familyPlayer = find(uuid);
+        if (familyPlayer == null) {
+            familyPlayer = new FamilyPlayer(uuid);
+        }
+
+        return familyPlayer;
+    }
+
     private FamilyPlayer(@org.jetbrains.annotations.NotNull UUID uuid) {
         this.uuid = uuid;
         PlayerSender player = LunaticLib.getPlatform().getPlayerSender(uuid);
-        this.name = player.getName();
+        String name = player.getName();
+        this.name = name == null ? "unknown-name" : name;
 
         String skinURL = player.getSkinURL();
         this.skinURL = skinURL == null ? this.skinURL : skinURL;
@@ -124,6 +150,10 @@ public class FamilyPlayer {
     public void update() {
         DatabaseRepository.getDatabase().update(this);
         updateFamilyTree();
+    }
+
+    public void delete() {
+        DatabaseRepository.getDatabase().delete(this);
     }
 
     public String getName() {
@@ -157,7 +187,8 @@ public class FamilyPlayer {
 
     public FamilyPlayer save() {
         DatabaseRepository.getDatabase().save(this);
-        ids.put(uuid, id);
+        uuids.put(uuid, id);
+        names.put(name, id);
         familyPlayerMap.put(id, this);
         return this;
     }

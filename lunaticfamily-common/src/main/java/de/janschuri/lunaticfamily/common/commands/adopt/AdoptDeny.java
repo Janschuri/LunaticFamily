@@ -72,7 +72,7 @@ public class AdoptDeny extends FamilyCommand implements HasParentCommand {
         }
 
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
         if (LunaticFamily.adoptRequests.containsKey(playerUUID)) {
             UUID partnerUUID = LunaticFamily.adoptRequests.get(playerUUID);

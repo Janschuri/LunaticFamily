@@ -5,7 +5,6 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import io.ebean.annotation.Identity;
 import io.ebean.annotation.NotNull;
-import io.ebean.annotation.WhenCreated;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -114,5 +113,9 @@ public class Marriage {
         }
 
         return null;
+    }
+
+    public void delete() {
+        DatabaseRepository.getDatabase().delete(this);
     }
 }

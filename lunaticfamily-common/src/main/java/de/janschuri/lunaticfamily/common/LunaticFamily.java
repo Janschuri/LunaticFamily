@@ -9,7 +9,6 @@ import de.janschuri.lunaticfamily.common.commands.marry.Marry;
 import de.janschuri.lunaticfamily.common.commands.priest.Priest;
 import de.janschuri.lunaticfamily.common.commands.sibling.Sibling;
 import de.janschuri.lunaticfamily.common.config.ConfigImpl;
-import de.janschuri.lunaticfamily.common.config.FamilyTreeJSON;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.futurerequests.*;
@@ -174,7 +173,7 @@ public final class LunaticFamily {
     }
 
     public static FamilyPlayer getFamilyPlayer(UUID uuid) {
-        return FamilyPlayer.findOrCreate(uuid);
+        return FamilyPlayer.find(uuid);
     }
 
     public static FamilyPlayer getFamilyPlayer(int id) {
