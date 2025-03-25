@@ -34,6 +34,14 @@ public class ConfigImpl extends LunaticConfig implements FamilyConfig {
     private Map<String, Double> commandWithdraws = new HashMap<>();
     private Map<String, String> colors = new HashMap<>();
 
+    private ConfigKey<Integer> siblingLimitCK = new LunaticConfigKey<Integer>("sibling_limit")
+            .defaultValue(1)
+            .keyBlockComment("The maximum number of siblings a player can have. -1 means unlimited.");
+
+    private ConfigKey<Integer> adoptLimitCK = new LunaticConfigKey<Integer>("adopt_limit")
+            .defaultValue(2)
+            .keyBlockComment("The maximum children a player can adopt. -1 means unlimited.");
+
     public ConfigImpl(Path dataDirectory) {
         super(dataDirectory, CONFIG_FILE);
 
@@ -334,5 +342,13 @@ public class ConfigImpl extends LunaticConfig implements FamilyConfig {
 
         Logger.errorLog("Invalid color code or undefined color for unmarried_heart_color in config.yml. Using default color #AAAAAA.");
         return colorString;
+    }
+
+    public int getSiblingLimit() {
+        return getInt("sibling_limit", siblingLimitCK.getDefault());
+    }
+
+    public int getAdoptLimit() {
+        return getInt("adopt_limit", adoptLimitCK.getDefault());
     }
 }

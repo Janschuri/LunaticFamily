@@ -3,7 +3,6 @@ package de.janschuri.lunaticfamily.common.commands.marry;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
@@ -11,7 +10,6 @@ import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
-import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -86,8 +84,15 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
         }
 
         String player1Arg = args[0];
-        UUID player1UUID = Utils.getUUIDFromArg(player1Arg);
-        if (player1UUID == null) {
+        FamilyPlayer player1Fam;
+
+        if (Utils.isUUID(player1Arg)) {
+            player1Fam = FamilyPlayer.find(UUID.fromString(player1Arg));
+        } else {
+            player1Fam = FamilyPlayer.find(player1Arg);
+        }
+
+        if (player1Fam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK.noPrefix(),
                     placeholder("%player%", player1Arg)
             ));
@@ -95,22 +100,25 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
         }
 
         String player2Arg = args[1];
-        UUID player2UUID = Utils.getUUIDFromArg(player2Arg);
-        if (player2UUID == null) {
+        FamilyPlayer player2Fam;
+
+        if (Utils.isUUID(player2Arg)) {
+            player2Fam = FamilyPlayer.find(UUID.fromString(player2Arg));
+        } else {
+            player2Fam = FamilyPlayer.find(player2Arg);
+        }
+
+        if (player2Fam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                     placeholder("%player%", player2Arg)
             ));
             return true;
         }
 
-
-        if (player1UUID.equals(player2UUID)) {
+        if (player1Fam.equals(player2Fam)) {
             sender.sendMessage(getMessage(SAME_PLAYER_MK));
             return true;
         }
-
-        FamilyPlayer player2Fam = getFamilyPlayer(player2UUID);
-        FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
 
         player1Fam.update();
         player2Fam.update();
@@ -131,7 +139,9 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
             return true;
         }
 
-        if (player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() > 2) {
+        int newChildrenAmount = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount();
+
+        if (LunaticFamily.exceedsAdoptLimit(newChildrenAmount)) {
             int amountDiff = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() - 2;
             sender.sendMessage(getMessage(TOO_MANY_CHILDREN_MK,
                     placeholder("%player1%", player1Fam.getName()),
@@ -154,15 +164,6 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
             ));
             return true;
         }
-
-
-        LunaticFamily.marryRequests.remove(player1UUID);
-        LunaticFamily.marryPriestRequests.remove(player1UUID);
-        LunaticFamily.marryPriests.remove(player1UUID);
-
-        LunaticFamily.marryRequests.remove(player1UUID);
-        LunaticFamily.marryPriestRequests.remove(player1UUID);
-        LunaticFamily.marryPriests.remove(player1UUID);
 
         player1Fam.marry(player2Fam);
         sender.sendMessage(getMessage(MARRIED_MK,

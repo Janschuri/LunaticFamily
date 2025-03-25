@@ -104,7 +104,7 @@ public class GenderSet extends FamilyCommand implements HasParams, HasParentComm
                 sender.sendMessage(getMessage(NO_CONSOLE_COMMAND_MK));
             } else {
                 UUID playerUUID = player.getUniqueId();
-                FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+                FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
                 if (!LunaticFamily.getLanguageConfig().getGenders().contains(args[0].toLowerCase())) {
                     sender.sendMessage(getMessage(NOT_EXIST_MK));
@@ -132,16 +132,22 @@ public class GenderSet extends FamilyCommand implements HasParams, HasParentComm
         }
 
         String player1Arg = args[1];
-        UUID player1UUID = Utils.getUUIDFromArg(player1Arg);
-        if (player1UUID == null) {
+        FamilyPlayer player1Fam;
+
+        if (Utils.isUUID(player1Arg)) {
+            player1Fam = FamilyPlayer.find(UUID.fromString(player1Arg));
+        } else {
+            player1Fam = FamilyPlayer.find(player1Arg);
+        }
+
+        if (player1Fam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                 placeholder("%player%", player1Arg)));
             return true;
         }
 
-            PlayerSender player1 = LunaticLib.getPlatform().getPlayerSender(player1UUID);
+            PlayerSender player1 = LunaticLib.getPlatform().getPlayerSender(player1Fam.getUUID());
 
-            FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
             if (player1Fam.getGender().equalsIgnoreCase(args[0])) {
                 sender.sendMessage(getMessage(ADMIN_ALREADY_MK,
                 placeholder("%player%", player1.getName()),

@@ -11,7 +11,6 @@ import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
-import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -71,7 +70,7 @@ public class GenderInfo extends FamilyCommand implements HasParentCommand, HasPa
             }
 
             UUID playerUUID = player.getUniqueId();
-            FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+            FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
             sender.sendMessage(getMessage(INFO_MK,
                 placeholder("%gender%", getGenderLang(playerFam.getGender()))));
             return true;
@@ -86,31 +85,24 @@ public class GenderInfo extends FamilyCommand implements HasParentCommand, HasPa
         UUID playerUUID;
 
 
-        FamilyPlayer player;
+        FamilyPlayer playerFam;
 
         if (Utils.isUUID(playerArg)) {
             playerUUID = UUID.fromString(playerArg);
-
-            if (DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uniqueId", playerUUID).findCount() == 0) {
-                sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
-                placeholder("%player%", playerArg)));
-                return true;
-            }
-
-            player = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("uniqueId", playerUUID).findOne();
+            playerFam = FamilyPlayer.find(playerUUID);
         } else {
-            player = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", playerArg).findOne();
+            playerFam = FamilyPlayer.find(playerArg);
+        }
 
-            if (player == null) {
-                sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
-                placeholder("%player%", playerArg)));
-                return true;
-            }
+        if (playerFam == null) {
+            sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
+                    placeholder("%player%", playerArg)));
+            return true;
         }
 
         sender.sendMessage(getMessage(INFO_OTHERS_MK,
-                placeholder("%player%", player.getName()),
-                placeholder("%gender%", getGenderLang(player.getGender()))));
+                placeholder("%player%", playerFam.getName()),
+                placeholder("%gender%", getGenderLang(playerFam.getGender()))));
         return true;
     }
 

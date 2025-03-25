@@ -61,7 +61,7 @@ public class PriestStats extends FamilyCommand implements HasParentCommand {
 
         msg.append(getMessage(HEADER_MK.noPrefix()));
 
-        FamilyPlayer playerFam = getFamilyPlayer(player.getUniqueId());
+        FamilyPlayer playerFam = FamilyPlayer.find(player.getUniqueId());
 
         int totalAdoptions = playerFam.getAdoptionsAsPriest().size();
         int activeAdoptions = playerFam.getAdoptionsAsPriest().stream()

@@ -111,9 +111,9 @@ public class SiblingAccept extends FamilyCommand implements HasParentCommand {
 
     private boolean proceedPriestSiblingRequest(PlayerSender player) {
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
         UUID siblingUUID = LunaticFamily.siblingPriestRequests.get(playerUUID);
-        FamilyPlayer siblingFam = getFamilyPlayer(siblingUUID);
+        FamilyPlayer siblingFam = FamilyPlayer.find(siblingUUID);
         PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
 
         if (playerFam.isAdopted()) {
@@ -188,9 +188,9 @@ public class SiblingAccept extends FamilyCommand implements HasParentCommand {
 
     private boolean proceedSiblingRequest(PlayerSender player) {
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
         UUID siblingUUID = LunaticFamily.siblingRequests.get(playerUUID);
-        FamilyPlayer siblingFam = getFamilyPlayer(siblingUUID);
+        FamilyPlayer siblingFam = FamilyPlayer.find(siblingUUID);
         PlayerSender sibling = LunaticLib.getPlatform().getPlayerSender(siblingUUID);
 
         if (playerFam.isAdopted()) {
@@ -228,9 +228,9 @@ public class SiblingAccept extends FamilyCommand implements HasParentCommand {
 
     private boolean acceptSiblingRequest(PlayerSender player, PlayerSender sibling) {
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
         UUID siblingUUID = sibling.getUniqueId();
-        FamilyPlayer siblingFam = getFamilyPlayer(siblingUUID);
+        FamilyPlayer siblingFam = FamilyPlayer.find(siblingUUID);
 
         if (!Utils.hasEnoughMoney(player.getServerName(), siblingUUID, WithdrawKey.SIBLING_PROPOSED_PLAYER)) {
             player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK,
@@ -267,12 +267,12 @@ public class SiblingAccept extends FamilyCommand implements HasParentCommand {
 
     private boolean acceptPriestSiblingRequest(PlayerSender player, PlayerSender sibling) {
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
         UUID siblingUUID = sibling.getUniqueId();
-        FamilyPlayer siblingFam = getFamilyPlayer(siblingUUID);
+        FamilyPlayer siblingFam = FamilyPlayer.find(siblingUUID);
 
         UUID priestUUID = LunaticFamily.siblingPriests.get(siblingUUID);
-        FamilyPlayer priestFam = getFamilyPlayer(priestUUID);
+        FamilyPlayer priestFam = FamilyPlayer.find(priestUUID);
         PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
 
         if (!Utils.hasEnoughMoney(player.getServerName(), priestUUID, WithdrawKey.PRIEST_SIBLING)) {

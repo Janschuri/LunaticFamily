@@ -69,7 +69,7 @@ public class AdoptEmoji extends FamilyCommand implements HasParentCommand, HasPa
 
 
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
         if (!playerFam.isAdopted()) {
             sender.sendMessage(getMessage(NO_ADOPTION_MK));

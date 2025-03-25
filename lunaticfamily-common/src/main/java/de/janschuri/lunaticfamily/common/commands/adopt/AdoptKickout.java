@@ -2,9 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
-import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -15,7 +13,6 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
-import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -86,7 +83,7 @@ public class AdoptKickout extends FamilyCommand implements HasParentCommand, Has
 
 
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
         if (playerFam.getChildren().isEmpty()) {
             sender.sendMessage(getMessage(NO_CHILD_MK));
@@ -101,16 +98,17 @@ public class AdoptKickout extends FamilyCommand implements HasParentCommand, Has
 
         String childName = args[0];
 
-        UUID childUUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", childName).findOne().getUUID();
 
-        if (childUUID == null) {
+        FamilyPlayer childFam = FamilyPlayer.find(childName);
+        UUID childUUID = childFam.getUUID();
+
+        if (childFam == null) {
             player.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                 placeholder("%player%", childName)));
             return true;
         }
 
         PlayerSender child = LunaticLib.getPlatform().getPlayerSender(childUUID);
-        FamilyPlayer childFam = getFamilyPlayer(childUUID);
 
         if (childFam.isNotChildOf(playerFam)) {
             sender.sendMessage(getMessage(NOT_YOUR_CHILD_MK,

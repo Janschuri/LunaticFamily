@@ -1,8 +1,8 @@
 package de.janschuri.lunaticfamily.common.commands.sibling;
 
+import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
@@ -10,7 +10,6 @@ import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
-import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -39,8 +38,8 @@ public class SiblingSet extends FamilyCommand implements HasParentCommand, HasPa
             .defaultMessage("en", "%player1% and %player2% are adopted. Set the adoption by the parents or marry the parents to make %player1% and %player2% siblings.")
             .defaultMessage("de", "%player1% und %player2% sind adoptiert. Setze die Adoption durch die Eltern oder verheirate die Eltern, um %player1% und %player2% zu Geschwistern zu machen.");
     private static final CommandMessageKey ALREADY_SIBLING_MK = new LunaticCommandMessageKey(INSTANCE, "already_sibling")
-            .defaultMessage("en", "%player1% already has a sibling.")
-            .defaultMessage("de", "%player1% hat bereits ein Geschwisterkind.");
+            .defaultMessage("en", "You cannot add %player1% and %player2% as siblings. This would exceed the sibling limit.")
+            .defaultMessage("de", "Du kannst %player1% und %player2% nicht als Geschwister hinzufügen. Dies würde das Geschwisterlimit überschreiten.");
 
 
 
@@ -76,24 +75,37 @@ public class SiblingSet extends FamilyCommand implements HasParentCommand, HasPa
         }
 
         String player1Arg = args[0];
-        UUID player1UUID = Utils.getUUIDFromArg(player1Arg);
-        if (player1UUID == null) {
+        FamilyPlayer player1Fam;
+
+        if (Utils.isUUID(player1Arg)) {
+            UUID player1UUID = UUID.fromString(player1Arg);
+            player1Fam = FamilyPlayer.find(player1UUID);
+            player1Arg = player1Fam.getName();
+        } else {
+            player1Fam = FamilyPlayer.find(player1Arg);
+        }
+
+        if (player1Fam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                 placeholder("%player%", player1Arg)));
             return true;
         }
 
         String player2Arg = args[1];
-        UUID player2UUID = Utils.getUUIDFromArg(player2Arg);
-        if (player2UUID == null) {
+        FamilyPlayer player2Fam;
+
+        if (Utils.isUUID(player2Arg)) {
+            UUID player2UUID = UUID.fromString(player2Arg);
+            player2Fam = FamilyPlayer.find(player2UUID);
+        } else {
+            player2Fam = FamilyPlayer.find(player2Arg);
+        }
+
+        if (player2Fam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                 placeholder("%player%", player2Arg)));
             return true;
         }
-
-
-        FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
-        FamilyPlayer player2Fam = getFamilyPlayer(player2UUID);
 
         player1Fam.update();
         player2Fam.update();
@@ -125,21 +137,18 @@ public class SiblingSet extends FamilyCommand implements HasParentCommand, HasPa
             return true;
         }
 
-        if (player1Fam.hasSiblings()) {
+        int newSiblingsAmount = player1Fam.getSiblingsAmount() + player2Fam.getSiblingsAmount() + 1;
+
+        if (LunaticFamily.exceedsSiblingLimit(newSiblingsAmount)) {
             sender.sendMessage(getMessage(ALREADY_SIBLING_MK,
-                placeholder("%player1%", player1Fam.getName())));
+                placeholder("%player1%", player1Fam.getName()),
+                placeholder("%player2%", player2Fam.getName())));
             return true;
         }
 
         if (player1Fam.isAdopted()) {
             sender.sendMessage(getMessage(IS_ADOPTED_MK,
                 placeholder("%player%", player1Fam.getName())));
-            return true;
-        }
-
-        if (player2Fam.hasSiblings()) {
-            sender.sendMessage(getMessage(ALREADY_SIBLING_MK,
-                placeholder("%player1%", player2Fam.getName())));
             return true;
         }
 

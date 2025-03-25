@@ -5,7 +5,6 @@ import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.handler.Marriage;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.Placeholder;
@@ -17,7 +16,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -94,7 +92,13 @@ public class MarryList extends FamilyCommand implements HasParentCommand, HasPar
 
     @Override
     public List<Map<String, String>> getParams() {
-        return List.of(getOnlinePlayersParam());
+        Map<String, String> numbers = Map.of(
+                "1", getPermission(),
+                "2", getPermission(),
+                "3", getPermission()
+        );
+
+        return List.of(numbers);
     }
 
     private Component getMarryList(int page) {

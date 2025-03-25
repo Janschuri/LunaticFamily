@@ -4,7 +4,6 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -15,7 +14,6 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
-import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -93,7 +91,7 @@ public class SiblingPropose extends FamilyCommand implements HasParentCommand, H
         }
 
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
         if (playerFam.hasSiblings()) {
             sender.sendMessage(getMessage(HAS_SIBLING_MK,
@@ -116,7 +114,7 @@ public class SiblingPropose extends FamilyCommand implements HasParentCommand, H
 
         String siblingName = args[0];
 
-        FamilyPlayer siblingFam = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", siblingName).findOneOrEmpty().orElse(null);
+        FamilyPlayer siblingFam = FamilyPlayer.find(siblingName);
 
         if (siblingFam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,

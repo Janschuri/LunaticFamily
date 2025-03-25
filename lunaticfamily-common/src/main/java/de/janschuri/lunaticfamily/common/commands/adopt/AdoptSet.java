@@ -3,7 +3,6 @@ package de.janschuri.lunaticfamily.common.commands.adopt;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
@@ -13,7 +12,6 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
-import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -116,21 +114,39 @@ public class AdoptSet extends FamilyCommand implements HasParams, HasParentComma
         }
 
         String firstParentArg = args[0];
-        UUID firstParentUUID = Utils.getUUIDFromArg(firstParentArg);
-        if (firstParentUUID == null) {
+        FamilyPlayer firstParentFam;
+
+        if (Utils.isUUID(firstParentArg)) {
+            UUID firstParentUUID = UUID.fromString(firstParentArg);
+            firstParentFam = FamilyPlayer.find(firstParentUUID);
+        } else {
+            firstParentFam = FamilyPlayer.find(firstParentArg);
+        }
+
+        if (firstParentFam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                 placeholder("%player%", firstParentArg)));
             return true;
         }
 
         String childArg = args[1];
-        UUID childUUID = Utils.getUUIDFromArg(childArg);
-        if (childUUID == null) {
+        FamilyPlayer childFam;
+
+        if (Utils.isUUID(childArg)) {
+            UUID childUUID = UUID.fromString(childArg);
+            childFam = FamilyPlayer.find(childUUID);
+        } else {
+            childFam = FamilyPlayer.find(childArg);
+        }
+
+        if (childFam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                 placeholder("%player%", childArg)));
             return true;
         }
 
+        UUID firstParentUUID = firstParentFam.getUUID();
+        UUID childUUID = childFam.getUUID();
         PlayerSender firstParent = LunaticLib.getPlatform().getPlayerSender(firstParentUUID);
         PlayerSender child = LunaticLib.getPlatform().getPlayerSender(childUUID);
 
@@ -139,9 +155,6 @@ public class AdoptSet extends FamilyCommand implements HasParams, HasParentComma
             sender.sendMessage(getMessage(SAME_PLAYER_MK));
             return true;
         }
-
-        FamilyPlayer firstParentFam = getFamilyPlayer(firstParentUUID);
-        FamilyPlayer childFam = getFamilyPlayer(childUUID);
 
         firstParentFam.update();
 
@@ -171,7 +184,9 @@ public class AdoptSet extends FamilyCommand implements HasParams, HasParentComma
             return true;
         }
 
-        if (firstParentFam.getChildrenAmount() > 1) {
+        int childAmount = firstParentFam.getChildrenAmount() + 1;
+
+        if (LunaticFamily.exceedsAdoptLimit(childAmount)) {
             sender.sendMessage(getMessage(ADOPT_LIMIT_MK,
                 placeholder("%player%", firstParentFam.getName())));
             return true;

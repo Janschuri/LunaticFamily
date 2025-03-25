@@ -72,7 +72,7 @@ public class SiblingDeny extends FamilyCommand implements HasParentCommand {
         }
 
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
         if (LunaticFamily.siblingRequests.containsKey(playerUUID)) {
             UUID partnerUUID = LunaticFamily.siblingRequests.get(playerUUID);

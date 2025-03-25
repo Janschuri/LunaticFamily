@@ -69,7 +69,7 @@ public class MarryEmoji extends FamilyCommand implements HasParentCommand, HasPa
 
 
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
         if (!playerFam.isMarried()) {
             sender.sendMessage(getMessage(NO_MARRIAGE_MK));

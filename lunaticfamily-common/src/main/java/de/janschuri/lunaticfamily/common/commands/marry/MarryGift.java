@@ -67,7 +67,7 @@ public class MarryGift extends FamilyCommand implements HasParentCommand {
         }
 
         UUID playerUUID = player.getUniqueId();
-            FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+            FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
             if (!playerFam.isMarried()) {
                 player.sendMessage(getMessage(NO_PARTNER_MK));

@@ -2,9 +2,7 @@ package de.janschuri.lunaticfamily.common.commands.marry;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
-import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -15,7 +13,6 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
-import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -95,7 +92,7 @@ public class MarryPropose extends FamilyCommand implements HasParentCommand, Has
             return true;
         }
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
         if (args.length < 1) {
             sender.sendMessage(getMessage(WRONG_USAGE_MK));
@@ -114,8 +111,7 @@ public class MarryPropose extends FamilyCommand implements HasParentCommand, Has
         }
 
         String partnerName = args[0];
-
-        FamilyPlayer partnerFam = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", partnerName).findOneOrEmpty().orElse(null);
+        FamilyPlayer partnerFam = FamilyPlayer.find(partnerName);
 
         if (partnerFam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
@@ -164,7 +160,9 @@ public class MarryPropose extends FamilyCommand implements HasParentCommand, Has
             return true;
         }
 
-        if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
+        int newChildrenAmount = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount();
+
+        if (LunaticFamily.exceedsAdoptLimit(newChildrenAmount)) {
             int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
             sender.sendMessage(getMessage(TOO_MANY_CHILDREN_MK,
                 placeholder("%player%", partnerFam.getName()),

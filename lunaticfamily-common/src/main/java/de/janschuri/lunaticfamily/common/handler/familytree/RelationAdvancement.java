@@ -1,6 +1,7 @@
 package de.janschuri.lunaticfamily.common.handler.familytree;
 
 import de.janschuri.lunaticfamily.TreeAdvancement;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -30,7 +31,7 @@ public class RelationAdvancement implements TreeAdvancement {
         this.title = title;
         this.description = description;
 
-        if (skinUrl == null || !skinUrl.isEmpty()) {
+        if (skinUrl == null || skinUrl.isEmpty()) {
             this.skinUrl = DEFAULT_SKIN;
         } else {
             this.skinUrl = skinUrl;
