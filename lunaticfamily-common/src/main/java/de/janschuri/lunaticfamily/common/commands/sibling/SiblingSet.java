@@ -1,5 +1,6 @@
 package de.janschuri.lunaticfamily.common.commands.sibling;
 
+import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -37,8 +38,8 @@ public class SiblingSet extends FamilyCommand implements HasParentCommand, HasPa
             .defaultMessage("en", "%player1% and %player2% are adopted. Set the adoption by the parents or marry the parents to make %player1% and %player2% siblings.")
             .defaultMessage("de", "%player1% und %player2% sind adoptiert. Setze die Adoption durch die Eltern oder verheirate die Eltern, um %player1% und %player2% zu Geschwistern zu machen.");
     private static final CommandMessageKey ALREADY_SIBLING_MK = new LunaticCommandMessageKey(INSTANCE, "already_sibling")
-            .defaultMessage("en", "%player1% already has a sibling.")
-            .defaultMessage("de", "%player1% hat bereits ein Geschwisterkind.");
+            .defaultMessage("en", "You cannot add %player1% and %player2% as siblings. This would exceed the sibling limit.")
+            .defaultMessage("de", "Du kannst %player1% und %player2% nicht als Geschwister hinzufügen. Dies würde das Geschwisterlimit überschreiten.");
 
 
 
@@ -136,21 +137,18 @@ public class SiblingSet extends FamilyCommand implements HasParentCommand, HasPa
             return true;
         }
 
-        if (player1Fam.hasSiblings()) {
+        int newSiblingsAmount = player1Fam.getSiblingsAmount() + player2Fam.getSiblingsAmount() + 1;
+
+        if (LunaticFamily.exceedsSiblingLimit(newSiblingsAmount)) {
             sender.sendMessage(getMessage(ALREADY_SIBLING_MK,
-                placeholder("%player1%", player1Fam.getName())));
+                placeholder("%player1%", player1Fam.getName()),
+                placeholder("%player2%", player2Fam.getName())));
             return true;
         }
 
         if (player1Fam.isAdopted()) {
             sender.sendMessage(getMessage(IS_ADOPTED_MK,
                 placeholder("%player%", player1Fam.getName())));
-            return true;
-        }
-
-        if (player2Fam.hasSiblings()) {
-            sender.sendMessage(getMessage(ALREADY_SIBLING_MK,
-                placeholder("%player1%", player2Fam.getName())));
             return true;
         }
 

@@ -34,8 +34,8 @@ public class AdoptAccept extends FamilyCommand implements HasParentCommand {
             .defaultMessage("en", "You adopted %player%.")
             .defaultMessage("de", "Du hast %player% adoptiert.");
     private static final CommandMessageKey PARENT_LIMIT_MK = new LunaticCommandMessageKey(INSTANCE,"parent_limit")
-            .defaultMessage("en", "%player% cannot adopt another child. %player% has already reached the limit of two children.")
-            .defaultMessage("de", "%player% kann kein weiteres Kind adoptieren. %player% hat bereits das Limit von zwei Kindern erreicht.");
+            .defaultMessage("en", "%player% cannot adopt another child. %player% has already reached the child limit.")
+            .defaultMessage("de", "%player% kann kein weiteres Kind adoptieren. %player% hat bereits das Kindlimit erreicht.");
     private static final CommandMessageKey NO_REQUEST_MK = new LunaticCommandMessageKey(INSTANCE,"no_request")
             .defaultMessage("en", "You don't have any open adoption requests.")
             .defaultMessage("de", "Du hast keine offenen Adoptionsanfragen.");
@@ -221,11 +221,14 @@ public class AdoptAccept extends FamilyCommand implements HasParentCommand {
         FamilyPlayer parent1Fam = FamilyPlayer.find(parent1UUID);
         PlayerSender parent1 = LunaticLib.getPlatform().getPlayerSender(parent1UUID);
 
-        if (parent1Fam.getChildrenAmount() > 1) {
+        int newChildrenAmount = parent1Fam.getChildrenAmount() + playerFam.getChildrenAmount() + 1;
+
+        if (LunaticFamily.exceedsAdoptLimit(newChildrenAmount)) {
             player.sendMessage(getMessage(PARENT_LIMIT_MK,
                 placeholder("%player%", parent1Fam.getName())));
             return true;
         }
+
         if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.ADOPT_CHILD)) {
             player.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK));
             return true;

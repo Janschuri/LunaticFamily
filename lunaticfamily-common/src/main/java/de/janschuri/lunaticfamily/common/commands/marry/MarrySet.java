@@ -1,5 +1,6 @@
 package de.janschuri.lunaticfamily.common.commands.marry;
 
+import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
@@ -138,7 +139,9 @@ public class MarrySet extends FamilyCommand implements HasParentCommand, HasPara
             return true;
         }
 
-        if (player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() > 2) {
+        int newChildrenAmount = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount();
+
+        if (LunaticFamily.exceedsAdoptLimit(newChildrenAmount)) {
             int amountDiff = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() - 2;
             sender.sendMessage(getMessage(TOO_MANY_CHILDREN_MK,
                     placeholder("%player1%", player1Fam.getName()),

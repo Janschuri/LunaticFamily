@@ -38,8 +38,8 @@ public class PriestSibling extends FamilyCommand implements HasParentCommand, Ha
             .defaultMessage("en", "%player1% is adopted. You could set up the adoption of %player2% by %player1%'s parents.")
             .defaultMessage("de", "%player1% ist adoptiert. Du könntest die Adoption von %player2% durch %player1%'s Eltern einrichten.");
     private static final CommandMessageKey ALREADY_SIBLING_MK = new LunaticCommandMessageKey(INSTANCE, "already_sibling")
-            .defaultMessage("en", "%player% already has a sibling.")
-            .defaultMessage("de", "%player% hat bereits ein Geschwister.");
+            .defaultMessage("en", "%player1% and %player2% cannot be siblings. Together they would exceed the sibling limit.")
+            .defaultMessage("de", "%player1% und %player2% können keine Geschwister sein. Zusammen würden sie das Geschwisterlimit überschreiten.");
     private static final CommandMessageKey SELF_REQUEST_MK = new LunaticCommandMessageKey(INSTANCE, "self_request")
             .defaultMessage("en", "You cannot be your own sibling.")
             .defaultMessage("de", "Du kannst nicht dein eigenes Geschwister sein.");
@@ -231,19 +231,6 @@ public class PriestSibling extends FamilyCommand implements HasParentCommand, Ha
             return true;
         }
 
-
-        if (player1Fam.hasSiblings()) {
-            sender.sendMessage(getMessage(ALREADY_SIBLING_MK,
-                placeholder("%player%", player1Fam.getName())));
-            return true;
-        }
-
-        if (player2Fam.isMarried()) {
-            sender.sendMessage(getMessage(ALREADY_SIBLING_MK,
-                placeholder("%player%", player2Fam.getName())));
-            return true;
-        }
-
         if (LunaticFamily.siblingRequests.containsKey(player1UUID) || LunaticFamily.siblingPriests.containsValue(player1UUID)) {
             sender.sendMessage(getMessage(OPEN_REQUEST_MK,
                 placeholder("%player%", player1Fam.getName())));
@@ -267,6 +254,15 @@ public class PriestSibling extends FamilyCommand implements HasParentCommand, Ha
             sender.sendMessage(getMessage(IS_ADOPTED_MK,
                 placeholder("%player1%", player2Fam.getName()),
                 placeholder("%player2%", player1Fam.getName())));
+            return true;
+        }
+
+        int newSiblingsAmount = player1Fam.getSiblingsAmount() + player2Fam.getSiblingsAmount() + 1;
+
+        if (LunaticFamily.exceedsSiblingLimit(newSiblingsAmount)) {
+            sender.sendMessage(getMessage(ALREADY_SIBLING_MK,
+                    placeholder("%player1%", player1Fam.getName()),
+                    placeholder("%player2%", player2Fam.getName())));
             return true;
         }
 

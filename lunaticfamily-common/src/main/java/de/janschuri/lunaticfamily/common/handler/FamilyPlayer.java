@@ -314,6 +314,10 @@ public class FamilyPlayer {
         return getAdoptionsAsParent().size();
     }
 
+    public Integer getSiblingsAmount() {
+        return getSiblinghoods().size();
+    }
+
     public void marry(FamilyPlayer partnerFam) {
         marry(partnerFam, null);
     }

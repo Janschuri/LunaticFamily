@@ -119,7 +119,9 @@ public class MarryAccept extends FamilyCommand implements HasParentCommand {
         FamilyPlayer partnerFam = FamilyPlayer.find(partnerUUID);
         PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
 
-        if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
+        int newChildrenAmount = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount();
+
+        if (LunaticFamily.exceedsAdoptLimit(newChildrenAmount)) {
             int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
             player.sendMessage(getMessage(TOO_MANY_CHILDREN_MK,
                 placeholder("%partner%", partnerFam.getName()),
@@ -141,7 +143,9 @@ public class MarryAccept extends FamilyCommand implements HasParentCommand {
         FamilyPlayer partnerFam = FamilyPlayer.find(partnerUUID);
         PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
 
-        if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
+        int newChildrenAmount = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount();
+
+        if (LunaticFamily.exceedsAdoptLimit(newChildrenAmount)) {
             int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
             player.sendMessage(getMessage(TOO_MANY_CHILDREN_MK,
                 placeholder("%partner%", partnerFam.getName()),

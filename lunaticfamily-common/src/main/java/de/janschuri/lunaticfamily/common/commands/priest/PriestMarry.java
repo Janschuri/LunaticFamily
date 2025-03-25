@@ -254,8 +254,11 @@ public class PriestMarry extends FamilyCommand implements HasParentCommand, HasP
             return true;
         }
 
-        if (player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() > 2) {
-            int amountDiff = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount() - 2;
+        int newChildrenAmount = player1Fam.getChildrenAmount() + player2Fam.getChildrenAmount();
+
+        if (LunaticFamily.exceedsAdoptLimit(newChildrenAmount)) {
+            int amountDiff = newChildrenAmount - LunaticFamily.getAdoptLimit();
+
             sender.sendMessage(getMessage(TOO_MANY_CHILDREN_MK,
                 placeholder("%player1%", player1Fam.getName()),
                 placeholder("%player2%", player2Fam.getName()),

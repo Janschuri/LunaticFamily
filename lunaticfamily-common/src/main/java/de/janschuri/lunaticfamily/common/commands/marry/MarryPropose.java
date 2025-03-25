@@ -160,7 +160,9 @@ public class MarryPropose extends FamilyCommand implements HasParentCommand, Has
             return true;
         }
 
-        if (playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() > 2) {
+        int newChildrenAmount = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount();
+
+        if (LunaticFamily.exceedsAdoptLimit(newChildrenAmount)) {
             int amountDiff = playerFam.getChildrenAmount() + partnerFam.getChildrenAmount() - 2;
             sender.sendMessage(getMessage(TOO_MANY_CHILDREN_MK,
                 placeholder("%player%", partnerFam.getName()),
