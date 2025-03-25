@@ -43,7 +43,6 @@ public class JoinListenerExecuter implements HasMessageKeys {
             String skinURL = sender.getSkinURL();
 
             if (skinURL != null) {
-                Logger.debugLog(String.format("Skin URL: %s", skinURL));
                 playerFam.updateSkinURL(skinURL);
             }
             playerFam.save();

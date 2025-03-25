@@ -380,14 +380,6 @@ public class DatabaseRepository {
             boolean first = true;
 
             for (Record player : players) {
-                if (first) {
-                    first = false;
-                    // log all columns with values
-                    for (Field<?> field : player.fields()) {
-                        Logger.debugLog(field.getName() + ": " + player.get(field));
-                    }
-                }
-
                 long id = player.get("player_id", Long.class);
 
                 String uuidString = player.get("uuid", String.class);

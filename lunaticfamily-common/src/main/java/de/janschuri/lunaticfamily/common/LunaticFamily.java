@@ -173,7 +173,6 @@ public final class LunaticFamily {
 
     public static boolean exceedsAdoptLimit(int amount) {
         int limit = config.getAdoptLimit();
-        Logger.debugLog("Adopt limit: " + limit + ", amount: " + amount);
 
         if (limit == -1) {
             return false;
@@ -192,7 +191,6 @@ public final class LunaticFamily {
 
     public static boolean exceedsSiblingLimit(int amount) {
         int limit = config.getSiblingLimit();
-        Logger.debugLog("Sibling limit: " + limit + " amount: " + amount);
 
         if (limit == -1) {
             return false;
