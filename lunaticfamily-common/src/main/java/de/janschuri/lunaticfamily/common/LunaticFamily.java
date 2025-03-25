@@ -9,12 +9,10 @@ import de.janschuri.lunaticfamily.common.commands.marry.Marry;
 import de.janschuri.lunaticfamily.common.commands.priest.Priest;
 import de.janschuri.lunaticfamily.common.commands.sibling.Sibling;
 import de.janschuri.lunaticfamily.common.config.ConfigImpl;
-import de.janschuri.lunaticfamily.common.config.FamilyTreeJSON;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.futurerequests.*;
 import de.janschuri.lunaticfamily.common.handler.Adoption;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticfamily.common.utils.Logger;
@@ -44,10 +42,10 @@ public final class LunaticFamily {
     private static ConfigImpl config;
 
     private static final FutureRequest[] futureRequests = {
-        new UpdateFamilyTreeRequest(),
-        new SpawnParticlesCloudRequest(),
-        new GetPlaceholderRequest(),
-        new GetRelationalPlaceholderRequest(),
+            new UpdateFamilyTreeRequest(),
+            new SpawnParticlesCloudRequest(),
+            new GetPlaceholderRequest(),
+            new GetRelationalPlaceholderRequest(),
     };
 
     private static Path dataDirectory;
@@ -78,11 +76,11 @@ public final class LunaticFamily {
             languageConfig = new LanguageConfigImpl(dataDirectory, languageKey);
             languageConfig.load();
 
-                if (DatabaseRepository.init()) {
-                    Logger.infoLog("Database loaded.");
-                } else {
-                    Logger.errorLog("Database could not be loaded.");
-                }
+            if (DatabaseRepository.init()) {
+                Logger.infoLog("Database loaded.");
+            } else {
+                Logger.errorLog("Database could not be loaded.");
+            }
         }
         return true;
     }
@@ -173,11 +171,39 @@ public final class LunaticFamily {
         return DatabaseRepository.getDatabase().find(Marriage.class).where().isNull("divorceDate").findCount() * 2;
     }
 
-    public static FamilyPlayer getFamilyPlayer(UUID uuid) {
-        return FamilyPlayer.findOrCreate(uuid);
+    public static boolean exceedsAdoptLimit(int amount) {
+        int limit = config.getAdoptLimit();
+
+        if (limit == -1) {
+            return false;
+        }
+
+        if (amount > limit) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public static FamilyPlayer getFamilyPlayer(int id) {
-        return FamilyPlayer.find(id);
+    public static int getAdoptLimit() {
+        return config.getAdoptLimit();
+    }
+
+    public static boolean exceedsSiblingLimit(int amount) {
+        int limit = config.getSiblingLimit();
+
+        if (limit == -1) {
+            return false;
+        }
+
+        if (amount > limit) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static int getSiblingLimit() {
+        return config.getSiblingLimit();
     }
 }

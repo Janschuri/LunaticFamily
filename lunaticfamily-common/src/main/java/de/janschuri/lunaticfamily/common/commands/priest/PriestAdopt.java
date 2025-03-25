@@ -4,7 +4,6 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
 import de.janschuri.lunaticlib.CommandMessageKey;
@@ -117,46 +116,46 @@ public class PriestAdopt extends FamilyCommand implements HasParentCommand, HasP
         String player1Name = args[0];
         String player2Name = args[1];
 
-        UUID player1UUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", player1Name).findOne().getUUID();
-        UUID player2UUID = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", player2Name).findOne().getUUID();
+        FamilyPlayer parentFam = FamilyPlayer.find(player1Name);
+        FamilyPlayer childFam = FamilyPlayer.find(player2Name);
 
-        if (player1UUID == null) {
+        if (parentFam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                     placeholder("%player%", player1Name)
             ));
             return true;
         }
 
-        if (player2UUID == null) {
+        if (childFam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                 placeholder("%player%", player2Name)
             ));
             return true;
         }
 
-        if (player1UUID.equals(player2UUID)) {
+        if (parentFam.equals(childFam)) {
             sender.sendMessage(getMessage(SAME_PLAYER_MK));
             return true;
         }
 
-        FamilyPlayer player1Fam = getFamilyPlayer(player1UUID);
-        FamilyPlayer player2Fam = getFamilyPlayer(player2UUID);
+        UUID player1UUID = parentFam.getUUID();
+        UUID player2UUID = childFam.getUUID();
 
-        player1Fam.update();
-        player2Fam.update();
+        parentFam.update();
+        childFam.update();
 
-        if (player1Fam.isFamilyMember(player2Fam)) {
+        if (parentFam.isFamilyMember(childFam)) {
             sender.sendMessage(getMessage(FAMILY_REQUEST_MK,
-                placeholder("%player1%", player1Fam.getName()),
-                placeholder("%player2%", player2Fam.getName())
+                placeholder("%player1%", parentFam.getName()),
+                placeholder("%player2%", childFam.getName())
             ));
             return true;
         }
 
-        if (player2Fam.isFamilyMember(player1Fam)) {
+        if (childFam.isFamilyMember(parentFam)) {
             sender.sendMessage(getMessage(FAMILY_REQUEST_MK,
-                placeholder("%player1%", player1Fam.getName()),
-                placeholder("%player2%", player2Fam.getName())
+                placeholder("%player1%", parentFam.getName()),
+                placeholder("%player2%", childFam.getName())
             ));
             return true;
         }
@@ -238,34 +237,36 @@ public class PriestAdopt extends FamilyCommand implements HasParentCommand, HasP
             return true;
         }
 
-        if (player1Fam.getChildrenAmount() > 2) {
-            sender.sendMessage(getMessage(TOO_MANY_CHILDREN_MK,
-                placeholder("%player%", player1Fam.getName()))
-            );
+        if (childFam.isAdopted()) {
+            sender.sendMessage(getMessage(PLAYER_ALREADY_ADOPTED_MK,
+                placeholder("%player%", childFam.getName())));
             return true;
         }
 
-        if (player2Fam.hasSiblings()) {
-            sender.sendMessage(getMessage(PLAYER_ALREADY_ADOPTED_MK,
-                placeholder("%player%", player2Fam.getName())));
+        int newChildrenAmount = parentFam.getChildrenAmount() + childFam.getSiblingsAmount();
+
+        if (LunaticFamily.exceedsAdoptLimit(newChildrenAmount)) {
+            sender.sendMessage(getMessage(TOO_MANY_CHILDREN_MK,
+                    placeholder("%player%", parentFam.getName()))
+            );
             return true;
         }
 
         if (LunaticFamily.adoptRequests.containsKey(player1UUID) || LunaticFamily.adoptPriests.containsValue(player1UUID)) {
             sender.sendMessage(getMessage(OPEN_REQUEST_MK,
-                placeholder("%player%", player1Fam.getName())));
+                placeholder("%player%", parentFam.getName())));
             return true;
         }
 
         if (LunaticFamily.adoptRequests.containsKey(player2UUID) || LunaticFamily.adoptPriests.containsValue(player2UUID)) {
             sender.sendMessage(getMessage(OPEN_REQUEST_MK,
-                placeholder("%player%", player2Fam.getName())));
+                placeholder("%player%", childFam.getName())));
             return true;
         }
 
         player.chat(getLanguageConfig().getMessageAsString(REQUEST_MK.noPrefix(),
-                placeholder("%player1%", player1Fam.getName()),
-                placeholder("%player2%", player2Fam.getName())
+                placeholder("%player1%", parentFam.getName()),
+                placeholder("%player2%", childFam.getName())
         ));
 
         player1.sendMessage(Utils.getClickableDecisionMessage(

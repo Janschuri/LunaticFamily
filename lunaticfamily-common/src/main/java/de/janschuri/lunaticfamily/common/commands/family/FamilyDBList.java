@@ -9,10 +9,13 @@ import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
+import io.ebean.DB;
+import io.ebean.OrderBy;
+import io.ebean.PagedList;
+import io.ebean.Paging;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 
@@ -81,21 +84,37 @@ public class FamilyDBList extends FamilyCommand implements HasParams, HasParentC
         );
     }
 
-
     @Override
     public List<Map<String, String>> getParams() {
-        return List.of(getOnlinePlayersParam());
+        Map<String, String> numbers = Map.of(
+                "1", getPermission(),
+                "2", getPermission(),
+                "3", getPermission()
+        );
+
+        return List.of(numbers);
     }
 
     private Component getPlayerList(int page) {
-        Map<Long, FamilyPlayer> players = DatabaseRepository.getDatabase().find(FamilyPlayer.class).findList().stream()
-                .collect(LinkedHashMap::new, (m, v) -> m.put(v.getId(), v), LinkedHashMap::putAll);
+        int firstRow = (page - 1) * 10;
+
+        PagedList<FamilyPlayer> pagedList = DB.find(FamilyPlayer.class)
+                .orderBy().asc("id")
+                .setFirstRow(firstRow)
+                .setMaxRows(10)
+                .findPagedList();
+
+        pagedList.loadCount();
+
+        int totalRowCount = pagedList.getTotalCount();
+
+        List<FamilyPlayer> players = pagedList.getList();
 
         ComponentBuilder<TextComponent, TextComponent.Builder> msg = Component.text().append(getMessage(HEADER_MK.noPrefix()));
 
         int i = 1;
 
-        for (FamilyPlayer player : players.values()) {
+        for (FamilyPlayer player : players) {
             msg.append(Component.newline());
 
             long id = player.getId();
@@ -131,6 +150,7 @@ public class FamilyDBList extends FamilyCommand implements HasParams, HasParentC
             row = row.append(delete);
 
             msg.append(row);
+            i++;
         }
 
         return msg.build();

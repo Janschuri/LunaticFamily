@@ -65,7 +65,7 @@ public class FamilyTree extends FamilyCommand implements HasParentCommand {
 
         UUID playerUUID = player.getUniqueId();
             String name = player.getName();
-            FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+            FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
             playerFam.save();
 
 

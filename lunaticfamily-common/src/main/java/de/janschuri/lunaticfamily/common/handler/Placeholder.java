@@ -8,12 +8,11 @@ import de.janschuri.lunaticfamily.common.handler.familytree.RelationAdvancement;
 import de.janschuri.lunaticlib.common.utils.Mode;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import static de.janschuri.lunaticfamily.common.handler.FamilyPlayer.findOrCreate;
+import static de.janschuri.lunaticfamily.common.handler.FamilyPlayer.find;
 
 public class Placeholder {
 
@@ -23,7 +22,7 @@ public class Placeholder {
             return new GetPlaceholderRequest().get(uuid, placeholder).thenApply(s -> s).join();
         }
 
-        FamilyPlayer player = findOrCreate(uuid);
+        FamilyPlayer player = find(uuid);
 
         if (player == null) {
             return null;
@@ -430,8 +429,8 @@ public class Placeholder {
             return new GetRelationalPlaceholderRequest().get(uuid1, uuid2, placeholder).thenApply(s -> s).join();
         }
 
-        FamilyPlayer player1 = findOrCreate(uuid1);
-        FamilyPlayer player2 = findOrCreate(uuid2);
+        FamilyPlayer player1 = find(uuid1);
+        FamilyPlayer player2 = find(uuid2);
 
         if (placeholder.equalsIgnoreCase("relation")) {
 

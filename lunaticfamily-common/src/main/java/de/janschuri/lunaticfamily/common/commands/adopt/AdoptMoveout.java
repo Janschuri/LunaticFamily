@@ -69,7 +69,7 @@ public class AdoptMoveout extends FamilyCommand implements HasParentCommand {
         }
 
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
         boolean confirm = false;
         boolean cancel = false;

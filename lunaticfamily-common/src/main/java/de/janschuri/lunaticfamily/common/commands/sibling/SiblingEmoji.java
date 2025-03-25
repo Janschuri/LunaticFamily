@@ -69,7 +69,7 @@ public class SiblingEmoji extends FamilyCommand implements HasParentCommand, Has
 
 
         UUID playerUUID = player.getUniqueId();
-        FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+        FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
         if (!playerFam.hasSiblings()) {
             sender.sendMessage(getMessage(NO_SIBLINGHOOD_MK));

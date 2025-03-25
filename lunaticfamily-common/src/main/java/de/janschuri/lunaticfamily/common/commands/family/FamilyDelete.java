@@ -7,7 +7,6 @@ import de.janschuri.lunaticfamily.common.handler.Adoption;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticfamily.common.handler.Siblinghood;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
@@ -16,7 +15,6 @@ import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.HasParams;
 import de.janschuri.lunaticlib.common.command.HasParentCommand;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
-import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -95,25 +93,25 @@ public class FamilyDelete extends FamilyCommand implements HasParentCommand, Has
 
         if (confirm) {
             UUID playerUUID = UUID.fromString(playerArg);
-            FamilyPlayer playerFam = getFamilyPlayer(playerUUID);
+            FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
             for (Marriage marriage : playerFam.getMarriages()) {
-                DatabaseRepository.getDatabase().delete(marriage);
+                marriage.delete();
             }
 
             for (Adoption adoption : playerFam.getAdoptionsAsChild()) {
-                DatabaseRepository.getDatabase().delete(adoption);
+                adoption.delete();
             }
 
             for (Adoption adoption : playerFam.getAdoptionsAsParent()) {
-                DatabaseRepository.getDatabase().delete(adoption);
+                adoption.delete();
             }
 
             for (Siblinghood siblinghood : playerFam.getSiblinghoods()) {
-                DatabaseRepository.getDatabase().delete(siblinghood);
+                siblinghood.delete();
             }
 
-            DatabaseRepository.getDatabase().delete(playerFam);
+            playerFam.delete();
 
             sender.sendMessage(getMessage(DELETED_MK,
                 placeholder("%uuid%", playerArg)));

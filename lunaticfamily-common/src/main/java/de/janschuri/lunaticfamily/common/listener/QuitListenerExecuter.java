@@ -7,7 +7,6 @@ import de.janschuri.lunaticfamily.common.commands.marry.MarryDeny;
 import de.janschuri.lunaticfamily.common.commands.sibling.SiblingDeny;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
@@ -19,7 +18,7 @@ import net.kyori.adventure.text.TextReplacementConfig;
 
 import java.util.UUID;
 
-import static de.janschuri.lunaticfamily.common.handler.FamilyPlayer.findOrCreate;
+import static de.janschuri.lunaticfamily.common.handler.FamilyPlayer.find;
 
 public class QuitListenerExecuter {
 
@@ -42,7 +41,7 @@ public class QuitListenerExecuter {
 
         LanguageConfigImpl languageConfig = LunaticFamily.getLanguageConfig();
         UUID uuid = player.getUniqueId();
-        FamilyPlayer playerFam = findOrCreate(uuid);
+        FamilyPlayer playerFam = find(uuid);
 
         if (LunaticFamily.marryRequests.containsValue(uuid) || LunaticFamily.marryRequests.containsKey(uuid) || LunaticFamily.marryPriests.containsKey(uuid)) {
 
