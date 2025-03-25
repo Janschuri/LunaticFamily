@@ -133,7 +133,9 @@ public class AdoptPropose extends FamilyCommand implements HasParentCommand, Has
             return true;
         }
 
-        if (playerFam.getChildrenAmount() > 1) {
+        int childrenAmount = playerFam.getChildrenAmount() + 1;
+
+        if (LunaticFamily.exceedsAdoptLimit(childrenAmount)) {
             sender.sendMessage(getMessage(limitMK));
             return true;
         }
@@ -220,7 +222,9 @@ public class AdoptPropose extends FamilyCommand implements HasParentCommand, Has
             return true;
         }
 
-        if (childFam.hasSiblings() && playerFam.getChildrenAmount() > 0) {
+        int childrenAmountWithSiblings = playerFam.getChildrenAmount() + childFam.getSiblingsAmount() + 1;
+
+        if (LunaticFamily.exceedsAdoptLimit(childrenAmountWithSiblings)) {
             sender.sendMessage(getMessage(hasSiblingLimitMK,
                 placeholder("%player1%", childFam.getName()),
                 placeholder("%player2%", childFam.getSibling().getName())));

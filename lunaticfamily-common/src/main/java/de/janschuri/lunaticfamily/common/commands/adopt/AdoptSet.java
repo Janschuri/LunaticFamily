@@ -184,7 +184,9 @@ public class AdoptSet extends FamilyCommand implements HasParams, HasParentComma
             return true;
         }
 
-        if (firstParentFam.getChildrenAmount() > 1) {
+        int childAmount = firstParentFam.getChildrenAmount();
+
+        if (LunaticFamily.exceedsAdoptLimit(childAmount)) {
             sender.sendMessage(getMessage(ADOPT_LIMIT_MK,
                 placeholder("%player%", firstParentFam.getName())));
             return true;

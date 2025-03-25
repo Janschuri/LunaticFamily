@@ -35,11 +35,11 @@ public class ConfigImpl extends LunaticConfig implements FamilyConfig {
     private Map<String, String> colors = new HashMap<>();
 
     private ConfigKey<Integer> siblingLimitCK = new LunaticConfigKey<Integer>("sibling_limit")
-            .defaultValue(0)
+            .defaultValue(1)
             .keyBlockComment("The maximum number of siblings a player can have. -1 means unlimited.");
 
-    private ConfigKey<Integer> adoptLimit = new LunaticConfigKey<Integer>("adopt_limit")
-            .defaultValue(0)
+    private ConfigKey<Integer> adoptLimitCK = new LunaticConfigKey<Integer>("adopt_limit")
+            .defaultValue(2)
             .keyBlockComment("The maximum children a player can adopt. -1 means unlimited.");
 
     public ConfigImpl(Path dataDirectory) {
@@ -349,6 +349,6 @@ public class ConfigImpl extends LunaticConfig implements FamilyConfig {
     }
 
     public int getAdoptLimit() {
-        return getInt("adopt_limit", adoptLimit.getDefault());
+        return getInt("adopt_limit", adoptLimitCK.getDefault());
     }
 }

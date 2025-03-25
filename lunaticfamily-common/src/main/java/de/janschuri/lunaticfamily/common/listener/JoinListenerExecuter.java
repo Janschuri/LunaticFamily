@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.marry.Marry;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
@@ -11,6 +12,7 @@ import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.config.HasMessageKeys;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
+import java.nio.file.LinkOption;
 import java.util.concurrent.TimeUnit;
 
 import static de.janschuri.lunaticfamily.common.handler.FamilyPlayer.find;
@@ -41,6 +43,7 @@ public class JoinListenerExecuter implements HasMessageKeys {
             String skinURL = sender.getSkinURL();
 
             if (skinURL != null) {
+                Logger.debugLog(String.format("Skin URL: %s", skinURL));
                 playerFam.updateSkinURL(skinURL);
             }
             playerFam.save();

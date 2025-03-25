@@ -13,12 +13,10 @@ import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.futurerequests.*;
 import de.janschuri.lunaticfamily.common.handler.Adoption;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.handler.Marriage;
 import de.janschuri.lunaticfamily.common.handler.Siblinghood;
 import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.platform.Platform;
-import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.futurerequests.FutureRequest;
 import de.janschuri.lunaticlib.common.futurerequests.FutureRequestsHandler;
@@ -175,6 +173,8 @@ public final class LunaticFamily {
 
     public static boolean exceedsAdoptLimit(int amount) {
         int limit = config.getAdoptLimit();
+        Logger.debugLog("Adopt limit: " + limit + ", amount: " + amount);
+
         if (limit == -1) {
             return false;
         }
@@ -192,6 +192,8 @@ public final class LunaticFamily {
 
     public static boolean exceedsSiblingLimit(int amount) {
         int limit = config.getSiblingLimit();
+        Logger.debugLog("Sibling limit: " + limit + " amount: " + amount);
+
         if (limit == -1) {
             return false;
         }
