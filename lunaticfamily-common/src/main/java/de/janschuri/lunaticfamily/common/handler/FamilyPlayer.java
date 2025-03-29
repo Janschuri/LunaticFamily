@@ -221,6 +221,19 @@ public class FamilyPlayer {
         return !getMarriages().isEmpty();
     }
 
+    public boolean isMarriedTo(FamilyPlayer partnerFam) {
+        if (partnerFam == null) {
+            return false;
+        }
+
+        for (Marriage marriage : getMarriages()) {
+            if (marriage.getPartner(this).equals(partnerFam)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean hasChildren() {
         return !getAdoptionsAsParent().isEmpty();
     }
