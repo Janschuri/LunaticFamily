@@ -3,6 +3,7 @@ package de.janschuri.lunaticfamily.common.commands.marry;
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.common.listener.PlayerInteractsWithPlayerExecuter;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.CommandMessageKey;
 import de.janschuri.lunaticlib.PlayerSender;
@@ -13,7 +14,6 @@ import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class MarryKiss extends FamilyCommand implements HasParentCommand {
 
@@ -25,12 +25,6 @@ public class MarryKiss extends FamilyCommand implements HasParentCommand {
     private static final CommandMessageKey NO_PARTNER_MK = new LunaticCommandMessageKey(INSTANCE, "no_partner")
             .defaultMessage("en", "You are not married!")
             .defaultMessage("de", "Du bist nicht verheiratet!");
-    private static final CommandMessageKey KISS_MK = new LunaticCommandMessageKey(INSTANCE, "kiss")
-            .defaultMessage("en", "You have kissed %player%.")
-            .defaultMessage("de", "Du hast %player% geküsst.");
-    private static final CommandMessageKey GOT_KISSED_MK = new LunaticCommandMessageKey(INSTANCE, "got_kissed")
-            .defaultMessage("en", "%player% has kissed you.")
-            .defaultMessage("de", "%player% hat dich geküsst.");
 
 
 
@@ -95,27 +89,7 @@ public class MarryKiss extends FamilyCommand implements HasParentCommand {
             return true;
         }
 
-        double[] playerPosition = player.getPosition();
-        double[] partnerPosition = partner.getPosition();
-        double[] position = Utils.getPositionBetweenLocations(playerPosition, partnerPosition);
-        position[1] += 2;
-        for (int i = 0; i < 6; i++) {
-
-            Runnable runnable = () -> {
-                Utils.spawnParticleCloud(playerUUID, position, "HEART");
-            };
-
-            Utils.scheduleTask(runnable, i * 250L, TimeUnit.MILLISECONDS);
-        }
-
-        player.sendMessage(getMessage(KISS_MK,
-                placeholder("%player%", partner.getName())));
-
-        partner.sendMessage(getMessage(GOT_KISSED_MK,
-                placeholder("%player%", player.getName())));
-
-
-        return true;
+        return PlayerInteractsWithPlayerExecuter.performKiss(player, partner);
     }
 
     @Override

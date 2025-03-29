@@ -46,6 +46,7 @@ public final class LunaticFamily {
             new SpawnParticlesCloudRequest(),
             new GetPlaceholderRequest(),
             new GetRelationalPlaceholderRequest(),
+            new PlayerInteractsWithPlayerRequest()
     };
 
     private static Path dataDirectory;
