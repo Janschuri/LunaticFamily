@@ -18,6 +18,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextColor;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MarryEmoji extends FamilyCommand implements HasParentCommand, HasParams {
 
@@ -29,6 +30,9 @@ public class MarryEmoji extends FamilyCommand implements HasParentCommand, HasPa
     private static final CommandMessageKey NO_COLOR_MK = new LunaticCommandMessageKey(INSTANCE, "no_color")
             .defaultMessage("en", "You must specify a color.")
             .defaultMessage("de", "Du musst eine Farbe angeben.");
+    private static final CommandMessageKey NO_AVAIBLE_COLOR_MK = new LunaticCommandMessageKey(INSTANCE, "no_available_color")
+            .defaultMessage("en", "You have no available color.")
+            .defaultMessage("de", "Du hast keine verfügbare Farbe.");
     private static final CommandMessageKey COLOR_SET_MK = new LunaticCommandMessageKey(INSTANCE, "color_set")
             .defaultMessage("en", "You have chosen the color %color%.")
             .defaultMessage("de", "Du hast die Farbe %color% gewählt.");
@@ -77,14 +81,23 @@ public class MarryEmoji extends FamilyCommand implements HasParentCommand, HasPa
         }
 
         if (args.length < 1) {
+            Set<String> colors = LunaticFamily.getConfig().getColors().keySet()
+                    .stream()
+                    .filter(color -> !color.startsWith("#"))
+                    .filter(color -> player.hasPermission(getPermission() + ".color." + color))
+                    .collect(Collectors.toSet());
+
+            if (colors.isEmpty()) {
+                sender.sendMessage(getMessage(NO_AVAIBLE_COLOR_MK));
+                return true;
+            }
+
+
             ComponentBuilder builder = Component.text();
             builder.append(getMessage(HEADER_MK));
             builder.append(Component.newline());
 
-            for (String color : getParams().get(0).keySet()) {
-                if (color.startsWith("#")) {
-                    continue;
-                }
+            for (String color : colors) {
                 String colorLang = LunaticFamily.getLanguageConfig().getColorLang(color);
 
                 ComponentBuilder component = Component.text()

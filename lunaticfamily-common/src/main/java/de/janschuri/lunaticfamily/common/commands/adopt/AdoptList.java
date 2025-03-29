@@ -110,7 +110,7 @@ public class AdoptList extends FamilyCommand implements HasParams, HasParentComm
 
 
             String hoverText = " (" + e.getDate() + ")";
-            if (e.getPriest() == null) {
+            if (e.getPriest() != null) {
                 hoverText = hoverText + " -> " + e.getPriest().getName();
             }
 

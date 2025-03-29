@@ -237,7 +237,6 @@ public class FamilyPlayer {
     public boolean hasChildren() {
         return !getAdoptionsAsParent().isEmpty();
     }
-
     public FamilyPlayer getSibling() {
         if (getSiblinghoods().isEmpty()) {
             return null;
@@ -363,12 +362,12 @@ public class FamilyPlayer {
         List<FamilyPlayer> partnerChildren = partnerFam.getChildren();
 
         for (FamilyPlayer child : playerChildren) {
-            createAdoption(this, child, priestFam);
+            createAdoption(partnerFam, child, priestFam);
             linkSiblings(child, partnerChildren, priestFam);
         }
 
         for (FamilyPlayer child : partnerChildren) {
-            createAdoption(partnerFam, child, priestFam);
+            createAdoption(this, child, priestFam);
         }
     }
 
