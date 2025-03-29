@@ -32,11 +32,6 @@ public class JoinListenerExecuter implements HasMessageKeys {
 
 
     public static boolean execute(PlayerSender sender) {
-
-        if (!Utils.isPlayerOnRegisteredServer(sender))  {
-            return true;
-        }
-
         Runnable runnable = () -> {
             LanguageConfigImpl languageConfig = LunaticFamily.getLanguageConfig();
             FamilyPlayer playerFam = findOrCreate(sender.getUniqueId());

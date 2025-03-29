@@ -4,6 +4,7 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticlib.PlayerSender;
+import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.LunaticLib;
 import de.janschuri.lunaticlib.common.utils.Mode;
 
@@ -11,9 +12,13 @@ import java.util.UUID;
 
 public abstract class Utils extends de.janschuri.lunaticlib.common.utils.Utils {
 
-    public static boolean isPlayerOnRegisteredServer(PlayerSender sender) {
+    public static boolean isPlayerOnRegisteredServer(Sender sender) {
+        if (!(sender instanceof PlayerSender player)) {
+            return true;
+        }
+
         if (LunaticFamily.getMode() == Mode.PROXY) {
-            return LunaticFamily.getConfig().getServers().contains(sender.getServerName());
+            return LunaticFamily.getConfig().getServers().contains(player.getServerName());
         }
         return true;
     }

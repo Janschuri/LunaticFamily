@@ -3,15 +3,13 @@ package de.janschuri.lunaticfamily.common.commands;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.config.LanguageConfigImpl;
-import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
+import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.Sender;
 import de.janschuri.lunaticlib.common.command.LunaticCommand;
 import de.janschuri.lunaticlib.common.config.HasMessageKeys;
 import de.janschuri.lunaticlib.common.config.LunaticMessageKey;
 import net.kyori.adventure.text.Component;
-
-import java.util.UUID;
 
 public abstract class FamilyCommand extends LunaticCommand implements HasMessageKeys {
 
@@ -104,5 +102,10 @@ public abstract class FamilyCommand extends LunaticCommand implements HasMessage
     @Override
     public Component noPermissionMessage(Sender sender, String[] strings) {
         return getMessage(NO_PERMISSION_MK);
+    }
+
+    @Override
+    public boolean checkPermission(Sender commandSender, String[] args, boolean silent) {
+        return Utils.isPlayerOnRegisteredServer(commandSender) && super.checkPermission(commandSender, args, silent);
     }
 }

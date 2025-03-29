@@ -74,12 +74,13 @@ public class MarryGift extends FamilyCommand implements HasParentCommand {
                 return true;
             }
 
-            UUID partnerUUID = playerFam.getPartner().getUUID();
+            FamilyPlayer partnerFam = playerFam.getPartner();
+            UUID partnerUUID = partnerFam.getUUID();
             PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(partnerUUID);
 
             if (!partner.isOnline()) {
                 player.sendMessage(getMessage(PLAYER_OFFLINE_MK,
-                        placeholder("%player%", partner.getName())
+                        placeholder("%player%", partnerFam.getName())
                 ));
                 return true;
             }
