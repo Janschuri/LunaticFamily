@@ -235,8 +235,13 @@ public class FamilyPlayer {
     }
 
     public boolean hasChildren() {
-        return !getAdoptionsAsParent().isEmpty();
+        return hasChildren(1);
     }
+
+    public boolean hasChildren(int amount) {
+        return getAdoptionsAsParent().size() >= amount;
+    }
+
     public FamilyPlayer getSibling() {
         if (getSiblinghoods().isEmpty()) {
             return null;
@@ -260,7 +265,11 @@ public class FamilyPlayer {
     }
 
     public boolean hasSiblings() {
-        return !getSiblinghoods().isEmpty();
+        return hasSiblings(1);
+    }
+
+    public boolean hasSiblings(int amount) {
+        return getSiblinghoods().size() >= amount;
     }
 
     public boolean isAdopted() {

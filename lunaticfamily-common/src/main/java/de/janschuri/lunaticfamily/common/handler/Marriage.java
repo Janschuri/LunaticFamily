@@ -91,10 +91,6 @@ public class Marriage {
         DatabaseRepository.getDatabase().save(this);
     }
 
-    public String getColoredEmoji() {
-        return "<" + getEmojiColor() + ">" + getDefaultEmoji();
-    }
-
     public static String getDefaultEmoji() {
         return "❤";
     }

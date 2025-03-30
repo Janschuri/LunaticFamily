@@ -88,14 +88,6 @@ public class Adoption {
         return priest != null;
     }
 
-    public String getColoredParentEmoji() {
-        return "<" + getEmojiColor() + ">" + getDefaultParentEmoji();
-    }
-
-    public String getColoredChildEmoji() {
-        return "<" + getEmojiColor() + ">" + getDefaultChildEmoji();
-    }
-
     public static String getDefaultParentEmoji() {
         return "⌂";
     }
