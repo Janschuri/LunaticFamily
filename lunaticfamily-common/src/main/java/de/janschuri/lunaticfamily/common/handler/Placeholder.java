@@ -53,21 +53,18 @@ public class Placeholder {
 
             if (Objects.equals(type, "emojiStatus")) {
 
-                StringBuilder emojiStatus = new StringBuilder();
-
                 if (player.isMarried()) {
                     Marriage marriage = player.getMarriage();
                         String color = marriage.getEmojiColor();
 
-                        String emoji = coloredEmojiPattern
-                                .replaceAll("%color%", color)
+                        return coloredEmojiPattern
+                                .replaceAll("%hexcolor%", color)
                                 .replaceAll("%emoji%", Marriage.getDefaultEmoji());
-                        emojiStatus.append(emoji);
                 } else {
                     String color = LunaticFamily.getConfig().getUnmarriedEmojiColor();
 
                     return coloredEmojiPattern
-                            .replaceAll("%color%", color)
+                            .replaceAll("%hexcolor%", color)
                             .replaceAll("%emoji%", Marriage.getDefaultEmoji());
                 }
             }
@@ -92,7 +89,7 @@ public class Placeholder {
                 String color = marriage.getEmojiColor();
 
                 return coloredEmojiPattern
-                        .replaceAll("%color%", color)
+                        .replaceAll("%hexcolor%", color)
                         .replaceAll("%emoji%", Marriage.getDefaultEmoji());
             }
 
@@ -142,13 +139,13 @@ public class Placeholder {
                         String color = siblinghood.getEmojiColor();
 
                         return coloredEmojiPattern
-                                .replaceAll("%color%", color)
+                                .replaceAll("%hexcolor%", color)
                                 .replaceAll("%emoji%", Siblinghood.getDefaultEmoji());
                 } else {
                     String color = LunaticFamily.getConfig().getUnmarriedEmojiColor();
 
                     return coloredEmojiPattern
-                            .replaceAll("%color%", color)
+                            .replaceAll("%hexcolor%", color)
                             .replaceAll("%emoji%", Siblinghood.getDefaultEmoji());
                 }
             }
@@ -173,7 +170,7 @@ public class Placeholder {
                 String color = siblinghood.getEmojiColor();
 
                 return coloredEmojiPattern
-                        .replaceAll("%color%", color)
+                        .replaceAll("%hexcolor%", color)
                         .replaceAll("%emoji%", Siblinghood.getDefaultEmoji());
             }
 
@@ -226,13 +223,13 @@ public class Placeholder {
                         String color = adoption.getEmojiColor();
 
                         return coloredEmojiPattern
-                                .replaceAll("%color%", color)
+                                .replaceAll("%hexcolor%", color)
                                 .replaceAll("%emoji%", Adoption.getDefaultParentEmoji());
                 } else {
                     String color = LunaticFamily.getConfig().getUnparentEmojiColor();
 
                     return coloredEmojiPattern
-                            .replaceAll("%color%", color)
+                            .replaceAll("%hexcolor%", color)
                                 .replaceAll("%emoji%", Adoption.getDefaultChildEmoji());
                 }
             }
@@ -256,7 +253,7 @@ public class Placeholder {
                 String color = adoption.getEmojiColor();
 
                 return coloredEmojiPattern
-                        .replaceAll("%color%", color)
+                        .replaceAll("%hexcolor%", color)
                         .replaceAll("%emoji%", Adoption.getDefaultParentEmoji());
             }
 
@@ -317,13 +314,13 @@ public class Placeholder {
                     String color = adoption.getEmojiColor();
 
                     return coloredEmojiPattern
-                            .replaceAll("%color%", color)
+                            .replaceAll("%hexcolor%", color)
                             .replaceAll("%emoji%", Adoption.getDefaultChildEmoji());
                 } else {
                     String color = LunaticFamily.getConfig().getUnparentEmojiColor();
 
                     return coloredEmojiPattern
-                            .replaceAll("%color%", color)
+                            .replaceAll("%hexcolor%", color)
                             .replaceAll("%emoji%", Adoption.getDefaultChildEmoji());
                 }
             }
@@ -351,7 +348,7 @@ public class Placeholder {
                 String color = adoption.getEmojiColor();
 
                 return coloredEmojiPattern
-                        .replaceAll("%color%", color)
+                        .replaceAll("%hexcolor%", color)
                         .replaceAll("%emoji%", Adoption.getDefaultChildEmoji());
             }
 
@@ -408,7 +405,7 @@ public class Placeholder {
                 String color = marriage.getEmojiColor();
 
                 return coloredEmojiPattern
-                        .replaceAll("%color%", color)
+                        .replaceAll("%hexcolor%", color)
                         .replaceAll("%emoji%", Marriage.getDefaultEmoji());
             }
 
@@ -449,7 +446,7 @@ public class Placeholder {
                 String color = adoption.getEmojiColor();
 
                 return coloredEmojiPattern
-                        .replaceAll("%color%", color)
+                        .replaceAll("%hexcolor%", color)
                         .replaceAll("%emoji%", Adoption.getDefaultChildEmoji());
             }
 
@@ -490,7 +487,7 @@ public class Placeholder {
                 String color = siblinghood.getEmojiColor();
 
                 return coloredEmojiPattern
-                        .replaceAll("%color%", color)
+                        .replaceAll("%hexcolor%", color)
                         .replaceAll("%emoji%", Siblinghood.getDefaultEmoji());
             }
 

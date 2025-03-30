@@ -84,7 +84,14 @@ public class FamilyPlayer {
             long id = names.get(name);
             return find(id);
         } else {
-            FamilyPlayer familyPlayer = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", name).findList().getFirst();
+            List<FamilyPlayer> familyPlayerList = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", name).findList();
+
+            if (familyPlayerList.isEmpty()) {
+                return null;
+            }
+
+            FamilyPlayer familyPlayer = familyPlayerList.get(0);
+
             if (familyPlayer == null) {
                 return null;
             }
