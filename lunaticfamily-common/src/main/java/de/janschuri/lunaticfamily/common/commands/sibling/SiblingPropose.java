@@ -2,7 +2,6 @@ package de.janschuri.lunaticfamily.common.commands.sibling;
 
 import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.commands.FamilyCommand;
-import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.FamilyPlayer;
 import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.common.utils.WithdrawKey;
@@ -27,24 +26,21 @@ public class SiblingPropose extends FamilyCommand implements HasParentCommand, H
     private static final CommandMessageKey HELP_MK = new LunaticCommandMessageKey(INSTANCE, "help")
             .defaultMessage("en", "&6/%command% %subcommand% &b<%param%> &7- Propose siblinghood to a player.")
             .defaultMessage("de", "&6/%command% %subcommand% &b<%param%> &7- Schlage einem Spieler eine Geschwisterschaft vor.");
-    private static final CommandMessageKey HAS_SIBLING_MK = new LunaticCommandMessageKey(INSTANCE, "has_sibling")
-            .defaultMessage("en", "You already have a sibling.")
-            .defaultMessage("de", "Du hast bereits ein Geschwister.");
+    private static final CommandMessageKey TOO_MANY_SIBLINGS = new LunaticCommandMessageKey(INSTANCE, "too_many_siblings")
+            .defaultMessage("en", "You already reached the maximum amount of siblings.")
+            .defaultMessage("de", "Du hast bereits die maximale Anzahl an Geschwistern erreicht.");
     private static final CommandMessageKey IS_ADOPTED_MK = new LunaticCommandMessageKey(INSTANCE, "is_adopted")
             .defaultMessage("en", "You are adopted. Your parents can adopt a sibling for you.")
             .defaultMessage("de", "Du bist adoptiert. Deine Eltern können ein Geschwister für dich adoptieren.");
     private static final CommandMessageKey PLAYER_IS_ADOPTED_MK = new LunaticCommandMessageKey(INSTANCE, "player_is_adopted")
-            .defaultMessage("en", "%player% is adopted. %player%'s parents can adopt a sibling for %player%.")
-            .defaultMessage("de", "%player% ist adoptiert. %player%'s Eltern können ein Geschwister für %player% adoptieren.");
+            .defaultMessage("en", "%player% is already adopted. Their parents can adopt you to become your sibling.")
+            .defaultMessage("de", "%player% ist bereits adoptiert. Ihre Eltern können dich adoptieren, um dein Geschwister zu werden.");
     private static final CommandMessageKey SELF_REQUEST_MK = new LunaticCommandMessageKey(INSTANCE, "self_request")
             .defaultMessage("en", "You cannot be your own sibling.")
             .defaultMessage("de", "Du kannst kein Geschwister von dir selbst sein.");
     private static final CommandMessageKey FAMILY_REQUEST_MK = new LunaticCommandMessageKey(INSTANCE, "family_request")
             .defaultMessage("en", "%player% is already part of your family.")
             .defaultMessage("de", "%player% ist bereits Teil deiner Familie.");
-    private static final CommandMessageKey SIBLING_IS_ADOPTED_MK = new LunaticCommandMessageKey(INSTANCE, "sibling_is_adopted")
-            .defaultMessage("en", "%player% is already adopted. Their parents can adopt you to become your sibling.")
-            .defaultMessage("de", "%player% ist bereits adoptiert. Ihre Eltern können dich adoptieren, um dein Geschwister zu werden.");
     private static final CommandMessageKey OPEN_REQUEST_MK = new LunaticCommandMessageKey(INSTANCE, "open_request")
             .defaultMessage("en", "%player% already has an open sibling request.")
             .defaultMessage("de", "%player% hat bereits eine offene Geschwisterschaft Anfrage.");
@@ -93,13 +89,6 @@ public class SiblingPropose extends FamilyCommand implements HasParentCommand, H
         UUID playerUUID = player.getUniqueId();
         FamilyPlayer playerFam = FamilyPlayer.find(playerUUID);
 
-        if (playerFam.hasSiblings()) {
-            sender.sendMessage(getMessage(HAS_SIBLING_MK,
-                    placeholder("%player%", playerFam.getName())
-            ));
-            return true;
-        }
-
         if (playerFam.isAdopted()) {
             sender.sendMessage(getMessage(IS_ADOPTED_MK,
                     placeholder("%player%", playerFam.getName())
@@ -119,6 +108,16 @@ public class SiblingPropose extends FamilyCommand implements HasParentCommand, H
         if (siblingFam == null) {
             sender.sendMessage(getMessage(PLAYER_NOT_EXIST_MK,
                     placeholder("%player%", siblingName)
+            ));
+            return true;
+        }
+
+
+        int siblingAmount = playerFam.getSiblingsAmount() + siblingFam.getSiblingsAmount() + 1;
+
+        if (LunaticFamily.exceedsSiblingLimit(siblingAmount)) {
+            sender.sendMessage(getMessage(TOO_MANY_SIBLINGS,
+                    placeholder("%player%", playerFam.getName())
             ));
             return true;
         }
