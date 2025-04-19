@@ -84,7 +84,14 @@ public class FamilyPlayer {
             long id = names.get(name);
             return find(id);
         } else {
-            FamilyPlayer familyPlayer = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", name).findList().getFirst();
+            List<FamilyPlayer> familyPlayerList = DatabaseRepository.getDatabase().find(FamilyPlayer.class).where().eq("name", name).findList();
+
+            if (familyPlayerList.isEmpty()) {
+                return null;
+            }
+
+            FamilyPlayer familyPlayer = familyPlayerList.get(0);
+
             if (familyPlayer == null) {
                 return null;
             }
@@ -235,8 +242,13 @@ public class FamilyPlayer {
     }
 
     public boolean hasChildren() {
-        return !getAdoptionsAsParent().isEmpty();
+        return hasChildren(1);
     }
+
+    public boolean hasChildren(int amount) {
+        return getAdoptionsAsParent().size() >= amount;
+    }
+
     public FamilyPlayer getSibling() {
         if (getSiblinghoods().isEmpty()) {
             return null;
@@ -260,7 +272,11 @@ public class FamilyPlayer {
     }
 
     public boolean hasSiblings() {
-        return !getSiblinghoods().isEmpty();
+        return hasSiblings(1);
+    }
+
+    public boolean hasSiblings(int amount) {
+        return getSiblinghoods().size() >= amount;
     }
 
     public boolean isAdopted() {

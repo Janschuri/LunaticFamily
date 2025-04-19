@@ -83,10 +83,6 @@ public class Siblinghood {
         return this;
     }
 
-    public String getColoredEmoji() {
-        return "<" + getEmojiColor() + ">" + getDefaultEmoji();
-    }
-
     public static String getDefaultEmoji() {
         return "⭐";
     }

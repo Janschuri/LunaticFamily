@@ -42,6 +42,10 @@ public class ConfigImpl extends LunaticConfig implements FamilyConfig {
             .defaultValue(2)
             .keyBlockComment("The maximum children a player can adopt. -1 means unlimited.");
 
+    private ConfigKey<String> coloredEmojiPatter = new LunaticConfigKey<String>("colored_emoji_pattern")
+            .defaultValue("<%hexcolor%>%emoji%")
+            .keyBlockComment("The pattern for colored emojis in placeholders. Use %hexcolor% for the color and %emoji% for the emoji.");
+
     public ConfigImpl(Path dataDirectory) {
         super(dataDirectory, CONFIG_FILE);
 
@@ -350,5 +354,9 @@ public class ConfigImpl extends LunaticConfig implements FamilyConfig {
 
     public int getAdoptLimit() {
         return getInt("adopt_limit", adoptLimitCK.getDefault());
+    }
+
+    public String getColoredEmojiPattern() {
+        return getString("colored_emoji_pattern", coloredEmojiPatter.getDefault());
     }
 }
