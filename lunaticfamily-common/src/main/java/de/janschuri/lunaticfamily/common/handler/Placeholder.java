@@ -118,7 +118,7 @@ public class Placeholder {
 
             int amount = index + 1;
 
-            String type = split[1];
+            String type = split[split.length - 1];
 
             if (Objects.equals(type, "emojiStatus")) {
 
@@ -186,7 +186,7 @@ public class Placeholder {
 
             int amount = index + 1;
 
-            String type = split[2];
+            String type = split[split.length - 1];
 
             if (Objects.equals(type, "emojiStatus")) {
                 if (player.hasChildren(amount)) {
@@ -251,7 +251,7 @@ public class Placeholder {
 
             int index = getIndex(split[1]);
 
-            String type = split[2];
+            String type = split[split.length - 1];
 
             if (Objects.equals(type, "firstParent")) {
                 index = 0;
