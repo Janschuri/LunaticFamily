@@ -74,7 +74,7 @@ public class Placeholder {
             }
 
 
-            if (player.isMarried()) {
+            if (!player.isMarried()) {
                 return "";
             }
 
@@ -109,33 +109,21 @@ public class Placeholder {
             }
         }
 
-        Pattern siblinghoodPattern = Pattern.compile("siblinghood_<index>_(emojiStatus|emoji|sibling|priest|date|status|color)");
+        Pattern siblinghoodPattern = Pattern.compile("siblinghood_(?:<\\d+>_)?(emojiStatus|emoji|sibling|priest|date|status|color)");
 
         if (siblinghoodPattern.matcher(placeholder).matches()) {
             String[] split = placeholder.split("_");
 
-            String indexString = split[1].replaceAll("[<>]", "");
-            int index;
-            if (split.length == 2) {
-                index = 1;
-            } else {
-                try {
-                    index = Integer.parseInt(indexString);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
+            int index = getIndex(split[1]);
 
-            if (index < 1) {
-                index = 1;
-            }
+            int amount = index + 1;
 
             String type = split[1];
 
             if (Objects.equals(type, "emojiStatus")) {
 
-                if (player.hasSiblings(index)) {
-                     Siblinghood siblinghood = player.getSiblinghoods().get(index - 1);
+                if (player.hasSiblings(amount)) {
+                     Siblinghood siblinghood = player.getSiblinghoods().get(index);
                         String color = siblinghood.getEmojiColor();
 
                         return coloredEmojiPattern
@@ -154,13 +142,12 @@ public class Placeholder {
                 return player.hasSiblings() + "";
             }
 
-
-            if (player.hasSiblings(index + 1)) {
+            if (!player.hasSiblings(amount)) {
                 return "";
             }
 
             List<Siblinghood> siblinghoods = player.getSiblinghoods();
-            Siblinghood siblinghood = siblinghoods.get(index - 1);
+            Siblinghood siblinghood = siblinghoods.get(index);
 
             if (Objects.equals(type, "sibling")) {
                 return player.getSibling().getName();
@@ -190,36 +177,20 @@ public class Placeholder {
             }
         }
 
-        Pattern adoptionFirstChildPattern = Pattern.compile("adoptionAsParent_<index>_(emojiStatus|emoji|child|priest|date|status|color)");
+        Pattern adoptionAsParentPattern = Pattern.compile("adoptionAsParent_(?:<\\d+>_)?(emojiStatus|emoji|child|priest|date|status|color)");
 
-        if (adoptionFirstChildPattern.matcher(placeholder).matches()) {
+        if (adoptionAsParentPattern.matcher(placeholder).matches()) {
             String[] split = placeholder.split("_");
 
-            String indexString = split[1].replaceAll("[<>]", "");
-            int index;
-            if (split.length == 2) {
-                index = 1;
-            } else if (indexString == "firstChild") {
-                index = 1;
-            } else if (indexString == "secondChild") {
-                index = 2;
-            } else {
-                try {
-                    index = Integer.parseInt(indexString);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
+            int index = getIndex(split[1]);
 
-            if (index < 1) {
-                index = 1;
-            }
+            int amount = index + 1;
 
             String type = split[2];
 
             if (Objects.equals(type, "emojiStatus")) {
-                if (player.hasChildren(index)) {
-                    Adoption adoption = player.getAdoptionsAsParent().get(index - 1);
+                if (player.hasChildren(amount)) {
+                    Adoption adoption = player.getAdoptionsAsParent().get(index);
                         String color = adoption.getEmojiColor();
 
                         return coloredEmojiPattern
@@ -235,15 +206,15 @@ public class Placeholder {
             }
 
             if (Objects.equals(type, "status")) {
-                return player.hasChildren(index) + "";
+                return player.hasChildren(amount) + "";
             }
 
-            if (player.hasChildren(index)) {
+            if (!player.hasChildren(amount)) {
                 return "";
             }
 
             List<Adoption> adoptions = player.getAdoptionsAsParent();
-            Adoption adoption = adoptions.get(index - 1);
+            Adoption adoption = adoptions.get(index);
 
             if (Objects.equals(type, "child")) {
                 return player.getChildren().get(0).getName();
@@ -273,44 +244,26 @@ public class Placeholder {
             }
         }
 
-        Pattern adoptionAsChildPattern = Pattern.compile("adoptionAsChild_<index>_(emojiStatus|emoji|firstParent|secondParent|priest|date|status|color)");
+        Pattern adoptionAsChildPattern = Pattern.compile("adoptionAsChild_(?:<\\d+>_)?(emojiStatus|emoji|firstParent|secondParent|priest|date|status|color)");
 
         if (adoptionAsChildPattern.matcher(placeholder).matches()) {
             String[] split = placeholder.split("_");
 
-            String indexString = split[1].replaceAll("[<>]", "");
-            int index;
-            if (split.length == 2) {
-                index = 1;
-            } else if (indexString == "firstChild") {
-                index = 1;
-            } else if (indexString == "secondChild") {
-                index = 2;
-            } else {
-                try {
-                    index = Integer.parseInt(indexString);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
-
-            if (index < 1) {
-                index = 1;
-            }
+            int index = getIndex(split[1]);
 
             String type = split[2];
 
             if (Objects.equals(type, "firstParent")) {
-                index = 1;
+                index = 0;
             }
 
             if (Objects.equals(type, "secondParent")) {
-                index = 2;
+                index = 1;
             }
 
             if (Objects.equals(type, "emojiStatus")) {
                 if (player.isAdopted()) {
-                    Adoption adoption = player.getAdoptionsAsChild().get(index - 1);
+                    Adoption adoption = player.getAdoptionsAsChild().get(index);
                     String color = adoption.getEmojiColor();
 
                     return coloredEmojiPattern
@@ -334,7 +287,7 @@ public class Placeholder {
             }
 
             List<Adoption> adoptions = player.getAdoptionsAsParent();
-            Adoption adoption = adoptions.get(index - 1);
+            Adoption adoption = adoptions.get(index);
 
             if (Objects.equals(type, "firstParent")) {
                 return adoption.getParent().getName();
@@ -384,10 +337,10 @@ public class Placeholder {
 
         if (marriagesPattern.matcher(placeholder).matches()) {
             String[] split = placeholder.replaceAll("[<>]", "").split("_");
-            int index = Integer.parseInt(split[1]);
+            int index = getIndex(split[1]);
             String type = split[2];
 
-            Marriage marriage = DatabaseRepository.getDatabase().find(Marriage.class).setFirstRow(index - 1).setMaxRows(1).findOne();
+            Marriage marriage = DatabaseRepository.getDatabase().find(Marriage.class).setFirstRow(index).setMaxRows(1).findOne();
 
             if (marriage == null) {
                 return null;
@@ -425,10 +378,10 @@ public class Placeholder {
 
         if (adoptionsPattern.matcher(placeholder).matches()) {
             String[] split = placeholder.split("_");
-            int index = Integer.parseInt(split[1]);
+            int index = getIndex(split[1]);
             String type = split[2];
 
-            Adoption adoption = DatabaseRepository.getDatabase().find(Adoption.class).setFirstRow(index - 1).setMaxRows(1).findOne();
+            Adoption adoption = DatabaseRepository.getDatabase().find(Adoption.class).setFirstRow(index).setMaxRows(1).findOne();
 
             if (adoption == null) {
                 return null;
@@ -466,10 +419,11 @@ public class Placeholder {
 
         if (siblinghoodsPattern.matcher(placeholder).matches()) {
             String[] split = placeholder.split("_");
-            int index = Integer.parseInt(split[1]);
+
+            int index = getIndex(split[1]);
             String type = split[2];
 
-            Siblinghood siblinghood = DatabaseRepository.getDatabase().find(Siblinghood.class).setFirstRow(index - 1).setMaxRows(1).findOne();
+            Siblinghood siblinghood = DatabaseRepository.getDatabase().find(Siblinghood.class).setFirstRow(index).setMaxRows(1).findOne();
 
             if (siblinghood == null) {
                 return null;
@@ -532,5 +486,21 @@ public class Placeholder {
         }
 
         return null;
+    }
+
+    private static int getIndex(String indexString) {
+        indexString = indexString.replaceAll("[<>]", "");
+        int index;
+        try {
+            index = Integer.parseInt(indexString);
+            index--;
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+
+        if (index < 0) {
+            index = 0;
+        }
+        return index;
     }
 }
