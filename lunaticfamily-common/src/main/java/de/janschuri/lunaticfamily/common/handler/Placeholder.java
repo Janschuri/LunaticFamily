@@ -5,6 +5,7 @@ import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.futurerequests.GetPlaceholderRequest;
 import de.janschuri.lunaticfamily.common.futurerequests.GetRelationalPlaceholderRequest;
 import de.janschuri.lunaticfamily.common.handler.familytree.RelationAdvancement;
+import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticlib.common.utils.Mode;
 import org.checkerframework.checker.units.qual.A;
 
@@ -499,6 +500,7 @@ public class Placeholder {
             index = Integer.parseInt(indexString);
             index--;
         } catch (NumberFormatException e) {
+            Logger.errorLog(indexString + " is not a valid Index. Using 0 instead.");
             return 0;
         }
 
