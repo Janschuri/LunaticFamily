@@ -177,7 +177,7 @@ public class Placeholder {
             }
         }
 
-        Pattern adoptionAsParentPattern = Pattern.compile("adoptionAsParent_(?:<\\d+>_)?(emojiStatus|emoji|child|priest|date|status|color)");
+        Pattern adoptionAsParentPattern = Pattern.compile("adoptionAsParent_(((?:<\\d+>)|firstChild_|secondChild)_)?(emojiStatus|emoji|child|priest|date|status|color)");
 
         if (adoptionAsParentPattern.matcher(placeholder).matches()) {
             String[] split = placeholder.split("_");
@@ -244,7 +244,7 @@ public class Placeholder {
             }
         }
 
-        Pattern adoptionAsChildPattern = Pattern.compile("adoptionAsChild_(?:<\\d+>_)?(emojiStatus|emoji|firstParent|secondParent|priest|date|status|color)");
+        Pattern adoptionAsChildPattern = Pattern.compile("adoptionAsChild_(?:<\\d+>_)?(emojiStatus|emoji|firstParent|secondParent|parent|priest|date|status|color)");
 
         if (adoptionAsChildPattern.matcher(placeholder).matches()) {
             String[] split = placeholder.split("_");
@@ -289,11 +289,7 @@ public class Placeholder {
             List<Adoption> adoptions = player.getAdoptionsAsParent();
             Adoption adoption = adoptions.get(index);
 
-            if (Objects.equals(type, "firstParent")) {
-                return adoption.getParent().getName();
-            }
-
-            if (Objects.equals(type, "secondParent")) {
+            if (Objects.equals(type, "firstParent") || Objects.equals(type, "secondParent") || Objects.equals(type, "parent")) {
                 return adoption.getParent().getName();
             }
 
@@ -490,6 +486,14 @@ public class Placeholder {
 
     private static int getIndex(String indexString) {
         indexString = indexString.replaceAll("[<>]", "");
+
+        switch (indexString.toLowerCase()) {
+            case "firstchild":
+                return 0;
+            case "secondchild":
+                return 1;
+        }
+
         int index;
         try {
             index = Integer.parseInt(indexString);
