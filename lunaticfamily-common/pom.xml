@@ -14,7 +14,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <ebean.version>15.8.1</ebean.version>
+        <ebean.version>15.11.0</ebean.version>
     </properties>
 
     <build>
@@ -76,17 +76,23 @@
         <dependency>
             <groupId>io.ebean</groupId>
             <artifactId>ebean-core</artifactId>
-            <version>15.8.1</version>
+            <version>${ebean.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.avaje</groupId>
+                    <artifactId>avaje-applog-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.ebean</groupId>
             <artifactId>ebean-mysql</artifactId>
-            <version>15.8.1</version>
+            <version>${ebean.version}</version>
         </dependency>
         <dependency>
             <groupId>io.ebean</groupId>
             <artifactId>ebean-sqlite</artifactId>
-            <version>15.8.1</version>
+            <version>${ebean.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
