@@ -10,6 +10,7 @@ import de.janschuri.lunaticlib.MessageKey;
 import de.janschuri.lunaticlib.Placeholder;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.command.LunaticPlaceholder;
+import de.janschuri.lunaticlib.common.config.HasMessageKeys;
 import de.janschuri.lunaticlib.common.config.LunaticCommandMessageKey;
 import de.janschuri.lunaticlib.common.config.LunaticMessageKey;
 import de.janschuri.lunaticlib.common.utils.Mode;
@@ -18,7 +19,7 @@ import net.kyori.adventure.text.Component;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public final class PlayerInteractsWithPlayerExecuter {
+public final class PlayerInteractsWithPlayerExecuter implements HasMessageKeys {
 
     private static final MarryKiss MARRY_KISS_CMD = new MarryKiss();
 
@@ -99,9 +100,9 @@ public final class PlayerInteractsWithPlayerExecuter {
         Utils.scheduleTask(runnable, 2000L, TimeUnit.MILLISECONDS);
 
         clickingPlayer.sendMessage(getMessage(KISS_MK,
-                placeholder("%player%", clickingPlayer.getName())));
-        clickedPlayer.sendMessage(getMessage(GOT_KISSED_MK,
                 placeholder("%player%", clickedPlayer.getName())));
+        clickedPlayer.sendMessage(getMessage(GOT_KISSED_MK,
+                placeholder("%player%", clickingPlayer.getName())));
 
         return true;
     }
