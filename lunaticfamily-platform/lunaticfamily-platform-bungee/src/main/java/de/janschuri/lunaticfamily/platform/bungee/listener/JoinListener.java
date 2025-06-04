@@ -1,7 +1,6 @@
 package de.janschuri.lunaticfamily.platform.bungee.listener;
 
 import de.janschuri.lunaticfamily.common.listener.JoinListenerExecuter;
-import de.janschuri.lunaticfamily.common.utils.Logger;
 import de.janschuri.lunaticfamily.platform.bungee.BungeeLunaticFamily;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.platform.bungee.PlatformImpl;
@@ -17,14 +16,12 @@ public class JoinListener implements Listener {
     @EventHandler
     public void onPlayerJoin(ServerConnectEvent event) {
 
-        if (event.getReason() != ServerConnectEvent.Reason.JOIN_PROXY) {
-            return;
-        }
+        boolean isFirstJoin = event.getReason() == ServerConnectEvent.Reason.JOIN_PROXY;
 
         PlayerSender commandSender = (PlayerSender) new PlatformImpl().getSender(event.getPlayer());
 
         ProxyServer.getInstance().getScheduler().schedule(BungeeLunaticFamily.getInstance(), () -> {
-            JoinListenerExecuter.execute(commandSender);
+            JoinListenerExecuter.execute(commandSender, isFirstJoin);
         }, 200, TimeUnit.MILLISECONDS);
     }
 }

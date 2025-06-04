@@ -32,6 +32,10 @@ public class JoinListenerExecuter implements HasMessageKeys {
 
 
     public static boolean execute(PlayerSender sender) {
+        return execute(sender, true);
+    }
+
+    public static boolean execute(PlayerSender sender, boolean isFirstJoin) {
         Runnable runnable = () -> {
             LanguageConfigImpl languageConfig = LunaticFamily.getLanguageConfig();
             FamilyPlayer playerFam = findOrCreate(sender.getUniqueId());
@@ -43,6 +47,10 @@ public class JoinListenerExecuter implements HasMessageKeys {
             playerFam.save();
 
             playerFam.updateFamilyTree();
+
+            if (!isFirstJoin) {
+                return;
+            }
 
             if (playerFam.isMarried()) {
                 PlayerSender partner = LunaticLib.getPlatform().getPlayerSender(playerFam.getPartner().getUUID());
