@@ -6,6 +6,7 @@ import de.janschuri.lunaticfamily.common.LunaticFamily;
 import de.janschuri.lunaticfamily.common.database.DatabaseRepository;
 import de.janschuri.lunaticfamily.common.handler.familytree.FamilyTree;
 import de.janschuri.lunaticfamily.common.utils.Logger;
+import de.janschuri.lunaticfamily.common.utils.Utils;
 import de.janschuri.lunaticfamily.platform.FamilyTreeManager;
 import de.janschuri.lunaticlib.PlayerSender;
 import de.janschuri.lunaticlib.common.LunaticLib;
@@ -646,20 +647,27 @@ public class FamilyPlayer {
             return CompletableFuture.completedFuture(true);
         }
 
-        if (player.isOnline() && LunaticFamily.getConfig().isUseCrazyAdvancementAPI()) {
-            FamilyTreeManager familyTreeManager = LunaticFamily.getPlatform().getFamilyTreeManager();
-
-            if (familyTreeManager == null) {
-                Logger.errorLog("FamilyTreeManager is null. Please check if CrazyAdvancementsAPI is installed or disable it!");
-                return CompletableFuture.completedFuture(false);
-            } else {
-
-                String serverName = player.getServerName();
-
-                return familyTreeManager.update(serverName, uuid, getFamilyTree().getTreeAdvancements());
-            }
+        if (!player.isOnline()) {
+            return CompletableFuture.completedFuture(true);
         }
-        return CompletableFuture.completedFuture(true);
+
+        if (!Utils.isPlayerOnRegisteredServer(player)) {
+            return CompletableFuture.completedFuture(true);
+        }
+
+        if (!LunaticFamily.getConfig().isUseCrazyAdvancementAPI()) {
+            return CompletableFuture.completedFuture(true);
+        }
+
+        FamilyTreeManager familyTreeManager = LunaticFamily.getPlatform().getFamilyTreeManager();
+
+        if (familyTreeManager == null) {
+            Logger.errorLog("FamilyTreeManager is null. Please check if CrazyAdvancementsAPI is installed or disable it!");
+            return CompletableFuture.completedFuture(false);
+        }
+
+        String serverName = player.getServerName();
+        return familyTreeManager.update(serverName, uuid, getFamilyTree().getTreeAdvancements());
     }
 
     public Marriage getMarriage() {

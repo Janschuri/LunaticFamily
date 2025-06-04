@@ -22,6 +22,7 @@ public class UpdateFamilyTreeRequest extends FutureRequest<Boolean> {
 
     public UpdateFamilyTreeRequest() {
         super(REQUEST_NAME, REQUEST_MAP);
+        isVoid();
     }
 
     @Override

@@ -12,10 +12,8 @@ public class JoinListener {
     public void onPlayerConnect(ServerPostConnectEvent event) {
         PlayerSender playerCommandSender = (PlayerSender) LunaticLib.getPlatform().getSender(event.getPlayer());
 
-        if (event.getPreviousServer() != null) {
+        boolean isFirstJoin = event.getPreviousServer() == null;
 
-        } else {
-            JoinListenerExecuter.execute(playerCommandSender);
-        }
+        JoinListenerExecuter.execute(playerCommandSender, isFirstJoin);
     }
 }
