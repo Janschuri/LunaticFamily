@@ -41,8 +41,8 @@ public class MarryAccept extends FamilyCommand implements HasParentCommand {
     private final static PriestMarry PRIEST_MARRY_INSTANCE = new PriestMarry();
 
     private final static CommandMessageKey PRIEST_REQUEST_MK = new LunaticCommandMessageKey(PRIEST_MARRY_INSTANCE, "request")
-            .defaultMessage("en", "%player1%, would you like to be siblings with %player2% on this Minecraft server?")
-            .defaultMessage("de", "%player1%, möchtest du mit %player2% auf diesem Minecraft-Server Geschwister sein?");
+            .defaultMessage("en", "%player1%, would you like to marry %player2%? on this Minecraft server.")
+            .defaultMessage("de", "%player1%, möchtest du %player2% auf diesem Minecraft Server heiraten?");
     private final static CommandMessageKey PRIEST_NO_MK = new LunaticCommandMessageKey(PRIEST_MARRY_INSTANCE, "no")
             .defaultMessage("en", "No. I don't want to.")
             .defaultMessage("de", "Nein. Ich möchte nicht.");
@@ -50,14 +50,14 @@ public class MarryAccept extends FamilyCommand implements HasParentCommand {
             .defaultMessage("en", "Yes. I do!")
             .defaultMessage("de", "Ja. Ich möchte!");
     private final static CommandMessageKey PRIEST_COMPLETE_MK = new LunaticCommandMessageKey(PRIEST_MARRY_INSTANCE, "complete")
-            .defaultMessage("en", "You are siblings!")
-            .defaultMessage("de", "Ihr seid Geschwister!");
+            .defaultMessage("en", "You are married! You may now kiss!")
+            .defaultMessage("de", "Ihr seid verheiratet! Ihr dürft euch jetzt küssen!");
     private final static CommandMessageKey PRIEST_REQUEST_EXPIRED_PRIEST_MK = new LunaticCommandMessageKey(PRIEST_MARRY_INSTANCE, "request_expired_priest")
-            .defaultMessage("en", "The siblinghood between %player1% and %player2% has been canceled.")
-            .defaultMessage("de", "Die Geschwisterbeziehung zwischen %player1% und %player2% wurde abgebrochen.");
+            .defaultMessage("en", "The wedding between %player1% and %player2% has been cancelled.")
+            .defaultMessage("de", "Die Hochzeit zwischen %player1% und %player2% wurde abgebrochen.");
     private final static CommandMessageKey PRIEST_REQUEST_EXPIRED_PLAYER_MK = new LunaticCommandMessageKey(PRIEST_MARRY_INSTANCE, "request_expired_player")
-            .defaultMessage("en", "Your siblinghood with %player% has been canceled.")
-            .defaultMessage("de", "Deine Geschwisterbeziehung mit %player% wurde abgebrochen.");
+            .defaultMessage("en", "The wedding proposal from %player% has expired. You can no longer accept it.")
+            .defaultMessage("de", "Die Heiratsanfrage von %player% ist abgelaufen. Du kannst sie nicht mehr annehmen.");
 
 
     @Override
@@ -155,13 +155,19 @@ public class MarryAccept extends FamilyCommand implements HasParentCommand {
 
         UUID priestUUID = LunaticFamily.marryPriests.get(playerUUID);
         PlayerSender priest = LunaticLib.getPlatform().getPlayerSender(priestUUID);
+        FamilyPlayer priestFam = FamilyPlayer.find(priestUUID);
 
-        if (!Utils.hasEnoughMoney(player.getServerName(), partnerUUID, WithdrawKey.MARRY_PROPOSING_PLAYER)) {
+        if (!Utils.hasEnoughMoney(player.getServerName(), priestUUID, WithdrawKey.PRIEST_MARRY)) {
+            player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK,
+                    placeholder("%player%", priestFam.getName())));
+            return true;
+        }
+        if (!Utils.hasEnoughMoney(player.getServerName(), partnerUUID, WithdrawKey.PRIEST_MARRY_PLAYER)) {
             player.sendMessage(getMessage(PLAYER_NOT_ENOUGH_MONEY_MK,
                 placeholder("%player%", partnerFam.getName())));
             return true;
         }
-        if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.MARRY_PROPOSED_PLAYER)) {
+        if (!Utils.hasEnoughMoney(player.getServerName(), playerUUID, WithdrawKey.PRIEST_MARRY_PLAYER)) {
             player.sendMessage(getMessage(NOT_ENOUGH_MONEY_MK,
                 placeholder("%player%", player.getName())));
             return true;
